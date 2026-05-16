@@ -44,8 +44,7 @@ namespace _Project.Scripts.Gameplay.Drag
             Vector3 worldPosition = camera.ScreenToWorldPoint(screenPosition);
             _currentDraggable.OnDragMove(worldPosition + _dragOffset);
 
-            Collider2D hit = _physicsService.OverlapPoint(worldPosition, ~0);
-            return hit != null ? hit.GetComponent<IDropTarget>() : null;
+            return GetDropTargetAt(worldPosition);
         }
 
         public IDropTarget EndDrag(Vector2 screenPosition, Camera camera)
@@ -54,8 +53,7 @@ namespace _Project.Scripts.Gameplay.Drag
                 return null;
 
             Vector3 worldPosition = camera.ScreenToWorldPoint(screenPosition);
-            Collider2D hit = _physicsService.OverlapPoint(worldPosition, ~0);
-            IDropTarget target = hit != null ? hit.GetComponent<IDropTarget>() : null;
+            IDropTarget target = GetDropTargetAt(worldPosition);
 
             if (target != null && target.CanAcceptDrop(_currentDraggable))
             {
@@ -71,6 +69,21 @@ namespace _Project.Scripts.Gameplay.Drag
             IDropTarget result = target;
             _currentDraggable = null;
             return result;
+        }
+
+        private IDropTarget GetDropTargetAt(Vector3 worldPosition)
+        {
+            Collider2D col = _currentDraggable.Transform.GetComponent<Collider2D>();
+            if (col != null)
+                col.enabled = false;
+
+            Collider2D hit = _physicsService.OverlapPoint(worldPosition, ~0);
+            IDropTarget target = hit != null ? hit.GetComponent<IDropTarget>() : null;
+
+            if (col != null)
+                col.enabled = true;
+
+            return target;
         }
 
         public void CancelDrag()

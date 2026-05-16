@@ -9,6 +9,7 @@ using _Project.Scripts.Infrastructure.GameStates.States;
 using _Project.Scripts.Infrastructure.GameStates;
 using _Project.Scripts.Gameplay.Level;
 using _Project.Scripts.Gameplay.Units.Atom;
+using _Project.Scripts.Gameplay.Units.BattleMolecule;
 using _Project.Scripts.Gameplay.Units.Example;
 using _Project.Scripts.Gameplay.Windows;
 using _Project.Scripts.Infrastructure.AssetManagement;
@@ -34,6 +35,7 @@ namespace _Project.Scripts.Infrastructure
             BindDragService();
             BindGameplayExample();
             BindWindowInfrastructure();
+            BindGameplayBattleMolecule();
         }
 
         private void BindAssetManagement()
@@ -76,6 +78,11 @@ namespace _Project.Scripts.Infrastructure
             Container.Bind<ITimeService>().To<UnityTimeService>().AsSingle();
             Container.Bind<IPhysicsService>().To<PhysicsService>().AsSingle();
             Container.Bind<IRandomService>().To<UnityRandomService>().AsSingle();
+        }
+
+        private void BindGameplayBattleMolecule()
+        {
+            Container.Bind<IBattleMoleculeFactory>().To<BattleMoleculeFactory>().AsSingle();
         }
 
         private void BindPauseService()

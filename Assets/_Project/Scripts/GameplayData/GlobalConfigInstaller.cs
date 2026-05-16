@@ -3,6 +3,7 @@ using UnityEngine;
 using Zenject;
 using _Project.Scripts.Gameplay.Enemies;
 using _Project.Scripts.Gameplay.Units;
+using _Project.Scripts.Gameplay.Units.BattleMolecule;
 using _Project.Scripts.Localization;
 
 namespace _Project.Scripts.GameplayData
@@ -13,12 +14,14 @@ namespace _Project.Scripts.GameplayData
         [field: SerializeField] private LanguageConfig LanguageConfig { get; set; }
         [field: SerializeField] private EnemySpawnerConfig EnemySpawnerConfig { get; set; }
         [field: SerializeField] private UnitClickConfig UnitClickConfig { get; set; }
+        [field: SerializeField] private BattleMoleculeConfig BattleMoleculeConfig { get; set; }
 
         public override void InstallBindings()
         {
             BindConfig(LanguageConfig);
             BindConfig(EnemySpawnerConfig);
             BindConfig(UnitClickConfig);
+            BindConfig(BattleMoleculeConfig);
         }
 
         private void BindConfig<TConfig>(TConfig config) where TConfig : ScriptableObject

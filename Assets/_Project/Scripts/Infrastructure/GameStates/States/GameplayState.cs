@@ -3,6 +3,7 @@ using _Project.Scripts.Gameplay.Drag;
 using _Project.Scripts.Gameplay.Enemies;
 using _Project.Scripts.Gameplay.Input.Service;
 using _Project.Scripts.Gameplay.Units.Atom;
+using _Project.Scripts.Gameplay.Units.BattleMolecule;
 using _Project.Scripts.Gameplay.Units.Example;
 using _Project.Scripts.Utils.Pause;
 using UnityEngine;
@@ -15,12 +16,11 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
         [Inject] private IEnemySpawner _enemySpawner;
         [Inject] private IExampleUnitFactory _exampleUnitFactory;
         [Inject] private IAtomFactory _atomFactory;
+        [Inject] private IBattleMoleculeFactory _battleMoleculeFactory;
         [Inject] private IDragService _dragService;
         [Inject] private IInputService _inputService;
         [Inject] private ICameraProvider _cameraProvider;
         [Inject] private PauseService _pauseService;
-
-        private bool _wasDragging;
 
         public override void Enter()
         {
@@ -56,14 +56,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
                 _dragService.UpdateDrag(screenPos, camera);
 
                 if (_inputService.GetLeftMouseButtonUp())
-                {
                     _dragService.EndDrag(screenPos, camera);
-                    _wasDragging = true;
-                }
-                else
-                {
-                    _wasDragging = false;
-                }
             }
         }
 
@@ -72,6 +65,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
             _dragService.CancelDrag();
             _enemySpawner.Cleanup();
             _exampleUnitFactory.Cleanup();
+            _battleMoleculeFactory.Cleanup();
             _atomFactory.Cleanup();
         }
     }

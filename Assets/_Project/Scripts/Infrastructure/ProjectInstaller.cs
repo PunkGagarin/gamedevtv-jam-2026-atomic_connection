@@ -2,7 +2,9 @@ using _Project.Scripts.Gameplay.Cameras.Provider;
 using _Project.Scripts.Gameplay.Common.Physics;
 using _Project.Scripts.Gameplay.Common.Random;
 using _Project.Scripts.Gameplay.Common.Time;
+using _Project.Scripts.Gameplay.Drag;
 using _Project.Scripts.Gameplay.Enemies;
+using _Project.Scripts.Gameplay.Input.Service;
 using _Project.Scripts.Infrastructure.GameStates.States;
 using _Project.Scripts.Infrastructure.GameStates;
 using _Project.Scripts.Gameplay.Level;
@@ -27,6 +29,8 @@ namespace _Project.Scripts.Infrastructure
             BindCameraProvider();
             BindCommonServices();
             BindPauseService();
+            BindInputService();
+            BindDragService();
             BindGameplayExample();
             BindWindowInfrastructure();
         }
@@ -34,6 +38,16 @@ namespace _Project.Scripts.Infrastructure
         private void BindAssetManagement()
         {
             Container.Bind<IAssetProvider>().To<AssetProvider>().AsSingle();
+        }
+
+        private void BindInputService()
+        {
+            Container.Bind<IInputService>().To<StandaloneInputService>().AsSingle();
+        }
+
+        private void BindDragService()
+        {
+            Container.Bind<IDragService>().To<DragService>().AsSingle();
         }
 
         private void BindGameplayExample()

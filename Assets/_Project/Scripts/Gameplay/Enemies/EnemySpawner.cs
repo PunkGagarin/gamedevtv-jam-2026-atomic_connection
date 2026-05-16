@@ -63,7 +63,7 @@ namespace _Project.Scripts.Gameplay.Enemies
 
         private bool FirstGameplayClickWasReceived()
         {
-            if (!Input.GetMouseButtonDown(0))
+            if (!UnityEngine.Input.GetMouseButtonDown(0))
                 return false;
 
             return EventSystem.current == null || !EventSystem.current.IsPointerOverGameObject();

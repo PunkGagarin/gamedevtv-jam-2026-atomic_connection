@@ -3,7 +3,7 @@ using _Project.Scripts.Infrastructure.AssetManagement;
 using UnityEngine;
 using Zenject;
 
-namespace _Project.Scripts.Gameplay.Units
+namespace _Project.Scripts.Gameplay.Units.Example
 {
     public class ExampleUnitFactory : IExampleUnitFactory
     {

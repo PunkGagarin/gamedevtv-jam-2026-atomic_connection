@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace _Project.Scripts.Gameplay.Units
+namespace _Project.Scripts.Gameplay.Units.Example
 {
     public interface IExampleUnitFactory
     {

@@ -1,5 +1,5 @@
 using _Project.Scripts.Gameplay.Level;
-using _Project.Scripts.Gameplay.Units;
+using _Project.Scripts.Gameplay.Units.Example;
 using Zenject;
 
 namespace _Project.Scripts.Infrastructure.GameStates.States

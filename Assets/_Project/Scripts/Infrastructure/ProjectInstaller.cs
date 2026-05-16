@@ -8,7 +8,8 @@ using _Project.Scripts.Gameplay.Input.Service;
 using _Project.Scripts.Infrastructure.GameStates.States;
 using _Project.Scripts.Infrastructure.GameStates;
 using _Project.Scripts.Gameplay.Level;
-using _Project.Scripts.Gameplay.Units;
+using _Project.Scripts.Gameplay.Units.Atom;
+using _Project.Scripts.Gameplay.Units.Example;
 using _Project.Scripts.Gameplay.Windows;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Infrastructure.GameStates.Factory;
@@ -54,6 +55,7 @@ namespace _Project.Scripts.Infrastructure
         {
             Container.Bind<ILevelStartPointProvider>().To<LevelStartPointProvider>().AsSingle();
             Container.Bind<IExampleUnitFactory>().To<ExampleUnitFactory>().AsSingle();
+            Container.Bind<IAtomFactory>().To<AtomFactory>().AsSingle();
             Container.Bind<IEnemyFactory>().To<EnemyFactory>().AsSingle();
             Container.Bind<IEnemySpawner>().To<EnemySpawner>().AsSingle();
         }

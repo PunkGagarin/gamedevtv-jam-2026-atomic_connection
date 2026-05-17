@@ -1,3 +1,4 @@
+using System;
 using _Project.Scripts.Gameplay.Units.BattleMolecules.Components;
 using UnityEngine;
 
@@ -7,12 +8,20 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
     [RequireComponent(typeof(BattleMoleculeCharge))]
     [RequireComponent(typeof(BattleMoleculeAtomReceiver))]
     [RequireComponent(typeof(BattleMoleculeAtomOrbit))]
+    [RequireComponent(typeof(BattleMoleculeShotQueue))]
     public class BattleMolecule : MonoBehaviour
     {
         [field: SerializeField] private OwnedAtoms OwnedAtoms { get; set; }
         [field: SerializeField] private BattleMoleculeCharge Charge { get; set; }
         [field: SerializeField] private BattleMoleculeAtomReceiver AtomReceiver { get; set; }
         [field: SerializeField] private BattleMoleculeAtomOrbit AtomOrbit { get; set; }
+        [field: SerializeField] private BattleMoleculeShotQueue ShotQueue { get; set; }
+
+        public event Action<Vector3, Vector3> ShotRequested
+        {
+            add => ShotQueue.ShotRequested += value;
+            remove => ShotQueue.ShotRequested -= value;
+        }
 
         private void Awake()
         {
@@ -27,6 +36,9 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
             if (AtomOrbit == null)
                 AtomOrbit = GetComponent<BattleMoleculeAtomOrbit>();
+
+            if (ShotQueue == null)
+                ShotQueue = GetComponent<BattleMoleculeShotQueue>();
         }
 
         public void Configure(BattleMoleculeConfig config)

@@ -28,6 +28,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
 
             _atomCoreService.Start(currentCore);
             _enemySpawner.Start(currentCore != null ? currentCore.transform : null);
+            _battleMoleculeService.Start();
         }
 
         protected override void OnUpdate()

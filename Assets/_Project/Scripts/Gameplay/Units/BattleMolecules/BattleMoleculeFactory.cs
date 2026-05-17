@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Level;
 using _Project.Scripts.Infrastructure.AssetManagement;
@@ -18,6 +19,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         [Inject] private IInstantiator _instantiator;
 
         public IReadOnlyList<BattleMolecule> CreatedMolecules => _createdMolecules;
+        public event Action<BattleMolecule> MoleculeCreated;
 
         public BattleMolecule Create(Vector3 at, BattleMoleculeConfig config)
         {
@@ -38,6 +40,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             molecule.name = nameof(BattleMolecule);
             molecule.Configure(config);
             _createdMolecules.Add(molecule);
+            MoleculeCreated?.Invoke(molecule);
 
             return molecule;
         }
@@ -51,6 +54,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             }
 
             _createdMolecules.Clear();
+            MoleculeCreated = null;
         }
     }
 }

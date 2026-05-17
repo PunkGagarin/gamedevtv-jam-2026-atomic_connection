@@ -5,12 +5,12 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
     [RequireComponent(typeof(BattleMoleculeCharge))]
     [RequireComponent(typeof(BattleMoleculeAimLineView))]
-    [RequireComponent(typeof(BattleMoleculeShotLogger))]
+    [RequireComponent(typeof(BattleMoleculeShotQueue))]
     public class BattleMoleculeAiming : MonoBehaviour, IDraggable, IDragReleaseHandler
     {
         [field: SerializeField] private BattleMoleculeCharge Charge { get; set; }
         [field: SerializeField] private BattleMoleculeAimLineView AimLine { get; set; }
-        [field: SerializeField] private BattleMoleculeShotLogger ShotLogger { get; set; }
+        [field: SerializeField] private BattleMoleculeShotQueue ShotQueue { get; set; }
 
         private Vector3 _aimOrigin;
         private bool _isAiming;
@@ -26,8 +26,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             if (AimLine == null)
                 AimLine = GetComponent<BattleMoleculeAimLineView>();
 
-            if (ShotLogger == null)
-                ShotLogger = GetComponent<BattleMoleculeShotLogger>();
+            if (ShotQueue == null)
+                ShotQueue = GetComponent<BattleMoleculeShotQueue>();
         }
 
         public void OnDragStart()
@@ -42,7 +42,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             if (!_isAiming)
                 return;
 
-            AimLine.SetEnd(worldPosition);
+            AimLine.SetEnd(GetShotEnd(worldPosition));
         }
 
         public void OnDragEnd()
@@ -60,18 +60,29 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             if (!Charge.IsCharged)
                 return false;
 
-            Vector3 direction = worldPosition - _aimOrigin;
+            Vector3 direction = GetShotDirection(worldPosition);
             if (direction.sqrMagnitude <= Mathf.Epsilon)
                 return false;
 
-            ShotLogger.LogShot(direction.normalized);
-            return true;
+            return ShotQueue.TryRequestShot(direction.normalized);
         }
 
         private void StopAiming()
         {
             _isAiming = false;
             AimLine.Hide();
+        }
+
+        private Vector3 GetShotEnd(Vector3 dragPosition)
+        {
+            Vector3 direction = GetShotDirection(dragPosition);
+            return _aimOrigin + direction;
+        }
+
+        private Vector3 GetShotDirection(Vector3 dragPosition)
+        {
+            dragPosition.z = _aimOrigin.z;
+            return _aimOrigin - dragPosition;
         }
     }
 }

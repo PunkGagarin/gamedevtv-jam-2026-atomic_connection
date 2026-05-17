@@ -1,3 +1,4 @@
+using System;
 using _Project.Scripts.Gameplay.Cameras.Provider;
 using _Project.Scripts.Gameplay.Common.Physics;
 using _Project.Scripts.Gameplay.Common.Random;
@@ -23,10 +24,17 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
         [Inject] private UnitClickConfig _config;
         [Inject] private IFreeAtomFactory _freeAtomFactory;
 
+        public event Action CoreDied;
+
         public void Start(AtomCore core)
         {
             _core = core;
-            _core?.Configure(_config);
+
+            if (_core == null)
+                return;
+
+            _core.Configure(_config);
+            _core.Died += OnCoreDied;
         }
 
         public void Update()
@@ -40,8 +48,18 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
 
         public void Cleanup()
         {
-            _core?.CleanupAtoms();
+            if (_core != null)
+            {
+                _core.Died -= OnCoreDied;
+                _core.CleanupAtoms();
+            }
+
             _core = null;
+        }
+
+        private void OnCoreDied()
+        {
+            CoreDied?.Invoke();
         }
 
         private void HandleCoreClick()

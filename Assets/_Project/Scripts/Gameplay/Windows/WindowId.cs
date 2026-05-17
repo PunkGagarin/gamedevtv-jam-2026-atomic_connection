@@ -4,5 +4,6 @@ namespace _Project.Scripts.Gameplay.Windows
     {
         SettingsWindow = 0,
         GameplayMenuWindow = 1,
+        GameOverWindow = 2,
     }
 }

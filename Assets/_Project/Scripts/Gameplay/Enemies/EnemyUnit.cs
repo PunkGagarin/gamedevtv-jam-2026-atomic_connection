@@ -1,13 +1,16 @@
 using System;
 using _Project.Scripts.Gameplay.Common.Health;
+using _Project.Scripts.Gameplay.Enemies.Components;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Enemies
 {
     [RequireComponent(typeof(Health))]
+    [RequireComponent(typeof(EnemyMovement))]
     public class EnemyUnit : MonoBehaviour
     {
         [field: SerializeField] private Health Health { get; set; }
+        [field: SerializeField] private EnemyMovement Movement { get; set; }
 
         public bool IsAlive => Health == null || Health.IsAlive;
 
@@ -17,6 +20,9 @@ namespace _Project.Scripts.Gameplay.Enemies
         {
             if (Health == null)
                 Health = GetComponent<Health>();
+
+            if (Movement == null)
+                Movement = GetComponent<EnemyMovement>();
 
             if (Health != null)
                 Health.Died += OnHealthDied;
@@ -30,6 +36,8 @@ namespace _Project.Scripts.Gameplay.Enemies
 
         public void PrepareForSpawn()
         {
+            Movement?.Clear();
+
             if (Health != null)
                 Health.ResetHealth();
 
@@ -38,7 +46,18 @@ namespace _Project.Scripts.Gameplay.Enemies
 
         public void PrepareForPool()
         {
+            Movement?.Clear();
             gameObject.SetActive(false);
+        }
+
+        public void MoveTo(Transform target, float speed)
+        {
+            Movement?.Configure(target, speed);
+        }
+
+        public void Tick(float deltaTime)
+        {
+            Movement?.Tick(deltaTime);
         }
 
         public void Kill()

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1166e0ac63544b3aa9d3658fdf850a44, type: 3}
   m_Name: EnemySpawnerConfig
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Enemies.EnemySpawnerConfig
-  <SpawnIntervalSeconds>k__BackingField: 3
-  <MinSpawnRadius>k__BackingField: 3
-  <MaxSpawnRadius>k__BackingField: 5
+  <SpawnIntervalSeconds>k__BackingField: 6
+  <OffscreenSpawnPadding>k__BackingField: 1
+  <MoveSpeed>k__BackingField: 1
+  <CoreCollisionDamage>k__BackingField: 1

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using _Project.Scripts.Gameplay.Currencies;
 using Zenject;
 using _Project.Scripts.Infrastructure.SaveLoad;
 
@@ -11,10 +12,11 @@ namespace _Project.Scripts.Gameplay.Talents
         [Inject] private TalentConfig _config;
         [Inject] private IProgressProvider _progressProvider;
         [Inject] private ISaveLoadService _saveLoadService;
+        [Inject] private ICurrencyService _currencyService;
+        [Inject] private CurrencyConfig _currencyConfig;
 
         public event Action Changed;
 
-        public int Gold => _progressProvider.ProgressData.Gold;
         public IReadOnlyList<TalentDefinition> Talents => _config.Talents;
         public float AtomGenerationMultiplier => 1f + BonusOf(TalentType.AtomGenerationSpeed);
 
@@ -27,11 +29,17 @@ namespace _Project.Scripts.Gameplay.Talents
             }
 
             if (!_saveLoadService.HasSavedProgress)
-                CreateProgressWithStartingGold();
+                CreateProgressWithStartingCurrencies();
         }
 
         public int LevelOf(TalentId talentId) =>
             _progressProvider.ProgressData.GetTalentLevel((int)talentId);
+
+        public CurrencyAmount PriceFor(TalentId talentId)
+        {
+            TalentDefinition talent = DefinitionFor(talentId);
+            return talent.PriceForLevel(LevelOf(talentId));
+        }
 
         public bool CanBuy(TalentId talentId)
         {
@@ -39,7 +47,7 @@ namespace _Project.Scripts.Gameplay.Talents
             int currentLevel = LevelOf(talentId);
 
             return currentLevel < talent.MaxLevel &&
-                   Gold >= talent.CostForLevel(currentLevel) &&
+                   _currencyService.CanSpend(talent.PriceForLevel(currentLevel)) &&
                    PrerequisitesBought(talent);
         }
 
@@ -51,7 +59,9 @@ namespace _Project.Scripts.Gameplay.Talents
             TalentDefinition talent = DefinitionFor(talentId);
             int currentLevel = LevelOf(talentId);
 
-            _progressProvider.ProgressData.Gold -= talent.CostForLevel(currentLevel);
+            if (!_currencyService.Spend(talent.PriceForLevel(currentLevel)))
+                return false;
+
             _progressProvider.ProgressData.SetTalentLevel((int)talentId, currentLevel + 1);
 
             _saveLoadService.SaveProgress();
@@ -63,7 +73,7 @@ namespace _Project.Scripts.Gameplay.Talents
         public void ResetProgress()
         {
             _saveLoadService.DeleteAllSavedData();
-            CreateProgressWithStartingGold();
+            CreateProgressWithStartingCurrencies();
             Changed?.Invoke();
         }
 
@@ -78,11 +88,11 @@ namespace _Project.Scripts.Gameplay.Talents
         private bool PrerequisitesBought(TalentDefinition talent) =>
             talent.Prerequisites == null || talent.Prerequisites.All(prerequisite => LevelOf(prerequisite) > 0);
 
-        private void CreateProgressWithStartingGold()
+        private void CreateProgressWithStartingCurrencies()
         {
             _saveLoadService.CreateProgress();
-            _progressProvider.ProgressData.Gold = _config.TestStartingGold;
-            _saveLoadService.SaveProgress();
+            _currencyService.SetBalance(CurrencyId.Nucleotides, _currencyConfig.StartingAmount(CurrencyId.Nucleotides).Amount);
+            _currencyService.SetBalance(CurrencyId.Isotopes, _currencyConfig.StartingAmount(CurrencyId.Isotopes).Amount);
         }
 
         private TalentDefinition DefinitionFor(TalentId talentId) =>

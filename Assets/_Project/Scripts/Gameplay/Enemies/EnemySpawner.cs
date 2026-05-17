@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Cameras.Provider;
+using _Project.Scripts.Gameplay.Currencies;
 using _Project.Scripts.Gameplay.Units.AtomCores;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -24,9 +25,12 @@ namespace _Project.Scripts.Gameplay.Enemies
         [Inject] private ICameraProvider _cameraProvider;
         [Inject] private IRandomService _random;
         [Inject] private ITimeService _time;
+        [Inject] private ICurrencyService _currencyService;
 
         public void Start(Transform target)
         {
+            Cleanup();
+
             _target = target;
             _targetCollider = target != null ? target.GetComponent<Collider2D>() : null;
             _isActive = target != null;
@@ -39,8 +43,6 @@ namespace _Project.Scripts.Gameplay.Enemies
             if (!_isActive || _target == null)
                 return;
 
-            TickEnemies();
-
             if (!_spawnWasStarted)
             {
                 if (FirstGameplayClickWasReceived())
@@ -48,6 +50,8 @@ namespace _Project.Scripts.Gameplay.Enemies
 
                 return;
             }
+
+            TickEnemies();
 
             _timeToNextSpawn -= _time.DeltaTime;
 
@@ -86,6 +90,7 @@ namespace _Project.Scripts.Gameplay.Enemies
 
             EnemyUnit enemy = _enemyFactory.Create(spawnPosition);
             enemy.Died += OnEnemyDied;
+            enemy.Killed += OnEnemyKilled;
             enemy.MoveTo(_target, _config.MoveSpeed);
 
             _activeEnemies.Add(enemy);
@@ -141,21 +146,30 @@ namespace _Project.Scripts.Gameplay.Enemies
             if (_target.TryGetComponent(out AtomCore core))
                 core.TakeDamage(_config.CoreCollisionDamage);
 
-            enemy.Kill();
+            enemy.DieFromCore();
         }
 
         private void OnEnemyDied(EnemyUnit enemy)
         {
             enemy.Died -= OnEnemyDied;
+            enemy.Killed -= OnEnemyKilled;
 
             if (!_activeEnemies.Remove(enemy))
                 throw new System.InvalidOperationException($"{nameof(EnemySpawner)} received death from an untracked {nameof(EnemyUnit)}.");
         }
 
+        private void OnEnemyKilled(EnemyUnit enemy)
+        {
+            _currencyService.Add(new CurrencyAmount(CurrencyId.Nucleotides, _config.NucleotideReward));
+        }
+
         private void UnsubscribeFromActiveEnemies()
         {
             foreach (EnemyUnit enemy in _activeEnemies)
+            {
                 enemy.Died -= OnEnemyDied;
+                enemy.Killed -= OnEnemyKilled;
+            }
 
             _activeEnemies.Clear();
         }

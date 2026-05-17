@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: TalentConfig
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Talents.TalentConfig
   <ClearSavedProgressOnStartup>k__BackingField: 0
-  <TestStartingGold>k__BackingField: 500
   <Talents>k__BackingField:
   - <Id>k__BackingField: 0
     <Type>k__BackingField: 0
@@ -23,6 +22,7 @@ MonoBehaviour:
       \u0437\u0430\u0431\u0435\u0433\u043E\u0432."
     <Icon>k__BackingField: {fileID: 0}
     <MaxLevel>k__BackingField: 3
+    <CostCurrency>k__BackingField: 0
     <CostsByLevel>k__BackingField: 3200000064000000c8000000
     <Prerequisites>k__BackingField: 
     <GraphPosition>k__BackingField: {x: -14.730568, y: 377.16605}
@@ -37,6 +37,7 @@ MonoBehaviour:
       \u043D\u043E\u0432\u043E\u0433\u043E \u0430\u0442\u043E\u043C\u0430."
     <Icon>k__BackingField: {fileID: 0}
     <MaxLevel>k__BackingField: 3
+    <CostCurrency>k__BackingField: 0
     <CostsByLevel>k__BackingField: 3200000064000000c8000000
     <Prerequisites>k__BackingField: 00000000
     <GraphPosition>k__BackingField: {x: -240, y: 120}
@@ -51,6 +52,7 @@ MonoBehaviour:
       \u0430\u0442\u0430\u043A\u0443."
     <Icon>k__BackingField: {fileID: 0}
     <MaxLevel>k__BackingField: 3
+    <CostCurrency>k__BackingField: 0
     <CostsByLevel>k__BackingField: 3200000064000000c8000000
     <Prerequisites>k__BackingField: 00000000
     <GraphPosition>k__BackingField: {x: 240, y: 120}
@@ -64,6 +66,7 @@ MonoBehaviour:
       \u043C\u043E\u043B\u0435\u043A\u0443\u043B\u044B."
     <Icon>k__BackingField: {fileID: 0}
     <MaxLevel>k__BackingField: 3
+    <CostCurrency>k__BackingField: 0
     <CostsByLevel>k__BackingField: 3200000064000000c8000000
     <Prerequisites>k__BackingField: 02000000
     <GraphPosition>k__BackingField: {x: 240, y: -120}
@@ -77,6 +80,7 @@ MonoBehaviour:
       \u0441\u043D\u0430\u0440\u044F\u0434\u0430."
     <Icon>k__BackingField: {fileID: 0}
     <MaxLevel>k__BackingField: 3
+    <CostCurrency>k__BackingField: 0
     <CostsByLevel>k__BackingField: 3200000064000000c8000000
     <Prerequisites>k__BackingField: 03000000
     <GraphPosition>k__BackingField: {x: 453.75848, y: -120.78556}
@@ -90,7 +94,8 @@ MonoBehaviour:
       \u0430\u0442\u043E\u043C\u043E\u0432."
     <Icon>k__BackingField: {fileID: 0}
     <MaxLevel>k__BackingField: 1
-    <CostsByLevel>k__BackingField: c8000000
+    <CostCurrency>k__BackingField: 1
+    <CostsByLevel>k__BackingField: 01000000
     <Prerequisites>k__BackingField: 01000000
     <GraphPosition>k__BackingField: {x: -679.35175, y: 119.442764}
     <BonusPerLevel>k__BackingField: 1
@@ -103,7 +108,8 @@ MonoBehaviour:
       \u0432 \u0431\u043E\u0435\u0432\u0443\u044E \u043C\u043E\u043B\u0435\u043A\u0443\u043B\u0443."
     <Icon>k__BackingField: {fileID: 0}
     <MaxLevel>k__BackingField: 1
-    <CostsByLevel>k__BackingField: c8000000
+    <CostCurrency>k__BackingField: 1
+    <CostsByLevel>k__BackingField: 02000000
     <Prerequisites>k__BackingField: 0100000002000000
     <GraphPosition>k__BackingField: {x: -10.163893, y: -192.35315}
     <BonusPerLevel>k__BackingField: 1

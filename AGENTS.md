@@ -122,6 +122,7 @@ Assets/_Project/Scripts/
 ├── Gameplay/         # Game features, one subfolder per feature
 │   ├── Cameras/      # Camera provider and camera-facing gameplay helpers
 │   ├── Common/       # Small common gameplay services: time, random, physics
+│   ├── Currencies/   # Meta-currency ids, amounts, and balance service
 │   ├── Enemies/      # Minimal enemy feature: view, factory, spawner service
 │   ├── Level/        # Concrete scene references and providers
 │   ├── Talents/      # Talent tree config, progress service, and test/window UI
@@ -220,8 +221,8 @@ over UI. Any `EventSystem.current` access must be null-checked.
 
 **Config Assets vs Prefab Registries** are intentionally different. Value/config
 assets with gameplay or settings numbers should be assigned in installers,
-bound with `FromInstance(...)`, and injected; `EnemySpawnerConfig` and
-`TalentConfig` are current examples. Dynamic prefab registries that map ids to prefabs may stay
+bound with `FromInstance(...)`, and injected; `EnemySpawnerConfig`,
+`TalentConfig`, and `CurrencyConfig` are current examples. Dynamic prefab registries that map ids to prefabs may stay
 resource-backed, matching `ecs-survivors` `WindowsConfig`/`StaticDataService`
 lookup. `WindowsConfig` is a prefab registry, not a numeric settings config.
 When adding a new value config, create the asset under `Assets/_Project/Data/Config`,
@@ -235,19 +236,27 @@ Three installer types:
 
 **MVP** used for UI: `Model` (data + PlayerPrefs), `Presenter` (`IInitializable`, UI/local logic), `View` (MonoBehaviour, UI only). See `Audio/` for the canonical example. Presenters must not become lifecycle intermediaries for gameplay flow.
 
-**Gameplay choice UI** uses MVP direct service calls for now. Presenters/windows may read display data from services/static data and may call high-level feature/domain methods such as `BuyItem(id)`, `SelectUpgrade(id)`, or `ApplyChoice(id)` directly. Keep the operation encapsulated in one owning service; do not spread one UI click across low-level calls such as `RemoveGold`, `AddPurchasedItem`, `ApplyBoost`, and `SaveProgress` from the presenter. The `ecs-survivors` request pattern (`UpgradeRequest`/`BuyRequest` entities processed later by systems) is documented as a deferred option, not the current default.
+**Gameplay choice UI** uses MVP direct service calls for now. Presenters/windows may read display data from services/static data and may call high-level feature/domain methods such as `BuyItem(id)`, `SelectUpgrade(id)`, or `ApplyChoice(id)` directly. Keep the operation encapsulated in one owning service; do not spread one UI click across low-level calls such as `SpendCurrency`, `AddPurchasedItem`, `ApplyBoost`, and `SaveProgress` from the presenter. The `ecs-survivors` request pattern (`UpgradeRequest`/`BuyRequest` entities processed later by systems) is documented as a deferred option, not the current default.
 
 **Talent Tree** currently uses `TalentConfig` for the list of talents, graph
-positions, costs, prerequisites, and numeric effects. Talent tree UI is
+positions, currency costs, prerequisites, and numeric effects. Talent tree UI is
 prefab-driven: `TalentTreeWindow` receives `TalentNodeView` and
 `TalentConnectionView` prefabs through serialized fields and must not build UI
 views manually in code. The talent graph is zoomable with mouse wheel; keep
 long descriptions in the serialized tooltip UI instead of always-visible node
-text. `TalentService` is the single high-level service for reading
-gold/progress and buying talents; `TalentTreeWindow` may call
-`TalentService.Buy(id)` directly. Talent progress is currently saved through
-`PlayerPrefs` as an MVP persistence path until the real meta-progress save model
-exists. `TalentConfig.ClearSavedProgressOnStartup` is a temporary testing flag
+text. `TalentService` is the single high-level service for reading talent
+progress and buying talents; it spends balances through `CurrencyService`, the
+single high-level service for saved meta-currencies such as ДНК
+(`CurrencyId.Nucleotides`) and изотопы (`CurrencyId.Isotopes`).
+Starting balances for new or reset progress live in `CurrencyConfig`, not in
+`TalentConfig`.
+`TalentTreeWindow` may call `TalentService.Buy(id)` directly and read display
+balances through `CurrencyService`. Shared currency display uses
+`CurrencyBalanceView`: gameplay HUD and `TalentTreeWindow` both show the same
+two-row ДНК/изотопы view with icon sprites and numeric balances. Talent progress
+and currencies are currently saved through `PlayerPrefs` as an MVP persistence path until the real
+meta-progress save model exists. Legacy saved `Gold` is migrated into
+`CurrencyId.Nucleotides`. `TalentConfig.ClearSavedProgressOnStartup` is a temporary testing flag
 for wiping talent `PlayerPrefs` on service initialization. The temporary test
 entry point is the main-menu `Update` button; the intended future entry point is
 the victory/defeat result flow.

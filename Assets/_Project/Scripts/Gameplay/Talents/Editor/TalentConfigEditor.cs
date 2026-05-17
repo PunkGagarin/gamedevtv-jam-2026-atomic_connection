@@ -44,7 +44,6 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
         private void DrawDefaultFields()
         {
             EditorGUILayout.PropertyField(serializedObject.FindProperty("<ClearSavedProgressOnStartup>k__BackingField"));
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("<TestStartingGold>k__BackingField"));
         }
 
         private void DrawTalentsList()

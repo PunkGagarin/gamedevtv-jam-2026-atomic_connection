@@ -16,3 +16,4 @@ MonoBehaviour:
   <OffscreenSpawnPadding>k__BackingField: 1
   <MoveSpeed>k__BackingField: 1
   <CoreCollisionDamage>k__BackingField: 1
+  <NucleotideReward>k__BackingField: 5

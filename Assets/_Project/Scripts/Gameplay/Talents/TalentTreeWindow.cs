@@ -5,14 +5,17 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
 using Zenject;
+using _Project.Scripts.Gameplay.Currencies;
 using _Project.Scripts.Gameplay.Windows;
+using UnityEngine.Serialization;
 
 namespace _Project.Scripts.Gameplay.Talents
 {
     public class TalentTreeWindow : BaseWindow, IDragHandler
     {
         [field: SerializeField] private Button CloseButton { get; set; }
-        [field: SerializeField] private TextMeshProUGUI GoldLabel { get; set; }
+        [field: SerializeField, FormerlySerializedAs("<GoldLabel>k__BackingField")]
+        private TextMeshProUGUI LegacyCurrencyLabel { get; set; }
         [field: SerializeField] private RectTransform NodesRoot { get; set; }
         [field: SerializeField] private RectTransform ConnectionsRoot { get; set; }
         [field: SerializeField] private RectTransform TooltipPanel { get; set; }
@@ -25,6 +28,7 @@ namespace _Project.Scripts.Gameplay.Talents
         [field: SerializeField, Min(0.01f)] private float ZoomStep { get; set; } = 0.12f;
 
         [Inject] private ITalentService _talentService;
+        [Inject] private ICurrencyService _currencyService;
         [Inject] private IWindowService _windowService;
 
         private readonly Dictionary<TalentId, TalentNodeView> _nodesById = new();
@@ -38,6 +42,9 @@ namespace _Project.Scripts.Gameplay.Talents
 
         protected override void Initialize()
         {
+            if (LegacyCurrencyLabel != null)
+                LegacyCurrencyLabel.enabled = false;
+
             HideTooltip();
             BuildGraph();
             Refresh();
@@ -47,6 +54,7 @@ namespace _Project.Scripts.Gameplay.Talents
         {
             CloseButton.onClick.AddListener(Close);
             _talentService.Changed += Refresh;
+            _currencyService.Changed += Refresh;
         }
 
         protected override void UnsubscribeUpdates()
@@ -55,6 +63,7 @@ namespace _Project.Scripts.Gameplay.Talents
                 CloseButton.onClick.RemoveListener(Close);
 
             _talentService.Changed -= Refresh;
+            _currencyService.Changed -= Refresh;
         }
 
         public void Buy(TalentId talentId)
@@ -136,12 +145,14 @@ namespace _Project.Scripts.Gameplay.Talents
 
         private void Refresh()
         {
-            GoldLabel.text = $"{_talentService.Gold} золота";
-
             foreach (TalentDefinition talent in _talentService.Talents)
             {
                 int level = _talentService.LevelOf(talent.Id);
-                _nodesById[talent.Id].Refresh(talent, level, _talentService.CanBuy(talent.Id));
+                _nodesById[talent.Id].Refresh(
+                    talent,
+                    level,
+                    _talentService.CanBuy(talent.Id),
+                    _currencyService.Format(talent.PriceForLevel(level)));
             }
 
             foreach (TalentConnectionBinding connection in _connections)

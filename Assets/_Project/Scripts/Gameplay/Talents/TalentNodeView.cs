@@ -35,7 +35,7 @@ namespace _Project.Scripts.Gameplay.Talents
             Button.onClick.AddListener(OnClicked);
         }
 
-        public void Refresh(TalentDefinition talent, int level, bool canBuy)
+        public void Refresh(TalentDefinition talent, int level, bool canBuy, string priceText)
         {
             bool isMaxed = level >= talent.MaxLevel;
 
@@ -46,7 +46,7 @@ namespace _Project.Scripts.Gameplay.Talents
                 LevelLabel.text = $"{level}/{talent.MaxLevel}";
 
             if (CostLabel != null)
-                CostLabel.text = isMaxed ? "MAX" : talent.CostForLevel(level).ToString();
+                CostLabel.text = isMaxed ? "MAX" : priceText;
 
             if (Button != null)
                 Button.interactable = canBuy;

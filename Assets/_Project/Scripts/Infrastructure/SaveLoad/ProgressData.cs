@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using _Project.Scripts.Gameplay.Currencies;
 using UnityEngine;
 
 namespace _Project.Scripts.Infrastructure.SaveLoad
@@ -9,7 +10,32 @@ namespace _Project.Scripts.Infrastructure.SaveLoad
     public class ProgressData
     {
         public int Gold;
+        public List<CurrencySlot> Currencies = new();
         public List<TalentSlot> TalentLevels = new();
+
+        public int GetCurrencyAmount(CurrencyId currencyId)
+        {
+            EnsureLegacyGoldMigrated();
+
+            CurrencySlot slot = Currencies.FirstOrDefault(s => s.CurrencyId == (int)currencyId);
+            return slot?.Amount ?? 0;
+        }
+
+        public void SetCurrencyAmount(CurrencyId currencyId, int amount)
+        {
+            EnsureLegacyGoldMigrated();
+
+            for (int i = 0; i < Currencies.Count; i++)
+            {
+                if (Currencies[i].CurrencyId == (int)currencyId)
+                {
+                    Currencies[i].Amount = amount;
+                    return;
+                }
+            }
+
+            Currencies.Add(new CurrencySlot { CurrencyId = (int)currencyId, Amount = amount });
+        }
 
         public int GetTalentLevel(int talentId)
         {
@@ -32,6 +58,7 @@ namespace _Project.Scripts.Infrastructure.SaveLoad
 
         public string ToJson()
         {
+            EnsureLegacyGoldMigrated();
             return JsonUtility.ToJson(this);
         }
 
@@ -39,6 +66,24 @@ namespace _Project.Scripts.Infrastructure.SaveLoad
         {
             return JsonUtility.FromJson<ProgressData>(json);
         }
+
+        private void EnsureLegacyGoldMigrated()
+        {
+            Currencies ??= new List<CurrencySlot>();
+
+            if (Gold <= 0 || Currencies.Any(s => s.CurrencyId == (int)CurrencyId.Nucleotides))
+                return;
+
+            Currencies.Add(new CurrencySlot { CurrencyId = (int)CurrencyId.Nucleotides, Amount = Gold });
+            Gold = 0;
+        }
+    }
+
+    [Serializable]
+    public class CurrencySlot
+    {
+        public int CurrencyId;
+        public int Amount;
     }
 
     [Serializable]

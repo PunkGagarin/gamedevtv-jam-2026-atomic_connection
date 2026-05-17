@@ -2,6 +2,7 @@ using _Project.Scripts.Gameplay.Cameras.Provider;
 using _Project.Scripts.Gameplay.Common.Physics;
 using _Project.Scripts.Gameplay.Common.Random;
 using _Project.Scripts.Gameplay.Common.Time;
+using _Project.Scripts.Gameplay.Currencies;
 using _Project.Scripts.Gameplay.Drag;
 using _Project.Scripts.Gameplay.Enemies;
 using _Project.Scripts.Gameplay.Input.Service;
@@ -36,6 +37,7 @@ namespace _Project.Scripts.Infrastructure
             BindInputService();
             BindDragService();
             BindSaveLoad();
+            BindCurrencyService();
             BindTalentService();
             BindAtomCoreGameplay();
             BindWindowInfrastructure();
@@ -61,6 +63,11 @@ namespace _Project.Scripts.Infrastructure
         {
             Container.Bind<IProgressProvider>().To<ProgressProvider>().AsSingle();
             Container.BindInterfacesAndSelfTo<SaveLoadService>().AsSingle();
+        }
+
+        private void BindCurrencyService()
+        {
+            Container.Bind<ICurrencyService>().To<CurrencyService>().AsSingle();
         }
 
         private void BindTalentService()

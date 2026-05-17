@@ -12,6 +12,7 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
 
         [field: SerializeField] public OrbitMotion OrbitMotion { get; private set; }
 
+        public bool CanStartDrag => true;
         public Transform Transform => transform;
         public FreeAtomOwnerKind OwnerKind { get; private set; }
         public Transform Owner { get; private set; }

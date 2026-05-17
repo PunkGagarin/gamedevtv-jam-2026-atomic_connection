@@ -1,78 +1,47 @@
-using _Project.Scripts.Gameplay.Drag;
-using _Project.Scripts.Gameplay.Units;
-using _Project.Scripts.Gameplay.Units.FreeAtoms;
+using _Project.Scripts.Gameplay.Units.BattleMolecules.Components;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 {
     [RequireComponent(typeof(OwnedAtoms))]
-    public class BattleMolecule : MonoBehaviour, IDropTarget
+    [RequireComponent(typeof(BattleMoleculeCharge))]
+    [RequireComponent(typeof(BattleMoleculeAtomReceiver))]
+    [RequireComponent(typeof(BattleMoleculeAtomOrbit))]
+    public class BattleMolecule : MonoBehaviour
     {
         [field: SerializeField] private OwnedAtoms OwnedAtoms { get; set; }
-
-        private int _atomsRequired;
-        private float _atomsPosCircleRadius;
-        private float _depositedAtomsOrbitDegreesPerSecond;
+        [field: SerializeField] private BattleMoleculeCharge Charge { get; set; }
+        [field: SerializeField] private BattleMoleculeAtomReceiver AtomReceiver { get; set; }
+        [field: SerializeField] private BattleMoleculeAtomOrbit AtomOrbit { get; set; }
 
         private void Awake()
         {
             if (OwnedAtoms == null)
                 OwnedAtoms = GetComponent<OwnedAtoms>();
+
+            if (Charge == null)
+                Charge = GetComponent<BattleMoleculeCharge>();
+
+            if (AtomReceiver == null)
+                AtomReceiver = GetComponent<BattleMoleculeAtomReceiver>();
+
+            if (AtomOrbit == null)
+                AtomOrbit = GetComponent<BattleMoleculeAtomOrbit>();
         }
 
         public void Configure(BattleMoleculeConfig config)
         {
-            _atomsRequired = config.AtomsRequired;
-            _atomsPosCircleRadius = config.AtomsPosCircleRadius;
-            _depositedAtomsOrbitDegreesPerSecond = config.DepositedAtomsOrbitDegreesPerSecond;
-        }
-
-        public bool CanAcceptDrop(IDraggable draggable)
-        {
-            if (_atomsRequired <= 0)
-                return false;
-
-            return draggable is FreeAtom && OwnedAtoms.Count < _atomsRequired;
-        }
-
-        public void OnDropAccepted(IDraggable draggable)
-        {
-            if (draggable is not FreeAtom freeAtom)
+            if (config == null)
                 return;
 
-            GameObject freeAtomObject = freeAtom.gameObject;
-
-            Collider2D col = freeAtomObject.GetComponent<Collider2D>();
-            if (col != null)
-                col.enabled = false;
-
-            float angle = GetCircleAngle(OwnedAtoms.Count, _atomsRequired);
-            OwnedAtoms.TakeOwnership(freeAtom, FreeAtomOwnerKind.BattleMolecule);
-            freeAtom.OrbitMotion?.Configure(transform, _atomsPosCircleRadius, angle);
-
-            if (OwnedAtoms.Count >= _atomsRequired)
-                Fire();
+            Charge.Configure(config.AtomsRequired);
+            AtomReceiver.Configure(config.AtomsPosCircleRadius);
+            AtomOrbit.Configure(config.DepositedAtomsOrbitDegreesPerSecond);
         }
 
         public void Tick(float deltaTime)
         {
-            float angleDelta = _depositedAtomsOrbitDegreesPerSecond * Mathf.Deg2Rad * deltaTime;
-            OwnedAtoms.TickOrbit(angleDelta);
-        }
-
-        private void Fire()
-        {
-            Debug.Log("Boom");
-            OwnedAtoms.DestroyAll();
-        }
-
-        private float GetCircleAngle(int index, int total)
-        {
-            return (index / (float)total) * Mathf.PI * 2f;
-        }
-
-        public void OnDropRejected(IDraggable draggable)
-        {
+            AtomOrbit.Tick(deltaTime);
         }
     }
 }

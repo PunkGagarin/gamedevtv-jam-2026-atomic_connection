@@ -116,6 +116,16 @@ Assets/_Project/Scripts/
 
 Each state implements `IState, IGameState` directly or inherits a base state that does. Bind every lifecycle state in `ProjectInstaller` with self binding, resolve states through `IStateFactory`, transition with `_stateMachine.Enter<SomeState>()`, and keep scene loading inside loading states.
 
+States are lifecycle orchestrators, not gameplay logic containers. A state may
+load scenes, create initial runtime objects through factories, start services,
+call service `Update`/`Cleanup`/`Cancel` methods, gate those calls with pause or
+state-transition conditions, and transition to another state. A state must not
+contain gameplay mechanics or algorithms: no input-processing branches, drag/drop
+rules, click/spawn progress, target selection, timers/cooldowns, physics queries,
+damage/resource/score mutation, or UI choice application logic. Put that logic
+inside the owning service, then call the service from the state. Keep this rule
+even when the code looks small enough for a private state helper method.
+
 `GameplayEnterState` owns the current gameplay setup: it reads `ILevelStartPointProvider.StartPoint`, calls `IAtomCoreFactory.Create(...)`, creates the battle molecule, then enters `GameplayState`. `AtomCoreFactory`, `FreeAtomFactory`, and `BattleMoleculeFactory` follow the reference-backed prefab flow: `Resources` paths under `Gameplay/Units/...` -> `IAssetProvider` -> Zenject `IInstantiator`, mirroring `HeroFactory.AddViewPath("Gameplay/Hero/hero")` and `EntityViewFactory.CreateViewForEntity(...)` in `ecs-survivors`. `GameplayState` inherits `EndOfFrameExitState`; it starts/ticks/cleans active gameplay services such as `IEnemySpawner` and `IAtomCoreClickService`, skips gameplay ticks while `PauseService.IsPaused`, and its `ExitOnEndOfFrame()` calls cleanup for state-owned runtime objects. `EnemySpawner`, `IAtomCoreClickService`, and battle molecule setup read tunable numeric values from config assets assigned in `GlobalConfigInstaller`. Do not use serialized gameplay prefab fields on `ProjectInstaller` for runtime gameplay prefabs unless explicitly approved as a new proposal. `GameplaySceneInitializer` writes the `MainCamera` and `GameplayStartPoint` scene references into `CameraProvider` and `LevelStartPointProvider`.
 
 Scene initializers that implement Zenject interfaces must be listed in `SceneInitializationInstaller` on the scene `SceneContext`, matching the `ecs-survivors` pattern.
@@ -136,7 +146,7 @@ menu UI.
 
 **Gameplay Menu Pause** is not a `GameplayPauseState` transition yet.
 `GearButton -> PauseService.SetPaused(true) -> WindowService.Open(WindowId.GameplayMenuWindow)`.
-`Close`, `Restart`, and `MainMenu` actions must unpause first; loading states
+`Close`, `Restart`, and `MainMenu` actions in `GameplayMenuWindow` must unpause first; loading states
 also reset pause as a safety measure. `GameplayState` skips active gameplay
 ticks while `PauseService.IsPaused`, but keeps state-owned runtime objects alive.
 No gameplay-changing path may bypass this pause gate. Input polling, timers,
@@ -145,10 +155,16 @@ gameplay mutations must run from services ticked by `GameplayState`, not from
 independent `MonoBehaviour.Update()` methods.
 
 **Gameplay Input and Interaction** belongs to the active gameplay loop when it
-can change runtime state. Click-to-spawn, drag/drop, selection, targeting,
-charge bars, and similar interactions should be modeled as state-owned services
-with explicit `Start`, `Update`, `Cancel`/`Stop`, and `Cleanup` methods as
-needed. `MonoBehaviour` runtime components may expose passive methods such as
+can change runtime state. Click-to-spawn, selection, targeting, charge bars, and
+similar interactions should be modeled as state-owned services with explicit
+`Start`, `Update`, `Cancel`/`Stop`, and `Cleanup` methods as needed. Keep simple
+interaction mechanics inside the existing owning service instead of adding
+wrapper services. Current drag/drop ownership is `DragService`: it reads input
+and camera data, starts/moves/ends drag, handles raw release for active drags,
+and is ticked from `GameplayState`. Do not put drag mechanics into
+`GameplayState`, and do not add a separate drag interaction service unless
+`DragService` has become genuinely too broad and the user approves the split.
+`MonoBehaviour` runtime components may expose passive methods such as
 `SetProgress`, `OnDragMove`, or collision/view callbacks, but they should not
 poll input or spawn/clean gameplay objects on their own. UI-filtered input is
 appropriate for starting clicks/drags; release/cancel for an already-started
@@ -182,7 +198,7 @@ Three installer types:
 
 **UniTask** for all async and time-based operations. Coroutines are **never** used, including Unity yield instructions such as `WaitForSeconds`, `UnityEngine.WaitUntil`, and similar. Use `UniTask.Delay`, `UniTask.WaitUntil`, `async UniTaskVoid` instead. This applies to all code: MonoBehaviour components, services, states.
 
-**Component-based approach** - runtime Unity objects are built from small `MonoBehaviour` components. One responsibility equals one component. Dependencies between gameplay components should use `[SerializeField]` or `GetComponent`, not Zenject. State-owned lifecycle helpers such as factories, spawners, input handlers, drag/drop handlers, and click/progress services can be plain DI services that are started, updated, cancelled/stopped, and cleaned by states. Do not inject gameplay services, factories, config, or input into a runtime `MonoBehaviour` just so that component can own active gameplay flow; inject those dependencies into the owning state/service instead and keep the component passive.
+**Component-based approach** - runtime Unity objects are built from small `MonoBehaviour` components. One responsibility equals one component. Dependencies between gameplay components should use `[SerializeField]` or `GetComponent`, not Zenject. State-owned lifecycle helpers such as factories, spawners, input handlers, and click/progress services can be plain DI services that are started, updated, cancelled/stopped, and cleaned by states. Do not inject gameplay services, factories, config, or input into a runtime `MonoBehaviour` just so that component can own active gameplay flow; inject those dependencies into the owning state/service instead and keep the component passive.
 
 ### Adding new things
 

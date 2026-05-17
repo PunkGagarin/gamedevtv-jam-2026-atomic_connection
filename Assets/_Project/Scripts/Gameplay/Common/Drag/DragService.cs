@@ -1,4 +1,6 @@
+using _Project.Scripts.Gameplay.Cameras.Provider;
 using _Project.Scripts.Gameplay.Common.Physics;
+using _Project.Scripts.Gameplay.Input.Service;
 using UnityEngine;
 using Zenject;
 
@@ -10,11 +12,34 @@ namespace _Project.Scripts.Gameplay.Drag
         private Vector3 _dragOffset;
 
         [Inject] private IPhysicsService _physicsService;
+        [Inject] private IInputService _inputService;
+        [Inject] private ICameraProvider _cameraProvider;
 
-        public bool IsDragging => _currentDraggable != null;
-        public IDraggable CurrentDraggable => _currentDraggable;
+        private bool IsDragging => _currentDraggable != null;
 
-        public bool TryStartDrag(Vector2 screenPosition, Camera camera)
+        public void Update()
+        {
+            Camera camera = _cameraProvider.MainCamera;
+            if (camera == null)
+                return;
+
+            Vector2 screenPosition = _inputService.GetScreenMousePosition();
+
+            if (!IsDragging)
+            {
+                if (_inputService.GetLeftMouseButtonDown())
+                    TryStartDrag(screenPosition, camera);
+            }
+            else
+            {
+                UpdateDrag(screenPosition, camera);
+
+                if (_inputService.GetLeftMouseButtonUpRaw())
+                    EndDrag(screenPosition, camera);
+            }
+        }
+
+        private bool TryStartDrag(Vector2 screenPosition, Camera camera)
         {
             if (_currentDraggable != null)
                 return false;
@@ -36,7 +61,7 @@ namespace _Project.Scripts.Gameplay.Drag
             return true;
         }
 
-        public IDropTarget UpdateDrag(Vector2 screenPosition, Camera camera)
+        private IDropTarget UpdateDrag(Vector2 screenPosition, Camera camera)
         {
             if (_currentDraggable == null)
                 return null;
@@ -47,7 +72,7 @@ namespace _Project.Scripts.Gameplay.Drag
             return GetDropTargetAt(worldPosition);
         }
 
-        public IDropTarget EndDrag(Vector2 screenPosition, Camera camera)
+        private IDropTarget EndDrag(Vector2 screenPosition, Camera camera)
         {
             if (_currentDraggable == null)
                 return null;

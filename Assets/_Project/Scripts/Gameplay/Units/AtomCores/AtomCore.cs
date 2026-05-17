@@ -66,7 +66,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
 
         public void CleanupAtoms()
         {
-            OwnedAtoms.DestroyAll();
+            OwnedAtoms.ReleaseAll();
         }
 
         private float GetColliderRadius(Transform target)

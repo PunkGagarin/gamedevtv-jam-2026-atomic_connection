@@ -50,7 +50,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             foreach (BattleMolecule molecule in _createdMolecules)
             {
                 if (molecule != null)
-                    Object.Destroy(molecule.gameObject);
+                    UnityEngine.Object.Destroy(molecule.gameObject);
             }
 
             _createdMolecules.Clear();

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Drag;
 using _Project.Scripts.Gameplay.Common.Movement;
 using UnityEngine;
@@ -8,6 +9,7 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
     [RequireComponent(typeof(OrbitMotion))]
     public class FreeAtom : MonoBehaviour, IDraggable
     {
+        private readonly List<Collider2D> _colliders = new();
         private bool _isDragging;
 
         [field: SerializeField] public OrbitMotion OrbitMotion { get; private set; }
@@ -19,6 +21,7 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
         public bool CanOrbit => !_isDragging;
 
         public event Action<FreeAtom> Destroyed;
+        public event Action<FreeAtom> DespawnRequested;
         public event Action<FreeAtom, FreeAtomOwnerKind> OwnerChanged;
 
         private void Awake()
@@ -47,6 +50,27 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
             OwnerChanged?.Invoke(this, OwnerKind);
         }
 
+        public void PrepareForSpawn()
+        {
+            _isDragging = false;
+            SetCollidersEnabled(true);
+            gameObject.SetActive(true);
+            ClearOwner();
+        }
+
+        public void PrepareForPool()
+        {
+            _isDragging = false;
+            ClearOwner();
+            SetCollidersEnabled(false);
+            gameObject.SetActive(false);
+        }
+
+        public void RequestDespawn()
+        {
+            DespawnRequested?.Invoke(this);
+        }
+
         public void OnDragStart()
         {
             _isDragging = true;
@@ -66,6 +90,14 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
         {
             _isDragging = false;
             OrbitMotion?.SnapToOrbit();
+        }
+
+        private void SetCollidersEnabled(bool isEnabled)
+        {
+            GetComponentsInChildren(true, _colliders);
+
+            foreach (Collider2D col in _colliders)
+                col.enabled = isEnabled;
         }
     }
 }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace _Project.Scripts.Gameplay.Units.BattleMolecule
+namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 {
     [CreateAssetMenu(fileName = "BattleMoleculeConfig", menuName = "Game Resources/Configs/Battle Molecule")]
     public class BattleMoleculeConfig : ScriptableObject

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace _Project.Scripts.Gameplay.Units.BattleMolecule
+namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 {
     public interface IBattleMoleculeFactory
     {

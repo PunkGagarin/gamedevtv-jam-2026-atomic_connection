@@ -1,9 +1,9 @@
 using _Project.Scripts.Gameplay.UI;
 using UnityEngine;
 
-namespace _Project.Scripts.Gameplay.Units.Example
+namespace _Project.Scripts.Gameplay.Units.AtomCores
 {
-    public class ExampleUnit : MonoBehaviour
+    public class AtomCore : MonoBehaviour
     {
         [field: SerializeField] private ProgressBar ProgressBar { get; set; }
 

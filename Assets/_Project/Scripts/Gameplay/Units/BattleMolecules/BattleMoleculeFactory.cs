@@ -3,7 +3,7 @@ using _Project.Scripts.Infrastructure.AssetManagement;
 using UnityEngine;
 using Zenject;
 
-namespace _Project.Scripts.Gameplay.Units.BattleMolecule
+namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 {
     public class BattleMoleculeFactory : IBattleMoleculeFactory
     {

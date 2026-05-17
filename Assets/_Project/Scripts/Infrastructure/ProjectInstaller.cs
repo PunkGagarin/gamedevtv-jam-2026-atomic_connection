@@ -8,9 +8,9 @@ using _Project.Scripts.Gameplay.Input.Service;
 using _Project.Scripts.Infrastructure.GameStates.States;
 using _Project.Scripts.Infrastructure.GameStates;
 using _Project.Scripts.Gameplay.Level;
-using _Project.Scripts.Gameplay.Units.Atom;
-using _Project.Scripts.Gameplay.Units.BattleMolecule;
-using _Project.Scripts.Gameplay.Units.Example;
+using _Project.Scripts.Gameplay.Units.FreeAtoms;
+using _Project.Scripts.Gameplay.Units.BattleMolecules;
+using _Project.Scripts.Gameplay.Units.AtomCores;
 using _Project.Scripts.Gameplay.Windows;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Infrastructure.GameStates.Factory;
@@ -33,7 +33,7 @@ namespace _Project.Scripts.Infrastructure
             BindPauseService();
             BindInputService();
             BindDragService();
-            BindGameplayExample();
+            BindAtomCoreGameplay();
             BindWindowInfrastructure();
             BindGameplayBattleMolecule();
         }
@@ -53,12 +53,12 @@ namespace _Project.Scripts.Infrastructure
             Container.Bind<IDragService>().To<DragService>().AsSingle();
         }
 
-        private void BindGameplayExample()
+        private void BindAtomCoreGameplay()
         {
             Container.Bind<ILevelStartPointProvider>().To<LevelStartPointProvider>().AsSingle();
-            Container.Bind<IExampleUnitFactory>().To<ExampleUnitFactory>().AsSingle();
-            Container.Bind<IExampleUnitClickService>().To<ExampleUnitClickService>().AsSingle();
-            Container.Bind<IAtomFactory>().To<AtomFactory>().AsSingle();
+            Container.Bind<IAtomCoreFactory>().To<AtomCoreFactory>().AsSingle();
+            Container.Bind<IAtomCoreClickService>().To<AtomCoreClickService>().AsSingle();
+            Container.Bind<IFreeAtomFactory>().To<FreeAtomFactory>().AsSingle();
             Container.Bind<IEnemyFactory>().To<EnemyFactory>().AsSingle();
             Container.Bind<IEnemySpawner>().To<EnemySpawner>().AsSingle();
         }

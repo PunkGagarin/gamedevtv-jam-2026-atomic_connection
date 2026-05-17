@@ -1,9 +1,9 @@
 using _Project.Scripts.Gameplay.Drag;
 using UnityEngine;
 
-namespace _Project.Scripts.Gameplay.Units.Atom
+namespace _Project.Scripts.Gameplay.Units.FreeAtoms
 {
-    public class Atom : MonoBehaviour, IDraggable
+    public class FreeAtom : MonoBehaviour, IDraggable
     {
         public Transform Transform => transform;
 

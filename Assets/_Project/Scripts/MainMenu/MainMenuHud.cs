@@ -6,9 +6,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
 
-namespace _Project.Scripts
+namespace _Project.Scripts.MainMenu
 {
-    public class MainMenu : MonoBehaviour
+    public class MainMenuHud : MonoBehaviour
     {
         [field: SerializeField]
         private Button StartGameButton { get; set; }

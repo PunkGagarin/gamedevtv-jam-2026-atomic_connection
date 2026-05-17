@@ -1,14 +1,13 @@
-using _Project.Scripts.Gameplay.Windows;
 using _Project.Scripts.Infrastructure.GameStates;
 using _Project.Scripts.Infrastructure.GameStates.States;
+using _Project.Scripts.Utils.Pause;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
-using _Project.Scripts.Utils.Pause;
 
-namespace _Project.Scripts
+namespace _Project.Scripts.Gameplay.Windows
 {
-    public class Restart : BaseWindow
+    public class GameplayMenuWindow : BaseWindow
     {
         [field: SerializeField] private GameObject Content { get; set; }
 

@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Drag;
+using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
 using Zenject;
-using AtomUnit = _Project.Scripts.Gameplay.Units.Atom.Atom;
 
-namespace _Project.Scripts.Gameplay.Units.BattleMolecule
+namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 {
     public class BattleMolecule : MonoBehaviour, IDropTarget
     {
@@ -18,24 +18,24 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecule
             if (_config == null)
                 return false;
 
-            return draggable is AtomUnit && _depositedCount < _config.AtomsRequired;
+            return draggable is FreeAtom && _depositedCount < _config.AtomsRequired;
         }
 
         public void OnDropAccepted(IDraggable draggable)
         {
-            if (draggable is not AtomUnit atom)
+            if (draggable is not FreeAtom freeAtom)
                 return;
 
-            GameObject atomGO = atom.gameObject;
+            GameObject freeAtomObject = freeAtom.gameObject;
 
-            Collider2D col = atomGO.GetComponent<Collider2D>();
+            Collider2D col = freeAtomObject.GetComponent<Collider2D>();
             if (col != null)
                 col.enabled = false;
 
-            atomGO.transform.SetParent(transform, true);
-            atomGO.transform.localPosition = GetCirclePosition(_depositedCount, _config.AtomsRequired);
+            freeAtomObject.transform.SetParent(transform, true);
+            freeAtomObject.transform.localPosition = GetCirclePosition(_depositedCount, _config.AtomsRequired);
 
-            _depositedAtoms.Add(atomGO);
+            _depositedAtoms.Add(freeAtomObject);
             _depositedCount++;
 
             if (_depositedCount >= _config.AtomsRequired)

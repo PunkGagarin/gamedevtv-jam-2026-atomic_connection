@@ -100,14 +100,13 @@ Assets/_Project/Scripts/
 │   ├── Common/       # Small common gameplay services: time, random, physics
 │   ├── Enemies/      # Minimal enemy feature: view, factory, spawner service
 │   ├── Level/        # Concrete scene references and providers
-│   ├── Units/        # Example gameplay feature folder
+│   ├── Units/        # Atom core, free atom, and related unit feature folders
 │   └── Windows/      # Dynamic window infrastructure and window configs
 ├── Infrastructure/   # App lifecycle: GameRunner, StateMachine, States, SceneManagement
 ├── GameplayData/     # ScriptableObject repositories and base Definitions
 ├── Audio/            # Audio subsystem: Domain/, Data/, View/
 ├── Localization/     # EN/RU via XML
-├── MainMenu.cs       # Main menu UI entry script
-├── Restart.cs        # Example restart/menu UI script
+├── MainMenu/         # Main menu scene UI entry scripts
 └── Utils/            # ContentUi helper, Pause service, Editor tools
 ```
 
@@ -117,7 +116,7 @@ Assets/_Project/Scripts/
 
 Each state implements `IState, IGameState` directly or inherits a base state that does. Bind every lifecycle state in `ProjectInstaller` with self binding, resolve states through `IStateFactory`, transition with `_stateMachine.Enter<SomeState>()`, and keep scene loading inside loading states.
 
-`GameplayEnterState` owns the current example gameplay setup: it reads `ILevelStartPointProvider.StartPoint`, calls `IExampleUnitFactory.Create(...)`, creates the example battle molecule, then enters `GameplayState`. `ExampleUnitFactory`, `AtomFactory`, and `BattleMoleculeFactory` follow the reference-backed prefab flow: `Resources` paths under `Gameplay/Units/...` -> `IAssetProvider` -> Zenject `IInstantiator`, mirroring `HeroFactory.AddViewPath("Gameplay/Hero/hero")` and `EntityViewFactory.CreateViewForEntity(...)` in `ecs-survivors`. `GameplayState` inherits `EndOfFrameExitState`; it starts/ticks/cleans active gameplay services such as `IEnemySpawner` and `IExampleUnitClickService`, skips gameplay ticks while `PauseService.IsPaused`, and its `ExitOnEndOfFrame()` calls cleanup for state-owned runtime objects. `EnemySpawner`, `IExampleUnitClickService`, and battle molecule setup read tunable numeric values from config assets assigned in `GlobalConfigInstaller`. Do not use serialized gameplay prefab fields on `ProjectInstaller` for runtime gameplay prefabs unless explicitly approved as a new proposal. `GameplaySceneInitializer` writes the `MainCamera` and `GameplayStartPoint` scene references into `CameraProvider` and `LevelStartPointProvider`.
+`GameplayEnterState` owns the current gameplay setup: it reads `ILevelStartPointProvider.StartPoint`, calls `IAtomCoreFactory.Create(...)`, creates the battle molecule, then enters `GameplayState`. `AtomCoreFactory`, `FreeAtomFactory`, and `BattleMoleculeFactory` follow the reference-backed prefab flow: `Resources` paths under `Gameplay/Units/...` -> `IAssetProvider` -> Zenject `IInstantiator`, mirroring `HeroFactory.AddViewPath("Gameplay/Hero/hero")` and `EntityViewFactory.CreateViewForEntity(...)` in `ecs-survivors`. `GameplayState` inherits `EndOfFrameExitState`; it starts/ticks/cleans active gameplay services such as `IEnemySpawner` and `IAtomCoreClickService`, skips gameplay ticks while `PauseService.IsPaused`, and its `ExitOnEndOfFrame()` calls cleanup for state-owned runtime objects. `EnemySpawner`, `IAtomCoreClickService`, and battle molecule setup read tunable numeric values from config assets assigned in `GlobalConfigInstaller`. Do not use serialized gameplay prefab fields on `ProjectInstaller` for runtime gameplay prefabs unless explicitly approved as a new proposal. `GameplaySceneInitializer` writes the `MainCamera` and `GameplayStartPoint` scene references into `CameraProvider` and `LevelStartPointProvider`.
 
 Scene initializers that implement Zenject interfaces must be listed in `SceneInitializationInstaller` on the scene `SceneContext`, matching the `ecs-survivors` pattern.
 
@@ -126,10 +125,10 @@ Scene initializers that implement Zenject interfaces must be listed in `SceneIni
 `WindowsConfig` prefab lookup at `Resources/Configs/Windows/windowConfig` ->
 Zenject `IInstantiator` under the scene `UIRoot`. `UIInitializer` writes the
 scene `Canvas`/`UIRoot` into `WindowFactory` through `SceneInitializationInstaller`.
-`SettingsView` is now a `BaseWindow` opened by `MainMenu` through
+`SettingsView` is now a `BaseWindow` opened by `MainMenuHud` through
 `WindowService.Open(WindowId.SettingsWindow)`. In `Gameplay`, the scene-owned
 HUD `GearButton` sets `PauseService.SetPaused(true)` and opens the dynamic
-`WindowId.GameplayMenuWindow`; `Restart` backs that gameplay menu modal and
+`WindowId.GameplayMenuWindow`; `GameplayMenuWindow` backs that gameplay menu modal and
 unpauses before close/restart/main-menu actions. This is not a result/game-over
 window, and `GameOverOrParagonState` must not open it unless explicitly
 redesigned. Do not inject concrete windows such as `SettingsView` directly into
@@ -247,7 +246,7 @@ Three installer types:
 - For code-only changes, at minimum check affected C# files for compile-time issues and keep scene/prefab references in sync.
 - If adding or moving Unity assets, ensure corresponding `.meta` files are present and Unity-valid. Script `.cs.meta` files should contain a `MonoImporter` block, folder `.meta` files should contain `folderAsset: yes` and `DefaultImporter`, and new/moved prefabs or assets must keep stable GUID references. Prefer letting Unity generate or refresh these files when possible.
 - Current manual lifecycle/UI validation should include `MainMenu -> Settings -> Apply/Cancel`, `MainMenu -> Gameplay`, `GearButton -> GameplayMenuWindow -> Close`, `GearButton -> GameplayMenuWindow -> Restart`, and `GearButton -> GameplayMenuWindow -> MainMenu`.
-- Current gameplay validation should include `Bootstrap -> LoadMainMenuState -> MainMenuState -> LoadGameplayState -> GameplayEnterState -> GameplayState`, `ExampleUnit` creation at `GameplayStartPoint`, enemy spawning after first gameplay click, and cleanup when restarting or returning to main menu.
+- Current gameplay validation should include `Bootstrap -> LoadMainMenuState -> MainMenuState -> LoadGameplayState -> GameplayEnterState -> GameplayState`, `AtomCore` creation at `GameplayStartPoint`, enemy spawning after first gameplay click, and cleanup when restarting or returning to main menu.
 
 ## Git Notes
 

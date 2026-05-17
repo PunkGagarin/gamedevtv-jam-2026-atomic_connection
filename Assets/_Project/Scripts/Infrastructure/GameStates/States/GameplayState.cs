@@ -2,9 +2,9 @@ using _Project.Scripts.Gameplay.Cameras.Provider;
 using _Project.Scripts.Gameplay.Drag;
 using _Project.Scripts.Gameplay.Enemies;
 using _Project.Scripts.Gameplay.Input.Service;
-using _Project.Scripts.Gameplay.Units.Atom;
-using _Project.Scripts.Gameplay.Units.BattleMolecule;
-using _Project.Scripts.Gameplay.Units.Example;
+using _Project.Scripts.Gameplay.Units.FreeAtoms;
+using _Project.Scripts.Gameplay.Units.BattleMolecules;
+using _Project.Scripts.Gameplay.Units.AtomCores;
 using _Project.Scripts.Utils.Pause;
 using UnityEngine;
 using Zenject;
@@ -14,9 +14,9 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
     internal class GameplayState : EndOfFrameExitState
     {
         [Inject] private IEnemySpawner _enemySpawner;
-        [Inject] private IExampleUnitFactory _exampleUnitFactory;
-        [Inject] private IExampleUnitClickService _exampleUnitClickService;
-        [Inject] private IAtomFactory _atomFactory;
+        [Inject] private IAtomCoreFactory _atomCoreFactory;
+        [Inject] private IAtomCoreClickService _atomCoreClickService;
+        [Inject] private IFreeAtomFactory _freeAtomFactory;
         [Inject] private IBattleMoleculeFactory _battleMoleculeFactory;
         [Inject] private IDragService _dragService;
         [Inject] private IInputService _inputService;
@@ -25,10 +25,10 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
 
         public override void Enter()
         {
-            ExampleUnit currentUnit = _exampleUnitFactory.CurrentUnit;
+            AtomCore currentCore = _atomCoreFactory.CurrentCore;
 
-            _exampleUnitClickService.Start(currentUnit);
-            _enemySpawner.Start(currentUnit != null ? currentUnit.transform : null);
+            _atomCoreClickService.Start(currentCore);
+            _enemySpawner.Start(currentCore != null ? currentCore.transform : null);
         }
 
         protected override void OnUpdate()
@@ -37,7 +37,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
                 return;
 
             _enemySpawner.Update();
-            _exampleUnitClickService.Update();
+            _atomCoreClickService.Update();
             UpdateDrag();
         }
 
@@ -67,10 +67,10 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
         {
             _dragService.CancelDrag();
             _enemySpawner.Cleanup();
-            _exampleUnitClickService.Cleanup();
-            _exampleUnitFactory.Cleanup();
+            _atomCoreClickService.Cleanup();
+            _atomCoreFactory.Cleanup();
             _battleMoleculeFactory.Cleanup();
-            _atomFactory.Cleanup();
+            _freeAtomFactory.Cleanup();
         }
     }
 }

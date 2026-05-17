@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 199f4a4687ae245fb820deb98fe53116, type: 3}
   m_Name: UnitClickConfig
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Units.UnitClickConfig
-  <ClicksToGenerateAtom>k__BackingField: 4
+  <ClicksToGenerateFreeAtom>k__BackingField: 4
   <SpawnRadiusOffset>k__BackingField: 1

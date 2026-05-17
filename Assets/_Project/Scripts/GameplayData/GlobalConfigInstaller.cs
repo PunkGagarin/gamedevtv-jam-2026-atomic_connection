@@ -3,7 +3,7 @@ using UnityEngine;
 using Zenject;
 using _Project.Scripts.Gameplay.Enemies;
 using _Project.Scripts.Gameplay.Units;
-using _Project.Scripts.Gameplay.Units.BattleMolecule;
+using _Project.Scripts.Gameplay.Units.BattleMolecules;
 using _Project.Scripts.Localization;
 
 namespace _Project.Scripts.GameplayData

@@ -12,5 +12,6 @@ namespace _Project.Scripts.Gameplay.Input.Service
         Vector2 GetScreenMousePosition();
         Vector2 GetWorldMousePosition();
         bool GetLeftMouseButtonUp();
+        bool GetLeftMouseButtonUpRaw();
     }
 }

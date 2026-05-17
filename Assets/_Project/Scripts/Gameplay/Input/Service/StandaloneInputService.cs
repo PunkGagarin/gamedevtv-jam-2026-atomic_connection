@@ -28,9 +28,15 @@ namespace _Project.Scripts.Gameplay.Input.Service
         public float GetHorizontalAxis() => UnityEngine.Input.GetAxis("Horizontal");
 
         public bool GetLeftMouseButtonDown() =>
-            UnityEngine.Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject();
+            UnityEngine.Input.GetMouseButtonDown(0) && !IsPointerOverGameObject();
 
         public bool GetLeftMouseButtonUp() =>
-            UnityEngine.Input.GetMouseButtonUp(0) && !EventSystem.current.IsPointerOverGameObject();
+            UnityEngine.Input.GetMouseButtonUp(0) && !IsPointerOverGameObject();
+
+        public bool GetLeftMouseButtonUpRaw() =>
+            UnityEngine.Input.GetMouseButtonUp(0);
+
+        private static bool IsPointerOverGameObject() =>
+            EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
     }
 }

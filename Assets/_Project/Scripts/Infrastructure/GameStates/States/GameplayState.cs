@@ -15,6 +15,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
     {
         [Inject] private IEnemySpawner _enemySpawner;
         [Inject] private IExampleUnitFactory _exampleUnitFactory;
+        [Inject] private IExampleUnitClickService _exampleUnitClickService;
         [Inject] private IAtomFactory _atomFactory;
         [Inject] private IBattleMoleculeFactory _battleMoleculeFactory;
         [Inject] private IDragService _dragService;
@@ -24,9 +25,10 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
 
         public override void Enter()
         {
-            _enemySpawner.Start(_exampleUnitFactory.CurrentUnit != null
-                ? _exampleUnitFactory.CurrentUnit.transform
-                : null);
+            ExampleUnit currentUnit = _exampleUnitFactory.CurrentUnit;
+
+            _exampleUnitClickService.Start(currentUnit);
+            _enemySpawner.Start(currentUnit != null ? currentUnit.transform : null);
         }
 
         protected override void OnUpdate()
@@ -35,6 +37,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
                 return;
 
             _enemySpawner.Update();
+            _exampleUnitClickService.Update();
             UpdateDrag();
         }
 
@@ -55,7 +58,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
             {
                 _dragService.UpdateDrag(screenPos, camera);
 
-                if (_inputService.GetLeftMouseButtonUp())
+                if (_inputService.GetLeftMouseButtonUpRaw())
                     _dragService.EndDrag(screenPos, camera);
             }
         }
@@ -64,6 +67,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
         {
             _dragService.CancelDrag();
             _enemySpawner.Cleanup();
+            _exampleUnitClickService.Cleanup();
             _exampleUnitFactory.Cleanup();
             _battleMoleculeFactory.Cleanup();
             _atomFactory.Cleanup();

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Drag;
 using UnityEngine;
 using Zenject;
+using AtomUnit = _Project.Scripts.Gameplay.Units.Atom.Atom;
 
 namespace _Project.Scripts.Gameplay.Units.BattleMolecule
 {
@@ -17,12 +18,15 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecule
             if (_config == null)
                 return false;
 
-            return _depositedCount < _config.AtomsRequired;
+            return draggable is AtomUnit && _depositedCount < _config.AtomsRequired;
         }
 
         public void OnDropAccepted(IDraggable draggable)
         {
-            GameObject atomGO = ((MonoBehaviour)draggable).gameObject;
+            if (draggable is not AtomUnit atom)
+                return;
+
+            GameObject atomGO = atom.gameObject;
 
             Collider2D col = atomGO.GetComponent<Collider2D>();
             if (col != null)
@@ -40,7 +44,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecule
 
         private void Fire()
         {
-            Debug.Log("Бум");
+            Debug.Log("Boom");
 
             foreach (GameObject atom in _depositedAtoms)
             {

@@ -15,7 +15,7 @@ No project-owned automated tests exist under `Assets/_Project`. Manual validatio
 ## Repository Rules
 
 - Keep Unity `.meta` files together with their assets and scripts.
-- Do not edit generated folders: `Library`, `Temp`, `Obj`, `Logs`, `UserSettings`, `.vs`, or IDE caches.
+- Do not edit generated folders: `Library`, `Temp`, `Obj`, `Logs`, `UserSettings`, `.vs`, `.idea`, or IDE caches.
 - Avoid editing generated solution/project files (`*.sln`, `*.csproj`) unless the task explicitly requires it.
 - Prefer changes inside `Assets/_Project` for project code. Treat `Assets/Plugins`, `Assets/NaughtyAttributes`, `Assets/TextMesh Pro`, and imported packages as vendor code unless asked otherwise.
 - Do not revert unrelated local changes. This repository may contain user, IDE, or Unity-generated changes in progress.
@@ -117,7 +117,7 @@ Assets/_Project/Scripts/
 
 Each state implements `IState, IGameState` directly or inherits a base state that does. Bind every lifecycle state in `ProjectInstaller` with self binding, resolve states through `IStateFactory`, transition with `_stateMachine.Enter<SomeState>()`, and keep scene loading inside loading states.
 
-`GameplayEnterState` owns the current example gameplay setup: it reads `ILevelStartPointProvider.StartPoint`, calls `IExampleUnitFactory.Create(...)`, then enters `GameplayState`. `ExampleUnitFactory` follows the reference-backed prefab flow: `Resources` path `Gameplay/Units/ExampleUnit` -> `IAssetProvider` -> Zenject `IInstantiator`, mirroring `HeroFactory.AddViewPath("Gameplay/Hero/hero")` and `EntityViewFactory.CreateViewForEntity(...)` in `ecs-survivors`. `GameplayState` inherits `EndOfFrameExitState`; it starts/ticks/cleans active gameplay services such as `IEnemySpawner`, skips gameplay ticks while `PauseService.IsPaused`, and its `ExitOnEndOfFrame()` calls cleanup for state-owned runtime objects. `EnemyFactory` follows the same prefab flow with `Resources` path `Gameplay/Enemies/EnemyUnit`. `EnemySpawner` reads tunable numeric values from injected `EnemySpawnerConfig`, which is assigned in `GlobalConfigInstaller`. Do not use serialized gameplay prefab fields on `ProjectInstaller` for runtime gameplay prefabs unless explicitly approved as a new proposal. `GameplaySceneInitializer` writes the `MainCamera` and `GameplayStartPoint` scene references into `CameraProvider` and `LevelStartPointProvider`.
+`GameplayEnterState` owns the current example gameplay setup: it reads `ILevelStartPointProvider.StartPoint`, calls `IExampleUnitFactory.Create(...)`, creates the example battle molecule, then enters `GameplayState`. `ExampleUnitFactory`, `AtomFactory`, and `BattleMoleculeFactory` follow the reference-backed prefab flow: `Resources` paths under `Gameplay/Units/...` -> `IAssetProvider` -> Zenject `IInstantiator`, mirroring `HeroFactory.AddViewPath("Gameplay/Hero/hero")` and `EntityViewFactory.CreateViewForEntity(...)` in `ecs-survivors`. `GameplayState` inherits `EndOfFrameExitState`; it starts/ticks/cleans active gameplay services such as `IEnemySpawner` and `IExampleUnitClickService`, skips gameplay ticks while `PauseService.IsPaused`, and its `ExitOnEndOfFrame()` calls cleanup for state-owned runtime objects. `EnemySpawner`, `IExampleUnitClickService`, and battle molecule setup read tunable numeric values from config assets assigned in `GlobalConfigInstaller`. Do not use serialized gameplay prefab fields on `ProjectInstaller` for runtime gameplay prefabs unless explicitly approved as a new proposal. `GameplaySceneInitializer` writes the `MainCamera` and `GameplayStartPoint` scene references into `CameraProvider` and `LevelStartPointProvider`.
 
 Scene initializers that implement Zenject interfaces must be listed in `SceneInitializationInstaller` on the scene `SceneContext`, matching the `ecs-survivors` pattern.
 
@@ -140,6 +140,21 @@ menu UI.
 `Close`, `Restart`, and `MainMenu` actions must unpause first; loading states
 also reset pause as a safety measure. `GameplayState` skips active gameplay
 ticks while `PauseService.IsPaused`, but keeps state-owned runtime objects alive.
+No gameplay-changing path may bypass this pause gate. Input polling, timers,
+cooldowns, spawning, resource changes, score/progress changes, and other runtime
+gameplay mutations must run from services ticked by `GameplayState`, not from
+independent `MonoBehaviour.Update()` methods.
+
+**Gameplay Input and Interaction** belongs to the active gameplay loop when it
+can change runtime state. Click-to-spawn, drag/drop, selection, targeting,
+charge bars, and similar interactions should be modeled as state-owned services
+with explicit `Start`, `Update`, `Cancel`/`Stop`, and `Cleanup` methods as
+needed. `MonoBehaviour` runtime components may expose passive methods such as
+`SetProgress`, `OnDragMove`, or collision/view callbacks, but they should not
+poll input or spawn/clean gameplay objects on their own. UI-filtered input is
+appropriate for starting clicks/drags; release/cancel for an already-started
+drag must use raw input so the interaction cannot get stuck when the pointer is
+over UI. Any `EventSystem.current` access must be null-checked.
 
 **Zenject DI** wires dependencies. No `new SomeService()` for DI-owned services - bind them in installers and inject them. `IInitializable` is allowed for local setup, UI presenters, settings, cached references, and other non-flow initialization. Do not use `IInitializable` to enter gameplay states, load gameplay scenes, or start active gameplay loops.
 
@@ -168,15 +183,16 @@ Three installer types:
 
 **UniTask** for all async and time-based operations. Coroutines are **never** used, including Unity yield instructions such as `WaitForSeconds`, `UnityEngine.WaitUntil`, and similar. Use `UniTask.Delay`, `UniTask.WaitUntil`, `async UniTaskVoid` instead. This applies to all code: MonoBehaviour components, services, states.
 
-**Component-based approach** - runtime Unity objects are built from small `MonoBehaviour` components. One responsibility equals one component. Dependencies between gameplay components should use `[SerializeField]` or `GetComponent`, not Zenject. State-owned lifecycle helpers such as factories and spawners can be plain DI services that are started, updated, and cleaned by states.
+**Component-based approach** - runtime Unity objects are built from small `MonoBehaviour` components. One responsibility equals one component. Dependencies between gameplay components should use `[SerializeField]` or `GetComponent`, not Zenject. State-owned lifecycle helpers such as factories, spawners, input handlers, drag/drop handlers, and click/progress services can be plain DI services that are started, updated, cancelled/stopped, and cleaned by states. Do not inject gameplay services, factories, config, or input into a runtime `MonoBehaviour` just so that component can own active gameplay flow; inject those dependencies into the owning state/service instead and keep the component passive.
 
 ### Adding new things
 
 **New gameplay feature:**
 1. Create a `Gameplay/FeatureName/` folder.
 2. Put runtime object behavior into focused `MonoBehaviour` components.
-3. Put factories/spawners/lifecycle helpers in the same feature folder as plain DI services when a state owns their lifecycle.
-4. If the feature needs ScriptableObject data, create a `GameplayData/Definitions/FeatureName/` folder.
+3. If the feature polls input, advances timers/cooldowns, spawns or cleans objects, or changes gameplay progress/resources, put that logic in a plain DI service ticked by the owning state.
+4. Put factories/spawners/lifecycle helpers in the same feature folder as plain DI services when a state owns their lifecycle.
+5. If the feature needs ScriptableObject data, create a `GameplayData/Definitions/FeatureName/` folder.
 
 **New service:**
 1. Define the interface beside the feature/service implementation, or in the relevant `Domain/` folder for subsystems that already use one.
@@ -229,7 +245,7 @@ Three installer types:
 
 - When possible, validate Unity changes by opening the project in Unity `6000.4.4f1`.
 - For code-only changes, at minimum check affected C# files for compile-time issues and keep scene/prefab references in sync.
-- If adding or moving Unity assets, ensure corresponding `.meta` files are present.
+- If adding or moving Unity assets, ensure corresponding `.meta` files are present and Unity-valid. Script `.cs.meta` files should contain a `MonoImporter` block, folder `.meta` files should contain `folderAsset: yes` and `DefaultImporter`, and new/moved prefabs or assets must keep stable GUID references. Prefer letting Unity generate or refresh these files when possible.
 - Current manual lifecycle/UI validation should include `MainMenu -> Settings -> Apply/Cancel`, `MainMenu -> Gameplay`, `GearButton -> GameplayMenuWindow -> Close`, `GearButton -> GameplayMenuWindow -> Restart`, and `GearButton -> GameplayMenuWindow -> MainMenu`.
 - Current gameplay validation should include `Bootstrap -> LoadMainMenuState -> MainMenuState -> LoadGameplayState -> GameplayEnterState -> GameplayState`, `ExampleUnit` creation at `GameplayStartPoint`, enemy spawning after first gameplay click, and cleanup when restarting or returning to main menu.
 

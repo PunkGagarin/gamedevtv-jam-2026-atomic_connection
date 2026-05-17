@@ -57,6 +57,7 @@ namespace _Project.Scripts.Infrastructure
         {
             Container.Bind<ILevelStartPointProvider>().To<LevelStartPointProvider>().AsSingle();
             Container.Bind<IExampleUnitFactory>().To<ExampleUnitFactory>().AsSingle();
+            Container.Bind<IExampleUnitClickService>().To<ExampleUnitClickService>().AsSingle();
             Container.Bind<IAtomFactory>().To<AtomFactory>().AsSingle();
             Container.Bind<IEnemyFactory>().To<EnemyFactory>().AsSingle();
             Container.Bind<IEnemySpawner>().To<EnemySpawner>().AsSingle();

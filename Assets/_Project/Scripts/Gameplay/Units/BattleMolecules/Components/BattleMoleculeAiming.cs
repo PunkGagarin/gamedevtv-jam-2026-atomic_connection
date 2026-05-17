@@ -42,7 +42,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             if (!_isAiming)
                 return;
 
-            AimLine.SetEnd(GetShotEnd(worldPosition));
+            AimLine.SetEnd(GetDragEnd(worldPosition));
         }
 
         public void OnDragEnd()
@@ -73,10 +73,10 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             AimLine.Hide();
         }
 
-        private Vector3 GetShotEnd(Vector3 dragPosition)
+        private Vector3 GetDragEnd(Vector3 dragPosition)
         {
-            Vector3 direction = GetShotDirection(dragPosition);
-            return _aimOrigin + direction;
+            dragPosition.z = _aimOrigin.z;
+            return dragPosition;
         }
 
         private Vector3 GetShotDirection(Vector3 dragPosition)

@@ -35,7 +35,7 @@ namespace _Project.Scripts.Gameplay.Units
             }
         }
 
-        public void DestroyAll()
+        public void ReleaseAll()
         {
             for (int i = _atoms.Count - 1; i >= 0; i--)
             {
@@ -43,7 +43,7 @@ namespace _Project.Scripts.Gameplay.Units
                 Remove(atom);
 
                 if (atom != null)
-                    Destroy(atom.gameObject);
+                    atom.RequestDespawn();
             }
         }
 

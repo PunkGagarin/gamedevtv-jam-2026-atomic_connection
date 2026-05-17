@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Common.Health
@@ -6,14 +7,20 @@ namespace _Project.Scripts.Gameplay.Common.Health
     {
         public bool IsAlive { get; private set; } = true;
 
+        public event Action Died;
+
         public void Kill()
         {
             if (!IsAlive)
                 return;
 
             IsAlive = false;
-            gameObject.SetActive(false);
-            Destroy(gameObject);
+            Died?.Invoke();
+        }
+
+        public void ResetHealth()
+        {
+            IsAlive = true;
         }
     }
 }

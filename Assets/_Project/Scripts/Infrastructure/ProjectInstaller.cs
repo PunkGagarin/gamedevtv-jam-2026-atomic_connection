@@ -15,6 +15,7 @@ using _Project.Scripts.Gameplay.Talents;
 using _Project.Scripts.Gameplay.Windows;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Infrastructure.GameStates.Factory;
+using _Project.Scripts.Infrastructure.SaveLoad;
 using _Project.Scripts.Utils.Pause;
 using UnityEngine;
 using Zenject;
@@ -34,6 +35,7 @@ namespace _Project.Scripts.Infrastructure
             BindPauseService();
             BindInputService();
             BindDragService();
+            BindSaveLoad();
             BindTalentService();
             BindAtomCoreGameplay();
             BindWindowInfrastructure();
@@ -53,6 +55,12 @@ namespace _Project.Scripts.Infrastructure
         private void BindDragService()
         {
             Container.Bind<IDragService>().To<DragService>().AsSingle();
+        }
+
+        private void BindSaveLoad()
+        {
+            Container.Bind<IProgressProvider>().To<ProgressProvider>().AsSingle();
+            Container.BindInterfacesAndSelfTo<SaveLoadService>().AsSingle();
         }
 
         private void BindTalentService()

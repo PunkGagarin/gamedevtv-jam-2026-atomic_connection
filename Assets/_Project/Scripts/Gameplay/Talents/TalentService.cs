@@ -1,41 +1,42 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using Zenject;
+using _Project.Scripts.Infrastructure.SaveLoad;
 
 namespace _Project.Scripts.Gameplay.Talents
 {
     public class TalentService : ITalentService, IInitializable
     {
-        private const string GOLD_KEY = "AtomicConnection.Talents.Gold";
-        private const string TALENT_LEVEL_KEY_PREFIX = "AtomicConnection.Talents.Level.";
-
         [Inject] private TalentConfig _config;
-
-        private readonly Dictionary<TalentId, int> _levelsById = new();
+        [Inject] private IProgressProvider _progressProvider;
+        [Inject] private ISaveLoadService _saveLoadService;
 
         public event Action Changed;
 
-        public int Gold { get; private set; }
+        public int Gold => _progressProvider.ProgressData.Gold;
         public IReadOnlyList<TalentDefinition> Talents => _config.Talents;
         public float AtomGenerationMultiplier => 1f + BonusOf(TalentType.AtomGenerationSpeed);
 
         public void Initialize()
         {
             if (_config.ClearSavedProgressOnStartup)
-                ClearSavedProgress();
+            {
+                _saveLoadService.CreateProgress();
+                _progressProvider.ProgressData.Gold = _config.TestStartingGold;
+                _saveLoadService.SaveProgress();
+                return;
+            }
 
-            Gold = PlayerPrefs.HasKey(GOLD_KEY)
-                ? PlayerPrefs.GetInt(GOLD_KEY)
-                : _config.TestStartingGold;
-
-            foreach (TalentDefinition talent in _config.Talents)
-                _levelsById[talent.Id] = PlayerPrefs.GetInt(LevelKey(talent.Id), 0);
+            if (!_saveLoadService.HasSavedProgress)
+            {
+                _progressProvider.ProgressData.Gold = _config.TestStartingGold;
+                _saveLoadService.SaveProgress();
+            }
         }
 
         public int LevelOf(TalentId talentId) =>
-            _levelsById.TryGetValue(talentId, out int level) ? level : 0;
+            _progressProvider.ProgressData.GetTalentLevel((int)talentId);
 
         public bool CanBuy(TalentId talentId)
         {
@@ -55,10 +56,10 @@ namespace _Project.Scripts.Gameplay.Talents
             TalentDefinition talent = DefinitionFor(talentId);
             int currentLevel = LevelOf(talentId);
 
-            Gold -= talent.CostForLevel(currentLevel);
-            _levelsById[talentId] = currentLevel + 1;
+            _progressProvider.ProgressData.Gold -= talent.CostForLevel(currentLevel);
+            _progressProvider.ProgressData.SetTalentLevel((int)talentId, currentLevel + 1);
 
-            Save();
+            _saveLoadService.SaveProgress();
             Changed?.Invoke();
 
             return true;
@@ -78,28 +79,5 @@ namespace _Project.Scripts.Gameplay.Talents
         private TalentDefinition DefinitionFor(TalentId talentId) =>
             _config.Talents.FirstOrDefault(talent => talent.Id == talentId)
             ?? throw new InvalidOperationException($"Talent {talentId} is not present in {nameof(TalentConfig)}.");
-
-        private void Save()
-        {
-            PlayerPrefs.SetInt(GOLD_KEY, Gold);
-
-            foreach (KeyValuePair<TalentId, int> levelById in _levelsById)
-                PlayerPrefs.SetInt(LevelKey(levelById.Key), levelById.Value);
-
-            PlayerPrefs.Save();
-        }
-
-        private void ClearSavedProgress()
-        {
-            PlayerPrefs.DeleteKey(GOLD_KEY);
-
-            foreach (TalentDefinition talent in _config.Talents)
-                PlayerPrefs.DeleteKey(LevelKey(talent.Id));
-
-            PlayerPrefs.Save();
-        }
-
-        private string LevelKey(TalentId talentId) =>
-            $"{TALENT_LEVEL_KEY_PREFIX}{talentId}";
     }
 }

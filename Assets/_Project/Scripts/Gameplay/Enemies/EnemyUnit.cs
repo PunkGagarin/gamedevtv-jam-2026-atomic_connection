@@ -68,6 +68,14 @@ namespace _Project.Scripts.Gameplay.Enemies
                 Died?.Invoke(this);
         }
 
+        public void TakeDamage(int amount)
+        {
+            if (Health != null)
+                Health.TakeDamage(amount);
+            else
+                Kill();
+        }
+
         private void OnHealthDied()
         {
             Died?.Invoke(this);

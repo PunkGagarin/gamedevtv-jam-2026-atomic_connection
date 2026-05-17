@@ -37,7 +37,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
 
             _core.Died += OnCoreDied;
             _talentService.Changed += OnTalentChanged;
-            ApplyTalentMultiplier();
+            ApplyTalentBonuses();
         }
 
         public void Update()
@@ -66,14 +66,18 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
             if (_core == null)
                 return;
 
-            ApplyTalentMultiplier();
+            ApplyTalentBonuses();
         }
 
-        private void ApplyTalentMultiplier()
+        private void ApplyTalentBonuses()
         {
             int adjustedClicks = Mathf.Max(1, Mathf.RoundToInt(
                 _config.ClicksToGenerateFreeAtom / _talentService.AtomGenerationMultiplier));
-            _core.Configure(_config, adjustedClicks);
+
+            int adjustedHealth = Mathf.Max(1, Mathf.RoundToInt(
+                _config.CoreMaxHealth + _talentService.BonusOf(TalentType.CoreHealth)));
+
+            _core.Configure(_config, adjustedClicks, adjustedHealth);
         }
         
         private void OnCoreDied()

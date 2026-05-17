@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14b1389576504ef49fc3772b2941d910, type: 3}
   m_Name: TalentConfig
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Talents.TalentConfig
-  <ClearSavedProgressOnStartup>k__BackingField: 1
+  <ClearSavedProgressOnStartup>k__BackingField: 0
   <TestStartingGold>k__BackingField: 500
   <Talents>k__BackingField:
   - <Id>k__BackingField: 0
@@ -26,7 +26,7 @@ MonoBehaviour:
     <CostsByLevel>k__BackingField: 3200000064000000c8000000
     <Prerequisites>k__BackingField: 
     <GraphPosition>k__BackingField: {x: -14.730568, y: 377.16605}
-    <BonusPerLevel>k__BackingField: 25
+    <BonusPerLevel>k__BackingField: 3
     <IsUnlock>k__BackingField: 0
   - <Id>k__BackingField: 1
     <Type>k__BackingField: 1

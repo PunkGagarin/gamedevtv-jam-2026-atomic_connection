@@ -41,12 +41,12 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                 ShotQueue = GetComponent<BattleMoleculeShotQueue>();
         }
 
-        public void Configure(BattleMoleculeConfig config)
+        public void Configure(BattleMoleculeConfig config, int atomsRequired)
         {
             if (config == null)
                 return;
 
-            Charge.Configure(config.AtomsRequired);
+            Charge.Configure(atomsRequired);
             AtomReceiver.Configure(config.AtomsPosCircleRadius);
             AtomOrbit.Configure(config.DepositedAtomsOrbitDegreesPerSecond);
         }

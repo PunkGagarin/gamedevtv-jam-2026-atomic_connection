@@ -28,7 +28,12 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
         public void Start(AtomCore core)
         {
             _core = core;
-            _core?.Configure(_config);
+
+            if (_core == null)
+                return;
+
+            _talentService.Changed += OnTalentChanged;
+            ApplyTalentMultiplier();
         }
 
         public void Update()
@@ -42,8 +47,24 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
 
         public void Cleanup()
         {
+            _talentService.Changed -= OnTalentChanged;
             _core?.CleanupAtoms();
             _core = null;
+        }
+
+        private void OnTalentChanged()
+        {
+            if (_core == null)
+                return;
+
+            ApplyTalentMultiplier();
+        }
+
+        private void ApplyTalentMultiplier()
+        {
+            int adjustedClicks = Mathf.Max(1, Mathf.RoundToInt(
+                _config.ClicksToGenerateFreeAtom / _talentService.AtomGenerationMultiplier));
+            _core.Configure(_config, adjustedClicks);
         }
 
         private void HandleCoreClick()

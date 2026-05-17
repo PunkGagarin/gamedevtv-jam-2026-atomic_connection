@@ -24,13 +24,13 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
                 ProductionProgress = GetComponent<AtomProductionProgress>();
         }
 
-        public void Configure(UnitClickConfig config)
+        public void Configure(UnitClickConfig config, int clicksRequired)
         {
             _spawnRadiusOffset = config.SpawnRadiusOffset;
             _atomOrbitDegreesPerSecond = config.FreeAtomOrbitDegreesPerSecond;
             _orbitRadius = GetColliderRadius(transform);
 
-            ProductionProgress.Configure(config.ClicksToGenerateFreeAtom);
+            ProductionProgress.Configure(clicksRequired);
         }
 
         public bool RegisterAtomClick()

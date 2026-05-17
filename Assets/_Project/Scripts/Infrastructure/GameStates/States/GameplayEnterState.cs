@@ -20,7 +20,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
         {
             CreateAtomCore();
             CreateBattleMolecule();
-            _stateMachine.Enter<GameplayState>();
+            _stateMachine.Enter<GameplayLoopState>();
         }
 
         private void CreateAtomCore()
@@ -31,7 +31,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
         private void CreateBattleMolecule()
         {
             Vector3 offset = _battleMoleculeConfig.SpawnOffset;
-            _battleMoleculeFactory.Create(_levelStartPointProvider.StartPoint + offset);
+            _battleMoleculeFactory.Create(_levelStartPointProvider.StartPoint + offset, _battleMoleculeConfig);
         }
 
         public void Exit()

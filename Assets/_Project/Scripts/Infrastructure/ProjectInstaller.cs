@@ -56,8 +56,9 @@ namespace _Project.Scripts.Infrastructure
         private void BindAtomCoreGameplay()
         {
             Container.Bind<ILevelStartPointProvider>().To<LevelStartPointProvider>().AsSingle();
+            Container.Bind<IGameplayRuntimeHierarchy>().To<GameplayRuntimeHierarchy>().AsSingle();
             Container.Bind<IAtomCoreFactory>().To<AtomCoreFactory>().AsSingle();
-            Container.Bind<IAtomCoreClickService>().To<AtomCoreClickService>().AsSingle();
+            Container.Bind<IAtomCoreService>().To<AtomCoreService>().AsSingle();
             Container.Bind<IFreeAtomFactory>().To<FreeAtomFactory>().AsSingle();
             Container.Bind<IEnemyFactory>().To<EnemyFactory>().AsSingle();
             Container.Bind<IEnemySpawner>().To<EnemySpawner>().AsSingle();
@@ -84,6 +85,7 @@ namespace _Project.Scripts.Infrastructure
         private void BindGameplayBattleMolecule()
         {
             Container.Bind<IBattleMoleculeFactory>().To<BattleMoleculeFactory>().AsSingle();
+            Container.Bind<IBattleMoleculeService>().To<BattleMoleculeService>().AsSingle();
         }
 
         private void BindPauseService()
@@ -109,7 +111,7 @@ namespace _Project.Scripts.Infrastructure
             Container.BindInterfacesAndSelfTo<LoadGameplayState>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameplayEnterState>().AsSingle();
             Container.BindInterfacesAndSelfTo<MainMenuState>().AsSingle();
-            Container.BindInterfacesAndSelfTo<GameplayState>().AsSingle();
+            Container.BindInterfacesAndSelfTo<GameplayLoopState>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameplayPauseState>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameOverOrParagonState>().AsSingle();
         }

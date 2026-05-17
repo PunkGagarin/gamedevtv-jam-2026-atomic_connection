@@ -22,6 +22,9 @@ namespace _Project.Scripts.Gameplay.Common.Physics
             return default;
         }
 
+        public int RaycastNonAlloc(Vector2 worldPosition, Vector2 direction, int layerMask, RaycastHit2D[] hitBuffer) =>
+            Physics2D.RaycastNonAlloc(worldPosition, direction, hitBuffer, Mathf.Infinity, layerMask);
+
         public RaycastHit2D LineCast(Vector2 start, Vector2 end, int layerMask)
         {
             int hitCount = Physics2D.LinecastNonAlloc(start, end, Hits, layerMask);

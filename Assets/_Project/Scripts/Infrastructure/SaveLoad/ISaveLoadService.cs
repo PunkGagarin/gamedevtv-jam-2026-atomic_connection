@@ -6,5 +6,6 @@ namespace _Project.Scripts.Infrastructure.SaveLoad
         void SaveProgress();
         void LoadProgress();
         void CreateProgress();
+        void DeleteAllSavedData();
     }
 }

@@ -43,6 +43,13 @@ namespace _Project.Scripts.Infrastructure.SaveLoad
             _progressProvider.SetProgressData(new ProgressData());
         }
 
+        public void DeleteAllSavedData()
+        {
+            PlayerPrefs.DeleteAll();
+            PlayerPrefs.Save();
+            CreateProgress();
+        }
+
         private void EnsureProgressLoaded()
         {
             if (_progressProvider.ProgressData != null)

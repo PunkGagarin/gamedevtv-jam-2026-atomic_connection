@@ -22,17 +22,12 @@ namespace _Project.Scripts.Gameplay.Talents
         {
             if (_config.ClearSavedProgressOnStartup)
             {
-                _saveLoadService.CreateProgress();
-                _progressProvider.ProgressData.Gold = _config.TestStartingGold;
-                _saveLoadService.SaveProgress();
+                ResetProgress();
                 return;
             }
 
             if (!_saveLoadService.HasSavedProgress)
-            {
-                _progressProvider.ProgressData.Gold = _config.TestStartingGold;
-                _saveLoadService.SaveProgress();
-            }
+                CreateProgressWithStartingGold();
         }
 
         public int LevelOf(TalentId talentId) =>
@@ -65,6 +60,13 @@ namespace _Project.Scripts.Gameplay.Talents
             return true;
         }
 
+        public void ResetProgress()
+        {
+            _saveLoadService.DeleteAllSavedData();
+            CreateProgressWithStartingGold();
+            Changed?.Invoke();
+        }
+
         public float BonusOf(TalentType type) =>
             _config.Talents
                 .Where(talent => talent.Type == type)
@@ -75,6 +77,13 @@ namespace _Project.Scripts.Gameplay.Talents
 
         private bool PrerequisitesBought(TalentDefinition talent) =>
             talent.Prerequisites == null || talent.Prerequisites.All(prerequisite => LevelOf(prerequisite) > 0);
+
+        private void CreateProgressWithStartingGold()
+        {
+            _saveLoadService.CreateProgress();
+            _progressProvider.ProgressData.Gold = _config.TestStartingGold;
+            _saveLoadService.SaveProgress();
+        }
 
         private TalentDefinition DefinitionFor(TalentId talentId) =>
             _config.Talents.FirstOrDefault(talent => talent.Id == talentId)

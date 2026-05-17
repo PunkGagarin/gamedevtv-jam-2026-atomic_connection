@@ -14,6 +14,7 @@ namespace _Project.Scripts.Gameplay.Talents
         int LevelOf(TalentId talentId);
         bool CanBuy(TalentId talentId);
         bool Buy(TalentId talentId);
+        void ResetProgress();
         float BonusOf(TalentType type);
         bool IsUnlocked(TalentType type);
     }

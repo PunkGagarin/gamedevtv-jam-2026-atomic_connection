@@ -173,8 +173,9 @@ HUD `GearButton` sets `PauseService.SetPaused(true)` and opens the dynamic
 `WindowId.GameplayMenuWindow`; `GameplayMenuWindow` backs that gameplay menu modal and
 unpauses before close/restart/main-menu actions. This is not a result/game-over
 window, and `GameOverOrParagonState` must not open it unless explicitly
-redesigned. `TalentTreeTestButton` is a temporary gameplay-scene entry point for
-opening `WindowId.TalentTreeWindow` directly while the result screen is deferred.
+redesigned. `MainMenuHud` opens `WindowId.TalentTreeWindow` from the main-menu
+`Update` button while the result screen is deferred, and exposes `Reset` for
+clearing saved PlayerPrefs-backed data through `TalentService.ResetProgress()`.
 Do not inject concrete windows such as `SettingsView` directly into menu UI.
 
 **Gameplay Menu Pause** is not a `GameplayPauseState` transition yet.
@@ -248,8 +249,8 @@ gold/progress and buying talents; `TalentTreeWindow` may call
 `PlayerPrefs` as an MVP persistence path until the real meta-progress save model
 exists. `TalentConfig.ClearSavedProgressOnStartup` is a temporary testing flag
 for wiping talent `PlayerPrefs` on service initialization. The temporary test
-entry point is a gameplay scene button; the intended future entry point is the
-victory/defeat result flow.
+entry point is the main-menu `Update` button; the intended future entry point is
+the victory/defeat result flow.
 
 **Deferred request transport** may be reconsidered later if direct service calls cause real problems: multiple UI entry points apply the same effect differently, strict ordering inside the active gameplay/meta loop matters, close/pause/state transitions conflict with direct calls, or choices need to be logged/tested separately from their effects. If this returns, do not add an abstract event bus by default; model it as a named request transport owned by the feature, then process it from the owning gameplay/meta loop.
 
@@ -336,7 +337,7 @@ Runtime ownership and pool collections must not contain `null` entries as a tole
 - When possible, validate Unity changes by opening the project in Unity `6000.4.4f1`.
 - For code-only changes, at minimum check affected C# files for compile-time issues and keep scene/prefab references in sync.
 - If adding or moving Unity assets, ensure corresponding `.meta` files are present and Unity-valid. Script `.cs.meta` files should contain a `MonoImporter` block, folder `.meta` files should contain `folderAsset: yes` and `DefaultImporter`, and new/moved prefabs or assets must keep stable GUID references. Prefer letting Unity generate or refresh these files when possible.
-- Current manual lifecycle/UI validation should include `MainMenu -> Settings -> Apply/Cancel`, `MainMenu -> Gameplay`, `GearButton -> GameplayMenuWindow -> Close`, `GearButton -> GameplayMenuWindow -> Restart`, and `GearButton -> GameplayMenuWindow -> MainMenu`.
+- Current manual lifecycle/UI validation should include `MainMenu -> Settings -> Apply/Cancel`, `MainMenu -> Update -> TalentTreeWindow`, `MainMenu -> Reset`, `MainMenu -> Gameplay`, `GearButton -> GameplayMenuWindow -> Close`, `GearButton -> GameplayMenuWindow -> Restart`, and `GearButton -> GameplayMenuWindow -> MainMenu`.
 - Current gameplay validation should include `Bootstrap -> LoadMainMenuState -> MainMenuState -> LoadGameplayState -> GameplayEnterState -> GameplayLoopState`, `AtomCore` creation at `GameplayStartPoint`, enemy spawning after first gameplay click, and cleanup when restarting or returning to main menu.
 
 ## Git Notes

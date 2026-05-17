@@ -101,6 +101,7 @@ Assets/_Project/Scripts/
 │   ├── Common/       # Small common gameplay services: time, random, physics
 │   ├── Enemies/      # Minimal enemy feature: view, factory, spawner service
 │   ├── Level/        # Concrete scene references and providers
+│   ├── Talents/      # Talent tree config, progress service, and test/window UI
 │   ├── Units/        # Atom core, free atom, and related unit feature folders
 │   └── Windows/      # Dynamic window infrastructure and window configs
 ├── Infrastructure/   # App lifecycle: GameRunner, state machine, states, scene loading
@@ -148,8 +149,9 @@ HUD `GearButton` sets `PauseService.SetPaused(true)` and opens the dynamic
 `WindowId.GameplayMenuWindow`; `GameplayMenuWindow` backs that gameplay menu modal and
 unpauses before close/restart/main-menu actions. This is not a result/game-over
 window, and `GameOverOrParagonState` must not open it unless explicitly
-redesigned. Do not inject concrete windows such as `SettingsView` directly into
-menu UI.
+redesigned. `TalentTreeTestButton` is a temporary gameplay-scene entry point for
+opening `WindowId.TalentTreeWindow` directly while the result screen is deferred.
+Do not inject concrete windows such as `SettingsView` directly into menu UI.
 
 **Gameplay Menu Pause** is not a `GameplayPauseState` transition yet.
 `GearButton -> PauseService.SetPaused(true) -> WindowService.Open(WindowId.GameplayMenuWindow)`.
@@ -182,8 +184,8 @@ over UI. Any `EventSystem.current` access must be null-checked.
 
 **Config Assets vs Prefab Registries** are intentionally different. Value/config
 assets with gameplay or settings numbers should be assigned in installers,
-bound with `FromInstance(...)`, and injected; `EnemySpawnerConfig` is the current
-example. Dynamic prefab registries that map ids to prefabs may stay
+bound with `FromInstance(...)`, and injected; `EnemySpawnerConfig` and
+`TalentConfig` are current examples. Dynamic prefab registries that map ids to prefabs may stay
 resource-backed, matching `ecs-survivors` `WindowsConfig`/`StaticDataService`
 lookup. `WindowsConfig` is a prefab registry, not a numeric settings config.
 When adding a new value config, create the asset under `Assets/_Project/Data/Config`,
@@ -198,6 +200,21 @@ Three installer types:
 **MVP** used for UI: `Model` (data + PlayerPrefs), `Presenter` (`IInitializable`, UI/local logic), `View` (MonoBehaviour, UI only). See `Audio/` for the canonical example. Presenters must not become lifecycle intermediaries for gameplay flow.
 
 **Gameplay choice UI** uses MVP direct service calls for now. Presenters/windows may read display data from services/static data and may call high-level feature/domain methods such as `BuyItem(id)`, `SelectUpgrade(id)`, or `ApplyChoice(id)` directly. Keep the operation encapsulated in one owning service; do not spread one UI click across low-level calls such as `RemoveGold`, `AddPurchasedItem`, `ApplyBoost`, and `SaveProgress` from the presenter. The `ecs-survivors` request pattern (`UpgradeRequest`/`BuyRequest` entities processed later by systems) is documented as a deferred option, not the current default.
+
+**Talent Tree** currently uses `TalentConfig` for the list of talents, graph
+positions, costs, prerequisites, and numeric effects. Talent tree UI is
+prefab-driven: `TalentTreeWindow` receives `TalentNodeView` and
+`TalentConnectionView` prefabs through serialized fields and must not build UI
+views manually in code. The talent graph is zoomable with mouse wheel; keep
+long descriptions in the serialized tooltip UI instead of always-visible node
+text. `TalentService` is the single high-level service for reading
+gold/progress and buying talents; `TalentTreeWindow` may call
+`TalentService.Buy(id)` directly. Talent progress is currently saved through
+`PlayerPrefs` as an MVP persistence path until the real meta-progress save model
+exists. `TalentConfig.ClearSavedProgressOnStartup` is a temporary testing flag
+for wiping talent `PlayerPrefs` on service initialization. The temporary test
+entry point is a gameplay scene button; the intended future entry point is the
+victory/defeat result flow.
 
 **Deferred request transport** may be reconsidered later if direct service calls cause real problems: multiple UI entry points apply the same effect differently, strict ordering inside the active gameplay/meta loop matters, close/pause/state transitions conflict with direct calls, or choices need to be logged/tested separately from their effects. If this returns, do not add an abstract event bus by default; model it as a named request transport owned by the feature, then process it from the owning gameplay/meta loop.
 

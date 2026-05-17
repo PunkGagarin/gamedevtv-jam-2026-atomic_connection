@@ -1,0 +1,236 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &9200000001
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9200000002}
+  - component: {fileID: 9200000003}
+  - component: {fileID: 9200000004}
+  - component: {fileID: 9200000005}
+  - component: {fileID: 9200000006}
+  m_Layer: 5
+  m_Name: TalentNodeView
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &9200000002
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9200000001}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 9200000012}
+  - {fileID: 9200000022}
+  - {fileID: 9200000032}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 120, y: 92}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &9200000003
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9200000001}
+  m_CullTransparentMesh: 1
+--- !u!114 &9200000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9200000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Color: {r: 0.11, g: 0.08, b: 0.11, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_Type: 1
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!114 &9200000005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9200000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
+  m_Navigation:
+    m_Mode: 3
+    m_WrapAround: 0
+    m_SelectOnUp: {fileID: 0}
+    m_SelectOnDown: {fileID: 0}
+    m_SelectOnLeft: {fileID: 0}
+    m_SelectOnRight: {fileID: 0}
+  m_Transition: 1
+  m_TargetGraphic: {fileID: 9200000004}
+  m_OnClick:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &9200000006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9200000001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b59d67aa63e942b8ad9773a9fadbcde8, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Talents.TalentNodeView
+  <RectTransform>k__BackingField: {fileID: 9200000002}
+  <Button>k__BackingField: {fileID: 9200000005}
+  <Background>k__BackingField: {fileID: 9200000004}
+  <TitleLabel>k__BackingField: {fileID: 9200000014}
+  <LevelLabel>k__BackingField: {fileID: 9200000024}
+  <CostLabel>k__BackingField: {fileID: 9200000034}
+--- !u!1 &9200000011
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9200000012}
+  - component: {fileID: 9200000013}
+  - component: {fileID: 9200000014}
+  m_Layer: 5
+  m_Name: Title
+  m_TagString: Untagged
+  m_IsActive: 1
+--- !u!224 &9200000012
+RectTransform:
+  m_GameObject: {fileID: 9200000011}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 9200000002}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: -10}
+  m_SizeDelta: {x: -10, y: -12}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &9200000013
+CanvasRenderer:
+  m_GameObject: {fileID: 9200000011}
+  m_CullTransparentMesh: 1
+--- !u!114 &9200000014
+MonoBehaviour:
+  m_GameObject: {fileID: 9200000011}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_text: Talent
+  m_fontSize: 18
+  m_fontSizeMin: 10
+  m_fontSizeMax: 18
+  m_enableAutoSizing: 1
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_fontColor: {r: 0.92, g: 0.94, b: 0.97, a: 1}
+--- !u!1 &9200000021
+GameObject:
+  m_Component:
+  - component: {fileID: 9200000022}
+  - component: {fileID: 9200000023}
+  - component: {fileID: 9200000024}
+  m_Layer: 5
+  m_Name: Level
+  m_IsActive: 1
+--- !u!224 &9200000022
+RectTransform:
+  m_GameObject: {fileID: 9200000021}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 9200000002}
+  m_AnchorMin: {x: 0, y: 0.2}
+  m_AnchorMax: {x: 1, y: 0.55}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: -10, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &9200000023
+CanvasRenderer:
+  m_GameObject: {fileID: 9200000021}
+  m_CullTransparentMesh: 1
+--- !u!114 &9200000024
+MonoBehaviour:
+  m_GameObject: {fileID: 9200000021}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_text: 0/3
+  m_fontSize: 18
+  m_fontColor: {r: 0.92, g: 0.94, b: 0.97, a: 1}
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+--- !u!1 &9200000031
+GameObject:
+  m_Component:
+  - component: {fileID: 9200000032}
+  - component: {fileID: 9200000033}
+  - component: {fileID: 9200000034}
+  m_Layer: 5
+  m_Name: Cost
+  m_IsActive: 1
+--- !u!224 &9200000032
+RectTransform:
+  m_GameObject: {fileID: 9200000031}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 9200000002}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 0.25}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: -10, y: -4}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &9200000033
+CanvasRenderer:
+  m_GameObject: {fileID: 9200000031}
+  m_CullTransparentMesh: 1
+--- !u!114 &9200000034
+MonoBehaviour:
+  m_GameObject: {fileID: 9200000031}
+  m_Enabled: 1
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_text: 50
+  m_fontSize: 16
+  m_fontColor: {r: 0.95, g: 0.82, b: 0.28, a: 1}
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512

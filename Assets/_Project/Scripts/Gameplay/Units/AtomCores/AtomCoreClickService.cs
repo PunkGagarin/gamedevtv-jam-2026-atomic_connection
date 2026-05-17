@@ -2,6 +2,7 @@ using _Project.Scripts.Gameplay.Cameras.Provider;
 using _Project.Scripts.Gameplay.Common.Physics;
 using _Project.Scripts.Gameplay.Common.Random;
 using _Project.Scripts.Gameplay.Input.Service;
+using _Project.Scripts.Gameplay.Talents;
 using _Project.Scripts.Gameplay.Units;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
@@ -22,11 +23,12 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
         [Inject] private IRandomService _random;
         [Inject] private UnitClickConfig _config;
         [Inject] private IFreeAtomFactory _freeAtomFactory;
+        [Inject] private ITalentService _talentService;
 
         public void Start(AtomCore core)
         {
             _core = core;
-            _clicksRemaining = _config.ClicksToGenerateFreeAtom;
+            _clicksRemaining = ClicksToGenerateFreeAtom();
             UpdateProgressBar();
         }
 
@@ -61,7 +63,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
                 return;
 
             _freeAtomFactory.Create(_core.transform.position + (Vector3)RandomSpawnOffset());
-            _clicksRemaining = _config.ClicksToGenerateFreeAtom;
+            _clicksRemaining = ClicksToGenerateFreeAtom();
             UpdateProgressBar();
         }
 
@@ -78,7 +80,10 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
             if (_core == null)
                 return;
 
-            _core.SetClickProgress(_clicksRemaining, _config.ClicksToGenerateFreeAtom);
+            _core.SetClickProgress(_clicksRemaining, ClicksToGenerateFreeAtom());
         }
+
+        private int ClicksToGenerateFreeAtom() =>
+            Mathf.Max(1, Mathf.RoundToInt(_config.ClicksToGenerateFreeAtom / _talentService.AtomGenerationMultiplier));
     }
 }

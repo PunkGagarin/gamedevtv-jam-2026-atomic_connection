@@ -11,6 +11,7 @@ using _Project.Scripts.Gameplay.Level;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using _Project.Scripts.Gameplay.Units.BattleMolecules;
 using _Project.Scripts.Gameplay.Units.AtomCores;
+using _Project.Scripts.Gameplay.Talents;
 using _Project.Scripts.Gameplay.Windows;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Infrastructure.GameStates.Factory;
@@ -33,6 +34,7 @@ namespace _Project.Scripts.Infrastructure
             BindPauseService();
             BindInputService();
             BindDragService();
+            BindTalentService();
             BindAtomCoreGameplay();
             BindWindowInfrastructure();
             BindGameplayBattleMolecule();
@@ -51,6 +53,11 @@ namespace _Project.Scripts.Infrastructure
         private void BindDragService()
         {
             Container.Bind<IDragService>().To<DragService>().AsSingle();
+        }
+
+        private void BindTalentService()
+        {
+            Container.BindInterfacesAndSelfTo<TalentService>().AsSingle().NonLazy();
         }
 
         private void BindAtomCoreGameplay()

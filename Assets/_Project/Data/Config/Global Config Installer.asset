@@ -16,3 +16,4 @@ MonoBehaviour:
   <EnemySpawnerConfig>k__BackingField: {fileID: 11400000, guid: 8d489ee3818740e1a19a1216fd2de532, type: 2}
   <UnitClickConfig>k__BackingField: {fileID: 11400000, guid: cb0994611d614e3a94797f6e028490ec, type: 2}
   <BattleMoleculeConfig>k__BackingField: {fileID: 11400000, guid: 0140a7cd6bd244eda71400d972c714e5, type: 2}
+  <TalentConfig>k__BackingField: {fileID: 11400000, guid: 907e1edd1c3d47638316a956996ea18a, type: 2}

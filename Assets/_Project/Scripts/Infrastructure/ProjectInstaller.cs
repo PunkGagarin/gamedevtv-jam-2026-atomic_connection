@@ -2,11 +2,15 @@ using _Project.Scripts.Gameplay.Cameras.Provider;
 using _Project.Scripts.Gameplay.Common.Physics;
 using _Project.Scripts.Gameplay.Common.Random;
 using _Project.Scripts.Gameplay.Common.Time;
+using _Project.Scripts.Gameplay.Drag;
 using _Project.Scripts.Gameplay.Enemies;
+using _Project.Scripts.Gameplay.Input.Service;
 using _Project.Scripts.Infrastructure.GameStates.States;
 using _Project.Scripts.Infrastructure.GameStates;
 using _Project.Scripts.Gameplay.Level;
-using _Project.Scripts.Gameplay.Units;
+using _Project.Scripts.Gameplay.Units.FreeAtoms;
+using _Project.Scripts.Gameplay.Units.BattleMolecules;
+using _Project.Scripts.Gameplay.Units.AtomCores;
 using _Project.Scripts.Gameplay.Windows;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Infrastructure.GameStates.Factory;
@@ -27,8 +31,11 @@ namespace _Project.Scripts.Infrastructure
             BindCameraProvider();
             BindCommonServices();
             BindPauseService();
-            BindGameplayExample();
+            BindInputService();
+            BindDragService();
+            BindAtomCoreGameplay();
             BindWindowInfrastructure();
+            BindGameplayBattleMolecule();
         }
 
         private void BindAssetManagement()
@@ -36,10 +43,22 @@ namespace _Project.Scripts.Infrastructure
             Container.Bind<IAssetProvider>().To<AssetProvider>().AsSingle();
         }
 
-        private void BindGameplayExample()
+        private void BindInputService()
+        {
+            Container.Bind<IInputService>().To<StandaloneInputService>().AsSingle();
+        }
+
+        private void BindDragService()
+        {
+            Container.Bind<IDragService>().To<DragService>().AsSingle();
+        }
+
+        private void BindAtomCoreGameplay()
         {
             Container.Bind<ILevelStartPointProvider>().To<LevelStartPointProvider>().AsSingle();
-            Container.Bind<IExampleUnitFactory>().To<ExampleUnitFactory>().AsSingle();
+            Container.Bind<IAtomCoreFactory>().To<AtomCoreFactory>().AsSingle();
+            Container.Bind<IAtomCoreClickService>().To<AtomCoreClickService>().AsSingle();
+            Container.Bind<IFreeAtomFactory>().To<FreeAtomFactory>().AsSingle();
             Container.Bind<IEnemyFactory>().To<EnemyFactory>().AsSingle();
             Container.Bind<IEnemySpawner>().To<EnemySpawner>().AsSingle();
         }
@@ -60,6 +79,11 @@ namespace _Project.Scripts.Infrastructure
             Container.Bind<ITimeService>().To<UnityTimeService>().AsSingle();
             Container.Bind<IPhysicsService>().To<PhysicsService>().AsSingle();
             Container.Bind<IRandomService>().To<UnityRandomService>().AsSingle();
+        }
+
+        private void BindGameplayBattleMolecule()
+        {
+            Container.Bind<IBattleMoleculeFactory>().To<BattleMoleculeFactory>().AsSingle();
         }
 
         private void BindPauseService()

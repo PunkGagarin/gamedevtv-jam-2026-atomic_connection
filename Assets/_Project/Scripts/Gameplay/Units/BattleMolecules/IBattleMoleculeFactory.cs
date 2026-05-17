@@ -1,10 +1,14 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 {
     public interface IBattleMoleculeFactory
     {
-        BattleMolecule Create(Vector3 at);
+        IReadOnlyList<BattleMolecule> CreatedMolecules { get; }
+        event Action<BattleMolecule> MoleculeCreated;
+        BattleMolecule Create(Vector3 at, BattleMoleculeConfig config);
         void Cleanup();
     }
 }

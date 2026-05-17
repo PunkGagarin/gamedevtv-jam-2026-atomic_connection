@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using _Project.Scripts.Gameplay.Level;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using UnityEngine;
 using Zenject;
@@ -8,13 +10,18 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
     public class BattleMoleculeFactory : IBattleMoleculeFactory
     {
         private const string BATTLE_MOLECULE_PREFAB_PATH = "Gameplay/Units/BattleMolecule";
+        private const string BATTLE_MOLECULES_CONTAINER_NAME = "BattleMolecules";
 
         private readonly List<BattleMolecule> _createdMolecules = new();
 
         [Inject] private IAssetProvider _assetProvider;
+        [Inject] private IGameplayRuntimeHierarchy _runtimeHierarchy;
         [Inject] private IInstantiator _instantiator;
 
-        public BattleMolecule Create(Vector3 at)
+        public IReadOnlyList<BattleMolecule> CreatedMolecules => _createdMolecules;
+        public event Action<BattleMolecule> MoleculeCreated;
+
+        public BattleMolecule Create(Vector3 at, BattleMoleculeConfig config)
         {
             BattleMolecule prefab = _assetProvider.LoadAsset<BattleMolecule>(BATTLE_MOLECULE_PREFAB_PATH);
 
@@ -28,10 +35,12 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                 prefab,
                 at,
                 Quaternion.identity,
-                parentTransform: null);
+                _runtimeHierarchy.GetOrCreateContainer(BATTLE_MOLECULES_CONTAINER_NAME));
 
             molecule.name = nameof(BattleMolecule);
+            molecule.Configure(config);
             _createdMolecules.Add(molecule);
+            MoleculeCreated?.Invoke(molecule);
 
             return molecule;
         }
@@ -41,10 +50,11 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             foreach (BattleMolecule molecule in _createdMolecules)
             {
                 if (molecule != null)
-                    Object.Destroy(molecule.gameObject);
+                    UnityEngine.Object.Destroy(molecule.gameObject);
             }
 
             _createdMolecules.Clear();
+            MoleculeCreated = null;
         }
     }
 }

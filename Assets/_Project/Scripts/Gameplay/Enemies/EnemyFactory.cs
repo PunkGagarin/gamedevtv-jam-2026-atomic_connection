@@ -1,50 +1,66 @@
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using Zenject;
+using _Project.Scripts.Gameplay.Level;
+using _Project.Scripts.Gameplay.Common.Pooling;
 using _Project.Scripts.Infrastructure.AssetManagement;
 
 namespace _Project.Scripts.Gameplay.Enemies
 {
-    public class EnemyFactory : IEnemyFactory
+    public class EnemyFactory : PooledFactory<EnemyUnit>, IEnemyFactory
     {
         private const string ENEMY_UNIT_PREFAB_PATH = "Gameplay/Enemies/EnemyUnit";
-
-        private readonly List<EnemyUnit> _createdEnemies = new();
+        private const string ENEMIES_CONTAINER_NAME = "Enemies";
+        private const string ENEMIES_POOL_CONTAINER_NAME = "EnemiesPool";
 
         [Inject] private IAssetProvider _assetProvider;
+        [Inject] private IGameplayRuntimeHierarchy _runtimeHierarchy;
         [Inject] private IInstantiator _instantiator;
 
         public EnemyUnit Create(Vector3 at)
         {
-            EnemyUnit prefab = _assetProvider.LoadAsset<EnemyUnit>(ENEMY_UNIT_PREFAB_PATH);
+            EnemyUnit enemy = GetFromPoolOrCreate();
 
-            if (prefab == null)
-            {
-                Debug.LogError($"EnemyUnit prefab is missing at Resources path '{ENEMY_UNIT_PREFAB_PATH}'.");
-                return null;
-            }
-
-            EnemyUnit enemy = _instantiator.InstantiatePrefabForComponent<EnemyUnit>(
-                prefab,
-                at,
-                Quaternion.identity,
-                parentTransform: null);
-
+            Transform parent = _runtimeHierarchy.GetOrCreateContainer(ENEMIES_CONTAINER_NAME);
+            enemy.transform.SetParent(parent, true);
+            enemy.transform.SetPositionAndRotation(at, Quaternion.identity);
             enemy.name = nameof(EnemyUnit);
-            _createdEnemies.Add(enemy);
+            enemy.PrepareForSpawn();
 
             return enemy;
         }
 
-        public void Cleanup()
+        protected override EnemyUnit CreateNew()
         {
-            foreach (EnemyUnit enemy in _createdEnemies)
-            {
-                if (enemy != null)
-                    Object.Destroy(enemy.gameObject);
-            }
+            EnemyUnit prefab = _assetProvider.LoadAsset<EnemyUnit>(ENEMY_UNIT_PREFAB_PATH);
 
-            _createdEnemies.Clear();
+            if (prefab == null)
+                throw new InvalidOperationException($"EnemyUnit prefab is missing at Resources path '{ENEMY_UNIT_PREFAB_PATH}'.");
+
+            EnemyUnit enemy = _instantiator.InstantiatePrefabForComponent<EnemyUnit>(
+                prefab,
+                Vector3.zero,
+                Quaternion.identity,
+                _runtimeHierarchy.GetOrCreateContainer(ENEMIES_CONTAINER_NAME));
+
+            enemy.Died += OnEnemyDied;
+            return enemy;
+        }
+
+        private void OnEnemyDied(EnemyUnit enemy)
+        {
+            ReturnToPool(enemy);
+        }
+
+        protected override void OnBeforeReturnToPool(EnemyUnit enemy)
+        {
+            enemy.transform.SetParent(_runtimeHierarchy.GetOrCreateContainer(ENEMIES_POOL_CONTAINER_NAME), false);
+            enemy.PrepareForPool();
+        }
+
+        protected override void OnBeforeDestroy(EnemyUnit enemy)
+        {
+            enemy.Died -= OnEnemyDied;
         }
     }
 }

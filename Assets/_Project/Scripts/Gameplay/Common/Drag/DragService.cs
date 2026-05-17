@@ -51,7 +51,7 @@ namespace _Project.Scripts.Gameplay.Drag
                 return false;
 
             IDraggable draggable = hit.GetComponent<IDraggable>();
-            if (draggable == null)
+            if (draggable == null || !draggable.CanStartDrag)
                 return false;
 
             _currentDraggable = draggable;
@@ -78,11 +78,17 @@ namespace _Project.Scripts.Gameplay.Drag
                 return null;
 
             Vector3 worldPosition = camera.ScreenToWorldPoint(screenPosition);
+            Vector3 draggablePosition = worldPosition + _dragOffset;
             IDropTarget target = GetDropTargetAt(worldPosition);
 
             if (target != null && target.CanAcceptDrop(_currentDraggable))
             {
                 target.OnDropAccepted(_currentDraggable);
+                _currentDraggable.OnDragEnd();
+            }
+            else if (_currentDraggable is IDragReleaseHandler releaseHandler
+                     && releaseHandler.TryHandleDragRelease(draggablePosition))
+            {
                 _currentDraggable.OnDragEnd();
             }
             else

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using _Project.Scripts.Gameplay.Level;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using UnityEngine;
 using Zenject;
@@ -8,10 +9,12 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
     public class AtomCoreFactory : IAtomCoreFactory
     {
         private const string ATOM_CORE_PREFAB_PATH = "Gameplay/Units/AtomCore";
+        private const string ATOM_CORES_CONTAINER_NAME = "AtomCores";
 
         private readonly List<AtomCore> _createdCores = new();
 
         [Inject] private IAssetProvider _assetProvider;
+        [Inject] private IGameplayRuntimeHierarchy _runtimeHierarchy;
         [Inject] private IInstantiator _instantiator;
 
         public AtomCore CurrentCore { get; private set; }
@@ -30,7 +33,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
                 prefab,
                 at,
                 Quaternion.identity,
-                parentTransform: null);
+                _runtimeHierarchy.GetOrCreateContainer(ATOM_CORES_CONTAINER_NAME));
 
             core.name = nameof(AtomCore);
             _createdCores.Add(core);

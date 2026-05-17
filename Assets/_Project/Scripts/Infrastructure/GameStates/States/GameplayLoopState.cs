@@ -1,5 +1,6 @@
 using _Project.Scripts.Gameplay.Drag;
 using _Project.Scripts.Gameplay.Enemies;
+using _Project.Scripts.Gameplay.Level;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using _Project.Scripts.Gameplay.Units.BattleMolecules;
 using _Project.Scripts.Gameplay.Units.AtomCores;
@@ -9,22 +10,25 @@ using Zenject;
 
 namespace _Project.Scripts.Infrastructure.GameStates.States
 {
-    internal class GameplayState : EndOfFrameExitState
+    internal class GameplayLoopState : EndOfFrameExitState
     {
         [Inject] private IEnemySpawner _enemySpawner;
         [Inject] private IAtomCoreFactory _atomCoreFactory;
-        [Inject] private IAtomCoreClickService _atomCoreClickService;
+        [Inject] private IAtomCoreService _atomCoreService;
         [Inject] private IFreeAtomFactory _freeAtomFactory;
         [Inject] private IBattleMoleculeFactory _battleMoleculeFactory;
+        [Inject] private IBattleMoleculeService _battleMoleculeService;
         [Inject] private IDragService _dragService;
+        [Inject] private IGameplayRuntimeHierarchy _runtimeHierarchy;
         [Inject] private PauseService _pauseService;
 
         public override void Enter()
         {
             AtomCore currentCore = _atomCoreFactory.CurrentCore;
 
-            _atomCoreClickService.Start(currentCore);
+            _atomCoreService.Start(currentCore);
             _enemySpawner.Start(currentCore != null ? currentCore.transform : null);
+            _battleMoleculeService.Start();
         }
 
         protected override void OnUpdate()
@@ -33,7 +37,8 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
                 return;
 
             _enemySpawner.Update();
-            _atomCoreClickService.Update();
+            _atomCoreService.Update();
+            _battleMoleculeService.Update();
             _dragService.Update();
         }
 
@@ -41,10 +46,12 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
         {
             _dragService.CancelDrag();
             _enemySpawner.Cleanup();
-            _atomCoreClickService.Cleanup();
+            _atomCoreService.Cleanup();
+            _battleMoleculeService.Cleanup();
             _atomCoreFactory.Cleanup();
             _battleMoleculeFactory.Cleanup();
             _freeAtomFactory.Cleanup();
+            _runtimeHierarchy.Cleanup();
         }
     }
 }

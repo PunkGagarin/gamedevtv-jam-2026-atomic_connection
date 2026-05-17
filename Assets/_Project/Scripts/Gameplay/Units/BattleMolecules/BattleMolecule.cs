@@ -1,69 +1,59 @@
-using System.Collections.Generic;
-using _Project.Scripts.Gameplay.Drag;
-using _Project.Scripts.Gameplay.Units.FreeAtoms;
+using System;
+using _Project.Scripts.Gameplay.Units.BattleMolecules.Components;
 using UnityEngine;
-using Zenject;
 
 namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 {
-    public class BattleMolecule : MonoBehaviour, IDropTarget
+    [RequireComponent(typeof(OwnedAtoms))]
+    [RequireComponent(typeof(BattleMoleculeCharge))]
+    [RequireComponent(typeof(BattleMoleculeAtomReceiver))]
+    [RequireComponent(typeof(BattleMoleculeAtomOrbit))]
+    [RequireComponent(typeof(BattleMoleculeShotQueue))]
+    public class BattleMolecule : MonoBehaviour
     {
-        [Inject] private BattleMoleculeConfig _config;
+        [field: SerializeField] private OwnedAtoms OwnedAtoms { get; set; }
+        [field: SerializeField] private BattleMoleculeCharge Charge { get; set; }
+        [field: SerializeField] private BattleMoleculeAtomReceiver AtomReceiver { get; set; }
+        [field: SerializeField] private BattleMoleculeAtomOrbit AtomOrbit { get; set; }
+        [field: SerializeField] private BattleMoleculeShotQueue ShotQueue { get; set; }
 
-        private readonly List<GameObject> _depositedAtoms = new();
-        private int _depositedCount;
-
-        public bool CanAcceptDrop(IDraggable draggable)
+        public event Action<Vector3, Vector3> ShotRequested
         {
-            if (_config == null)
-                return false;
-
-            return draggable is FreeAtom && _depositedCount < _config.AtomsRequired;
+            add => ShotQueue.ShotRequested += value;
+            remove => ShotQueue.ShotRequested -= value;
         }
 
-        public void OnDropAccepted(IDraggable draggable)
+        private void Awake()
         {
-            if (draggable is not FreeAtom freeAtom)
+            if (OwnedAtoms == null)
+                OwnedAtoms = GetComponent<OwnedAtoms>();
+
+            if (Charge == null)
+                Charge = GetComponent<BattleMoleculeCharge>();
+
+            if (AtomReceiver == null)
+                AtomReceiver = GetComponent<BattleMoleculeAtomReceiver>();
+
+            if (AtomOrbit == null)
+                AtomOrbit = GetComponent<BattleMoleculeAtomOrbit>();
+
+            if (ShotQueue == null)
+                ShotQueue = GetComponent<BattleMoleculeShotQueue>();
+        }
+
+        public void Configure(BattleMoleculeConfig config)
+        {
+            if (config == null)
                 return;
 
-            GameObject freeAtomObject = freeAtom.gameObject;
-
-            Collider2D col = freeAtomObject.GetComponent<Collider2D>();
-            if (col != null)
-                col.enabled = false;
-
-            freeAtomObject.transform.SetParent(transform, true);
-            freeAtomObject.transform.localPosition = GetCirclePosition(_depositedCount, _config.AtomsRequired);
-
-            _depositedAtoms.Add(freeAtomObject);
-            _depositedCount++;
-
-            if (_depositedCount >= _config.AtomsRequired)
-                Fire();
+            Charge.Configure(config.AtomsRequired);
+            AtomReceiver.Configure(config.AtomsPosCircleRadius);
+            AtomOrbit.Configure(config.DepositedAtomsOrbitDegreesPerSecond);
         }
 
-        private void Fire()
+        public void Tick(float deltaTime)
         {
-            Debug.Log("Boom");
-
-            foreach (GameObject atom in _depositedAtoms)
-            {
-                if (atom != null)
-                    Destroy(atom);
-            }
-
-            _depositedAtoms.Clear();
-            _depositedCount = 0;
-        }
-
-        private Vector3 GetCirclePosition(int index, int total)
-        {
-            float angle = (index / (float)total) * Mathf.PI * 2f;
-            return new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * _config.AtomsPosCircleRadius;
-        }
-
-        public void OnDropRejected(IDraggable draggable)
-        {
+            AtomOrbit.Tick(deltaTime);
         }
     }
 }

@@ -13,3 +13,5 @@ MonoBehaviour:
   m_Name: EnemySpawnerConfig
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Enemies.EnemySpawnerConfig
   <SpawnIntervalSeconds>k__BackingField: 3
+  <MinSpawnRadius>k__BackingField: 3
+  <MaxSpawnRadius>k__BackingField: 5

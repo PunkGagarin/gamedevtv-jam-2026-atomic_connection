@@ -1,4 +1,4 @@
-namespace _Project.Scripts.Infrastructure.GameStates
+namespace _Project.Scripts.Infrastructure.GameStates.StateInfrastructure
 {
     public interface IState : IExitableState
     {

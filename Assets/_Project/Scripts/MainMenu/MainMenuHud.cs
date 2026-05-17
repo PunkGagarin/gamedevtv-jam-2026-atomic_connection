@@ -1,6 +1,6 @@
 ﻿using _Project.Scripts.Audio.Domain;
 using _Project.Scripts.Gameplay.Windows;
-using _Project.Scripts.Infrastructure.GameStates;
+using _Project.Scripts.Infrastructure.GameStates.StateMachine;
 using _Project.Scripts.Infrastructure.GameStates.States;
 using UnityEngine;
 using UnityEngine.UI;

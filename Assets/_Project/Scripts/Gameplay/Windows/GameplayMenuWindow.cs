@@ -1,4 +1,4 @@
-using _Project.Scripts.Infrastructure.GameStates;
+using _Project.Scripts.Infrastructure.GameStates.StateMachine;
 using _Project.Scripts.Infrastructure.GameStates.States;
 using _Project.Scripts.Utils.Pause;
 using UnityEngine;

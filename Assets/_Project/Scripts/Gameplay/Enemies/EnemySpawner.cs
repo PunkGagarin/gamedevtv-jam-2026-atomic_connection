@@ -8,9 +8,6 @@ namespace _Project.Scripts.Gameplay.Enemies
 {
     public class EnemySpawner : IEnemySpawner
     {
-        private const float MIN_SPAWN_RADIUS = 3f;
-        private const float MAX_SPAWN_RADIUS = 5f;
-
         private Transform _target;
         private bool _isActive;
         private bool _spawnWasStarted;
@@ -72,7 +69,7 @@ namespace _Project.Scripts.Gameplay.Enemies
         private void SpawnEnemy()
         {
             float angle = _random.Range(0f, Mathf.PI * 2f);
-            float radius = _random.Range(MIN_SPAWN_RADIUS, MAX_SPAWN_RADIUS);
+            float radius = _random.Range(_config.MinSpawnRadius, _config.MaxSpawnRadius);
             Vector3 offset = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * radius;
 
             _enemyFactory.Create(_target.position + offset);

@@ -102,7 +102,13 @@ Assets/_Project/Scripts/
 │   ├── Level/        # Concrete scene references and providers
 │   ├── Units/        # Atom core, free atom, and related unit feature folders
 │   └── Windows/      # Dynamic window infrastructure and window configs
-├── Infrastructure/   # App lifecycle: GameRunner, StateMachine, States, SceneManagement
+├── Infrastructure/   # App lifecycle: GameRunner, state machine, states, scene loading
+│   ├── GameStates/   # Runtime state machine area
+│   │   ├── Factory/              # Zenject-backed state resolution
+│   │   ├── StateInfrastructure/  # State interfaces and base state helpers
+│   │   ├── StateMachine/         # State machine implementations and APIs
+│   │   └── States/               # Concrete lifecycle states
+│   └── SceneManagement/          # Scene loading and scene initialization
 ├── GameplayData/     # ScriptableObject repositories and base Definitions
 ├── Audio/            # Audio subsystem: Domain/, Data/, View/
 ├── Localization/     # EN/RU via XML
@@ -112,7 +118,7 @@ Assets/_Project/Scripts/
 
 ### Core patterns
 
-**State Machine** controls game flow. States live in `Infrastructure/GameStates/States/`. Current flow is `BootstrapState -> LoadMainMenuState -> MainMenuState -> LoadGameplayState -> GameplayEnterState -> GameplayState`. `GameplayPauseState` and `GameOverOrParagonState` are registered lifecycle states for later transitions. Do not enter `GameplayPauseState` for the gear menu until `GameplayState` has explicit suspend/resume semantics; a normal state transition out of `GameplayState` runs cleanup.
+**State Machine** controls game flow. State machine implementations live in `Infrastructure/GameStates/StateMachine/`, state interfaces and base helpers live in `Infrastructure/GameStates/StateInfrastructure/`, state resolution lives in `Infrastructure/GameStates/Factory/`, and concrete lifecycle states live in `Infrastructure/GameStates/States/`. Current flow is `BootstrapState -> LoadMainMenuState -> MainMenuState -> LoadGameplayState -> GameplayEnterState -> GameplayState`. `GameplayPauseState` and `GameOverOrParagonState` are registered lifecycle states for later transitions. Do not enter `GameplayPauseState` for the gear menu until `GameplayState` has explicit suspend/resume semantics; a normal state transition out of `GameplayState` runs cleanup.
 
 Each state implements `IState, IGameState` directly or inherits a base state that does. Bind every lifecycle state in `ProjectInstaller` with self binding, resolve states through `IStateFactory`, transition with `_stateMachine.Enter<SomeState>()`, and keep scene loading inside loading states.
 

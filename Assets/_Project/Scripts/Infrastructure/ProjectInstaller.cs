@@ -6,7 +6,7 @@ using _Project.Scripts.Gameplay.Drag;
 using _Project.Scripts.Gameplay.Enemies;
 using _Project.Scripts.Gameplay.Input.Service;
 using _Project.Scripts.Infrastructure.GameStates.States;
-using _Project.Scripts.Infrastructure.GameStates;
+using _Project.Scripts.Infrastructure.GameStates.StateMachine;
 using _Project.Scripts.Gameplay.Level;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using _Project.Scripts.Gameplay.Units.BattleMolecules;

@@ -1,9 +1,10 @@
 using _Project.Scripts.Infrastructure.GameStates.Factory;
+using _Project.Scripts.Infrastructure.GameStates.StateInfrastructure;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Zenject;
 
-namespace _Project.Scripts.Infrastructure.GameStates
+namespace _Project.Scripts.Infrastructure.GameStates.StateMachine
 {
     public class SimpleStateMachine<T> : IGameStateMachine<T>, IPayloadStateMachine<T>
     {

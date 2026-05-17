@@ -1,6 +1,8 @@
-using Zenject;
+using _Project.Scripts.Infrastructure.GameStates.StateInfrastructure;
+using _Project.Scripts.Infrastructure.GameStates.StateMachine;
 using _Project.Scripts.Infrastructure.SceneManagement;
 using _Project.Scripts.Utils.Pause;
+using Zenject;
 
 namespace _Project.Scripts.Infrastructure.GameStates.States
 {

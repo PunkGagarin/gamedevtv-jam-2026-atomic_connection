@@ -1,4 +1,4 @@
-using _Project.Scripts.Infrastructure.GameStates;
+using _Project.Scripts.Infrastructure.GameStates.StateInfrastructure;
 
 namespace _Project.Scripts.Infrastructure.GameStates.Factory
 {

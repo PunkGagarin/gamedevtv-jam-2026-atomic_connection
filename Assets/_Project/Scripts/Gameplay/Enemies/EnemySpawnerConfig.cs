@@ -6,5 +6,7 @@ namespace _Project.Scripts.Gameplay.Enemies
     public class EnemySpawnerConfig : ScriptableObject
     {
         [field: SerializeField, Min(0.01f)] public float SpawnIntervalSeconds { get; private set; } = 3f;
+        [field: SerializeField, Min(0f)] public float MinSpawnRadius { get; private set; } = 3f;
+        [field: SerializeField, Min(0f)] public float MaxSpawnRadius { get; private set; } = 5f;
     }
 }

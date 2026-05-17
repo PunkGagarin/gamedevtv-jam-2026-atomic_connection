@@ -1,6 +1,7 @@
+using _Project.Scripts.Infrastructure.GameStates.StateInfrastructure;
 using Zenject;
 
-namespace _Project.Scripts.Infrastructure.GameStates
+namespace _Project.Scripts.Infrastructure.GameStates.StateMachine
 {
     public class GameStateMachine : SimpleStateMachine<IGameState>, ITickable
     {

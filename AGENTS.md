@@ -4,7 +4,7 @@ This file provides guidance to Codex and other coding agents when working with c
 
 ## Project
 
-Unity template project built with Unity `6000.4.4f1` + URP. Infrastructure is the main focus; `Gameplay/Units` and `Gameplay/Enemies` are minimal example features used to exercise lifecycle and DI patterns.
+AtomicConnection is a Unity project built with Unity `6000.4.4f1` + URP. Game design is documented in [AtomicConnection_GDD.md](AtomicConnection_GDD.md). Infrastructure is still template-derived; `Gameplay/Units` and `Gameplay/Enemies` are minimal example features used to exercise lifecycle and DI patterns until production gameplay replaces them.
 
 ## Build & Run
 
@@ -28,13 +28,13 @@ Lifecycle, state machine, DI, scene loading, UI flow, and gameplay loop work is 
 Resolve its local path from `REFERENCES.local.md` first when present, otherwise from `REFERENCES.md`.
 If neither file contains a valid local path, ask the user for the current `ecs-survivors` checkout path before doing lifecycle work.
 
-Implemented UnityTemplate architecture is the first source of truth. When a rule, pattern, or working example already exists in `AGENTS.md` or `Assets/_Project`, follow this project even if it intentionally differs from `ecs-survivors`.
+Implemented AtomicConnection architecture is the first source of truth. When a rule, pattern, or working example already exists in `AGENTS.md` or `Assets/_Project`, follow this project even if it intentionally differs from `ecs-survivors`.
 
-Use `ecs-survivors` only for new architecture/lifecycle decisions that are not already described or exemplified in UnityTemplate, or when the user explicitly asks to compare with the reference. Do not "correct" user-approved UnityTemplate deviations back to `ecs-survivors` unless the user asks to revisit that decision.
+Use `ecs-survivors` only for new architecture/lifecycle decisions that are not already described or exemplified in AtomicConnection, or when the user explicitly asks to compare with the reference. Do not "correct" user-approved AtomicConnection deviations back to `ecs-survivors` unless the user asks to revisit that decision.
 
 Before recommending, documenting, or implementing a new lifecycle pattern:
 
-1. Check `AGENTS.md` and existing UnityTemplate code first.
+1. Check `AGENTS.md` and existing AtomicConnection code first.
 2. If the pattern is not already covered locally, find the matching `ecs-survivors` class/file or concrete pattern.
 3. Map that pattern to this project without adding extra architectural layers.
 4. If there is no matching pattern in `ecs-survivors`, label it as a new proposal and ask before adding it to docs or code.
@@ -43,7 +43,7 @@ Reference-backed lifecycle rules:
 
 - UI may call `GameStateMachine.Enter(...)`, as in `HomeHUD` / `GameOverWindow` from `ecs-survivors`.
 - UI may query UI-facing gameplay/meta services and static data for display, as in `LevelUpWindow` and `ShopWindow`.
-- Current UnityTemplate decision: gameplay/meta choice UI uses MVP direct service calls for now, not request queues. This is a user-approved simplification from the `ecs-survivors` request-entity pattern.
+- Current AtomicConnection decision: gameplay/meta choice UI uses MVP direct service calls for now, not request queues. This is a user-approved simplification from the `ecs-survivors` request-entity pattern.
 - UI must not call `SceneLoader.LoadScene(...)` or `SceneLoader.ReloadScene(...)` directly.
 - UI must not run gameplay cleanup or control gameplay service lifecycle. Opening/closing gameplay menu may toggle the high-level `PauseService`, but UI must not start, stop, tick, or clean individual gameplay services.
 - Runtime gameplay/meta changes from UI should go through high-level feature/domain services, not scattered low-level calls across multiple services.
@@ -236,7 +236,7 @@ Three installer types:
 ## Git Notes
 
 - Git may report `dubious ownership` in sandboxed environments. Use a per-command safe directory override when inspecting status:
-  `git -c safe.directory=F:/unity_personal/UnityTemplate status --short --branch`
+  `git -c safe.directory=F:/unity_personal/Jams/gamedevtv-jam-2026-atomic_connection status --short --branch`
 - Do not create commits, branches, stage files, or rewrite history unless the user asks for that explicitly.
 
 ## Key dependencies

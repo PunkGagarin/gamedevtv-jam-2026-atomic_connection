@@ -1,3 +1,4 @@
+using System;
 using _Project.Scripts.Gameplay.Cameras.Provider;
 using _Project.Scripts.Gameplay.Common.Physics;
 using _Project.Scripts.Gameplay.Common.Random;
@@ -25,6 +26,8 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
         [Inject] private IFreeAtomFactory _freeAtomFactory;
         [Inject] private ITalentService _talentService;
 
+        public event Action CoreDied;
+
         public void Start(AtomCore core)
         {
             _core = core;
@@ -32,6 +35,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
             if (_core == null)
                 return;
 
+            _core.Died += OnCoreDied;
             _talentService.Changed += OnTalentChanged;
             ApplyTalentMultiplier();
         }
@@ -47,8 +51,13 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
 
         public void Cleanup()
         {
-            _talentService.Changed -= OnTalentChanged;
-            _core?.CleanupAtoms();
+            if (_core != null)
+            {
+                _core.Died -= OnCoreDied;
+                _core.CleanupAtoms();
+                _talentService.Changed -= OnTalentChanged;
+            }
+
             _core = null;
         }
 
@@ -65,6 +74,11 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
             int adjustedClicks = Mathf.Max(1, Mathf.RoundToInt(
                 _config.ClicksToGenerateFreeAtom / _talentService.AtomGenerationMultiplier));
             _core.Configure(_config, adjustedClicks);
+        }
+        
+        private void OnCoreDied()
+        {
+            CoreDied?.Invoke();
         }
 
         private void HandleCoreClick()

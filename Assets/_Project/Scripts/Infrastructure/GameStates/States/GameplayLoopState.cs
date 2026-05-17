@@ -5,6 +5,7 @@ using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using _Project.Scripts.Gameplay.Units.BattleMolecules;
 using _Project.Scripts.Gameplay.Units.AtomCores;
 using _Project.Scripts.Infrastructure.GameStates.StateInfrastructure;
+using _Project.Scripts.Infrastructure.GameStates.StateMachine;
 using _Project.Scripts.Utils.Pause;
 using Zenject;
 
@@ -20,12 +21,14 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
         [Inject] private IBattleMoleculeService _battleMoleculeService;
         [Inject] private IDragService _dragService;
         [Inject] private IGameplayRuntimeHierarchy _runtimeHierarchy;
+        [Inject] private GameStateMachine _stateMachine;
         [Inject] private PauseService _pauseService;
 
         public override void Enter()
         {
             AtomCore currentCore = _atomCoreFactory.CurrentCore;
 
+            _atomCoreService.CoreDied += OnCoreDied;
             _atomCoreService.Start(currentCore);
             _enemySpawner.Start(currentCore != null ? currentCore.transform : null);
             _battleMoleculeService.Start();
@@ -44,6 +47,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
 
         protected override void ExitOnEndOfFrame()
         {
+            _atomCoreService.CoreDied -= OnCoreDied;
             _dragService.CancelDrag();
             _enemySpawner.Cleanup();
             _atomCoreService.Cleanup();
@@ -52,6 +56,11 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
             _battleMoleculeFactory.Cleanup();
             _freeAtomFactory.Cleanup();
             _runtimeHierarchy.Cleanup();
+        }
+
+        private void OnCoreDied()
+        {
+            _stateMachine.Enter<GameOverOrParagonState>();
         }
     }
 }

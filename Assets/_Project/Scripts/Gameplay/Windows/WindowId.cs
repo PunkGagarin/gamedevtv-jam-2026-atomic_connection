@@ -4,6 +4,7 @@ namespace _Project.Scripts.Gameplay.Windows
     {
         SettingsWindow = 0,
         GameplayMenuWindow = 1,
-        TalentTreeWindow = 2,
+        GameOverWindow = 2,
+        TalentTreeWindow = 3,
     }
 }

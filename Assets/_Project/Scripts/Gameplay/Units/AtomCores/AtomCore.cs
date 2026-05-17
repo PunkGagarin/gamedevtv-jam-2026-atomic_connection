@@ -1,3 +1,5 @@
+using System;
+using _Project.Scripts.Gameplay.Common.Health;
 using _Project.Scripts.Gameplay.Units;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
@@ -6,14 +8,32 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
 {
     [RequireComponent(typeof(OwnedAtoms))]
     [RequireComponent(typeof(AtomProductionProgress))]
+    [RequireComponent(typeof(Health))]
     public class AtomCore : MonoBehaviour
     {
         [field: SerializeField] public OwnedAtoms OwnedAtoms { get; private set; }
         [field: SerializeField] private AtomProductionProgress ProductionProgress { get; set; }
+        [field: SerializeField] private Health Health { get; set; }
 
         private float _spawnRadiusOffset;
         private float _atomOrbitDegreesPerSecond;
         private float _orbitRadius;
+
+        public bool IsAlive => Health == null || Health.IsAlive;
+
+        public event Action Died
+        {
+            add
+            {
+                if (Health != null)
+                    Health.Died += value;
+            }
+            remove
+            {
+                if (Health != null)
+                    Health.Died -= value;
+            }
+        }
 
         private void Awake()
         {
@@ -22,6 +42,9 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
 
             if (ProductionProgress == null)
                 ProductionProgress = GetComponent<AtomProductionProgress>();
+
+            if (Health == null)
+                Health = GetComponent<Health>();
         }
 
         public void Configure(UnitClickConfig config, int clicksRequired)
@@ -30,6 +53,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
             _atomOrbitDegreesPerSecond = config.FreeAtomOrbitDegreesPerSecond;
             _orbitRadius = GetColliderRadius(transform);
 
+            Health?.Configure(config.CoreMaxHealth);
             ProductionProgress.Configure(clicksRequired);
         }
 
@@ -62,6 +86,11 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
         {
             float angleDelta = _atomOrbitDegreesPerSecond * Mathf.Deg2Rad * deltaTime;
             OwnedAtoms.TickOrbit(angleDelta);
+        }
+
+        public void TakeDamage(int amount)
+        {
+            Health?.TakeDamage(amount);
         }
 
         public void CleanupAtoms()

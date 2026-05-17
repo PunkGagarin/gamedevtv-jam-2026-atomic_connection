@@ -143,7 +143,7 @@ Assets/_Project/Scripts/
 
 ### Core patterns
 
-**State Machine** controls game flow. State machine implementations live in `Infrastructure/GameStates/StateMachine/`, state interfaces and base helpers live in `Infrastructure/GameStates/StateInfrastructure/`, state resolution lives in `Infrastructure/GameStates/Factory/`, and concrete lifecycle states live in `Infrastructure/GameStates/States/`. Current flow is `BootstrapState -> LoadMainMenuState -> MainMenuState -> LoadGameplayState -> GameplayEnterState -> GameplayLoopState`. `GameplayPauseState` and `GameOverOrParagonState` are registered lifecycle states for later transitions. Do not enter `GameplayPauseState` for the gear menu until `GameplayLoopState` has explicit suspend/resume semantics; a normal state transition out of `GameplayLoopState` runs cleanup.
+**State Machine** controls game flow. State machine implementations live in `Infrastructure/GameStates/StateMachine/`, state interfaces and base helpers live in `Infrastructure/GameStates/StateInfrastructure/`, state resolution lives in `Infrastructure/GameStates/Factory/`, and concrete lifecycle states live in `Infrastructure/GameStates/States/`. Current flow is `BootstrapState -> LoadMainMenuState -> MainMenuState -> LoadGameplayState -> GameplayEnterState -> GameplayLoopState`. `GameplayLoopState` transitions to `GameOverOrParagonState` when the atom core dies, and `GameOverOrParagonState` opens `WindowId.GameOverWindow`. `GameplayPauseState` is registered for later transitions. Do not enter `GameplayPauseState` for the gear menu until `GameplayLoopState` has explicit suspend/resume semantics; a normal state transition out of `GameplayLoopState` runs cleanup.
 
 Each state implements `IState, IGameState` directly or inherits a base state that does. Bind every lifecycle state in `ProjectInstaller` with self binding, resolve states through `IStateFactory`, transition with `_stateMachine.Enter<SomeState>()`, and keep scene loading inside loading states.
 
@@ -186,6 +186,14 @@ No gameplay-changing path may bypass this pause gate. Input polling, timers,
 cooldowns, spawning, resource changes, score/progress changes, and other runtime
 gameplay mutations must run from services ticked by `GameplayLoopState`, not from
 independent `MonoBehaviour.Update()` methods.
+
+**Game Over Flow** is a normal state transition, not a gameplay menu action.
+`AtomCoreService` subscribes to the current core death event during `Start()` and
+raises a service-level notification. `GameplayLoopState` owns the transition from
+that notification to `GameOverOrParagonState`; exiting `GameplayLoopState` runs
+normal active gameplay cleanup. `GameOverOrParagonState` opens the dynamic
+`WindowId.GameOverWindow`, and `GameOverWindow` may restart gameplay or return to
+main menu through `GameStateMachine.Enter(...)`.
 
 **Gameplay Input and Interaction** belongs to the active gameplay loop when it
 can change runtime state. Input polling, hit detection, cross-object targeting,

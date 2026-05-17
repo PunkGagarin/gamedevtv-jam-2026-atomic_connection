@@ -1,4 +1,4 @@
-﻿# Lifecycle Migration Plan
+# Lifecycle Migration Plan
 
 Status: historical migration/audit log. `AGENTS.md` is the source of truth for
 current architecture rules. Do not treat this file as an active task plan unless
@@ -50,16 +50,16 @@ state/factory -> path/provider -> asset load -> instantiation.
 Текущее состояние:
 
 - `[done]` Step 1 - state machine update model.
-  `GameStateMachine` стал `ITickable`, добавлен `IUpdateable`, `GameplayState`
+  `GameStateMachine` стал `ITickable`, добавлен `IUpdateable`, `GameplayLoopState`
   стал active update-state с пустым `Update()`.
 - `[done]` Step 2 - gameplay loading/enter/active states.
   Добавлен `GameplayEnterState`, `LoadGameplayState` переходит по цепочке
-  `LoadGameplayState -> GameplayEnterState -> GameplayState`,
+  `LoadGameplayState -> GameplayEnterState -> GameplayLoopState`,
   `GameplayEnterState` зарегистрирован в `ProjectInstaller`.
 - `[done]` Step 3 - gameplay setup in `GameplayEnterState`.
   Добавлен минимальный пример по аналогии с `BattleEnterState.PlaceHero()`:
   `GameplayEnterState` берет `ILevelStartPointProvider.StartPoint`, вызывает
-  `IExampleUnitFactory.Create(...)`, затем входит в `GameplayState`.
+  `IExampleUnitFactory.Create(...)`, затем входит в `GameplayLoopState`.
   `ExampleUnit` asset flow приведен к reference-паттерну.
 - `[done]` Step 3a - rework `ExampleUnit` prefab loading to reference flow.
   Пример приведен к цепочке `Resources path -> IAssetProvider ->
@@ -77,12 +77,12 @@ state/factory -> path/provider -> asset load -> instantiation.
   UI дергает state machine, прямых вызовов `SceneLoader.LoadScene(...)` из UI
   нет. Из `MainMenu` удалена лишняя зависимость от `SceneLoader`.
 - `[done]` Step 6 - active state cleanup.
-  `GameplayState.ExitOnEndOfFrame()` вызывает `IExampleUnitFactory.Cleanup()`,
+  `GameplayLoopState.ExitOnEndOfFrame()` вызывает `IExampleUnitFactory.Cleanup()`,
   а factory уничтожает созданные ей `ExampleUnit` objects. Это минимальный
   аналог active-state cleanup из `BattleLoopState`.
 - `[done]` Step 7 - end-of-frame exit minimal implementation.
   Добавлен `EndOfFrameExitState`, `IDeferredExitState` и ожидание deferred exit
-  в `SimpleStateMachine` через `UniTask.WaitUntil(...)`. `GameplayState`
+  в `SimpleStateMachine` через `UniTask.WaitUntil(...)`. `GameplayLoopState`
   наследует `EndOfFrameExitState` и чистит state-owned objects в
   `ExitOnEndOfFrame()`.
 - `[done]` Target schema - menu loading split.
@@ -107,7 +107,7 @@ state/factory -> path/provider -> asset load -> instantiation.
   asset chain `Resources path "Gameplay/Enemies/EnemyUnit" -> IAssetProvider ->
   IInstantiator`. Lifecycle mapping взят из `BattleLoopState.OnUpdate()` ->
   `BattleFeature.Execute()` -> `EnemySpawnSystem.Execute()`, но без ECS/Feature
-  слоя. `GameplayState` запускает spawner с player transform, тикает его в
+  слоя. `GameplayLoopState` запускает spawner с player transform, тикает его в
   `Update()` и чистит через `ExitOnEndOfFrame()`. Spawn interval вынесен в
   value config `EnemySpawnerConfig`, который биндится через
   `GlobalConfigInstaller`.
@@ -160,7 +160,7 @@ state/factory -> path/provider -> asset load -> instantiation.
   и инжектится в `EnemySpawner`.
 - `[done]` Gameplay menu pause.
   `GearButton` включает `PauseService`, затем открывает
-  `GameplayMenuWindow`. `GameplayState` не тикает gameplay services пока
+  `GameplayMenuWindow`. `GameplayLoopState` не тикает gameplay services пока
   `PauseService.IsPaused`; `Restart` снимает паузу перед close, restart или
   main menu. `LoadGameplayState` и `LoadMainMenuState` также снимают паузу как
   safety reset.
@@ -175,7 +175,7 @@ state/factory -> path/provider -> asset load -> instantiation.
   gameplay и возврат в меню проверены в Unity Editor.
 - `[blocked]` Unity validation after example gameplay setup.
   Проверить `Bootstrap -> LoadMainMenuState -> MainMenuState ->
-  LoadGameplayState -> GameplayEnterState -> GameplayState`, создание
+  LoadGameplayState -> GameplayEnterState -> GameplayLoopState`, создание
   `ExampleUnit` на `GameplayStartPoint` и возврат в меню. Требует Play Mode в
   Unity Editor. После последнего импорта свежий `Editor.log` не показывает
   compile/runtime errors, но появление `ExampleUnit` в сцене еще нужно
@@ -251,7 +251,7 @@ BattleEnterState.Enter()
 ```text
 GameplayEnterState.Enter()
 -> подготовить игровую сессию обычными сервисами/фабриками
--> stateMachine.Enter<GameplayState>()
+-> stateMachine.Enter<GameplayLoopState>()
 ```
 
 Не вводим отдельного промежуточного владельца gameplay lifecycle. Подготовку
@@ -276,13 +276,13 @@ GameStateMachine.Tick()
 GameStateMachine : ITickable
 -> ticks current state
 
-GameplayState : IState, IGameState, IUpdateable
+GameplayLoopState : IState, IGameState, IUpdateable
 -> Enter()
 -> Update()
 -> Exit()
 ```
 
-Не переносим ECS/Features. Внутри `GameplayState.Update()` вызываем обычные
+Не переносим ECS/Features. Внутри `GameplayLoopState.Update()` вызываем обычные
 сервисы нашего проекта, если они нужны.
 
 ### 4a. StateFactory резолвит states из DI
@@ -330,13 +330,13 @@ ActiveState.ExitOnEndOfFrame()
 Для нашего template:
 
 ```text
-GameplayState.Enter()
+GameplayLoopState.Enter()
 -> включить активную игру
 
-GameplayState.Update()
+GameplayLoopState.Update()
 -> тик активной игры
 
-GameplayState.ExitOnEndOfFrame()
+GameplayLoopState.ExitOnEndOfFrame()
 -> остановить/почистить активную игру
 ```
 
@@ -384,7 +384,7 @@ BootstrapState
 -> MainMenuState
 -> LoadGameplayState
 -> GameplayEnterState
--> GameplayState
+-> GameplayLoopState
 -> GameplayPauseState
 -> GameOverOrParagonState
 ```
@@ -426,9 +426,9 @@ BootstrapState
 
 - Использует конкретные providers/services, заполненные scene initializers.
 - Создает/готовит игровую сессию.
-- Входит в `GameplayState`.
+- Входит в `GameplayLoopState`.
 
-### GameplayState
+### GameplayLoopState
 
 - Владеет активным игровым циклом.
 - Реализует update-интерфейс по аналогии с `IUpdateable` в `ecs-survivors`.
@@ -442,7 +442,7 @@ BootstrapState
 
 - Зарегистрирован как будущий lifecycle state.
 - Сейчас gear-menu pause не входит в `GameplayPauseState`, потому обычный
-  transition из `GameplayState` вызывает `ExitOnEndOfFrame()` и cleanup
+  transition из `GameplayLoopState` вызывает `ExitOnEndOfFrame()` и cleanup
   runtime objects.
 - Перед использованием для menu pause нужно добавить явную suspend/resume
   семантику, отличную от cleanup exit.
@@ -619,7 +619,7 @@ effect сам.
 LevelUpWindow
 -> abilityUpgradeRequests.RequestUpgrade(abilityId)
 
-GameplayState.Update()
+GameplayLoopState.Update()
 -> abilityUpgradeProcessor.ProcessRequests()
 -> abilityUpgradeRequests.ConsumeAll()
 -> abilityUpgradeService.ApplyUpgrade(...)
@@ -768,7 +768,7 @@ GameplayMenuWindow.CloseButton
 -> windowService.Close(Id)
 ```
 
-Не открываем result window из `GameplayState` напрямую, если это станет
+Не открываем result window из `GameplayLoopState` напрямую, если это станет
 responsibility конкретного result state. State owns lifecycle; window only
 asks for state transition.
 
@@ -912,13 +912,13 @@ if currentState is IUpdateable updateable
 
 - `LoadGameplayState`;
 - `GameplayEnterState`;
-- `GameplayState`.
+- `GameplayLoopState`.
 
 `LoadGameplayState` только грузит сцену.
 
 `GameplayEnterState` готовит сессию.
 
-`GameplayState` тикает активную игру.
+`GameplayLoopState` тикает активную игру.
 
 ### Шаг 3. Добавить подготовку gameplay в GameplayEnterState
 
@@ -936,7 +936,7 @@ BattleEnterState.Enter()
 ```text
 GameplayEnterState.Enter()
 -> подготовить gameplay через concrete providers/factories
--> stateMachine.Enter<GameplayState>()
+-> stateMachine.Enter<GameplayLoopState>()
 ```
 
 Если подготовка станет сложнее, расширяем этот же паттерн внутри
@@ -958,12 +958,12 @@ GameplayEnterState.Enter()
    Resources path "Gameplay/Units/ExampleUnit"
    -> IAssetProvider.LoadAsset<ExampleUnit>(path)
    -> IInstantiator.InstantiatePrefabForComponent(...)
--> stateMachine.Enter<GameplayState>()
+-> stateMachine.Enter<GameplayLoopState>()
 
-GameplayState.Enter()
+GameplayLoopState.Enter()
 -> enemySpawner.Start(exampleUnitFactory.CurrentUnit.transform)
 
-GameplayState.Update()
+GameplayLoopState.Update()
 -> enemySpawner waits for first gameplay click
 -> enemySpawner spawns EnemyUnit near player every EnemySpawnerConfig.SpawnIntervalSeconds
 ```
@@ -1006,7 +1006,7 @@ sceneLoader.ReloadScene()
 
 Минимум:
 
-- `GameplayState.ExitOnEndOfFrame()` чистит подписки и state-owned процессы.
+- `GameplayLoopState.ExitOnEndOfFrame()` чистит подписки и state-owned процессы.
 - `MainMenuState.Exit()` чистит menu-owned процессы, если они появятся.
 - `GameOverOrParagonState` отвечает за завершение и результат.
 
@@ -1016,7 +1016,7 @@ sceneLoader.ReloadScene()
 GameplayEnterState.Enter()
 -> exampleUnitFactory.Create(...)
 
-GameplayState.ExitOnEndOfFrame()
+GameplayLoopState.ExitOnEndOfFrame()
 -> enemySpawner.Cleanup()
 -> exampleUnitFactory.Cleanup()
 -> destroy created EnemyUnit and ExampleUnit objects
@@ -1046,7 +1046,7 @@ stateMachine.Enter<NextState>()
 - State machine берет states через `StateFactory`, а не через manual register.
 - Загрузкой сцен владеют loading states.
 - Подготовкой gameplay владеет `GameplayEnterState`.
-- Активным tick владеет `GameplayState`.
+- Активным tick владеет `GameplayLoopState`.
 - Cleanup находится в state exit.
 - Scene references передаются через concrete initializers/providers.
 - Нет новых абстракций, которых нет в референсном lifecycle-паттерне.

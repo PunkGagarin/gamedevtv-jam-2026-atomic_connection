@@ -1,24 +1,38 @@
-using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Drag;
+using _Project.Scripts.Gameplay.Units;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
-using Zenject;
 
 namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 {
+    [RequireComponent(typeof(OwnedAtoms))]
     public class BattleMolecule : MonoBehaviour, IDropTarget
     {
-        [Inject] private BattleMoleculeConfig _config;
+        [field: SerializeField] private OwnedAtoms OwnedAtoms { get; set; }
 
-        private readonly List<GameObject> _depositedAtoms = new();
-        private int _depositedCount;
+        private int _atomsRequired;
+        private float _atomsPosCircleRadius;
+        private float _depositedAtomsOrbitDegreesPerSecond;
+
+        private void Awake()
+        {
+            if (OwnedAtoms == null)
+                OwnedAtoms = GetComponent<OwnedAtoms>();
+        }
+
+        public void Configure(BattleMoleculeConfig config)
+        {
+            _atomsRequired = config.AtomsRequired;
+            _atomsPosCircleRadius = config.AtomsPosCircleRadius;
+            _depositedAtomsOrbitDegreesPerSecond = config.DepositedAtomsOrbitDegreesPerSecond;
+        }
 
         public bool CanAcceptDrop(IDraggable draggable)
         {
-            if (_config == null)
+            if (_atomsRequired <= 0)
                 return false;
 
-            return draggable is FreeAtom && _depositedCount < _config.AtomsRequired;
+            return draggable is FreeAtom && OwnedAtoms.Count < _atomsRequired;
         }
 
         public void OnDropAccepted(IDraggable draggable)
@@ -32,34 +46,29 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             if (col != null)
                 col.enabled = false;
 
-            freeAtomObject.transform.SetParent(transform, true);
-            freeAtomObject.transform.localPosition = GetCirclePosition(_depositedCount, _config.AtomsRequired);
+            float angle = GetCircleAngle(OwnedAtoms.Count, _atomsRequired);
+            OwnedAtoms.TakeOwnership(freeAtom, FreeAtomOwnerKind.BattleMolecule);
+            freeAtom.OrbitMotion?.Configure(transform, _atomsPosCircleRadius, angle);
 
-            _depositedAtoms.Add(freeAtomObject);
-            _depositedCount++;
-
-            if (_depositedCount >= _config.AtomsRequired)
+            if (OwnedAtoms.Count >= _atomsRequired)
                 Fire();
+        }
+
+        public void Tick(float deltaTime)
+        {
+            float angleDelta = _depositedAtomsOrbitDegreesPerSecond * Mathf.Deg2Rad * deltaTime;
+            OwnedAtoms.TickOrbit(angleDelta);
         }
 
         private void Fire()
         {
             Debug.Log("Boom");
-
-            foreach (GameObject atom in _depositedAtoms)
-            {
-                if (atom != null)
-                    Destroy(atom);
-            }
-
-            _depositedAtoms.Clear();
-            _depositedCount = 0;
+            OwnedAtoms.DestroyAll();
         }
 
-        private Vector3 GetCirclePosition(int index, int total)
+        private float GetCircleAngle(int index, int total)
         {
-            float angle = (index / (float)total) * Mathf.PI * 2f;
-            return new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * _config.AtomsPosCircleRadius;
+            return (index / (float)total) * Mathf.PI * 2f;
         }
 
         public void OnDropRejected(IDraggable draggable)

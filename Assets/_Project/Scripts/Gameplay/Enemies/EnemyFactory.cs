@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
+using _Project.Scripts.Gameplay.Level;
 using _Project.Scripts.Infrastructure.AssetManagement;
 
 namespace _Project.Scripts.Gameplay.Enemies
@@ -8,10 +9,12 @@ namespace _Project.Scripts.Gameplay.Enemies
     public class EnemyFactory : IEnemyFactory
     {
         private const string ENEMY_UNIT_PREFAB_PATH = "Gameplay/Enemies/EnemyUnit";
+        private const string ENEMIES_CONTAINER_NAME = "Enemies";
 
         private readonly List<EnemyUnit> _createdEnemies = new();
 
         [Inject] private IAssetProvider _assetProvider;
+        [Inject] private IGameplayRuntimeHierarchy _runtimeHierarchy;
         [Inject] private IInstantiator _instantiator;
 
         public EnemyUnit Create(Vector3 at)
@@ -28,7 +31,7 @@ namespace _Project.Scripts.Gameplay.Enemies
                 prefab,
                 at,
                 Quaternion.identity,
-                parentTransform: null);
+                _runtimeHierarchy.GetOrCreateContainer(ENEMIES_CONTAINER_NAME));
 
             enemy.name = nameof(EnemyUnit);
             _createdEnemies.Add(enemy);

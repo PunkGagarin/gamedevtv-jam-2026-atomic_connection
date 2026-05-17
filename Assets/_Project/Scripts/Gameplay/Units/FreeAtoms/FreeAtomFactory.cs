@@ -14,7 +14,7 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
         [Inject] private IAssetProvider _assetProvider;
         [Inject] private IInstantiator _instantiator;
 
-        public FreeAtom Create(Vector3 at)
+        public FreeAtom Create(Vector3 at, Transform parent)
         {
             FreeAtom prefab = _assetProvider.LoadAsset<FreeAtom>(FREE_ATOM_PREFAB_PATH);
 
@@ -28,9 +28,10 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
                 prefab,
                 at,
                 Quaternion.identity,
-                parentTransform: null);
+                parent);
 
             freeAtom.name = nameof(FreeAtom);
+            freeAtom.Destroyed += OnFreeAtomDestroyed;
             _createdFreeAtoms.Add(freeAtom);
 
             return freeAtom;
@@ -38,13 +39,26 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
 
         public void Cleanup()
         {
-            foreach (FreeAtom freeAtom in _createdFreeAtoms)
+            for (int i = _createdFreeAtoms.Count - 1; i >= 0; i--)
             {
-                if (freeAtom != null)
-                    Object.Destroy(freeAtom.gameObject);
-            }
+                FreeAtom freeAtom = _createdFreeAtoms[i];
 
-            _createdFreeAtoms.Clear();
+                if (freeAtom != null)
+                {
+                    freeAtom.Destroyed -= OnFreeAtomDestroyed;
+                    Object.Destroy(freeAtom.gameObject);
+                }
+
+                _createdFreeAtoms.RemoveAt(i);
+            }
+        }
+
+        private void OnFreeAtomDestroyed(FreeAtom freeAtom)
+        {
+            if (freeAtom != null)
+                freeAtom.Destroyed -= OnFreeAtomDestroyed;
+
+            _createdFreeAtoms.Remove(freeAtom);
         }
     }
 }

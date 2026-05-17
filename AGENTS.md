@@ -119,7 +119,7 @@ Assets/_Project/Scripts/
 
 ### Core patterns
 
-**State Machine** controls game flow. State machine implementations live in `Infrastructure/GameStates/StateMachine/`, state interfaces and base helpers live in `Infrastructure/GameStates/StateInfrastructure/`, state resolution lives in `Infrastructure/GameStates/Factory/`, and concrete lifecycle states live in `Infrastructure/GameStates/States/`. Current flow is `BootstrapState -> LoadMainMenuState -> MainMenuState -> LoadGameplayState -> GameplayEnterState -> GameplayState`. `GameplayPauseState` and `GameOverOrParagonState` are registered lifecycle states for later transitions. Do not enter `GameplayPauseState` for the gear menu until `GameplayState` has explicit suspend/resume semantics; a normal state transition out of `GameplayState` runs cleanup.
+**State Machine** controls game flow. State machine implementations live in `Infrastructure/GameStates/StateMachine/`, state interfaces and base helpers live in `Infrastructure/GameStates/StateInfrastructure/`, state resolution lives in `Infrastructure/GameStates/Factory/`, and concrete lifecycle states live in `Infrastructure/GameStates/States/`. Current flow is `BootstrapState -> LoadMainMenuState -> MainMenuState -> LoadGameplayState -> GameplayEnterState -> GameplayLoopState`. `GameplayPauseState` and `GameOverOrParagonState` are registered lifecycle states for later transitions. Do not enter `GameplayPauseState` for the gear menu until `GameplayLoopState` has explicit suspend/resume semantics; a normal state transition out of `GameplayLoopState` runs cleanup.
 
 Each state implements `IState, IGameState` directly or inherits a base state that does. Bind every lifecycle state in `ProjectInstaller` with self binding, resolve states through `IStateFactory`, transition with `_stateMachine.Enter<SomeState>()`, and keep scene loading inside loading states.
 
@@ -133,7 +133,7 @@ damage/resource/score mutation, or UI choice application logic. Put that logic
 inside the owning service, then call the service from the state. Keep this rule
 even when the code looks small enough for a private state helper method.
 
-`GameplayEnterState` owns the current gameplay setup: it reads `ILevelStartPointProvider.StartPoint`, calls `IAtomCoreFactory.Create(...)`, creates the battle molecule, then enters `GameplayState`. `AtomCoreFactory`, `FreeAtomFactory`, and `BattleMoleculeFactory` follow the reference-backed prefab flow: `Resources` paths under `Gameplay/Units/...` -> `IAssetProvider` -> Zenject `IInstantiator`, mirroring `HeroFactory.AddViewPath("Gameplay/Hero/hero")` and `EntityViewFactory.CreateViewForEntity(...)` in `ecs-survivors`. `GameplayState` inherits `EndOfFrameExitState`; it starts/ticks/cleans active gameplay services such as `IEnemySpawner` and `IAtomCoreClickService`, skips gameplay ticks while `PauseService.IsPaused`, and its `ExitOnEndOfFrame()` calls cleanup for state-owned runtime objects. `EnemySpawner`, `IAtomCoreClickService`, and battle molecule setup read tunable numeric values from config assets assigned in `GlobalConfigInstaller`. Do not use serialized gameplay prefab fields on `ProjectInstaller` for runtime gameplay prefabs unless explicitly approved as a new proposal. `GameplaySceneInitializer` writes the `MainCamera` and `GameplayStartPoint` scene references into `CameraProvider` and `LevelStartPointProvider`.
+`GameplayEnterState` owns the current gameplay setup: it reads `ILevelStartPointProvider.StartPoint`, calls `IAtomCoreFactory.Create(...)`, creates the battle molecule, then enters `GameplayLoopState`. `AtomCoreFactory`, `FreeAtomFactory`, and `BattleMoleculeFactory` follow the reference-backed prefab flow: `Resources` paths under `Gameplay/Units/...` -> `IAssetProvider` -> Zenject `IInstantiator`, mirroring `HeroFactory.AddViewPath("Gameplay/Hero/hero")` and `EntityViewFactory.CreateViewForEntity(...)` in `ecs-survivors`. Because gameplay factories are project-bound services, runtime gameplay objects they instantiate must be parented under the scene-owned `GameplayRuntime` hierarchy; they must not remain in `DontDestroyOnLoad` / `ProjectContext` and must not clutter the gameplay scene root. `GameplayLoopState` inherits `EndOfFrameExitState`; it starts/ticks/cleans active gameplay services such as `IEnemySpawner`, `IAtomCoreService`, and `IBattleMoleculeService`, skips gameplay ticks while `PauseService.IsPaused`, and its `ExitOnEndOfFrame()` calls cleanup for state-owned runtime objects. `IAtomCoreService` owns input hit detection, free atom creation through `FreeAtomFactory`, and lifecycle calls into the current `AtomCore`; `AtomCore` owns click progress, core-owned atom ownership, and core atom orbiting through local components. `IBattleMoleculeService` ticks created battle molecules; each `BattleMolecule` owns its accepted atoms, charge, fire, and molecule atom orbiting through local components. Enemy spawning, atom core behavior, and battle molecule setup read tunable numeric values from config assets assigned in `GlobalConfigInstaller`. Do not use serialized gameplay prefab fields on `ProjectInstaller` for runtime gameplay prefabs unless explicitly approved as a new proposal. `GameplaySceneInitializer` writes the `MainCamera` and `GameplayStartPoint` scene references into `CameraProvider` and `LevelStartPointProvider`.
 
 Scene initializers that implement Zenject interfaces must be listed in `SceneInitializationInstaller` on the scene `SceneContext`, matching the `ecs-survivors` pattern.
 
@@ -154,11 +154,11 @@ menu UI.
 **Gameplay Menu Pause** is not a `GameplayPauseState` transition yet.
 `GearButton -> PauseService.SetPaused(true) -> WindowService.Open(WindowId.GameplayMenuWindow)`.
 `Close`, `Restart`, and `MainMenu` actions in `GameplayMenuWindow` must unpause first; loading states
-also reset pause as a safety measure. `GameplayState` skips active gameplay
+also reset pause as a safety measure. `GameplayLoopState` skips active gameplay
 ticks while `PauseService.IsPaused`, but keeps state-owned runtime objects alive.
 No gameplay-changing path may bypass this pause gate. Input polling, timers,
 cooldowns, spawning, resource changes, score/progress changes, and other runtime
-gameplay mutations must run from services ticked by `GameplayState`, not from
+gameplay mutations must run from services ticked by `GameplayLoopState`, not from
 independent `MonoBehaviour.Update()` methods.
 
 **Gameplay Input and Interaction** belongs to the active gameplay loop when it
@@ -168,8 +168,8 @@ similar interactions should be modeled as state-owned services with explicit
 interaction mechanics inside the existing owning service instead of adding
 wrapper services. Current drag/drop ownership is `DragService`: it reads input
 and camera data, starts/moves/ends drag, handles raw release for active drags,
-and is ticked from `GameplayState`. Do not put drag mechanics into
-`GameplayState`, and do not add a separate drag interaction service unless
+and is ticked from `GameplayLoopState`. Do not put drag mechanics into
+`GameplayLoopState`, and do not add a separate drag interaction service unless
 `DragService` has become genuinely too broad and the user approves the split.
 `MonoBehaviour` runtime components may expose passive methods such as
 `SetProgress`, `OnDragMove`, or collision/view callbacks, but they should not
@@ -206,6 +206,12 @@ Three installer types:
 **UniTask** for all async and time-based operations. Coroutines are **never** used, including Unity yield instructions such as `WaitForSeconds`, `UnityEngine.WaitUntil`, and similar. Use `UniTask.Delay`, `UniTask.WaitUntil`, `async UniTaskVoid` instead. This applies to all code: MonoBehaviour components, services, states.
 
 **Component-based approach** - runtime Unity objects are built from small `MonoBehaviour` components. One responsibility equals one component. Dependencies between gameplay components should use `[SerializeField]` or `GetComponent`, not Zenject. State-owned lifecycle helpers such as factories, spawners, input handlers, and click/progress services can be plain DI services that are started, updated, cancelled/stopped, and cleaned by states. Do not inject gameplay services, factories, config, or input into a runtime `MonoBehaviour` just so that component can own active gameplay flow; inject those dependencies into the owning state/service instead and keep the component passive.
+
+Gameplay logic ownership is split by object boundary. If behavior describes how one runtime object works internally, implement it as components on that object or its root component. This includes movement, local stats, local progress, local owned-object containers, local charge, local firing behavior, local visual feedback, and other behavior that belongs to one object. If behavior coordinates several runtime objects, external input, factories, scene lifecycle, registration, spawning, cleanup, target selection across objects, or state transitions, implement it in a service or state. Feature services should not micromanage reusable components when the root object can own that behavior; services should contain logic that cannot naturally live inside one runtime object.
+
+Reusable gameplay components do not define service ownership. A shared component such as movement, orbiting, health, targeting, or visual feedback may be reused by multiple features, but do not create a global lifecycle service merely because several runtime objects use that component. The owning runtime object remains responsible for its own internal behavior, while feature services coordinate behavior that spans object boundaries. If two objects need the same mechanical behavior, extract or reuse a component and let each owning object drive it according to that object's rules.
+
+Reusable ownership components are valid when multiple runtime owners keep the same kind of child object. For atoms, use the `OwnedAtoms` component on the owning runtime object (for example core or battle molecule) instead of duplicating atom lists in each owner or storing ownership in a factory. `OwnedAtoms` tracks the owner's current atoms, parents owned atoms under the current owner in the Unity hierarchy, removes them on owner change or destruction, and can apply owner-local component ticks such as atom orbit movement. Services may trigger ownership transfers when the transfer comes from cross-object interactions such as drag/drop, spawning, cleanup, or scene lifecycle, but the owner component stores the ownership state.
 
 ### Adding new things
 
@@ -269,7 +275,7 @@ Three installer types:
 - For code-only changes, at minimum check affected C# files for compile-time issues and keep scene/prefab references in sync.
 - If adding or moving Unity assets, ensure corresponding `.meta` files are present and Unity-valid. Script `.cs.meta` files should contain a `MonoImporter` block, folder `.meta` files should contain `folderAsset: yes` and `DefaultImporter`, and new/moved prefabs or assets must keep stable GUID references. Prefer letting Unity generate or refresh these files when possible.
 - Current manual lifecycle/UI validation should include `MainMenu -> Settings -> Apply/Cancel`, `MainMenu -> Gameplay`, `GearButton -> GameplayMenuWindow -> Close`, `GearButton -> GameplayMenuWindow -> Restart`, and `GearButton -> GameplayMenuWindow -> MainMenu`.
-- Current gameplay validation should include `Bootstrap -> LoadMainMenuState -> MainMenuState -> LoadGameplayState -> GameplayEnterState -> GameplayState`, `AtomCore` creation at `GameplayStartPoint`, enemy spawning after first gameplay click, and cleanup when restarting or returning to main menu.
+- Current gameplay validation should include `Bootstrap -> LoadMainMenuState -> MainMenuState -> LoadGameplayState -> GameplayEnterState -> GameplayLoopState`, `AtomCore` creation at `GameplayStartPoint`, enemy spawning after first gameplay click, and cleanup when restarting or returning to main menu.
 
 ## Git Notes
 

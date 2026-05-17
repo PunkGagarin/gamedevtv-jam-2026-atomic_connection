@@ -1,4 +1,4 @@
-﻿# Lifecycle Comparison
+# Lifecycle Comparison
 
 Сравнение трех Unity-проектов:
 
@@ -40,7 +40,7 @@ scene-level composition через installers/bootstrap, а у `ecs-survivors` -
 | Entry scene | `Bootstrap` | `Bootstrap` | `Boot` |
 | Main scenes | `Bootstrap`, `MainMenu`, `Gameplay` | `Bootstrap`, `MainMenu`, `Gameplay` | `Boot`, `HomeScreen`, `Meadow` |
 | State machine | Простая синхронная | Та же основа, но больше overload-ов | `ITickable`, promise-based transitions |
-| Gameplay state | `GameplayState` пустой | `GameloopState` пустой, runtime в `GameplayBootstrap` | `BattleLoopState` владеет battle loop |
+| Gameplay state | `GameplayLoopState` пустой | `GameloopState` пустой, runtime в `GameplayBootstrap` | `BattleLoopState` владеет battle loop |
 | Gameplay init | Пока не выражен | Scene installers + `GameplayBootstrap` | `BattleEnterState` + `BattleLoopState` |
 | Game over | Заготовка | `GameEndService` + `GameEndUI`, restart reload scene | `GameOverState` + `GameOverWindow` |
 | Cleanup | Пустые `Exit()` | Частично через Zenject dispose/scene unload | Явный state teardown |
@@ -60,13 +60,13 @@ Bootstrap scene
 -> MainMenu.StartGame button
 -> LoadGameplayState
 -> Gameplay scene
--> GameplayState
+-> GameplayLoopState
 ```
 
 Дополнительные переходы:
 
 ```text
-Gameplay scene restart button -> LoadGameplayState -> GameplayState
+Gameplay scene restart button -> LoadGameplayState -> GameplayLoopState
 Gameplay scene main menu button -> MainMenuState -> MainMenu scene
 ```
 
@@ -134,7 +134,7 @@ Boot scene
 - Первая build-сцена: `Assets/_Project/_Scenes/Bootstrap.unity`.
 - Глобальные биндинги идут через `ProjectContext`.
 - `ProjectInstaller` регистрирует `BootstrapState`, `LoadGameplayState`,
-  `MainMenuState`, `GameplayState` и `GameStateMachine`.
+  `MainMenuState`, `GameplayLoopState` и `GameStateMachine`.
 - `BootstrapInstaller` регистрирует `GameRunner`.
 - `GameRunner.Initialize()` регистрирует все `IGameState` и входит в
   `BootstrapState`.
@@ -209,7 +209,7 @@ Bootstrap разбит на несколько явных шагов:
 - Загрузка идет через `SceneLoader.LoadScene(SceneEnum)`.
 - `MainMenuState` грузит `SceneEnum.MainMenu`.
 - `LoadGameplayState` показывает `LoadingCurtain`, грузит `SceneEnum.Gameplay`,
-  скрывает curtain и входит в `GameplayState`.
+  скрывает curtain и входит в `GameplayLoopState`.
 - `SceneLoader` использует `UniTask` и `SceneManager.LoadSceneAsync`.
 
 Текущая модель простая, но `LoadGameplayState` уже смешивает несколько задач:
@@ -344,9 +344,9 @@ State отвечает за загрузку сцены, а UI-действия 
 - показывает curtain;
 - грузит `Gameplay`;
 - скрывает curtain;
-- входит в `GameplayState`.
+- входит в `GameplayLoopState`.
 
-`GameplayState` пока пустой. Поэтому будущая gameplay-логика либо должна быть
+`GameplayLoopState` пока пустой. Поэтому будущая gameplay-логика либо должна быть
 добавлена в state lifecycle, либо будет жить в объектах сцены и отдельных
 сервисах.
 
@@ -393,7 +393,7 @@ state lifecycle.
 
 ### UnityTemplate
 
-Runtime loop пока не задан. `GameplayState.Enter()` и `Exit()` пустые.
+Runtime loop пока не задан. `GameplayLoopState.Enter()` и `Exit()` пустые.
 
 ### IgnisBearer
 
@@ -473,7 +473,7 @@ Game over встроен в lifecycle:
 - `BootstrapState.Exit()` пустой;
 - `MainMenuState.Exit()` пустой;
 - `LoadGameplayState.Exit()` пустой;
-- `GameplayState.Exit()` пустой;
+- `GameplayLoopState.Exit()` пустой;
 - `GameplayPauseState.Exit()` пустой;
 - `GameOverOrParagonState.Exit()` пустой.
 
@@ -536,11 +536,11 @@ Cleanup является частью state lifecycle:
    Целевая форма:
 
    ```text
-   LoadGameplayState -> GameplayEnterState -> GameplayState
+   LoadGameplayState -> GameplayEnterState -> GameplayLoopState
    ```
 
    `LoadGameplayState` только грузит сцену. `GameplayEnterState` создает session
-   runtime. `GameplayState` живет до pause/game over/win/exit.
+   runtime. `GameplayLoopState` живет до pause/game over/win/exit.
 
 4. Из `ecs-survivors`: добавить update lifecycle в global state machine.
 
@@ -629,12 +629,12 @@ Bootstrap
    - create session/runtime
    - spawn level data
    - load save/start data
--> GameplayState
+-> GameplayLoopState
    - active gameplay loop
    - can enter pause/game over/win
 -> GameplayPauseState
    - pause runtime
-   - return to GameplayState or MainMenu
+   - return to GameplayLoopState or MainMenu
 -> GameOverOrParagonState
    - stop gameplay
    - save results

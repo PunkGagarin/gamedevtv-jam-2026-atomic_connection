@@ -178,6 +178,31 @@
 Временный тестовый стартовый запас валют представлен в `CurrencyConfig`: `500` ДНК и `3` изотопа.
 Шанс выпадения `1` изотопа с не-боссового врага представлен в `CurrencyConfig`: `10%`.
 
+### Анимации дерева талантов
+
+Эти значения сейчас представлены в `TalentTreeAnimationConfig`.
+
+| Значение | Сейчас |
+|---|---:|
+| Hover scale ноды | 1.035 |
+| Hover duration ноды | 0.12 сек |
+| Reveal start scale ноды | 0.72 |
+| Reveal pulse scale ноды | 1.12 |
+| Reveal duration ноды | 0.22 сек |
+| Reveal fade duration ноды | 0.154 сек |
+| Reveal settle duration ноды | 0.18 сек |
+| Unlock pulse scale ноды | 1.12 |
+| Unlock pulse duration ноды | 0.18 сек |
+| Shake duration ноды | 0.18 сек |
+| Shake strength ноды | 8 |
+| Shake vibrato ноды | 12 |
+| Shake randomness ноды | 65 |
+| Tooltip offset | `(0, 94)` |
+| Tooltip start scale | `(1, 0.82)` |
+| Tooltip reveal duration | 0.14 сек |
+| Connection pulse duration | 0.16 сек |
+| Connection pulse scale | 1.45 |
+
 Текущие базовые значения боевой молекулы представлены в `BattleMoleculeConfig`:
 `3` атома для заряда и `1` базового урона.
 Таланты HP ядра, скорости генерации атомов, скорости генерации снарядов,

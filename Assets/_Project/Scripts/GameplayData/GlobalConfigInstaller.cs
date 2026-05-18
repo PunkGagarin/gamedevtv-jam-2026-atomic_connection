@@ -17,6 +17,7 @@ namespace _Project.Scripts.GameplayData
         [field: SerializeField] private UnitClickConfig UnitClickConfig { get; set; }
         [field: SerializeField] private BattleMoleculeConfig BattleMoleculeConfig { get; set; }
         [field: SerializeField] private TalentConfig TalentConfig { get; set; }
+        [field: SerializeField] private TalentTreeAnimationConfig TalentTreeAnimationConfig { get; set; }
         [field: SerializeField] private CurrencyConfig CurrencyConfig { get; set; }
         [field: SerializeField] private LevelCatalogConfig LevelCatalogConfig { get; set; }
 
@@ -26,6 +27,7 @@ namespace _Project.Scripts.GameplayData
             BindConfig(UnitClickConfig);
             BindConfig(BattleMoleculeConfig);
             BindConfig(TalentConfig);
+            BindConfig(TalentTreeAnimationConfig);
             BindConfig(CurrencyConfig);
             BindConfig(LevelCatalogConfig);
         }

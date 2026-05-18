@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 using _Project.Scripts.Gameplay.Level;
@@ -7,60 +8,113 @@ using _Project.Scripts.Infrastructure.AssetManagement;
 
 namespace _Project.Scripts.Gameplay.Enemies
 {
-    public class EnemyFactory : PooledFactory<EnemyUnit>, IEnemyFactory
+    public class EnemyFactory : IEnemyFactory
     {
-        private const string ENEMY_UNIT_PREFAB_PATH = "Gameplay/Enemies/EnemyUnit";
         private const string ENEMIES_CONTAINER_NAME = "Enemies";
         private const string ENEMIES_POOL_CONTAINER_NAME = "EnemiesPool";
+
+        private readonly Dictionary<EnemyId, EnemyPool> _poolsByEnemyId = new();
 
         [Inject] private IAssetProvider _assetProvider;
         [Inject] private IGameplayRuntimeHierarchy _runtimeHierarchy;
         [Inject] private IInstantiator _instantiator;
 
-        public EnemyUnit Create(Vector3 at)
+        public EnemyUnit Create(EnemyDefinition definition, Vector3 at)
         {
-            Transform parent = _runtimeHierarchy.GetOrCreateContainer(ENEMIES_CONTAINER_NAME);
-            EnemyUnit enemy = GetFromPoolOrCreate(at, Quaternion.identity, parent);
+            if (definition == null)
+                throw new ArgumentNullException(nameof(definition));
 
-            enemy.transform.SetParent(parent, true);
-            enemy.transform.SetPositionAndRotation(at, Quaternion.identity);
-            enemy.name = nameof(EnemyUnit);
-            enemy.PrepareForSpawn();
-
-            return enemy;
+            return PoolFor(definition).Create(at);
         }
 
-        protected override EnemyUnit CreateNew(Vector3 at, Quaternion rotation, Transform parent)
+        public void Cleanup()
         {
-            EnemyUnit prefab = _assetProvider.LoadAsset<EnemyUnit>(ENEMY_UNIT_PREFAB_PATH);
+            foreach (EnemyPool pool in _poolsByEnemyId.Values)
+                pool.Cleanup();
 
-            if (prefab == null)
-                throw new InvalidOperationException($"EnemyUnit prefab is missing at Resources path '{ENEMY_UNIT_PREFAB_PATH}'.");
-
-            EnemyUnit enemy = _instantiator.InstantiatePrefabForComponent<EnemyUnit>(
-                prefab,
-                at,
-                rotation,
-                parent);
-
-            enemy.Died += OnEnemyDied;
-            return enemy;
+            _poolsByEnemyId.Clear();
         }
 
-        private void OnEnemyDied(EnemyUnit enemy)
+        private EnemyPool PoolFor(EnemyDefinition definition)
         {
-            ReturnToPool(enemy);
+            if (_poolsByEnemyId.TryGetValue(definition.Id, out EnemyPool pool))
+                return pool;
+
+            pool = new EnemyPool(
+                definition,
+                _assetProvider,
+                _runtimeHierarchy,
+                _instantiator);
+
+            _poolsByEnemyId.Add(definition.Id, pool);
+            return pool;
         }
 
-        protected override void OnBeforeReturnToPool(EnemyUnit enemy)
+        private sealed class EnemyPool : PooledFactory<EnemyUnit>
         {
-            enemy.transform.SetParent(_runtimeHierarchy.GetOrCreateContainer(ENEMIES_POOL_CONTAINER_NAME), false);
-            enemy.PrepareForPool();
-        }
+            private readonly EnemyDefinition _definition;
+            private readonly IAssetProvider _assetProvider;
+            private readonly IGameplayRuntimeHierarchy _runtimeHierarchy;
+            private readonly IInstantiator _instantiator;
 
-        protected override void OnBeforeDestroy(EnemyUnit enemy)
-        {
-            enemy.Died -= OnEnemyDied;
+            public EnemyPool(
+                EnemyDefinition definition,
+                IAssetProvider assetProvider,
+                IGameplayRuntimeHierarchy runtimeHierarchy,
+                IInstantiator instantiator)
+            {
+                _definition = definition;
+                _assetProvider = assetProvider;
+                _runtimeHierarchy = runtimeHierarchy;
+                _instantiator = instantiator;
+            }
+
+            public EnemyUnit Create(Vector3 at)
+            {
+                Transform parent = _runtimeHierarchy.GetOrCreateContainer(ENEMIES_CONTAINER_NAME);
+                EnemyUnit enemy = GetFromPoolOrCreate(at, Quaternion.identity, parent);
+
+                enemy.transform.SetParent(parent, true);
+                enemy.transform.SetPositionAndRotation(at, Quaternion.identity);
+                enemy.name = $"{_definition.Id}{nameof(EnemyUnit)}";
+                enemy.Configure(_definition);
+                enemy.PrepareForSpawn();
+
+                return enemy;
+            }
+
+            protected override EnemyUnit CreateNew(Vector3 at, Quaternion rotation, Transform parent)
+            {
+                EnemyUnit prefab = _assetProvider.LoadAsset<EnemyUnit>(_definition.PrefabResourcePath);
+
+                if (prefab == null)
+                    throw new InvalidOperationException($"Enemy prefab is missing at Resources path '{_definition.PrefabResourcePath}'.");
+
+                EnemyUnit enemy = _instantiator.InstantiatePrefabForComponent<EnemyUnit>(
+                    prefab,
+                    at,
+                    rotation,
+                    parent);
+
+                enemy.Died += OnEnemyDied;
+                return enemy;
+            }
+
+            private void OnEnemyDied(EnemyUnit enemy)
+            {
+                ReturnToPool(enemy);
+            }
+
+            protected override void OnBeforeReturnToPool(EnemyUnit enemy)
+            {
+                enemy.transform.SetParent(_runtimeHierarchy.GetOrCreateContainer(ENEMIES_POOL_CONTAINER_NAME), false);
+                enemy.PrepareForPool();
+            }
+
+            protected override void OnBeforeDestroy(EnemyUnit enemy)
+            {
+                enemy.Died -= OnEnemyDied;
+            }
         }
     }
 }

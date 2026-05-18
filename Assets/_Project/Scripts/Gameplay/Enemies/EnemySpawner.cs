@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Cameras.Provider;
 using _Project.Scripts.Gameplay.Currencies;
+using _Project.Scripts.Gameplay.Levels;
 using _Project.Scripts.Gameplay.Units.AtomCores;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -13,19 +15,24 @@ namespace _Project.Scripts.Gameplay.Enemies
     public class EnemySpawner : IEnemySpawner
     {
         private readonly List<EnemyUnit> _activeEnemies = new();
+        private readonly List<SpawnTrack> _spawnTracks = new();
 
         private Transform _target;
         private Collider2D _targetCollider;
+        private LevelDefinition _level;
         private bool _isActive;
         private bool _spawnWasStarted;
-        private float _timeToNextSpawn;
+        private float _elapsedSeconds;
 
         [Inject] private IEnemyFactory _enemyFactory;
-        [Inject] private EnemySpawnerConfig _config;
+        [Inject] private LevelCatalogConfig _levelCatalog;
+        [Inject] private ILevelSelectionService _levelSelectionService;
         [Inject] private ICameraProvider _cameraProvider;
         [Inject] private IRandomService _random;
         [Inject] private ITimeService _time;
         [Inject] private ICurrencyService _currencyService;
+
+        public event Action BossKilled;
 
         public void Start(Transform target)
         {
@@ -33,9 +40,11 @@ namespace _Project.Scripts.Gameplay.Enemies
 
             _target = target;
             _targetCollider = target != null ? target.GetComponent<Collider2D>() : null;
+            _level = _levelCatalog.LevelFor(_levelSelectionService.SelectedLevel);
+            PrepareSpawnTracks();
             _isActive = target != null;
             _spawnWasStarted = false;
-            _timeToNextSpawn = 0;
+            _elapsedSeconds = 0;
         }
 
         public void Update()
@@ -53,13 +62,9 @@ namespace _Project.Scripts.Gameplay.Enemies
 
             TickEnemies();
 
-            _timeToNextSpawn -= _time.DeltaTime;
-
-            if (_timeToNextSpawn > 0)
-                return;
-
-            SpawnEnemy();
-            _timeToNextSpawn = _config.SpawnIntervalSeconds;
+            float deltaTime = _time.DeltaTime;
+            _elapsedSeconds += deltaTime;
+            TickSpawnTracks(deltaTime);
         }
 
         public void Cleanup()
@@ -68,9 +73,11 @@ namespace _Project.Scripts.Gameplay.Enemies
 
             _target = null;
             _targetCollider = null;
+            _level = null;
             _isActive = false;
             _spawnWasStarted = false;
-            _timeToNextSpawn = 0;
+            _elapsedSeconds = 0;
+            _spawnTracks.Clear();
 
             _enemyFactory.Cleanup();
         }
@@ -83,15 +90,51 @@ namespace _Project.Scripts.Gameplay.Enemies
             return EventSystem.current == null || !EventSystem.current.IsPointerOverGameObject();
         }
 
-        private void SpawnEnemy()
+        private void PrepareSpawnTracks()
+        {
+            _spawnTracks.Clear();
+
+            if (_level?.Waves == null)
+                return;
+
+            foreach (LevelWaveDefinition wave in _level.Waves)
+                _spawnTracks.Add(new SpawnTrack(wave));
+        }
+
+        private void TickSpawnTracks(float deltaTime)
+        {
+            foreach (SpawnTrack track in _spawnTracks)
+            {
+                if (!track.ShouldTick(_elapsedSeconds))
+                    continue;
+
+                track.Tick(deltaTime);
+
+                if (!track.ShouldSpawn)
+                    continue;
+
+                SpawnWave(track.Wave);
+                track.MarkSpawned();
+            }
+        }
+
+        private void SpawnWave(LevelWaveDefinition wave)
+        {
+            EnemyDefinition enemyDefinition = _levelCatalog.EnemyFor(wave.EnemyId);
+
+            for (int i = 0; i < wave.SpawnCount; i++)
+                SpawnEnemy(enemyDefinition);
+        }
+
+        private void SpawnEnemy(EnemyDefinition enemyDefinition)
         {
             if (!TryGetOffscreenSpawnPosition(out Vector3 spawnPosition))
                 return;
 
-            EnemyUnit enemy = _enemyFactory.Create(spawnPosition);
+            EnemyUnit enemy = _enemyFactory.Create(enemyDefinition, spawnPosition);
             enemy.Died += OnEnemyDied;
             enemy.Killed += OnEnemyKilled;
-            enemy.MoveTo(_target, _config.MoveSpeed);
+            enemy.MoveTo(_target, enemyDefinition.MoveSpeed);
 
             _activeEnemies.Add(enemy);
         }
@@ -107,7 +150,7 @@ namespace _Project.Scripts.Gameplay.Enemies
             float depth = Mathf.Abs(camera.transform.position.z - _target.position.z);
             Vector3 bottomLeft = camera.ViewportToWorldPoint(new Vector3(0, 0, depth));
             Vector3 topRight = camera.ViewportToWorldPoint(new Vector3(1, 1, depth));
-            float padding = _config.OffscreenSpawnPadding;
+            float padding = _level != null ? _level.OffscreenSpawnPadding : 1f;
             int side = _random.Range(0, 4);
 
             spawnPosition = side switch
@@ -151,9 +194,20 @@ namespace _Project.Scripts.Gameplay.Enemies
                 return;
 
             if (_target.TryGetComponent(out AtomCore core))
-                core.TakeDamage(_config.CoreCollisionDamage);
+                ApplyCoreCollision(enemy, core);
 
             enemy.DieFromCore();
+        }
+
+        private static void ApplyCoreCollision(EnemyUnit enemy, AtomCore core)
+        {
+            if (enemy.KillsCoreOnCollision)
+            {
+                core.TakeDamage(int.MaxValue);
+                return;
+            }
+
+            core.TakeDamage(enemy.CoreCollisionDamage);
         }
 
         private void OnEnemyDied(EnemyUnit enemy)
@@ -167,7 +221,10 @@ namespace _Project.Scripts.Gameplay.Enemies
 
         private void OnEnemyKilled(EnemyUnit enemy)
         {
-            _currencyService.Add(new CurrencyAmount(CurrencyId.Nucleotides, _config.NucleotideReward));
+            _currencyService.Add(new CurrencyAmount(CurrencyId.Nucleotides, enemy.NucleotideReward));
+
+            if (enemy.Id == EnemyId.Boss)
+                BossKilled?.Invoke();
         }
 
         private void UnsubscribeFromActiveEnemies()
@@ -179,6 +236,43 @@ namespace _Project.Scripts.Gameplay.Enemies
             }
 
             _activeEnemies.Clear();
+        }
+
+        private sealed class SpawnTrack
+        {
+            private float _timeToNextSpawn;
+            private int _spawnedCount;
+
+            public SpawnTrack(LevelWaveDefinition wave)
+            {
+                Wave = wave;
+                _timeToNextSpawn = 0;
+            }
+
+            public LevelWaveDefinition Wave { get; }
+            public bool ShouldSpawn => _timeToNextSpawn <= 0;
+
+            public bool ShouldTick(float elapsedSeconds)
+            {
+                if (elapsedSeconds < Wave.StartTimeSeconds)
+                    return false;
+
+                if (Wave.HasEndTime && elapsedSeconds >= Wave.EndTimeSeconds)
+                    return false;
+
+                return !Wave.HasSpawnLimit || _spawnedCount < Wave.SpawnLimit;
+            }
+
+            public void Tick(float deltaTime)
+            {
+                _timeToNextSpawn -= deltaTime;
+            }
+
+            public void MarkSpawned()
+            {
+                _spawnedCount++;
+                _timeToNextSpawn = Wave.SpawnIntervalSeconds;
+            }
         }
     }
 }

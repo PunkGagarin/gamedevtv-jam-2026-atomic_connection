@@ -10,6 +10,8 @@ namespace _Project.Scripts.Infrastructure.SaveLoad
     public class ProgressData
     {
         public int Gold;
+        public int CompletedLevelCount;
+        public int SelectedLevel = 1;
         public List<CurrencySlot> Currencies = new();
         public List<TalentSlot> TalentLevels = new();
 

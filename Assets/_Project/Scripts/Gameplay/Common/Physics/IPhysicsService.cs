@@ -9,6 +9,7 @@ namespace _Project.Scripts.Gameplay.Common.Physics
         int RaycastNonAlloc(Vector2 worldPosition, Vector2 direction, int layerMask, RaycastHit2D[] hitBuffer);
         RaycastHit2D LineCast(Vector2 start, Vector2 end, int layerMask);
         Collider2D OverlapPoint(Vector2 worldPosition, int layerMask);
+        int OverlapPointNonAlloc(Vector2 worldPosition, Collider2D[] hits, int layerMask);
         IEnumerable<Collider2D> CircleCast(Vector3 position, float radius, int layerMask);
         int OverlapCircle(Vector3 worldPosition, float radius, Collider2D[] hits, int layerMask);
         int CircleCastNonAlloc(Vector3 position, float radius, int layerMask, Collider2D[] hitBuffer);

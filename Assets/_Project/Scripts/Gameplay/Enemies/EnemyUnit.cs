@@ -12,7 +12,13 @@ namespace _Project.Scripts.Gameplay.Enemies
         [field: SerializeField] private Health Health { get; set; }
         [field: SerializeField] private EnemyMovement Movement { get; set; }
 
+        private EnemyDefinition _definition;
+
+        public EnemyId Id => _definition?.Id ?? EnemyId.Standard;
         public bool IsAlive => Health == null || Health.IsAlive;
+        public int CoreCollisionDamage => _definition?.CoreCollisionDamage ?? 1;
+        public bool KillsCoreOnCollision => _definition?.KillsCoreOnCollision ?? false;
+        public int NucleotideReward => _definition?.NucleotideReward ?? 0;
 
         public event Action<EnemyUnit> Died;
         public event Action<EnemyUnit> Killed;
@@ -33,6 +39,14 @@ namespace _Project.Scripts.Gameplay.Enemies
         {
             if (Health != null)
                 Health.Died -= OnHealthDied;
+        }
+
+        public void Configure(EnemyDefinition definition)
+        {
+            _definition = definition ?? throw new ArgumentNullException(nameof(definition));
+
+            if (Health != null)
+                Health.Configure(definition.MaxHealth);
         }
 
         public void PrepareForSpawn()

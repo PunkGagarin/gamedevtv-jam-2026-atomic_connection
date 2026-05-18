@@ -1,3 +1,6 @@
+using System;
+using _Project.Scripts.Gameplay.Common.Health;
+using _Project.Scripts.Gameplay.Units.AtomCores.Components;
 using _Project.Scripts.Gameplay.Units;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
@@ -6,14 +9,34 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
 {
     [RequireComponent(typeof(OwnedAtoms))]
     [RequireComponent(typeof(AtomProductionProgress))]
+    [RequireComponent(typeof(Health))]
+    [RequireComponent(typeof(AtomCoreClickInteraction))]
     public class AtomCore : MonoBehaviour
     {
         [field: SerializeField] public OwnedAtoms OwnedAtoms { get; private set; }
         [field: SerializeField] private AtomProductionProgress ProductionProgress { get; set; }
+        [field: SerializeField] private Health Health { get; set; }
+        [field: SerializeField] private AtomCoreClickInteraction ClickInteraction { get; set; }
 
         private float _spawnRadiusOffset;
         private float _atomOrbitDegreesPerSecond;
         private float _orbitRadius;
+
+        public bool IsAlive => Health == null || Health.IsAlive;
+
+        public event Action Died
+        {
+            add
+            {
+                if (Health != null)
+                    Health.Died += value;
+            }
+            remove
+            {
+                if (Health != null)
+                    Health.Died -= value;
+            }
+        }
 
         private void Awake()
         {
@@ -22,15 +45,22 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
 
             if (ProductionProgress == null)
                 ProductionProgress = GetComponent<AtomProductionProgress>();
+
+            if (Health == null)
+                Health = GetComponent<Health>();
+
+            if (ClickInteraction == null)
+                ClickInteraction = GetComponent<AtomCoreClickInteraction>();
         }
 
-        public void Configure(UnitClickConfig config)
+        public void Configure(UnitClickConfig config, int clicksRequired, int maxHealth)
         {
             _spawnRadiusOffset = config.SpawnRadiusOffset;
             _atomOrbitDegreesPerSecond = config.FreeAtomOrbitDegreesPerSecond;
             _orbitRadius = GetColliderRadius(transform);
 
-            ProductionProgress.Configure(config.ClicksToGenerateFreeAtom);
+            Health?.Configure(maxHealth);
+            ProductionProgress.Configure(clicksRequired);
         }
 
         public bool RegisterAtomClick()
@@ -60,13 +90,20 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
 
         public void Tick(float deltaTime)
         {
+            ClickInteraction?.Tick();
+
             float angleDelta = _atomOrbitDegreesPerSecond * Mathf.Deg2Rad * deltaTime;
             OwnedAtoms.TickOrbit(angleDelta);
         }
 
+        public void TakeDamage(int amount)
+        {
+            Health?.TakeDamage(amount);
+        }
+
         public void CleanupAtoms()
         {
-            OwnedAtoms.DestroyAll();
+            OwnedAtoms.ReleaseAll();
         }
 
         private float GetColliderRadius(Transform target)

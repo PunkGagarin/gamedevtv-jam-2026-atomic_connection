@@ -1,64 +1,64 @@
-using System.Collections.Generic;
-using _Project.Scripts.Infrastructure.AssetManagement;
+using System;
 using UnityEngine;
 using Zenject;
+using _Project.Scripts.Gameplay.Level;
+using _Project.Scripts.Gameplay.Common.Pooling;
+using _Project.Scripts.Infrastructure.AssetManagement;
 
 namespace _Project.Scripts.Gameplay.Units.FreeAtoms
 {
-    public class FreeAtomFactory : IFreeAtomFactory
+    public class FreeAtomFactory : PooledFactory<FreeAtom>, IFreeAtomFactory
     {
         private const string FREE_ATOM_PREFAB_PATH = "Gameplay/Units/FreeAtom";
-
-        private readonly List<FreeAtom> _createdFreeAtoms = new();
+        private const string FREE_ATOMS_POOL_CONTAINER_NAME = "FreeAtomsPool";
 
         [Inject] private IAssetProvider _assetProvider;
+        [Inject] private IGameplayRuntimeHierarchy _runtimeHierarchy;
         [Inject] private IInstantiator _instantiator;
 
         public FreeAtom Create(Vector3 at, Transform parent)
         {
-            FreeAtom prefab = _assetProvider.LoadAsset<FreeAtom>(FREE_ATOM_PREFAB_PATH);
+            FreeAtom freeAtom = GetFromPoolOrCreate(at, Quaternion.identity, parent);
 
-            if (prefab == null)
-            {
-                Debug.LogError($"FreeAtom prefab is missing at Resources path '{FREE_ATOM_PREFAB_PATH}'.");
-                return null;
-            }
-
-            FreeAtom freeAtom = _instantiator.InstantiatePrefabForComponent<FreeAtom>(
-                prefab,
-                at,
-                Quaternion.identity,
-                parent);
-
+            freeAtom.transform.SetParent(parent, true);
+            freeAtom.transform.SetPositionAndRotation(at, Quaternion.identity);
             freeAtom.name = nameof(FreeAtom);
-            freeAtom.Destroyed += OnFreeAtomDestroyed;
-            _createdFreeAtoms.Add(freeAtom);
+            freeAtom.PrepareForSpawn();
 
             return freeAtom;
         }
 
-        public void Cleanup()
+        protected override FreeAtom CreateNew(Vector3 at, Quaternion rotation, Transform parent)
         {
-            for (int i = _createdFreeAtoms.Count - 1; i >= 0; i--)
-            {
-                FreeAtom freeAtom = _createdFreeAtoms[i];
+            FreeAtom prefab = _assetProvider.LoadAsset<FreeAtom>(FREE_ATOM_PREFAB_PATH);
 
-                if (freeAtom != null)
-                {
-                    freeAtom.Destroyed -= OnFreeAtomDestroyed;
-                    Object.Destroy(freeAtom.gameObject);
-                }
+            if (prefab == null)
+                throw new InvalidOperationException($"FreeAtom prefab is missing at Resources path '{FREE_ATOM_PREFAB_PATH}'.");
 
-                _createdFreeAtoms.RemoveAt(i);
-            }
+            FreeAtom freeAtom = _instantiator.InstantiatePrefabForComponent<FreeAtom>(
+                prefab,
+                at,
+                rotation,
+                parent);
+
+            freeAtom.DespawnRequested += OnFreeAtomDespawnRequested;
+            return freeAtom;
         }
 
-        private void OnFreeAtomDestroyed(FreeAtom freeAtom)
+        private void OnFreeAtomDespawnRequested(FreeAtom freeAtom)
         {
-            if (freeAtom != null)
-                freeAtom.Destroyed -= OnFreeAtomDestroyed;
+            ReturnToPool(freeAtom);
+        }
 
-            _createdFreeAtoms.Remove(freeAtom);
+        protected override void OnBeforeReturnToPool(FreeAtom freeAtom)
+        {
+            freeAtom.transform.SetParent(_runtimeHierarchy.GetOrCreateContainer(FREE_ATOMS_POOL_CONTAINER_NAME), false);
+            freeAtom.PrepareForPool();
+        }
+
+        protected override void OnBeforeDestroy(FreeAtom freeAtom)
+        {
+            freeAtom.DespawnRequested -= OnFreeAtomDespawnRequested;
         }
     }
 }

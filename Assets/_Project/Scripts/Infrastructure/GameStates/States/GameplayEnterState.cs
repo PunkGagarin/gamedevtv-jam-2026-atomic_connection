@@ -12,7 +12,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
     {
         [Inject] private GameStateMachine _stateMachine;
         [Inject] private ILevelStartPointProvider _levelStartPointProvider;
-        [Inject] private IAtomCoreFactory _atomCoreFactory;
+        [Inject] private IAtomCoreCreator _atomCoreCreator;
         [Inject] private IBattleMoleculeFactory _battleMoleculeFactory;
         [Inject] private BattleMoleculeConfig _battleMoleculeConfig;
 
@@ -25,7 +25,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
 
         private void CreateAtomCore()
         {
-            _atomCoreFactory.Create(_levelStartPointProvider.StartPoint);
+            _atomCoreCreator.Create(_levelStartPointProvider.StartPoint);
         }
 
         private void CreateBattleMolecule()

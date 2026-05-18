@@ -31,7 +31,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             Vector3 shotDirection = direction.normalized;
 
             Charge.Spend();
-            OwnedAtoms.DestroyAll();
+            OwnedAtoms.ReleaseAll();
             ShotRequested?.Invoke(origin, shotDirection);
 
             return true;

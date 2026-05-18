@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: UnitClickConfig
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Units.UnitClickConfig
   <ClicksToGenerateFreeAtom>k__BackingField: 4
+  <CoreMaxHealth>k__BackingField: 2
   <SpawnRadiusOffset>k__BackingField: 1
   <FreeAtomOrbitDegreesPerSecond>k__BackingField: 60

@@ -2,18 +2,22 @@ using _Project.Scripts.Gameplay.Cameras.Provider;
 using _Project.Scripts.Gameplay.Common.Physics;
 using _Project.Scripts.Gameplay.Common.Random;
 using _Project.Scripts.Gameplay.Common.Time;
+using _Project.Scripts.Gameplay.Currencies;
 using _Project.Scripts.Gameplay.Drag;
 using _Project.Scripts.Gameplay.Enemies;
 using _Project.Scripts.Gameplay.Input.Service;
+using _Project.Scripts.Gameplay.Levels;
 using _Project.Scripts.Infrastructure.GameStates.States;
 using _Project.Scripts.Infrastructure.GameStates.StateMachine;
 using _Project.Scripts.Gameplay.Level;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using _Project.Scripts.Gameplay.Units.BattleMolecules;
 using _Project.Scripts.Gameplay.Units.AtomCores;
+using _Project.Scripts.Gameplay.Talents;
 using _Project.Scripts.Gameplay.Windows;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Infrastructure.GameStates.Factory;
+using _Project.Scripts.Infrastructure.SaveLoad;
 using _Project.Scripts.Utils.Pause;
 using UnityEngine;
 using Zenject;
@@ -33,7 +37,11 @@ namespace _Project.Scripts.Infrastructure
             BindPauseService();
             BindInputService();
             BindDragService();
+            BindSaveLoad();
+            BindCurrencyService();
+            BindTalentService();
             BindAtomCoreGameplay();
+            BindLevelProgress();
             BindWindowInfrastructure();
             BindGameplayBattleMolecule();
         }
@@ -53,15 +61,37 @@ namespace _Project.Scripts.Infrastructure
             Container.Bind<IDragService>().To<DragService>().AsSingle();
         }
 
+        private void BindSaveLoad()
+        {
+            Container.Bind<IProgressProvider>().To<ProgressProvider>().AsSingle();
+            Container.BindInterfacesAndSelfTo<SaveLoadService>().AsSingle();
+        }
+
+        private void BindCurrencyService()
+        {
+            Container.Bind<ICurrencyService>().To<CurrencyService>().AsSingle();
+        }
+
+        private void BindTalentService()
+        {
+            Container.BindInterfacesAndSelfTo<TalentService>().AsSingle().NonLazy();
+        }
+
         private void BindAtomCoreGameplay()
         {
             Container.Bind<ILevelStartPointProvider>().To<LevelStartPointProvider>().AsSingle();
             Container.Bind<IGameplayRuntimeHierarchy>().To<GameplayRuntimeHierarchy>().AsSingle();
             Container.Bind<IAtomCoreFactory>().To<AtomCoreFactory>().AsSingle();
-            Container.Bind<IAtomCoreService>().To<AtomCoreService>().AsSingle();
+            Container.BindInterfacesTo<AtomCoreService>().AsSingle();
             Container.Bind<IFreeAtomFactory>().To<FreeAtomFactory>().AsSingle();
             Container.Bind<IEnemyFactory>().To<EnemyFactory>().AsSingle();
             Container.Bind<IEnemySpawner>().To<EnemySpawner>().AsSingle();
+        }
+
+        private void BindLevelProgress()
+        {
+            Container.Bind<ILevelSelectionService>().To<LevelSelectionService>().AsSingle();
+            Container.Bind<ILevelProgressService>().To<LevelProgressService>().AsSingle();
         }
 
         private void BindWindowInfrastructure()
@@ -114,6 +144,7 @@ namespace _Project.Scripts.Infrastructure
             Container.BindInterfacesAndSelfTo<GameplayLoopState>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameplayPauseState>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameOverOrParagonState>().AsSingle();
+            Container.BindInterfacesAndSelfTo<LevelCompleteState>().AsSingle();
         }
     }
 

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Common.Physics;
 using _Project.Scripts.Gameplay.Common.Time;
 using _Project.Scripts.Gameplay.Enemies;
+using _Project.Scripts.Gameplay.Talents;
 using UnityEngine;
 using Zenject;
 
@@ -17,6 +18,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         [Inject] private IBattleMoleculeFactory _battleMoleculeFactory;
         [Inject] private IPhysicsService _physicsService;
         [Inject] private ITimeService _time;
+        [Inject] private BattleMoleculeConfig _config;
+        [Inject] private ITalentService _talentService;
 
         public void Start()
         {
@@ -74,7 +77,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                 return;
 
             Debug.DrawLine(origin, target.transform.position, Color.yellow, 0.5f);
-            target.Kill();
+            target.TakeDamage(CurrentShotDamage());
         }
 
         private EnemyUnit FindFirstEnemy(Vector3 origin, Vector3 direction)
@@ -98,6 +101,12 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             }
 
             return closestEnemy;
+        }
+
+        private int CurrentShotDamage()
+        {
+            float multiplier = 1f + _talentService.BonusOf(TalentType.BattleMoleculeDamage);
+            return Mathf.Max(1, Mathf.RoundToInt(_config.BaseShotDamage * multiplier));
         }
     }
 }

@@ -6,6 +6,7 @@ using _Project.Scripts.Gameplay.Currencies;
 using _Project.Scripts.Gameplay.Drag;
 using _Project.Scripts.Gameplay.Enemies;
 using _Project.Scripts.Gameplay.Input.Service;
+using _Project.Scripts.Gameplay.Levels;
 using _Project.Scripts.Infrastructure.GameStates.States;
 using _Project.Scripts.Infrastructure.GameStates.StateMachine;
 using _Project.Scripts.Gameplay.Level;
@@ -40,6 +41,7 @@ namespace _Project.Scripts.Infrastructure
             BindCurrencyService();
             BindTalentService();
             BindAtomCoreGameplay();
+            BindLevelProgress();
             BindWindowInfrastructure();
             BindGameplayBattleMolecule();
         }
@@ -84,6 +86,12 @@ namespace _Project.Scripts.Infrastructure
             Container.Bind<IFreeAtomFactory>().To<FreeAtomFactory>().AsSingle();
             Container.Bind<IEnemyFactory>().To<EnemyFactory>().AsSingle();
             Container.Bind<IEnemySpawner>().To<EnemySpawner>().AsSingle();
+        }
+
+        private void BindLevelProgress()
+        {
+            Container.Bind<ILevelSelectionService>().To<LevelSelectionService>().AsSingle();
+            Container.Bind<ILevelProgressService>().To<LevelProgressService>().AsSingle();
         }
 
         private void BindWindowInfrastructure()
@@ -136,6 +144,7 @@ namespace _Project.Scripts.Infrastructure
             Container.BindInterfacesAndSelfTo<GameplayLoopState>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameplayPauseState>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameOverOrParagonState>().AsSingle();
+            Container.BindInterfacesAndSelfTo<LevelCompleteState>().AsSingle();
         }
     }
 

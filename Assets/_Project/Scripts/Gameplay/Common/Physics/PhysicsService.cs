@@ -53,6 +53,9 @@ namespace _Project.Scripts.Gameplay.Common.Physics
             return null;
         }
 
+        public int OverlapPointNonAlloc(Vector2 worldPosition, Collider2D[] hits, int layerMask) =>
+            Physics2D.OverlapPointNonAlloc(worldPosition, hits, layerMask);
+
         public IEnumerable<Collider2D> CircleCast(Vector3 position, float radius, int layerMask)
         {
             int hitCount = OverlapCircle(position, radius, OverlapHits, layerMask);

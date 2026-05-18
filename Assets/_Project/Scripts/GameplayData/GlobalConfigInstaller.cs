@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using Zenject;
 using _Project.Scripts.Gameplay.Currencies;
-using _Project.Scripts.Gameplay.Enemies;
+using _Project.Scripts.Gameplay.Levels;
 using _Project.Scripts.Gameplay.Talents;
 using _Project.Scripts.Gameplay.Units;
 using _Project.Scripts.Gameplay.Units.BattleMolecules;
@@ -14,20 +14,20 @@ namespace _Project.Scripts.GameplayData
     public class GlobalConfigInstaller : ScriptableObjectInstaller
     {
         [field: SerializeField] private LanguageConfig LanguageConfig { get; set; }
-        [field: SerializeField] private EnemySpawnerConfig EnemySpawnerConfig { get; set; }
         [field: SerializeField] private UnitClickConfig UnitClickConfig { get; set; }
         [field: SerializeField] private BattleMoleculeConfig BattleMoleculeConfig { get; set; }
         [field: SerializeField] private TalentConfig TalentConfig { get; set; }
         [field: SerializeField] private CurrencyConfig CurrencyConfig { get; set; }
+        [field: SerializeField] private LevelCatalogConfig LevelCatalogConfig { get; set; }
 
         public override void InstallBindings()
         {
             BindConfig(LanguageConfig);
-            BindConfig(EnemySpawnerConfig);
             BindConfig(UnitClickConfig);
             BindConfig(BattleMoleculeConfig);
             BindConfig(TalentConfig);
             BindConfig(CurrencyConfig);
+            BindConfig(LevelCatalogConfig);
         }
 
         private void BindConfig<TConfig>(TConfig config) where TConfig : ScriptableObject

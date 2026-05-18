@@ -1,4 +1,5 @@
 ﻿using _Project.Scripts.Audio.Domain;
+using _Project.Scripts.Gameplay.Levels;
 using _Project.Scripts.Gameplay.Talents;
 using _Project.Scripts.Gameplay.Windows;
 using _Project.Scripts.Infrastructure.GameStates.StateMachine;
@@ -30,6 +31,7 @@ namespace _Project.Scripts.MainMenu
         [Inject] private AudioService _audio;
         [Inject] private IWindowService _windowService;
         [Inject] private ITalentService _talentService;
+        [Inject] private ILevelSelectionService _levelSelectionService;
 
         private void Awake()
         {
@@ -71,6 +73,7 @@ namespace _Project.Scripts.MainMenu
         {
             _audio.PlaySound(Sounds.buttonClick);
             _talentService.ResetProgress();
+            _levelSelectionService.ResetProgress();
         }
 
         private void OpenCredits()

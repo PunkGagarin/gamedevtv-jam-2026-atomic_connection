@@ -8,6 +8,8 @@ namespace _Project.Scripts.Gameplay.Drag
 {
     public class DragService : IDragService
     {
+        private static readonly Collider2D[] OverlapHits = new Collider2D[32];
+
         private IDraggable _currentDraggable;
         private Vector3 _dragOffset;
 
@@ -50,7 +52,7 @@ namespace _Project.Scripts.Gameplay.Drag
             if (hit == null)
                 return false;
 
-            IDraggable draggable = hit.GetComponent<IDraggable>();
+            IDraggable draggable = GetDraggableAt(worldPosition);
             if (draggable == null || !draggable.CanStartDrag)
                 return false;
 
@@ -108,13 +110,42 @@ namespace _Project.Scripts.Gameplay.Drag
             if (col != null)
                 col.enabled = false;
 
-            Collider2D hit = _physicsService.OverlapPoint(worldPosition, ~0);
-            IDropTarget target = hit != null ? hit.GetComponent<IDropTarget>() : null;
+            IDropTarget target = null;
+            int hitCount = _physicsService.OverlapPointNonAlloc(worldPosition, OverlapHits, ~0);
+
+            for (int i = 0; i < hitCount; i++)
+            {
+                Collider2D hit = OverlapHits[i];
+                if (hit == null || hit == col)
+                    continue;
+
+                target = hit.GetComponent<IDropTarget>();
+                if (target != null)
+                    break;
+            }
 
             if (col != null)
                 col.enabled = true;
 
             return target;
+        }
+
+        private IDraggable GetDraggableAt(Vector3 worldPosition)
+        {
+            int hitCount = _physicsService.OverlapPointNonAlloc(worldPosition, OverlapHits, ~0);
+
+            for (int i = 0; i < hitCount; i++)
+            {
+                Collider2D hit = OverlapHits[i];
+                if (hit == null)
+                    continue;
+
+                IDraggable draggable = hit.GetComponent<IDraggable>();
+                if (draggable != null)
+                    return draggable;
+            }
+
+            return null;
         }
 
         public void CancelDrag()

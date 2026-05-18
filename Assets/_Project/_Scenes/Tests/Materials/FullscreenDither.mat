@@ -46,11 +46,11 @@ Material:
     m_Ints: []
     m_Floats:
     - _Pattern: 4.7
-    - _Pixelsize: 438.7
-    - _Scale: 94.97
-    - _Threshold: 0
+    - _Pixelsize: 1281.9
+    - _Scale: 119.02
+    - _Threshold: 0.4
     m_Colors:
     - _Color: {r: 0, g: 0, b: 0, a: 1}
-    - _DitherColor: {r: 0, g: 0, b: 0, a: 1}
+    - _DitherColor: {r: 0.7075472, g: 0.7075472, b: 0.7075472, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

@@ -70,7 +70,7 @@ MonoBehaviour:
     <CostsByLevel>k__BackingField: 3200000064000000c8000000
     <Prerequisites>k__BackingField: 02000000
     <GraphPosition>k__BackingField: {x: 240, y: -120}
-    <BonusPerLevel>k__BackingField: 0.2
+    <BonusPerLevel>k__BackingField: 1
     <IsUnlock>k__BackingField: 0
   - <Id>k__BackingField: 4
     <Type>k__BackingField: 4

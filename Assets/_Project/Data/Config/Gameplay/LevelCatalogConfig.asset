@@ -106,3 +106,41 @@ MonoBehaviour:
       <CoreCollisionDamageOverride>k__BackingField: 0
       <SpawnCount>k__BackingField: 1
       <SpawnLimit>k__BackingField: 1
+  - <LevelNumber>k__BackingField: 3
+    <DurationSeconds>k__BackingField: 50
+    <OffscreenSpawnPadding>k__BackingField: 1
+    <RewardCurrency>k__BackingField: 1
+    <RewardAmount>k__BackingField: 1
+    <Waves>k__BackingField:
+    - <StartTimeSeconds>k__BackingField: 0
+      <EndTimeSeconds>k__BackingField: 50
+      <SpawnIntervalSeconds>k__BackingField: 9
+      <EnemyId>k__BackingField: 0
+      <MaxHealthOverride>k__BackingField: 2
+      <CoreCollisionDamageOverride>k__BackingField: 2
+      <SpawnCount>k__BackingField: 1
+      <SpawnLimit>k__BackingField: 0
+    - <StartTimeSeconds>k__BackingField: 15
+      <EndTimeSeconds>k__BackingField: 50
+      <SpawnIntervalSeconds>k__BackingField: 18
+      <EnemyId>k__BackingField: 2
+      <MaxHealthOverride>k__BackingField: 10
+      <CoreCollisionDamageOverride>k__BackingField: 3
+      <SpawnCount>k__BackingField: 1
+      <SpawnLimit>k__BackingField: 0
+    - <StartTimeSeconds>k__BackingField: 30
+      <EndTimeSeconds>k__BackingField: 50
+      <SpawnIntervalSeconds>k__BackingField: 12
+      <EnemyId>k__BackingField: 0
+      <MaxHealthOverride>k__BackingField: 4
+      <CoreCollisionDamageOverride>k__BackingField: 3
+      <SpawnCount>k__BackingField: 1
+      <SpawnLimit>k__BackingField: 0
+    - <StartTimeSeconds>k__BackingField: 50
+      <EndTimeSeconds>k__BackingField: 0
+      <SpawnIntervalSeconds>k__BackingField: 999
+      <EnemyId>k__BackingField: 3
+      <MaxHealthOverride>k__BackingField: 0
+      <CoreCollisionDamageOverride>k__BackingField: 0
+      <SpawnCount>k__BackingField: 1
+      <SpawnLimit>k__BackingField: 1

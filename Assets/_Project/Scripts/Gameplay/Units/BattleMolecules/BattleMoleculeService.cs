@@ -105,8 +105,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
         private int CurrentShotDamage()
         {
-            float multiplier = 1f + _talentService.BonusOf(TalentType.BattleMoleculeDamage);
-            return Mathf.Max(1, Mathf.RoundToInt(_config.BaseShotDamage * multiplier));
+            float bonusDamage = _talentService.BonusOf(TalentType.BattleMoleculeDamage);
+            return Mathf.Max(1, _config.BaseShotDamage + Mathf.RoundToInt(bonusDamage));
         }
     }
 }

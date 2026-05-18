@@ -53,7 +53,6 @@ jobs:
           targetPlatform: WebGL
           buildsPath: build
           buildName: AtomicConnection
-          versioning: Semantic
 
       - name: Locate WebGL build
         id: webgl_build
@@ -71,10 +70,27 @@ jobs:
           echo "dir=$webgl_dir" >> "$GITHUB_OUTPUT"
           echo "Found WebGL build at $webgl_dir"
 
+      - name: Prepare build version
+        id: build_version
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          project_version="$(sed -n 's/^[[:space:]]*bundleVersion:[[:space:]]*//p' ProjectSettings/ProjectSettings.asset | head -n 1)"
+          if [ -z "$project_version" ]; then
+            echo "::error::Could not read bundleVersion from ProjectSettings/ProjectSettings.asset."
+            exit 1
+          fi
+
+          version="${project_version}-build.${GITHUB_RUN_NUMBER}"
+
+          echo "value=$version" >> "$GITHUB_OUTPUT"
+          echo "Build version: $version"
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: AtomicConnection-WebGL
+          name: AtomicConnection-WebGL-${{ steps.build_version.outputs.value }}
           path: ${{ steps.webgl_build.outputs.dir }}
           if-no-files-found: error
 
@@ -96,7 +112,7 @@ jobs:
           BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
           ITCH_TARGET: ${{ inputs.itch_target }}
           WEBGL_DIR: ${{ steps.webgl_build.outputs.dir }}
-          BUILD_VERSION: ${{ steps.unity_build.outputs.buildVersion }}
+          BUILD_VERSION: ${{ steps.build_version.outputs.value }}
         run: |
           set -euo pipefail
 
@@ -110,5 +126,4 @@ jobs:
             exit 1
           fi
 
-          user_version="${BUILD_VERSION:-0.0.$GITHUB_RUN_NUMBER}"
-          ./butler push "$WEBGL_DIR" "$ITCH_TARGET" --userversion "$user_version"
+          ./butler push "$WEBGL_DIR" "$ITCH_TARGET" --userversion "$BUILD_VERSION"

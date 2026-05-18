@@ -18,7 +18,7 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
 
         public FreeAtom Create(Vector3 at, Transform parent)
         {
-            FreeAtom freeAtom = GetFromPoolOrCreate();
+            FreeAtom freeAtom = GetFromPoolOrCreate(at, Quaternion.identity, parent);
 
             freeAtom.transform.SetParent(parent, true);
             freeAtom.transform.SetPositionAndRotation(at, Quaternion.identity);
@@ -28,7 +28,7 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
             return freeAtom;
         }
 
-        protected override FreeAtom CreateNew()
+        protected override FreeAtom CreateNew(Vector3 at, Quaternion rotation, Transform parent)
         {
             FreeAtom prefab = _assetProvider.LoadAsset<FreeAtom>(FREE_ATOM_PREFAB_PATH);
 
@@ -37,9 +37,9 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
 
             FreeAtom freeAtom = _instantiator.InstantiatePrefabForComponent<FreeAtom>(
                 prefab,
-                Vector3.zero,
-                Quaternion.identity,
-                _runtimeHierarchy.GetOrCreateContainer(FREE_ATOMS_POOL_CONTAINER_NAME));
+                at,
+                rotation,
+                parent);
 
             freeAtom.DespawnRequested += OnFreeAtomDespawnRequested;
             return freeAtom;

@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 11400001}
   - component: {fileID: 11400002}
   - component: {fileID: 11400003}
+  - component: {fileID: 11400004}
   m_Layer: 0
   m_Name: AtomCore
   m_TagString: Untagged
@@ -36,6 +37,7 @@ Transform:
   m_Children:
   - {fileID: 2821851134536809101}
   - {fileID: 548164683330431852}
+  - {fileID: 8011357184}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &11400000
@@ -48,48 +50,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0de8b0430c494e50a395845a4d9fa7a3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
   <OwnedAtoms>k__BackingField: {fileID: 11400001}
   <ProductionProgress>k__BackingField: {fileID: 11400002}
   <Health>k__BackingField: {fileID: 11400003}
---- !u!114 &11400001
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e29cc8aa02b54f00a1eeeb467e6a1364, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
---- !u!114 &11400002
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b8e4fefb82e34d60b8d3055455a8ec52, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
-  <ProgressBar>k__BackingField: {fileID: 548164683352970287}
---- !u!114 &11400003
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff2c2ddace054125831907a5a47a9f7b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!58 &5800000
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -126,6 +91,58 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
+--- !u!114 &11400001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e29cc8aa02b54f00a1eeeb467e6a1364, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+--- !u!114 &11400002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8e4fefb82e34d60b8d3055455a8ec52, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  <ProgressBar>k__BackingField: {fileID: 548164683352970287}
+--- !u!114 &11400003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff2c2ddace054125831907a5a47a9f7b, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+--- !u!114 &11400004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7dba4a77b49a4c3aa38606e9fdf407d1, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  <Health>k__BackingField: {fileID: 11400003}
+  <ProgressBar>k__BackingField: {fileID: 7994057539}
+  <HideWhenSinglePoint>k__BackingField: 0
 --- !u!1 &8954845912983384912
 GameObject:
   m_ObjectHideFlags: 0
@@ -217,6 +234,83 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!1001 &8000000000
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 400000}
+    m_Modifications:
+    - target: {fileID: 100000, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
+      propertyPath: m_Name
+      value: HpProgressBar
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400001, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400005, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400005, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
+      propertyPath: m_Color.b
+      value: 0.12
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400005, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
+      propertyPath: m_Color.g
+      value: 0.12
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400005, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
+      propertyPath: m_Color.r
+      value: 0.95
+      objectReference: {fileID: 0}
+    - target: {fileID: 22400000, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 22400000, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0.12
+      objectReference: {fileID: 0}
+    - target: {fileID: 22400000, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22400000, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22400000, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 22400000, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.629
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
+--- !u!114 &7994057539 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 11400003, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
+  m_PrefabInstance: {fileID: 8000000000}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad6f804328db48d8b3104fa377f98d47, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+--- !u!224 &8011357184 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 22400000, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
+  m_PrefabInstance: {fileID: 8000000000}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &548164683342210924
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -225,6 +319,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 400000}
     m_Modifications:
+    - target: {fileID: 100000, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
+      propertyPath: m_Name
+      value: AtomProgressBar
+      objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -256,6 +354,18 @@ PrefabInstance:
     - target: {fileID: 11400004, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400005, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400005, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
+      propertyPath: m_Color.g
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 11400005, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
+      propertyPath: m_Color.r
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 11400005, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
       propertyPath: m_Enabled

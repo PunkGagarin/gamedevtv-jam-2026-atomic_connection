@@ -10,6 +10,7 @@ namespace _Project.Scripts.Gameplay.Common.Health
         public int CurrentHealth { get; private set; }
         public bool IsAlive { get; private set; } = true;
 
+        public event Action Changed;
         public event Action Died;
 
         private void Awake()
@@ -32,6 +33,8 @@ namespace _Project.Scripts.Gameplay.Common.Health
 
             if (CurrentHealth == 0)
                 Kill();
+            else
+                Changed?.Invoke();
         }
 
         public void Kill()
@@ -41,6 +44,7 @@ namespace _Project.Scripts.Gameplay.Common.Health
 
             CurrentHealth = 0;
             IsAlive = false;
+            Changed?.Invoke();
             Died?.Invoke();
         }
 
@@ -48,6 +52,7 @@ namespace _Project.Scripts.Gameplay.Common.Health
         {
             CurrentHealth = MaxHealth;
             IsAlive = true;
+            Changed?.Invoke();
         }
     }
 }

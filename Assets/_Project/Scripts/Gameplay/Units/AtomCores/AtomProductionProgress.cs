@@ -42,7 +42,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
             if (ProgressBar == null || _clicksRequired <= 0)
                 return;
 
-            ProgressBar.SetProgress((float)_clicksRemaining / _clicksRequired);
+            ProgressBar.SetProgress(1f - (float)_clicksRemaining / _clicksRequired);
         }
     }
 }

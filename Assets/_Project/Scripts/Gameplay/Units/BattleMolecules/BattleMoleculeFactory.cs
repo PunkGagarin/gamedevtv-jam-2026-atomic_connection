@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Level;
+using _Project.Scripts.Gameplay.Talents;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using UnityEngine;
 using Zenject;
@@ -17,6 +18,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         [Inject] private IAssetProvider _assetProvider;
         [Inject] private IGameplayRuntimeHierarchy _runtimeHierarchy;
         [Inject] private IInstantiator _instantiator;
+        [Inject] private ITalentService _talentService;
 
         public IReadOnlyList<BattleMolecule> CreatedMolecules => _createdMolecules;
         public event Action<BattleMolecule> MoleculeCreated;
@@ -38,11 +40,17 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                 _runtimeHierarchy.GetOrCreateContainer(BATTLE_MOLECULES_CONTAINER_NAME));
 
             molecule.name = nameof(BattleMolecule);
-            molecule.Configure(config);
+            molecule.Configure(config, AdjustedAtomsRequired(config));
             _createdMolecules.Add(molecule);
             MoleculeCreated?.Invoke(molecule);
 
             return molecule;
+        }
+
+        private int AdjustedAtomsRequired(BattleMoleculeConfig config)
+        {
+            float multiplier = 1f + _talentService.BonusOf(TalentType.ProjectileGenerationSpeed);
+            return Mathf.Max(1, Mathf.RoundToInt(config.AtomsRequired / multiplier));
         }
 
         public void Cleanup()

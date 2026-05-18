@@ -9,11 +9,11 @@ namespace _Project.Scripts.Gameplay.Common.Pooling
         private readonly List<T> _active = new();
         private readonly Stack<T> _pooled = new();
 
-        protected T GetFromPoolOrCreate()
+        protected T GetFromPoolOrCreate(Vector3 at, Quaternion rotation, Transform parent)
         {
             T instance = _pooled.Count > 0
                 ? _pooled.Pop()
-                : CreateNew();
+                : CreateNew(at, rotation, parent);
 
             _active.Add(instance);
             return instance;
@@ -39,7 +39,7 @@ namespace _Project.Scripts.Gameplay.Common.Pooling
                 DestroyInstance(_pooled.Pop());
         }
 
-        protected abstract T CreateNew();
+        protected abstract T CreateNew(Vector3 at, Quaternion rotation, Transform parent);
         protected abstract void OnBeforeReturnToPool(T instance);
 
         protected virtual void OnBeforeDestroy(T instance)

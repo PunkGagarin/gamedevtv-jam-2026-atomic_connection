@@ -47,14 +47,14 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
                 Health = GetComponent<Health>();
         }
 
-        public void Configure(UnitClickConfig config)
+        public void Configure(UnitClickConfig config, int clicksRequired, int maxHealth)
         {
             _spawnRadiusOffset = config.SpawnRadiusOffset;
             _atomOrbitDegreesPerSecond = config.FreeAtomOrbitDegreesPerSecond;
             _orbitRadius = GetColliderRadius(transform);
 
-            Health?.Configure(config.CoreMaxHealth);
-            ProductionProgress.Configure(config.ClicksToGenerateFreeAtom);
+            Health?.Configure(maxHealth);
+            ProductionProgress.Configure(clicksRequired);
         }
 
         public bool RegisterAtomClick()

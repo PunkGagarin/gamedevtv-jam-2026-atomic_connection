@@ -4,6 +4,7 @@ using _Project.Scripts.Gameplay.Common.Physics;
 using _Project.Scripts.Gameplay.Common.Random;
 using _Project.Scripts.Gameplay.Common.Time;
 using _Project.Scripts.Gameplay.Input.Service;
+using _Project.Scripts.Gameplay.Talents;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
 using Zenject;
@@ -23,6 +24,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
         [Inject] private ITimeService _time;
         [Inject] private UnitClickConfig _config;
         [Inject] private IFreeAtomFactory _freeAtomFactory;
+        [Inject] private ITalentService _talentService;
 
         public event Action CoreDied;
 
@@ -33,8 +35,9 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
             if (_core == null)
                 return;
 
-            _core.Configure(_config);
             _core.Died += OnCoreDied;
+            _talentService.Changed += OnTalentChanged;
+            ApplyTalentBonuses();
         }
 
         public void Update()
@@ -52,11 +55,31 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
             {
                 _core.Died -= OnCoreDied;
                 _core.CleanupAtoms();
+                _talentService.Changed -= OnTalentChanged;
             }
 
             _core = null;
         }
 
+        private void OnTalentChanged()
+        {
+            if (_core == null)
+                return;
+
+            ApplyTalentBonuses();
+        }
+
+        private void ApplyTalentBonuses()
+        {
+            int adjustedClicks = Mathf.Max(1, Mathf.RoundToInt(
+                _config.ClicksToGenerateFreeAtom / _talentService.AtomGenerationMultiplier));
+
+            int adjustedHealth = Mathf.Max(1, Mathf.RoundToInt(
+                _config.CoreMaxHealth + _talentService.BonusOf(TalentType.CoreHealth)));
+
+            _core.Configure(_config, adjustedClicks, adjustedHealth);
+        }
+        
         private void OnCoreDied()
         {
             CoreDied?.Invoke();

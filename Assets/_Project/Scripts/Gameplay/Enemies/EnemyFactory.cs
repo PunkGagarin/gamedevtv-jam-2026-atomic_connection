@@ -19,9 +19,9 @@ namespace _Project.Scripts.Gameplay.Enemies
 
         public EnemyUnit Create(Vector3 at)
         {
-            EnemyUnit enemy = GetFromPoolOrCreate();
-
             Transform parent = _runtimeHierarchy.GetOrCreateContainer(ENEMIES_CONTAINER_NAME);
+            EnemyUnit enemy = GetFromPoolOrCreate(at, Quaternion.identity, parent);
+
             enemy.transform.SetParent(parent, true);
             enemy.transform.SetPositionAndRotation(at, Quaternion.identity);
             enemy.name = nameof(EnemyUnit);
@@ -30,7 +30,7 @@ namespace _Project.Scripts.Gameplay.Enemies
             return enemy;
         }
 
-        protected override EnemyUnit CreateNew()
+        protected override EnemyUnit CreateNew(Vector3 at, Quaternion rotation, Transform parent)
         {
             EnemyUnit prefab = _assetProvider.LoadAsset<EnemyUnit>(ENEMY_UNIT_PREFAB_PATH);
 
@@ -39,9 +39,9 @@ namespace _Project.Scripts.Gameplay.Enemies
 
             EnemyUnit enemy = _instantiator.InstantiatePrefabForComponent<EnemyUnit>(
                 prefab,
-                Vector3.zero,
-                Quaternion.identity,
-                _runtimeHierarchy.GetOrCreateContainer(ENEMIES_CONTAINER_NAME));
+                at,
+                rotation,
+                parent);
 
             enemy.Died += OnEnemyDied;
             return enemy;

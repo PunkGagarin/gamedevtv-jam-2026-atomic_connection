@@ -15,6 +15,7 @@ namespace _Project.Scripts.Gameplay.Enemies
         public bool IsAlive => Health == null || Health.IsAlive;
 
         public event Action<EnemyUnit> Died;
+        public event Action<EnemyUnit> Killed;
 
         private void Awake()
         {
@@ -68,8 +69,29 @@ namespace _Project.Scripts.Gameplay.Enemies
                 Died?.Invoke(this);
         }
 
+        public void DieFromCore()
+        {
+            if (Health != null)
+            {
+                Health.Died -= OnHealthDied;
+                Health.Kill();
+                Health.Died += OnHealthDied;
+            }
+
+            Died?.Invoke(this);
+        }
+
+        public void TakeDamage(int amount)
+        {
+            if (Health != null)
+                Health.TakeDamage(amount);
+            else
+                Kill();
+        }
+
         private void OnHealthDied()
         {
+            Killed?.Invoke(this);
             Died?.Invoke(this);
         }
     }

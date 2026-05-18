@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: BattleMoleculeConfig
   m_EditorClassIdentifier: 
   <AtomsRequired>k__BackingField: 3
+  <BaseShotDamage>k__BackingField: 1
   <SpawnOffset>k__BackingField: {x: 2, y: 0}
   <AtomsPosCircleRadius>k__BackingField: 0.6
   <DepositedAtomsOrbitDegreesPerSecond>k__BackingField: 90

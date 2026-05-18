@@ -1,5 +1,6 @@
 using System;
 using _Project.Scripts.Gameplay.Common.Health;
+using _Project.Scripts.Gameplay.Units.AtomCores.Components;
 using _Project.Scripts.Gameplay.Units;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
@@ -9,11 +10,13 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
     [RequireComponent(typeof(OwnedAtoms))]
     [RequireComponent(typeof(AtomProductionProgress))]
     [RequireComponent(typeof(Health))]
+    [RequireComponent(typeof(AtomCoreClickInteraction))]
     public class AtomCore : MonoBehaviour
     {
         [field: SerializeField] public OwnedAtoms OwnedAtoms { get; private set; }
         [field: SerializeField] private AtomProductionProgress ProductionProgress { get; set; }
         [field: SerializeField] private Health Health { get; set; }
+        [field: SerializeField] private AtomCoreClickInteraction ClickInteraction { get; set; }
 
         private float _spawnRadiusOffset;
         private float _atomOrbitDegreesPerSecond;
@@ -45,6 +48,9 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
 
             if (Health == null)
                 Health = GetComponent<Health>();
+
+            if (ClickInteraction == null)
+                ClickInteraction = GetComponent<AtomCoreClickInteraction>();
         }
 
         public void Configure(UnitClickConfig config, int clicksRequired, int maxHealth)
@@ -84,6 +90,8 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
 
         public void Tick(float deltaTime)
         {
+            ClickInteraction?.Tick();
+
             float angleDelta = _atomOrbitDegreesPerSecond * Mathf.Deg2Rad * deltaTime;
             OwnedAtoms.TickOrbit(angleDelta);
         }

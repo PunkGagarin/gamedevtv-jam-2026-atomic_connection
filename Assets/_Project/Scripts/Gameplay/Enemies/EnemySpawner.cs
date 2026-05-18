@@ -46,10 +46,7 @@ namespace _Project.Scripts.Gameplay.Enemies
             if (!_spawnWasStarted)
             {
                 if (FirstGameplayClickWasReceived())
-                {
                     _spawnWasStarted = true;
-                    _timeToNextSpawn = _config.SpawnIntervalSeconds;
-                }
 
                 return;
             }
@@ -132,6 +129,13 @@ namespace _Project.Scripts.Gameplay.Enemies
             {
                 EnemyUnit enemy = _activeEnemies[i];
                 enemy.Tick(deltaTime);
+            }
+
+            Physics2D.SyncTransforms();
+
+            for (int i = _activeEnemies.Count - 1; i >= 0; i--)
+            {
+                EnemyUnit enemy = _activeEnemies[i];
                 TryHitCore(enemy);
             }
         }

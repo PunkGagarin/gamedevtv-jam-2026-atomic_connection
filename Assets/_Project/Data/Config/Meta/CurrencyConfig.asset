@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Currencies.CurrencyConfig
   <StartingNucleotides>k__BackingField: 555
   <StartingIsotopes>k__BackingField: 555
-  <RegularEnemyIsotopeDropChancePercent>k__BackingField: 10
+  <RegularEnemyIsotopeDropChancePercent>k__BackingField: 100

@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39978f06770a4d0b9d678815756242a1, type: 3}
+  m_Name: GameplayFeedbackAnimationConfig
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Feedback.GameplayFeedbackAnimationConfig
+  <CurrencyChangeDuration>k__BackingField: 0.22
+  <CurrencyPulseScale>k__BackingField: 1.12
+  <CurrencyPulseDuration>k__BackingField: 0.12
+  <DamagePopupWorldOffset>k__BackingField: {x: 0, y: 0.75, z: 0}
+  <DamagePopupTextColor>k__BackingField: {r: 1, g: 0.25, b: 0.2, a: 1}
+  <DamagePopupFontSize>k__BackingField: 4
+  <DamagePopupRiseDistance>k__BackingField: 0.65
+  <DamagePopupDuration>k__BackingField: 0.55
+  <DamagePopupSortingOrder>k__BackingField: 50
+  <IsotopeDropIcon>k__BackingField: {fileID: 21300000, guid: 2ed045dbe25a49b689caf9471eeec349, type: 3}
+  <CurrencyDropPopupWorldOffset>k__BackingField: {x: 0, y: 1.05, z: 0}
+  <CurrencyDropPopupTextColor>k__BackingField: {r: 0.55, g: 1, b: 1, a: 1}
+  <CurrencyDropPopupIconColor>k__BackingField: {r: 1, g: 1, b: 1, a: 1}
+  <CurrencyDropPopupFontSize>k__BackingField: 0.5
+  <CurrencyDropPopupRiseDistance>k__BackingField: 0.75
+  <CurrencyDropPopupDuration>k__BackingField: 0.7
+  <CurrencyDropPopupStartScale>k__BackingField: 0.75
+  <CurrencyDropPopupPulseScale>k__BackingField: 1.15
+  <CurrencyDropPopupTextOffset>k__BackingField: {x: 0.1, y: 0, z: 0}
+  <CurrencyDropPopupIconOffset>k__BackingField: {x: -0.1, y: 0, z: 0}
+  <CurrencyDropPopupIconScale>k__BackingField: {x: 0.16, y: 0.16, z: 0.16}
+  <CurrencyDropPopupSortingOrder>k__BackingField: 60

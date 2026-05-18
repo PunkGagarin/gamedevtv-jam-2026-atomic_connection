@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using Zenject;
 using _Project.Scripts.Gameplay.Currencies;
+using _Project.Scripts.Gameplay.Feedback;
 using _Project.Scripts.Gameplay.Levels;
 using _Project.Scripts.Gameplay.Talents;
 using _Project.Scripts.Gameplay.Units;
@@ -16,6 +17,7 @@ namespace _Project.Scripts.GameplayData
         [field: SerializeField] private LanguageConfig LanguageConfig { get; set; }
         [field: SerializeField] private UnitClickConfig UnitClickConfig { get; set; }
         [field: SerializeField] private BattleMoleculeConfig BattleMoleculeConfig { get; set; }
+        [field: SerializeField] private GameplayFeedbackAnimationConfig GameplayFeedbackAnimationConfig { get; set; }
         [field: SerializeField] private TalentConfig TalentConfig { get; set; }
         [field: SerializeField] private TalentTreeAnimationConfig TalentTreeAnimationConfig { get; set; }
         [field: SerializeField] private CurrencyConfig CurrencyConfig { get; set; }
@@ -26,6 +28,7 @@ namespace _Project.Scripts.GameplayData
             BindConfig(LanguageConfig);
             BindConfig(UnitClickConfig);
             BindConfig(BattleMoleculeConfig);
+            BindConfig(GameplayFeedbackAnimationConfig);
             BindConfig(TalentConfig);
             BindConfig(TalentTreeAnimationConfig);
             BindConfig(CurrencyConfig);

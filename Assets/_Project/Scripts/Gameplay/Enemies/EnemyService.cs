@@ -166,17 +166,19 @@ namespace _Project.Scripts.Gameplay.Enemies
                 return;
             }
 
-            TryDropIsotope();
+            TryDropIsotope(enemy);
         }
 
-        private void TryDropIsotope()
+        private void TryDropIsotope(EnemyUnit enemy)
         {
             int chancePercent = Mathf.Clamp(_currencyConfig.RegularEnemyIsotopeDropChancePercent, 0, 100);
 
             if (chancePercent <= 0 || _random.Range(0, 100) >= chancePercent)
                 return;
 
-            _currencyService.Add(new CurrencyAmount(CurrencyId.Isotopes, 1));
+            CurrencyAmount reward = new(CurrencyId.Isotopes, 1);
+            _currencyService.Add(reward);
+            enemy.ShowCurrencyDrop(reward);
         }
 
         private void UnsubscribeFromActiveEnemies()

@@ -14,7 +14,6 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
     internal class GameplayLoopState : EndOfFrameExitState
     {
         [Inject] private IEnemySpawner _enemySpawner;
-        [Inject] private IAtomCoreFactory _atomCoreFactory;
         [Inject] private IAtomCoreService _atomCoreService;
         [Inject] private IFreeAtomFactory _freeAtomFactory;
         [Inject] private IBattleMoleculeFactory _battleMoleculeFactory;
@@ -26,11 +25,9 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
 
         public override void Enter()
         {
-            AtomCore currentCore = _atomCoreFactory.CurrentCore;
-
             _atomCoreService.CoreDied += OnCoreDied;
-            _atomCoreService.Start(currentCore);
-            _enemySpawner.Start(currentCore != null ? currentCore.transform : null);
+            _atomCoreService.Start();
+            _enemySpawner.Start(_atomCoreService.CurrentCoreTransform);
             _battleMoleculeService.Start();
         }
 
@@ -52,7 +49,6 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
             _enemySpawner.Cleanup();
             _atomCoreService.Cleanup();
             _battleMoleculeService.Cleanup();
-            _atomCoreFactory.Cleanup();
             _battleMoleculeFactory.Cleanup();
             _freeAtomFactory.Cleanup();
             _runtimeHierarchy.Cleanup();

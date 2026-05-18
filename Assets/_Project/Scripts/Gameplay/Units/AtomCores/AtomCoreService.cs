@@ -11,11 +11,12 @@ using Zenject;
 
 namespace _Project.Scripts.Gameplay.Units.AtomCores
 {
-    public class AtomCoreService : IAtomCoreService
+    public class AtomCoreService : IAtomCoreService, IAtomCoreCreator
     {
         private const int PHYSICS_LAYER_MASK = ~0;
 
         private AtomCore _core;
+        private bool _isStarted;
 
         [Inject] private IInputService _inputService;
         [Inject] private ICameraProvider _cameraProvider;
@@ -25,19 +26,30 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
         [Inject] private UnitClickConfig _config;
         [Inject] private IFreeAtomFactory _freeAtomFactory;
         [Inject] private ITalentService _talentService;
+        [Inject] private IAtomCoreFactory _atomCoreFactory;
 
+        public Transform CurrentCoreTransform => _core != null ? _core.transform : null;
         public event Action CoreDied;
 
-        public void Start(AtomCore core)
+        public void Create(Vector3 at)
         {
-            _core = core;
+            if (_core != null)
+                Cleanup();
 
-            if (_core == null)
+            _core = _atomCoreFactory.Create(at);
+
+            if (_core != null)
+                ApplyTalentBonuses();
+        }
+
+        public void Start()
+        {
+            if (_core == null || _isStarted)
                 return;
 
             _core.Died += OnCoreDied;
             _talentService.Changed += OnTalentChanged;
-            ApplyTalentBonuses();
+            _isStarted = true;
         }
 
         public void Update()
@@ -51,13 +63,15 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
 
         public void Cleanup()
         {
-            if (_core != null)
+            if (_core != null && _isStarted)
             {
                 _core.Died -= OnCoreDied;
-                _core.CleanupAtoms();
                 _talentService.Changed -= OnTalentChanged;
             }
 
+            _core?.CleanupAtoms();
+            _isStarted = false;
+            _atomCoreFactory.Cleanup();
             _core = null;
         }
 

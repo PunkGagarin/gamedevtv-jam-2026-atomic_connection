@@ -17,8 +17,6 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
         [Inject] private IGameplayRuntimeHierarchy _runtimeHierarchy;
         [Inject] private IInstantiator _instantiator;
 
-        public AtomCore CurrentCore { get; private set; }
-
         public AtomCore Create(Vector3 at)
         {
             AtomCore prefab = _assetProvider.LoadAsset<AtomCore>(ATOM_CORE_PREFAB_PATH);
@@ -37,7 +35,6 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
 
             core.name = nameof(AtomCore);
             _createdCores.Add(core);
-            CurrentCore = core;
 
             return core;
         }
@@ -51,7 +48,6 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
             }
 
             _createdCores.Clear();
-            CurrentCore = null;
         }
     }
 }

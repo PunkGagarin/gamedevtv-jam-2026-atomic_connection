@@ -80,7 +80,7 @@ namespace _Project.Scripts.Infrastructure
             Container.Bind<ILevelStartPointProvider>().To<LevelStartPointProvider>().AsSingle();
             Container.Bind<IGameplayRuntimeHierarchy>().To<GameplayRuntimeHierarchy>().AsSingle();
             Container.Bind<IAtomCoreFactory>().To<AtomCoreFactory>().AsSingle();
-            Container.Bind<IAtomCoreService>().To<AtomCoreService>().AsSingle();
+            Container.BindInterfacesTo<AtomCoreService>().AsSingle();
             Container.Bind<IFreeAtomFactory>().To<FreeAtomFactory>().AsSingle();
             Container.Bind<IEnemyFactory>().To<EnemyFactory>().AsSingle();
             Container.Bind<IEnemySpawner>().To<EnemySpawner>().AsSingle();

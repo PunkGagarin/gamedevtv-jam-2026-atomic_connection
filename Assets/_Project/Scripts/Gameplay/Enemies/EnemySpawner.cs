@@ -46,7 +46,10 @@ namespace _Project.Scripts.Gameplay.Enemies
             if (!_spawnWasStarted)
             {
                 if (FirstGameplayClickWasReceived())
+                {
                     _spawnWasStarted = true;
+                    _timeToNextSpawn = _config.SpawnIntervalSeconds;
+                }
 
                 return;
             }

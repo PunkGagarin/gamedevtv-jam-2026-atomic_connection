@@ -14,7 +14,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
 {
     internal class GameplayLoopState : EndOfFrameExitState
     {
-        [Inject] private IEnemySpawner _enemySpawner;
+        [Inject] private IEnemyService _enemyService;
         [Inject] private IAtomCoreService _atomCoreService;
         [Inject] private IFreeAtomFactory _freeAtomFactory;
         [Inject] private IBattleMoleculeFactory _battleMoleculeFactory;
@@ -31,10 +31,10 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
         {
             _terminalTransitionWasRequested = false;
             _atomCoreService.CoreDied += OnCoreDied;
-            _enemySpawner.BossKilled += OnBossKilled;
+            _enemyService.BossKilled += OnBossKilled;
             _levelProgressService.Completed += OnLevelCompleted;
             _atomCoreService.Start();
-            _enemySpawner.Start(_atomCoreService.CurrentCoreTransform);
+            _enemyService.Start(_atomCoreService.CurrentCoreTransform);
             _battleMoleculeService.Start();
             _levelProgressService.Start();
         }
@@ -44,7 +44,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
             if (_pauseService.IsPaused)
                 return;
 
-            _enemySpawner.Update();
+            _enemyService.Update();
 
             if (_terminalTransitionWasRequested)
                 return;
@@ -62,11 +62,11 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
         protected override void ExitOnEndOfFrame()
         {
             _atomCoreService.CoreDied -= OnCoreDied;
-            _enemySpawner.BossKilled -= OnBossKilled;
+            _enemyService.BossKilled -= OnBossKilled;
             _levelProgressService.Completed -= OnLevelCompleted;
             _dragService.CancelDrag();
             _levelProgressService.Cleanup();
-            _enemySpawner.Cleanup();
+            _enemyService.Cleanup();
             _atomCoreService.Cleanup();
             _battleMoleculeService.Cleanup();
             _battleMoleculeFactory.Cleanup();

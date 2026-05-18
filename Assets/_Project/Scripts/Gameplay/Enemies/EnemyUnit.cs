@@ -1,23 +1,25 @@
 using System;
 using _Project.Scripts.Gameplay.Common.Health;
 using _Project.Scripts.Gameplay.Enemies.Components;
+using _Project.Scripts.Gameplay.Units.AtomCores;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Enemies
 {
     [RequireComponent(typeof(Health))]
     [RequireComponent(typeof(EnemyMovement))]
+    [RequireComponent(typeof(EnemyCoreCollision))]
     public class EnemyUnit : MonoBehaviour
     {
         [field: SerializeField] private Health Health { get; set; }
         [field: SerializeField] private EnemyMovement Movement { get; set; }
+        [field: SerializeField] private EnemyCoreCollision CoreCollision { get; set; }
 
         private EnemyDefinition _definition;
 
         public EnemyId Id => _definition?.Id ?? EnemyId.Standard;
         public bool IsAlive => Health == null || Health.IsAlive;
         public int CoreCollisionDamage => _definition?.CoreCollisionDamage ?? 1;
-        public bool KillsCoreOnCollision => _definition?.KillsCoreOnCollision ?? false;
         public int NucleotideReward => _definition?.NucleotideReward ?? 0;
 
         public event Action<EnemyUnit> Died;
@@ -30,6 +32,9 @@ namespace _Project.Scripts.Gameplay.Enemies
 
             if (Movement == null)
                 Movement = GetComponent<EnemyMovement>();
+
+            if (CoreCollision == null)
+                CoreCollision = GetComponent<EnemyCoreCollision>();
 
             if (Health != null)
                 Health.Died += OnHealthDied;
@@ -52,6 +57,7 @@ namespace _Project.Scripts.Gameplay.Enemies
         public void PrepareForSpawn()
         {
             Movement?.Clear();
+            CoreCollision?.Clear();
 
             if (Health != null)
                 Health.ResetHealth();
@@ -62,6 +68,7 @@ namespace _Project.Scripts.Gameplay.Enemies
         public void PrepareForPool()
         {
             Movement?.Clear();
+            CoreCollision?.Clear();
             gameObject.SetActive(false);
         }
 
@@ -70,9 +77,19 @@ namespace _Project.Scripts.Gameplay.Enemies
             Movement?.Configure(target, speed);
         }
 
-        public void Tick(float deltaTime)
+        public void CollideWithCore(AtomCore target)
+        {
+            CoreCollision?.Configure(target);
+        }
+
+        public void TickMovement(float deltaTime)
         {
             Movement?.Tick(deltaTime);
+        }
+
+        public void TickCoreCollision()
+        {
+            CoreCollision?.Tick();
         }
 
         public void Kill()

@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 11400000}
   - component: {fileID: 11400001}
   - component: {fileID: 11400002}
+  - component: {fileID: 11400004}
   - component: {fileID: 11400003}
   m_Layer: 0
   m_Name: BossEnemyUnit
@@ -88,6 +89,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Health>k__BackingField: {fileID: 11400001}
   <Movement>k__BackingField: {fileID: 11400002}
+  <CoreCollision>k__BackingField: {fileID: 11400004}
 --- !u!114 &11400001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112,6 +114,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b8d15b3421b42be9f84bcbdf4e60932, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &11400004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57c6b703a25445449fbd36d07138cedd, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  <Collider>k__BackingField: {fileID: 5800000}
 --- !u!114 &11400003
 MonoBehaviour:
   m_ObjectHideFlags: 0

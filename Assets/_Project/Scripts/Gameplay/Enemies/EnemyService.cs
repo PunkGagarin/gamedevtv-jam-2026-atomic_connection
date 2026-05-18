@@ -116,9 +116,11 @@ namespace _Project.Scripts.Gameplay.Enemies
         {
             EnemyDefinition enemyDefinition = _levelCatalog.EnemyFor(wave.EnemyId);
             float offscreenSpawnPadding = _level != null ? _level.OffscreenSpawnPadding : 1f;
+            int maxHealth = wave.MaxHealthFor(enemyDefinition);
+            int coreCollisionDamage = wave.CoreCollisionDamageFor(enemyDefinition);
 
             for (int i = 0; i < wave.SpawnCount; i++)
-                TrackEnemy(_enemySpawner.Spawn(enemyDefinition, _target, offscreenSpawnPadding));
+                TrackEnemy(_enemySpawner.Spawn(enemyDefinition, maxHealth, coreCollisionDamage, _target, offscreenSpawnPadding));
         }
 
         private void TrackEnemy(EnemyUnit enemy)

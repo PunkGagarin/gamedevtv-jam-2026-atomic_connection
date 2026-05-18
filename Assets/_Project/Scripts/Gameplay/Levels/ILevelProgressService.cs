@@ -7,6 +7,7 @@ namespace _Project.Scripts.Gameplay.Levels
     {
         event Action Completed;
         CurrencyAmount LastCompletionReward { get; }
+        bool LastCompletedLevelWasFinal { get; }
         float RemainingSeconds { get; }
         void Start();
         void Update();

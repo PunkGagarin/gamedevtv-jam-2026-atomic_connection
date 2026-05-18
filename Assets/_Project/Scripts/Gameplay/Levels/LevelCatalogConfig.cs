@@ -12,6 +12,10 @@ namespace _Project.Scripts.Gameplay.Levels
         [field: SerializeField] public List<EnemyDefinition> Enemies { get; private set; } = new();
         [field: SerializeField] public List<LevelDefinition> Levels { get; private set; } = new();
 
+        public int MaxLevelNumber => Levels == null || Levels.Count == 0
+            ? 1
+            : Levels.Max(level => level.LevelNumber);
+
         public LevelDefinition LevelFor(int levelNumber)
         {
             if (Levels == null || Levels.Count == 0)

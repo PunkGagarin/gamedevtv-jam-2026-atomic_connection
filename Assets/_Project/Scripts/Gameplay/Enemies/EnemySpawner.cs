@@ -12,12 +12,12 @@ namespace _Project.Scripts.Gameplay.Enemies
         [Inject] private ICameraProvider _cameraProvider;
         [Inject] private IRandomService _random;
 
-        public EnemyUnit Spawn(EnemyDefinition definition, Transform target, float offscreenPadding)
+        public EnemyUnit Spawn(EnemyDefinition definition, int maxHealth, int coreCollisionDamage, Transform target, float offscreenPadding)
         {
             if (!TryGetOffscreenSpawnPosition(target, offscreenPadding, out Vector3 spawnPosition))
                 return null;
 
-            EnemyUnit enemy = _enemyFactory.Create(definition, spawnPosition);
+            EnemyUnit enemy = _enemyFactory.Create(definition, maxHealth, coreCollisionDamage, spawnPosition);
             enemy.MoveTo(target, definition.MoveSpeed);
             enemy.CollideWithCore(target != null && target.TryGetComponent(out AtomCore core) ? core : null);
             return enemy;

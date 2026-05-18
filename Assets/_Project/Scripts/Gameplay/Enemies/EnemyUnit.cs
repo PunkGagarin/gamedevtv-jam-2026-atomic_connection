@@ -16,10 +16,11 @@ namespace _Project.Scripts.Gameplay.Enemies
         [field: SerializeField] private EnemyCoreCollision CoreCollision { get; set; }
 
         private EnemyDefinition _definition;
+        private int _coreCollisionDamage = 1;
 
         public EnemyId Id => _definition?.Id ?? EnemyId.Standard;
         public bool IsAlive => Health == null || Health.IsAlive;
-        public int CoreCollisionDamage => _definition?.CoreCollisionDamage ?? 1;
+        public int CoreCollisionDamage => _coreCollisionDamage;
         public int NucleotideReward => _definition?.NucleotideReward ?? 0;
 
         public event Action<EnemyUnit> Died;
@@ -46,12 +47,13 @@ namespace _Project.Scripts.Gameplay.Enemies
                 Health.Died -= OnHealthDied;
         }
 
-        public void Configure(EnemyDefinition definition)
+        public void Configure(EnemyDefinition definition, int maxHealth, int coreCollisionDamage)
         {
             _definition = definition ?? throw new ArgumentNullException(nameof(definition));
+            _coreCollisionDamage = Mathf.Max(1, coreCollisionDamage);
 
             if (Health != null)
-                Health.Configure(definition.MaxHealth);
+                Health.Configure(maxHealth);
         }
 
         public void PrepareForSpawn()

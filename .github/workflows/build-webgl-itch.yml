@@ -6,7 +6,7 @@ on:
       itch_target:
         description: "itch target in the form user/game:channel"
         required: true
-        default: "your-itch-username/atomic-connection:html5"
+        default: "punkgagarin/atomicconnection:html5"
       upload_to_itch:
         description: "Upload the successful build to itch"
         required: true

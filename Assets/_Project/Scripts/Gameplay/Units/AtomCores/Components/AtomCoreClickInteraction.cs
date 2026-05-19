@@ -26,7 +26,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
                 _core = GetComponent<AtomCore>();
 
             if (_clickCollider == null)
-                _clickCollider = GetComponent<Collider2D>();
+                _clickCollider = GetClickCollider();
         }
 
         public void Tick()
@@ -48,6 +48,17 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
 
             if (_core.RegisterAtomClick())
                 CreateAtomForCore();
+        }
+
+        private Collider2D GetClickCollider()
+        {
+            foreach (Collider2D col in GetComponents<Collider2D>())
+            {
+                if (!col.isTrigger)
+                    return col;
+            }
+
+            return GetComponent<Collider2D>();
         }
 
         private void CreateAtomForCore()

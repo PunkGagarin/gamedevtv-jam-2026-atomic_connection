@@ -182,7 +182,7 @@ namespace _Project.Scripts.Gameplay.Drag
                 if (hit == null)
                     continue;
 
-                IDragSource dragSource = hit.GetComponent<IDragSource>();
+                IDragSource dragSource = hit.GetComponentInParent<IDragSource>();
                 IDraggable draggable = dragSource?.GetDraggable();
                 if (draggable != null)
                     return new DragStartCandidate(draggable, false);

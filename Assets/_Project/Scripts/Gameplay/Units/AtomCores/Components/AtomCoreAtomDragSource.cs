@@ -5,20 +5,20 @@ using UnityEngine;
 namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
 {
     [DisallowMultipleComponent]
-    [RequireComponent(typeof(Collider2D))]
+    [RequireComponent(typeof(AtomCore))]
     public class AtomCoreAtomDragSource : MonoBehaviour, IDragSource
     {
         private AtomCore _core;
 
         private void Awake()
         {
-            _core = GetComponentInParent<AtomCore>();
+            _core = GetComponent<AtomCore>();
         }
 
         public IDraggable GetDraggable()
         {
             if (_core == null)
-                _core = GetComponentInParent<AtomCore>();
+                _core = GetComponent<AtomCore>();
 
             if (_core == null || !_core.IsAlive || _core.OwnedAtoms == null)
                 return null;

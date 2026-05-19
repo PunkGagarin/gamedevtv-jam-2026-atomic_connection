@@ -10,11 +10,20 @@ namespace _Project.Scripts.Gameplay.Windows
 
         private readonly List<BaseWindow> _openedWindows = new();
 
-        public void Open(WindowId windowId) =>
+        public void Open(WindowId windowId)
+        {
+            RemoveDestroyedWindows();
+
+            if (_openedWindows.Exists(x => x.Id == windowId))
+                return;
+
             _openedWindows.Add(_windowFactory.CreateWindow(windowId));
+        }
 
         public void Close(WindowId windowId)
         {
+            RemoveDestroyedWindows();
+
             BaseWindow window = _openedWindows.Find(x => x.Id == windowId);
 
             if (window == null)
@@ -23,5 +32,8 @@ namespace _Project.Scripts.Gameplay.Windows
             _openedWindows.Remove(window);
             Object.Destroy(window.gameObject);
         }
+
+        private void RemoveDestroyedWindows() =>
+            _openedWindows.RemoveAll(x => x == null);
     }
 }

@@ -120,6 +120,7 @@ Keep `AGENTS.md` operational and update the architecture notes when current flow
 
 - Use field injection for Zenject dependencies. Prefer `[Inject] private SomeService _service;` over constructor injection.
 - Use serialized auto-properties for inspector-exposed fields: `[field: SerializeField] private GameObject Obj { get; set; }`. Do not add new `[SerializeField] private GameObject _obj;` fields.
+- ScriptableObject configs with multiple semantic groups must use editor-friendly `[field: Header("...")]` sections with human-readable names.
 - When converting existing serialized fields to serialized auto-properties, update scene/prefab YAML references to the backing field name, for example `<Obj>k__BackingField`.
 - Prefer `List<T>` over arrays (`T[]`) where possible, including `[field: SerializeField]` collections
 - For new files, prefer usings grouped as System -> UnityEngine -> third-party -> project. In existing files, keep the surrounding order unless the file is already being cleaned up.

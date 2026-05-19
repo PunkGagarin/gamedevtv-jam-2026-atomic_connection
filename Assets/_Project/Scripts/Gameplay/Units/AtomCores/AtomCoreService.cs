@@ -12,7 +12,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
         private bool _isStarted;
 
         [Inject] private ITimeService _time;
-        [Inject] private UnitClickConfig _config;
+        [Inject] private AtomCoreConfig _config;
         [Inject] private ITalentService _talentService;
         [Inject] private IAtomCoreFactory _atomCoreFactory;
 

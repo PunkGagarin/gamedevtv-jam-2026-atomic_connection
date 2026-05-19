@@ -53,7 +53,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
                 ClickInteraction = GetComponent<AtomCoreClickInteraction>();
         }
 
-        public void Configure(UnitClickConfig config, int clicksRequired, int maxHealth)
+        public void Configure(AtomCoreConfig config, int clicksRequired, int maxHealth)
         {
             _spawnRadiusOffset = config.SpawnRadiusOffset;
             _atomOrbitDegreesPerSecond = config.FreeAtomOrbitDegreesPerSecond;

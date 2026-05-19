@@ -170,6 +170,9 @@ installers, bound with `FromInstance(...)`, and injected.
 Dynamic prefab registries map ids to prefabs. `WindowsConfig` is a prefab
 registry, not a numeric settings config.
 
+`AtomCoreConfig` owns core setup values: base core HP, clicks required to
+generate a free atom, generated atom spawn radius, and free atom orbit speed.
+
 Talent-adjusted runtime values are applied by the current owner:
 - `AtomCoreService` applies core HP and atom click count
 - `BattleMoleculeFactory` applies atom charge count

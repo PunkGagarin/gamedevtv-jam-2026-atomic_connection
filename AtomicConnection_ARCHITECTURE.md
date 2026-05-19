@@ -113,11 +113,18 @@ Dynamic window flow:
 WindowService.Open(WindowId)
 -> WindowFactory.CreateWindow(...)
 -> WindowsConfig prefab lookup at Resources/Configs/Windows/windowConfig
--> Zenject IInstantiator under scene UIRoot
+-> modal root with raycast-blocking backdrop under scene UIRoot
+-> Zenject IInstantiator under modal root
 ```
 
 UI may call `GameStateMachine.Enter(...)` or `IWindowService.Open(...)`, but must
 not load scenes or control gameplay service lifecycle.
+
+Every dynamic window gets a shared modal backdrop. The backdrop blocks clicks to
+UI behind the current window and forwards backdrop clicks to the opened
+`BaseWindow`. Its color is configured in `WindowsConfig`. Windows opt into
+dismiss-on-backdrop by overriding `OnBackdropClicked()`; result windows keep the
+default no-op and require explicit button actions.
 
 The gameplay menu is not a `GameplayPauseState` transition yet:
 
@@ -162,6 +169,9 @@ installers, bound with `FromInstance(...)`, and injected.
 
 Dynamic prefab registries map ids to prefabs. `WindowsConfig` is a prefab
 registry, not a numeric settings config.
+
+`AtomCoreConfig` owns core setup values: base core HP, clicks required to
+generate a free atom, generated atom spawn radius, and free atom orbit speed.
 
 Talent-adjusted runtime values are applied by the current owner:
 - `AtomCoreService` applies core HP and atom click count

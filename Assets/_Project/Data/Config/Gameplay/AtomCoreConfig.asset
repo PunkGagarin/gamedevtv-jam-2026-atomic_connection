@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 199f4a4687ae245fb820deb98fe53116, type: 3}
-  m_Name: UnitClickConfig
-  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Units.UnitClickConfig
-  <ClicksToGenerateFreeAtom>k__BackingField: 4
+  m_Name: AtomCoreConfig
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Units.AtomCoreConfig
   <CoreMaxHealth>k__BackingField: 2
+  <ClicksToGenerateFreeAtom>k__BackingField: 4
   <SpawnRadiusOffset>k__BackingField: 1
   <FreeAtomOrbitDegreesPerSecond>k__BackingField: 60

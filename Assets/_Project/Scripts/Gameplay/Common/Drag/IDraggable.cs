@@ -16,4 +16,9 @@ namespace _Project.Scripts.Gameplay.Drag
     {
         bool TryHandleDragRelease(Vector3 worldPosition);
     }
+
+    public interface IDragSource
+    {
+        IDraggable GetDraggable();
+    }
 }

@@ -32,6 +32,9 @@ namespace _Project.Scripts.Gameplay.Windows
         protected override void Initialize() =>
             Content.SetActive(true);
 
+        public override void OnBackdropClicked() =>
+            Close();
+
         protected override void SubscribeUpdates()
         {
             RestartButton.onClick.AddListener(RestartGameplay);

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Global Config Installer
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.GameplayData.GlobalConfigInstaller
   <LanguageConfig>k__BackingField: {fileID: 11400000, guid: 625438529fe15496eb8fb23c746b3502, type: 2}
-  <UnitClickConfig>k__BackingField: {fileID: 11400000, guid: cb0994611d614e3a94797f6e028490ec, type: 2}
+  <AtomCoreConfig>k__BackingField: {fileID: 11400000, guid: cb0994611d614e3a94797f6e028490ec, type: 2}
   <BattleMoleculeConfig>k__BackingField: {fileID: 11400000, guid: 0140a7cd6bd244eda71400d972c714e5, type: 2}
   <GameplayFeedbackAnimationConfig>k__BackingField: {fileID: 11400000, guid: 37559a0b80d549cbb042810eb74db0af, type: 2}
   <TalentConfig>k__BackingField: {fileID: 11400000, guid: 907e1edd1c3d47638316a956996ea18a, type: 2}

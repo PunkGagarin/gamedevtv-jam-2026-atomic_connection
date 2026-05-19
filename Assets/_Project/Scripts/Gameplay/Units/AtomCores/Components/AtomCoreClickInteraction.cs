@@ -1,6 +1,6 @@
 using _Project.Scripts.Gameplay.Cameras.Provider;
-using _Project.Scripts.Gameplay.Common.Physics;
 using _Project.Scripts.Gameplay.Common.Random;
+using _Project.Scripts.Gameplay.Drag;
 using _Project.Scripts.Gameplay.Input.Service;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
@@ -10,15 +10,16 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(AtomCore))]
+    [RequireComponent(typeof(Collider2D))]
     public class AtomCoreClickInteraction : MonoBehaviour
     {
-        private const int PHYSICS_LAYER_MASK = ~0;
-
         private AtomCore _core;
+        private Collider2D _clickCollider;
+        private bool _clickWasStartedOnCore;
 
         [Inject] private IInputService _inputService;
         [Inject] private ICameraProvider _cameraProvider;
-        [Inject] private IPhysicsService _physicsService;
+        [Inject] private IDragService _dragService;
         [Inject] private IRandomService _random;
         [Inject] private IFreeAtomFactory _freeAtomFactory;
 
@@ -26,6 +27,9 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
         {
             if (_core == null)
                 _core = GetComponent<AtomCore>();
+
+            if (_clickCollider == null)
+                _clickCollider = GetClickCollider();
         }
 
         public void Tick()
@@ -33,21 +37,52 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
             if (_core == null)
                 return;
 
-            if (_inputService == null || !_inputService.GetLeftMouseButtonDown())
+            if (_inputService == null)
                 return;
 
-            Camera camera = _cameraProvider != null ? _cameraProvider.MainCamera : null;
-            if (camera == null || _physicsService == null)
+            if (_inputService.GetLeftMouseButtonDown())
+                TryStartPendingClick();
+
+            if (!_clickWasStartedOnCore || !_inputService.GetLeftMouseButtonUpRaw())
                 return;
 
-            Vector2 worldPosition = _inputService.GetWorldMousePosition();
-            Collider2D hit = _physicsService.OverlapPoint(worldPosition, PHYSICS_LAYER_MASK);
+            bool shouldRegisterClick = _inputService.GetLeftMouseButtonUp() &&
+                                       (_dragService == null || !_dragService.DragWasStartedThisPress);
 
-            if (hit == null || hit.gameObject != gameObject)
+            _clickWasStartedOnCore = false;
+
+            if (!shouldRegisterClick)
                 return;
 
             if (_core.RegisterAtomClick())
                 CreateAtomForCore();
+        }
+
+        private void TryStartPendingClick()
+        {
+            _clickWasStartedOnCore = false;
+
+            Camera camera = _cameraProvider != null ? _cameraProvider.MainCamera : null;
+            if (camera == null || _clickCollider == null)
+                return;
+
+            Vector2 worldPosition = _inputService.GetWorldMousePosition();
+
+            if (!_clickCollider.OverlapPoint(worldPosition))
+                return;
+
+            _clickWasStartedOnCore = true;
+        }
+
+        private Collider2D GetClickCollider()
+        {
+            foreach (Collider2D col in GetComponents<Collider2D>())
+            {
+                if (!col.isTrigger)
+                    return col;
+            }
+
+            return GetComponent<Collider2D>();
         }
 
         private void CreateAtomForCore()

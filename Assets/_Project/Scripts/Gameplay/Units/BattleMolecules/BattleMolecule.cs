@@ -1,10 +1,12 @@
 using System;
 using _Project.Scripts.Gameplay.Units.BattleMolecules.Components;
+using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 {
     [RequireComponent(typeof(OwnedAtoms))]
+    [RequireComponent(typeof(OwnedAtomOrbitLayout))]
     [RequireComponent(typeof(BattleMoleculeCharge))]
     [RequireComponent(typeof(BattleMoleculeAtomReceiver))]
     [RequireComponent(typeof(BattleMoleculeAtomOrbit))]
@@ -12,6 +14,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
     public class BattleMolecule : MonoBehaviour
     {
         [field: SerializeField] private OwnedAtoms OwnedAtoms { get; set; }
+        [field: SerializeField] private OwnedAtomOrbitLayout AtomOrbitLayout { get; set; }
         [field: SerializeField] private BattleMoleculeCharge Charge { get; set; }
         [field: SerializeField] private BattleMoleculeAtomReceiver AtomReceiver { get; set; }
         [field: SerializeField] private BattleMoleculeAtomOrbit AtomOrbit { get; set; }
@@ -27,6 +30,9 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         {
             if (OwnedAtoms == null)
                 OwnedAtoms = GetComponent<OwnedAtoms>();
+
+            if (AtomOrbitLayout == null)
+                AtomOrbitLayout = GetComponent<OwnedAtomOrbitLayout>();
 
             if (Charge == null)
                 Charge = GetComponent<BattleMoleculeCharge>();
@@ -47,7 +53,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                 return;
 
             Charge.Configure(atomsRequired);
-            AtomReceiver.Configure(config.AtomsPosCircleRadius);
+            AtomOrbitLayout?.ConfigureFixedRadius(FreeAtomOwnerKind.BattleMolecule, config.AtomsPosCircleRadius);
             AtomOrbit.Configure(config.DepositedAtomsOrbitDegreesPerSecond);
         }
 

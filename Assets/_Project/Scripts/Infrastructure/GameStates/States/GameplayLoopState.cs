@@ -49,13 +49,13 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
             if (_terminalTransitionWasRequested)
                 return;
 
+            _dragService.Update();
             _atomCoreService.Update();
 
             if (_terminalTransitionWasRequested)
                 return;
 
             _battleMoleculeService.Update();
-            _dragService.Update();
             _levelProgressService.Update();
         }
 

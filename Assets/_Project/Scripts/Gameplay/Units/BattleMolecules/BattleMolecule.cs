@@ -23,7 +23,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         [field: SerializeField] private BattleMoleculeShotQueue ShotQueue { get; set; }
         [field: SerializeField] public Collider2D CollisionCollider { get; private set; }
 
-        public event Action<Vector3, Vector3> ShotRequested
+        public event Action<BattleMoleculeShotRequest> ShotRequested
         {
             add => ShotQueue.ShotRequested += value;
             remove => ShotQueue.ShotRequested -= value;
@@ -83,6 +83,11 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         public void FixedTick(float fixedDeltaTime)
         {
             CoreOrbit.FixedTick(fixedDeltaTime);
+        }
+
+        public bool TryAutoLoadAtom(FreeAtom atom)
+        {
+            return AtomReceiver != null && AtomReceiver.TryAcceptAtom(atom);
         }
     }
 }

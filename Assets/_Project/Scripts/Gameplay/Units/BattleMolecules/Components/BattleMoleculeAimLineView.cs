@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using _Project.Scripts.Gameplay.Units.BattleMolecules;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
@@ -100,8 +101,11 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
                 _aimLine.enabled = false;
         }
 
-        private void ShowShotLine(Vector3 origin, Vector3 direction)
+        private void ShowShotLine(BattleMoleculeShotRequest request)
         {
+            Vector3 origin = request.Origin;
+            Vector3 direction = request.Direction;
+
             if (direction.sqrMagnitude <= Mathf.Epsilon)
                 return;
 

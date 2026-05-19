@@ -90,7 +90,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
 
         public void Tick(float deltaTime)
         {
-            ClickInteraction?.Tick();
+            ClickInteraction?.Tick(deltaTime);
 
             float angleDelta = _atomOrbitDegreesPerSecond * Mathf.Deg2Rad * deltaTime;
             OwnedAtoms.TickOrbit(angleDelta);

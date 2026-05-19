@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using Zenject;
 using _Project.Scripts.Gameplay.Currencies;
+using _Project.Scripts.Gameplay.Enemies;
 using _Project.Scripts.Gameplay.Feedback;
 using _Project.Scripts.Gameplay.Levels;
 using _Project.Scripts.Gameplay.Talents;
@@ -22,6 +23,7 @@ namespace _Project.Scripts.GameplayData
         [field: SerializeField] private TalentTreeAnimationConfig TalentTreeAnimationConfig { get; set; }
         [field: SerializeField] private CurrencyConfig CurrencyConfig { get; set; }
         [field: SerializeField] private LevelCatalogConfig LevelCatalogConfig { get; set; }
+        [field: SerializeField] private EnemySpawnerConfig EnemySpawnerConfig { get; set; }
 
         public override void InstallBindings()
         {
@@ -33,6 +35,7 @@ namespace _Project.Scripts.GameplayData
             BindConfig(TalentTreeAnimationConfig);
             BindConfig(CurrencyConfig);
             BindConfig(LevelCatalogConfig);
+            BindConfig(EnemySpawnerConfig);
         }
 
         private void BindConfig<TConfig>(TConfig config) where TConfig : ScriptableObject

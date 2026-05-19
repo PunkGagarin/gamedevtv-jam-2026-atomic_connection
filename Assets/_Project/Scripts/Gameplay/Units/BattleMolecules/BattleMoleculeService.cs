@@ -1,9 +1,12 @@
 using System.Collections.Generic;
+using _Project.Scripts.Gameplay.Drag;
 using _Project.Scripts.Gameplay.Common.Physics;
 using _Project.Scripts.Gameplay.Common.Time;
 using _Project.Scripts.Gameplay.Enemies;
+using _Project.Scripts.Gameplay.Input.Service;
 using _Project.Scripts.Gameplay.Talents;
 using _Project.Scripts.Gameplay.Units.AtomCores;
+using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
 using Zenject;
 
@@ -11,10 +14,13 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 {
     public class BattleMoleculeService : IBattleMoleculeService
     {
+        private const float AUTO_LOAD_INTERVAL_SECONDS = 2f;
         private static readonly RaycastHit2D[] ShotHits = new RaycastHit2D[64];
 
         private readonly List<BattleMolecule> _trackedMolecules = new();
+        private readonly List<EnemyHit> _enemyHits = new();
         private bool _isStarted;
+        private float _autoLoadTimer;
 
         [Inject] private IBattleMoleculeFactory _battleMoleculeFactory;
         [Inject] private IPhysicsService _physicsService;
@@ -22,6 +28,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         [Inject] private IAtomCoreService _atomCoreService;
         [Inject] private BattleMoleculeConfig _config;
         [Inject] private ITalentService _talentService;
+        [Inject] private IInputService _inputService;
+        [Inject] private IDragService _dragService;
 
         public void Start()
         {
@@ -44,6 +52,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
                 molecule.Tick(_time.DeltaTime);
             }
+
+            TickAutoLoad(_time.DeltaTime);
         }
 
         public void FixedUpdate()
@@ -72,6 +82,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             }
 
             _trackedMolecules.Clear();
+            _autoLoadTimer = 0f;
         }
 
         private void TrackMolecule(BattleMolecule molecule)
@@ -84,21 +95,27 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             molecule.ShotRequested += ResolveShot;
         }
 
-        private void ResolveShot(Vector3 origin, Vector3 direction)
+        private void ResolveShot(BattleMoleculeShotRequest request)
         {
-            EnemyUnit target = FindFirstEnemy(origin, direction);
-            if (target == null)
-                return;
+            int targetCount = TargetCountFor(request);
+            FindEnemies(request.Origin, request.Direction);
 
-            Debug.DrawLine(origin, target.transform.position, Color.yellow, 0.5f);
-            target.TakeDamage(CurrentShotDamage());
+            for (int i = 0; i < _enemyHits.Count && i < targetCount; i++)
+            {
+                EnemyUnit target = _enemyHits[i].Enemy;
+                if (target == null)
+                    continue;
+
+                Debug.DrawLine(request.Origin, target.transform.position, Color.yellow, 0.5f);
+                target.TakeDamage(CurrentShotDamage());
+            }
         }
 
-        private EnemyUnit FindFirstEnemy(Vector3 origin, Vector3 direction)
+        private void FindEnemies(Vector3 origin, Vector3 direction)
         {
+            _enemyHits.Clear();
+
             int hitCount = _physicsService.RaycastNonAlloc(origin, direction, ~0, ShotHits);
-            EnemyUnit closestEnemy = null;
-            float closestDistance = float.PositiveInfinity;
 
             for (int i = 0; i < hitCount; i++)
             {
@@ -107,20 +124,99 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                     continue;
 
                 EnemyUnit enemy = hit.collider.GetComponentInParent<EnemyUnit>();
-                if (enemy == null || !enemy.IsAlive || hit.distance >= closestDistance)
+                if (enemy == null || !enemy.IsAlive || ContainsEnemy(enemy))
                     continue;
 
-                closestEnemy = enemy;
-                closestDistance = hit.distance;
+                _enemyHits.Add(new EnemyHit(enemy, hit.distance));
             }
 
-            return closestEnemy;
+            _enemyHits.Sort((a, b) => a.Distance.CompareTo(b.Distance));
+        }
+
+        private bool ContainsEnemy(EnemyUnit enemy)
+        {
+            foreach (EnemyHit hit in _enemyHits)
+            {
+                if (hit.Enemy == enemy)
+                    return true;
+            }
+
+            return false;
+        }
+
+        private int TargetCountFor(BattleMoleculeShotRequest request)
+        {
+            if (request.Kind != BattleMoleculeShotKind.Regular)
+                return 1;
+
+            int pierce = Mathf.RoundToInt(_talentService.BonusOf(TalentType.BattleMoleculePierce));
+            return Mathf.Max(1, 1 + pierce);
         }
 
         private int CurrentShotDamage()
         {
             float bonusDamage = _talentService.BonusOf(TalentType.BattleMoleculeDamage);
             return Mathf.Max(1, _config.BaseShotDamage + Mathf.RoundToInt(bonusDamage));
+        }
+
+        private void TickAutoLoad(float deltaTime)
+        {
+            if (deltaTime <= 0f || !CanAutoLoad())
+            {
+                _autoLoadTimer = 0f;
+                return;
+            }
+
+            _autoLoadTimer += deltaTime;
+            if (_autoLoadTimer < AUTO_LOAD_INTERVAL_SECONDS)
+                return;
+
+            _autoLoadTimer = 0f;
+            AutoLoadMolecules();
+        }
+
+        private bool CanAutoLoad()
+        {
+            if (!_talentService.IsUnlocked(TalentType.AtomAutoLoad))
+                return false;
+
+            if (_inputService != null && _inputService.GetLeftMouseButtonRaw())
+                return false;
+
+            return _dragService == null || !_dragService.IsDragActive;
+        }
+
+        private void AutoLoadMolecules()
+        {
+            AtomCore core = _atomCoreService.CurrentCoreTransform != null
+                ? _atomCoreService.CurrentCoreTransform.GetComponent<AtomCore>()
+                : null;
+
+            if (core == null || core.OwnedAtoms == null)
+                return;
+
+            foreach (BattleMolecule molecule in _battleMoleculeFactory.CreatedMolecules)
+            {
+                if (molecule == null)
+                    continue;
+
+                if (!core.OwnedAtoms.TryGetFirstOwned(FreeAtomOwnerKind.Core, out FreeAtom atom))
+                    return;
+
+                molecule.TryAutoLoadAtom(atom);
+            }
+        }
+
+        private readonly struct EnemyHit
+        {
+            public EnemyHit(EnemyUnit enemy, float distance)
+            {
+                Enemy = enemy;
+                Distance = distance;
+            }
+
+            public EnemyUnit Enemy { get; }
+            public float Distance { get; }
         }
     }
 }

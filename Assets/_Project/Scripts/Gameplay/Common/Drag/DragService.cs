@@ -24,6 +24,7 @@ namespace _Project.Scripts.Gameplay.Drag
         private bool IsDragging => _currentDraggable != null;
         private bool HasPendingDrag => _pendingCandidate.Draggable != null;
         public bool DragWasStartedThisPress => _dragWasStartedThisPress;
+        public bool IsDragActive => IsDragging || HasPendingDrag;
 
         public void Update()
         {

@@ -42,7 +42,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             {
                 float angle = startAngle + step * i;
                 Vector3 shotDirection = Quaternion.Euler(0f, 0f, angle) * centerDirection;
-                RequestShot(origin, shotDirection.normalized);
+                RequestShot(origin, shotDirection.normalized, BattleMoleculeShotKind.Mass);
             }
         }
     }

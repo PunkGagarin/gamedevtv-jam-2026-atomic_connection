@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using _Project.Scripts.Gameplay.Enemies;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Levels
@@ -9,7 +8,6 @@ namespace _Project.Scripts.Gameplay.Levels
     [CreateAssetMenu(fileName = "LevelCatalogConfig", menuName = "Game Resources/Configs/Level Catalog")]
     public class LevelCatalogConfig : ScriptableObject
     {
-        [field: SerializeField] public List<EnemyDefinition> Enemies { get; private set; } = new();
         [field: SerializeField] public List<LevelDefinition> Levels { get; private set; } = new();
 
         public int MaxLevelNumber => Levels == null || Levels.Count == 0
@@ -33,16 +31,6 @@ namespace _Project.Scripts.Gameplay.Levels
 
             Debug.LogWarning($"{nameof(LevelCatalogConfig)} has no data for level {levelNumber}. Using level {fallbackLevel.LevelNumber} data.");
             return fallbackLevel;
-        }
-
-        public EnemyDefinition EnemyFor(EnemyId enemyId)
-        {
-            EnemyDefinition enemy = Enemies?.FirstOrDefault(definition => definition.Id == enemyId);
-
-            if (enemy == null)
-                throw new InvalidOperationException($"{nameof(LevelCatalogConfig)} has no enemy definition for {enemyId}.");
-
-            return enemy;
         }
     }
 }

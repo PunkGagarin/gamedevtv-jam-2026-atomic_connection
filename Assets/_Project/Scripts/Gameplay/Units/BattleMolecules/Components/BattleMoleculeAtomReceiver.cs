@@ -31,10 +31,23 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             if (draggable is not FreeAtom freeAtom)
                 return;
 
+            TryAcceptAtom(freeAtom);
+        }
+
+        public bool TryAcceptAtom(FreeAtom freeAtom)
+        {
+            if (freeAtom == null || Charge == null || OwnedAtoms == null)
+                return false;
+
+            if (!Charge.CanReceiveAtom(OwnedAtoms.Count))
+                return false;
+
             DisableCollider(freeAtom);
 
             OwnedAtoms.TakeOwnership(freeAtom, FreeAtomOwnerKind.BattleMolecule);
             Charge.RegisterAtomCount(OwnedAtoms.Count);
+
+            return true;
         }
 
         public void OnDropRejected(IDraggable draggable)

@@ -25,6 +25,7 @@ namespace _Project.Scripts.Gameplay.Enemies
         [Inject] private IEnemySpawner _enemySpawner;
         [Inject] private IEnemyFactory _enemyFactory;
         [Inject] private LevelCatalogConfig _levelCatalog;
+        [Inject] private EnemySpawnerConfig _enemySpawnerConfig;
         [Inject] private ILevelSelectionService _levelSelectionService;
         [Inject] private ITimeService _time;
         [Inject] private IPhysicsService _physicsService;
@@ -117,13 +118,21 @@ namespace _Project.Scripts.Gameplay.Enemies
 
         private void SpawnWave(LevelWaveDefinition wave)
         {
-            EnemyDefinition enemyDefinition = _levelCatalog.EnemyFor(wave.EnemyId);
+            EnemyDefinition enemyDefinition = _enemySpawnerConfig.EnemyFor(wave.EnemyId);
             float offscreenSpawnPadding = _level != null ? _level.OffscreenSpawnPadding : 1f;
             int maxHealth = wave.MaxHealthFor(enemyDefinition);
             int coreCollisionDamage = wave.CoreCollisionDamageFor(enemyDefinition);
 
-            for (int i = 0; i < wave.SpawnCount; i++)
-                TrackEnemy(_enemySpawner.Spawn(enemyDefinition, maxHealth, coreCollisionDamage, _target, offscreenSpawnPadding));
+            foreach (EnemyUnit enemy in _enemySpawner.SpawnGroup(
+                         enemyDefinition,
+                         maxHealth,
+                         coreCollisionDamage,
+                         _target,
+                         offscreenSpawnPadding,
+                         wave.SpawnCount))
+            {
+                TrackEnemy(enemy);
+            }
         }
 
         private void TrackEnemy(EnemyUnit enemy)

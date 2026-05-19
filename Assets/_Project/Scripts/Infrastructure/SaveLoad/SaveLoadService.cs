@@ -5,6 +5,7 @@ namespace _Project.Scripts.Infrastructure.SaveLoad
 {
     public class SaveLoadService : ISaveLoadService
     {
+        private const int CURRENT_PROGRESS_VERSION = 2;
         private const string PROGRESS_KEY = "AtomicConnection.Progress";
 
         private readonly IProgressProvider _progressProvider;
@@ -35,12 +36,22 @@ namespace _Project.Scripts.Infrastructure.SaveLoad
 
             string json = PlayerPrefs.GetString(PROGRESS_KEY);
             ProgressData data = ProgressData.FromJson(json);
+
+            if (data == null || data.ProgressVersion != CURRENT_PROGRESS_VERSION)
+            {
+                DeleteAllSavedData();
+                return;
+            }
+
             _progressProvider.SetProgressData(data);
         }
 
         public void CreateProgress()
         {
-            _progressProvider.SetProgressData(new ProgressData());
+            _progressProvider.SetProgressData(new ProgressData
+            {
+                ProgressVersion = CURRENT_PROGRESS_VERSION
+            });
         }
 
         public void DeleteAllSavedData()

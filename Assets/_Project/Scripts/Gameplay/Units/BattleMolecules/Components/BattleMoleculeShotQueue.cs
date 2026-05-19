@@ -12,7 +12,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         [field: SerializeField] private OwnedAtoms OwnedAtoms { get; set; }
         [field: SerializeField] private BattleMoleculeCharge Charge { get; set; }
 
-        public event Action<Vector3, Vector3> ShotRequested;
+        public event Action<BattleMoleculeShotRequest> ShotRequested;
 
         private void Awake()
         {
@@ -36,7 +36,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             Vector3 shotDirection = NormalizeShotDirection(direction);
 
             SpendCharge();
-            RequestShot(origin, shotDirection);
+            RequestShot(origin, shotDirection, BattleMoleculeShotKind.Regular);
 
             return true;
         }
@@ -55,9 +55,9 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             OwnedAtoms.ReleaseAll();
         }
 
-        protected void RequestShot(Vector3 origin, Vector3 direction)
+        protected void RequestShot(Vector3 origin, Vector3 direction, BattleMoleculeShotKind kind)
         {
-            ShotRequested?.Invoke(origin, direction);
+            ShotRequested?.Invoke(new BattleMoleculeShotRequest(origin, direction, kind));
         }
 
         protected static Vector3 NormalizeShotDirection(Vector3 direction)

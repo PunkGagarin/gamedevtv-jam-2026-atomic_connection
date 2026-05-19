@@ -23,12 +23,12 @@ do not put the behavior in a service yet. Run these gates before code changes:
 - Event/update: use events/subscriptions/explicit calls for discrete changes; use `Update` only for continuous work.
 - Lifecycle: states decide when; services know how.
 - Unity assets: keep `.meta` files, preserve GUIDs, update prefabs/scenes for serialized fields/components.
-- Docs: update `AtomicConnection_GDD.md` for player-facing rules; update `AtomicConnection_BALANCE.md` for concrete numbers.
+- Docs: update `AtomicConnection_GDD.md` for player-facing rules; update `AtomicConnection_BALANCE.md` for concrete numbers; update `Spawn.md` for level spawn tables whenever `LevelCatalogConfig` waves change; update `Pacing.md` when spawn, currency rewards, level rewards, or upgrade costs/prerequisites change.
 - Validation: run available compile/static checks and report Unity Editor/manual validation gaps.
 
 ## Project
 
-AtomicConnection is a Unity project built with Unity `6000.4.4f1` + URP. Game design is documented in [AtomicConnection_GDD.md](AtomicConnection_GDD.md), while concrete gameplay numbers and tuning tables live in [AtomicConnection_BALANCE.md](AtomicConnection_BALANCE.md). Infrastructure is still template-derived; `Gameplay/Units` and `Gameplay/Enemies` are minimal example features used to exercise lifecycle and DI patterns until production gameplay replaces them.
+AtomicConnection is a Unity project built with Unity `6000.4.4f1` + URP. Game design is documented in [AtomicConnection_GDD.md](AtomicConnection_GDD.md), concrete gameplay numbers and tuning tables live in [AtomicConnection_BALANCE.md](AtomicConnection_BALANCE.md), level spawn tables live in [Spawn.md](Spawn.md), and progression pacing lives in [Pacing.md](Pacing.md). Infrastructure is still template-derived; `Gameplay/Units` and `Gameplay/Enemies` are minimal example features used to exercise lifecycle and DI patterns until production gameplay replaces them.
 
 ## Build & Run
 
@@ -74,7 +74,7 @@ Prefab rules:
 - `AGENTS.md` is the source of truth for current architecture rules.
 - Keep new or undocumented lifecycle decisions reference-backed by `ecs-survivors`; if a needed decision is neither covered locally nor reference-backed, stop and present it as a separate proposal.
 - After each architecture/lifecycle/UI/DI slice, check whether `AGENTS.md` still matches the implemented architecture. Update it before the final response if current flow, state registration, lifecycle rules, or project conventions changed.
-- Every time code adds gameplay, content, UI behavior, player-facing rules, or other design-relevant behavior that is not already described in `AtomicConnection_GDD.md`, update the GDD in the same task before the final response. Keep concrete gameplay numbers out of the GDD; if the change adds or changes balance values, update `AtomicConnection_BALANCE.md` instead or alongside the GDD. Pure infrastructure refactors that do not change design or player-facing behavior do not require GDD or balance-document updates.
+- Every time code adds gameplay, content, UI behavior, player-facing rules, or other design-relevant behavior that is not already described in `AtomicConnection_GDD.md`, update the GDD in the same task before the final response. Keep concrete gameplay numbers out of the GDD; if the change adds or changes balance values, update `AtomicConnection_BALANCE.md` instead or alongside the GDD. If the change touches `LevelCatalogConfig` waves, update `Spawn.md` as the only detailed spawn-table document and `Pacing.md` if rewards/progression expectations change. Pure infrastructure refactors that do not change design or player-facing behavior do not require GDD or balance-document updates.
 
 ### Layer structure
 
@@ -92,7 +92,7 @@ Keep `AGENTS.md` operational and update the architecture notes when current flow
 - State flow is `Bootstrap -> MainMenu -> GameplayEnter -> GameplayLoop`; terminal transitions go to game-over or level-complete states/windows.
 - `GameplayLoopState` owns active service ticking/fixed-ticking/cleanup and skips gameplay ticks while paused.
 - Runtime prefab flow is `Resources` path -> `IAssetProvider` -> Zenject `IInstantiator`; runtime objects belong under gameplay scene hierarchy.
-- Enemy ownership: `EnemyService` coordinates, `EnemySpawner` creates, enemy components own enemy-local behavior, `BossCoreCollision` is the boss one-shot variant.
+- Enemy ownership: `EnemyService` coordinates, `EnemySpawner` creates, enemy components own enemy-local behavior, `MassEnemyArcMovement` is the mass-enemy movement variant, and `BossCoreCollision` is the boss one-shot variant.
 - UI may call state/window services, but must not load scenes or control gameplay service lifecycle. Gameplay menu pause is not a `GameplayPauseState` transition yet.
 - Dynamic windows opened through `IWindowService` use the shared modal backdrop from `WindowFactory`; backdrop color is configured in `WindowsConfig`, while outside-click dismissal belongs in the owning window's `OnBackdropClicked()` override.
 - Zenject wires dependencies; do not `new` DI-owned services. `IInitializable` must not enter states, load scenes, or start gameplay loops.

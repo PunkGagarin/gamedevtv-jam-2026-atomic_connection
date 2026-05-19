@@ -67,9 +67,11 @@ Runtime ownership:
 - `EnemyService` owns wave timing, active enemy tracking, per-frame enemy
   ticking, death subscriptions, nucleotide rewards, and boss-kill notification.
 - `EnemySpawner` is only the spawn helper: choose offscreen position, ask
-  `EnemyFactory` to create the unit, and apply spawn-time object setup.
+  `EnemyFactory` to create the unit, apply spawn-time object setup, and keep
+  multi-enemy wave spawns clustered in one offscreen sector.
 - Enemy object-internal behavior stays on focused components.
-- `EnemyMovement` moves the enemy.
+- `EnemyMovement` moves enemies directly toward the core; prefab-specific
+  movement variants such as `MassEnemyArcMovement` own enemy-local path shapes.
 - `EnemyCoreCollision` resolves normal overlap damage with the atom core while
   ticked through `EnemyUnit` by `EnemyService`.
 - Boss one-shot core collision is a prefab component variant,
@@ -95,10 +97,12 @@ services, subscribes to core death during `Start()`, and ticks current
 `AtomCore`.
 
 `AtomCore` is the root facade. `AtomCoreClickInteraction` owns hit detection,
-click progress, and generated free atom creation through `FreeAtomFactory`.
+manual/auto click progress, and generated free atom creation through
+`FreeAtomFactory`.
 
 `IBattleMoleculeService` ticks created battle molecules, fixed-ticks molecule
-core orbit movement, and subscribes to shot-request events during `Start()`.
+core orbit movement, auto-loads core atoms into molecules when unlocked, and
+subscribes to shot-request events during `Start()`.
 Each `BattleMolecule` owns its accepted atoms, charge, fire request, collision
 collider, and molecule atom orbiting through local components.
 
@@ -177,8 +181,12 @@ generate a free atom, generated atom spawn radius, and free atom orbit speed.
 Talent-adjusted runtime values are applied by the current owner:
 - `AtomCoreService` applies core HP and atom click count
 - `BattleMoleculeFactory` applies atom charge count
-- `BattleMoleculeService` resolves shot damage
+- `AtomCoreClickInteraction` applies AutoClick
+- `BattleMoleculeService` resolves shot damage, Pierce, and AutoLoad
 
 Talent tree uses `TalentConfig`. `TalentService` owns talent progress and
 buying; `CurrencyService` owns saved meta-currencies. Talent progress and
-currencies currently use `PlayerPrefs` as MVP persistence.
+currencies currently use `PlayerPrefs` as MVP persistence. `ProgressData`
+contains a save/progression version; if the stored version does not match the
+current code version, `SaveLoadService` clears saved data and creates fresh
+progress instead of migrating.

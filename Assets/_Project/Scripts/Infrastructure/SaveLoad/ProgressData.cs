@@ -9,6 +9,7 @@ namespace _Project.Scripts.Infrastructure.SaveLoad
     [Serializable]
     public class ProgressData
     {
+        public int ProgressVersion;
         public int Gold;
         public int CompletedLevelCount;
         public int SelectedLevel = 1;

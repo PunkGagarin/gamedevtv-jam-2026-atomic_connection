@@ -13,6 +13,12 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         [field: SerializeField, Min(0f)] public float DepositedAtomsOrbitDegreesPerSecond { get; private set; } = 90f;
         [field: SerializeField, Min(0f)] public float CoreOrbitDegreesPerSecond { get; private set; } = 45f;
 
+        [field: Header("Shield Molecule")]
+        [field: SerializeField] public Vector2 ShieldMoleculeSpawnOffset { get; private set; } = new(0f, -2f);
+        [field: SerializeField, Min(1)] public int ShieldMoleculeAtomsRequired { get; private set; } = 3;
+        [field: SerializeField, Min(0.1f)] public float ShieldDurationSeconds { get; private set; } = 5f;
+        [field: SerializeField, Min(0f)] public float ShieldSecondsLostPerDamage { get; private set; } = 1f;
+
         [field: Header("Mass Molecule")]
         [field: SerializeField] public Vector2 MassMoleculeSpawnOffset { get; private set; } = new(-2f, 0f);
         [field: SerializeField, Min(1)] public int MassMoleculeAtomsRequired { get; private set; } = 5;

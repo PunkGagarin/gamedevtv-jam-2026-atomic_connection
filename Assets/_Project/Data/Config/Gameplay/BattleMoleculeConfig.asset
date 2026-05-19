@@ -18,6 +18,10 @@ MonoBehaviour:
   <AtomsPosCircleRadius>k__BackingField: 0.6
   <DepositedAtomsOrbitDegreesPerSecond>k__BackingField: 90
   <CoreOrbitDegreesPerSecond>k__BackingField: 20
+  <ShieldMoleculeSpawnOffset>k__BackingField: {x: 0, y: -2}
+  <ShieldMoleculeAtomsRequired>k__BackingField: 3
+  <ShieldDurationSeconds>k__BackingField: 5
+  <ShieldSecondsLostPerDamage>k__BackingField: 1
   <MassMoleculeSpawnOffset>k__BackingField: {x: -2, y: 0}
   <MassMoleculeAtomsRequired>k__BackingField: 5
   <MassMoleculeShotCount>k__BackingField: 5

@@ -22,6 +22,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
         {
             CreateAtomCore();
             CreateBattleMolecule();
+            CreateShieldBattleMoleculeIfUnlocked();
             CreateMassBattleMoleculeIfUnlocked();
             _stateMachine.Enter<GameplayLoopState>();
         }
@@ -44,6 +45,15 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
 
             Vector3 offset = _battleMoleculeConfig.MassMoleculeSpawnOffset;
             _battleMoleculeFactory.CreateMass(_levelStartPointProvider.StartPoint + offset, _battleMoleculeConfig);
+        }
+
+        private void CreateShieldBattleMoleculeIfUnlocked()
+        {
+            if (!_talentService.IsUnlocked(TalentType.ShieldMolecule))
+                return;
+
+            Vector3 offset = _battleMoleculeConfig.ShieldMoleculeSpawnOffset;
+            _battleMoleculeFactory.CreateShield(_levelStartPointProvider.StartPoint + offset, _battleMoleculeConfig);
         }
 
         public void Exit()

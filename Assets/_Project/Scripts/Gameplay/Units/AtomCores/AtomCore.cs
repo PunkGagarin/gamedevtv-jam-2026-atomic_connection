@@ -1,7 +1,6 @@
 using System;
 using _Project.Scripts.Gameplay.Common.Health;
 using _Project.Scripts.Gameplay.Units.AtomCores.Components;
-using _Project.Scripts.Gameplay.Units;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
 
@@ -19,6 +18,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
         [field: SerializeField] private AtomProductionProgress ProductionProgress { get; set; }
         [field: SerializeField] private Health Health { get; set; }
         [field: SerializeField] private AtomCoreClickInteraction ClickInteraction { get; set; }
+        [field: SerializeField] private AtomCoreShield Shield { get; set; }
 
         private float _spawnRadiusOffset;
         private float _atomOrbitDegreesPerSecond;
@@ -56,6 +56,9 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
 
             if (ClickInteraction == null)
                 ClickInteraction = GetComponent<AtomCoreClickInteraction>();
+
+            if (Shield == null)
+                Shield = GetComponent<AtomCoreShield>();
         }
 
         public void Configure(AtomCoreConfig config, int clicksRequired, int maxHealth)
@@ -91,6 +94,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
         public void Tick(float deltaTime)
         {
             ClickInteraction?.Tick(deltaTime);
+            Shield?.Tick(deltaTime);
 
             float angleDelta = _atomOrbitDegreesPerSecond * Mathf.Deg2Rad * deltaTime;
             OwnedAtoms.TickOrbit(angleDelta);
@@ -98,6 +102,9 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
 
         public void TakeDamage(int amount)
         {
+            if (Shield != null && Shield.TryAbsorbDamage(amount))
+                return;
+
             Health?.TakeDamage(amount);
         }
 

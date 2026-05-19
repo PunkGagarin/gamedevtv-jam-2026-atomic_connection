@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Level;
+using _Project.Scripts.Gameplay.Talents;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using UnityEngine;
 using Zenject;
@@ -10,6 +11,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
     public class BattleMoleculeFactory : IBattleMoleculeFactory
     {
         private const string BATTLE_MOLECULE_PREFAB_PATH = "Gameplay/Units/BattleMolecule";
+        private const string SHIELD_BATTLE_MOLECULE_PREFAB_PATH = "Gameplay/Units/ShieldBattleMolecule";
         private const string MASS_BATTLE_MOLECULE_PREFAB_PATH = "Gameplay/Units/MassBattleMolecule";
         private const string BATTLE_MOLECULES_CONTAINER_NAME = "BattleMolecules";
 
@@ -18,6 +20,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         [Inject] private IAssetProvider _assetProvider;
         [Inject] private IGameplayRuntimeHierarchy _runtimeHierarchy;
         [Inject] private IInstantiator _instantiator;
+        [Inject] private ITalentService _talentService;
         public IReadOnlyList<BattleMolecule> CreatedMolecules => _createdMolecules;
         public event Action<BattleMolecule> MoleculeCreated;
 
@@ -28,7 +31,22 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                 config,
                 BATTLE_MOLECULE_PREFAB_PATH,
                 nameof(BattleMolecule),
-                AdjustedAtomsRequired(config.AtomsRequired));
+                AdjustedAtomsRequired(config.AtomsRequired),
+                BattleMoleculeKind.Regular);
+        }
+
+        public BattleMolecule CreateShield(Vector3 at, BattleMoleculeConfig config)
+        {
+            int atomsRequired = config.ShieldMoleculeAtomsRequired -
+                                Mathf.RoundToInt(_talentService.BonusOf(TalentType.ShieldChargeReduction));
+
+            return Create(
+                at,
+                config,
+                SHIELD_BATTLE_MOLECULE_PREFAB_PATH,
+                "ShieldBattleMolecule",
+                AdjustedAtomsRequired(atomsRequired),
+                BattleMoleculeKind.Shield);
         }
 
         public BattleMolecule CreateMass(Vector3 at, BattleMoleculeConfig config)
@@ -38,7 +56,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                 config,
                 MASS_BATTLE_MOLECULE_PREFAB_PATH,
                 "MassBattleMolecule",
-                AdjustedAtomsRequired(config.MassMoleculeAtomsRequired));
+                AdjustedAtomsRequired(config.MassMoleculeAtomsRequired),
+                BattleMoleculeKind.Mass);
         }
 
         private BattleMolecule Create(
@@ -46,7 +65,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             BattleMoleculeConfig config,
             string prefabPath,
             string moleculeName,
-            int atomsRequired)
+            int atomsRequired,
+            BattleMoleculeKind kind)
         {
             BattleMolecule prefab = _assetProvider.LoadAsset<BattleMolecule>(prefabPath);
 
@@ -63,7 +83,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                 _runtimeHierarchy.GetOrCreateContainer(BATTLE_MOLECULES_CONTAINER_NAME));
 
             molecule.name = moleculeName;
-            molecule.Configure(config, atomsRequired);
+            molecule.Configure(config, atomsRequired, kind);
             _createdMolecules.Add(molecule);
             MoleculeCreated?.Invoke(molecule);
 

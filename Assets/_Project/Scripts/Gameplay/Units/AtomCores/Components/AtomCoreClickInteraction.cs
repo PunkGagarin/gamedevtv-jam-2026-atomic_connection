@@ -101,6 +101,10 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
             if (_talentService == null || !_talentService.IsUnlocked(TalentType.CoreAutoGeneration))
                 return false;
 
+            // Автогенерация намеренно работает только при наведении на ядро.
+            if (!IsPointerOverCore())
+                return false;
+
             if (_inputService.GetLeftMouseButtonRaw())
                 return false;
 
@@ -108,6 +112,16 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
                 return false;
 
             return true;
+        }
+
+        private bool IsPointerOverCore()
+        {
+            Camera camera = _cameraProvider != null ? _cameraProvider.MainCamera : null;
+            if (camera == null || _clickCollider == null)
+                return false;
+
+            Vector2 worldPosition = _inputService.GetWorldMousePosition();
+            return _clickCollider.OverlapPoint(worldPosition);
         }
 
         private void TryRegisterGeneratedAtomClick()

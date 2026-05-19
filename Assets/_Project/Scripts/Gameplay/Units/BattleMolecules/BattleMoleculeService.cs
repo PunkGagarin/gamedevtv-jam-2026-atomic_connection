@@ -92,6 +92,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
             _trackedMolecules.Add(molecule);
             molecule.ConfigureCoreOrbit(_atomCoreService.CurrentCoreTransform, _config);
+            molecule.ConfigureShield(CurrentCore(), CurrentShieldDuration(), _config.ShieldSecondsLostPerDamage);
             molecule.ShotRequested += ResolveShot;
         }
 
@@ -187,14 +188,13 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                 return false;
 
             return _talentService.IsUnlocked(TalentType.PrimaryMoleculeAutoLoad) ||
+                   _talentService.IsUnlocked(TalentType.ShieldAutoLoad) ||
                    _talentService.IsUnlocked(TalentType.AreaMoleculeAutoLoad);
         }
 
         private void AutoLoadMolecules()
         {
-            AtomCore core = _atomCoreService.CurrentCoreTransform != null
-                ? _atomCoreService.CurrentCoreTransform.GetComponent<AtomCore>()
-                : null;
+            AtomCore core = CurrentCore();
 
             if (core == null || core.OwnedAtoms == null)
                 return;
@@ -216,12 +216,26 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
         private bool CanAutoLoadMolecule(BattleMolecule molecule)
         {
-            bool isMassMolecule = molecule.name.Contains("MassBattleMolecule");
-            TalentType autoLoadType = isMassMolecule
-                ? TalentType.AreaMoleculeAutoLoad
-                : TalentType.PrimaryMoleculeAutoLoad;
+            TalentType autoLoadType = molecule.Kind switch
+            {
+                BattleMoleculeKind.Mass => TalentType.AreaMoleculeAutoLoad,
+                BattleMoleculeKind.Shield => TalentType.ShieldAutoLoad,
+                _ => TalentType.PrimaryMoleculeAutoLoad
+            };
 
             return _talentService.IsUnlocked(autoLoadType);
+        }
+
+        private AtomCore CurrentCore()
+        {
+            return _atomCoreService.CurrentCoreTransform != null
+                ? _atomCoreService.CurrentCoreTransform.GetComponent<AtomCore>()
+                : null;
+        }
+
+        private float CurrentShieldDuration()
+        {
+            return Mathf.Max(0.1f, _config.ShieldDurationSeconds + _talentService.BonusOf(TalentType.ShieldDuration));
         }
 
         private readonly struct EnemyHit

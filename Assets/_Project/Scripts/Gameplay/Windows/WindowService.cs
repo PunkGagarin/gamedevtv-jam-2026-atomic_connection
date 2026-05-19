@@ -30,7 +30,7 @@ namespace _Project.Scripts.Gameplay.Windows
                 return;
 
             _openedWindows.Remove(window);
-            Object.Destroy(window.gameObject);
+            Object.Destroy(window.ModalRoot);
         }
 
         private void RemoveDestroyedWindows() =>

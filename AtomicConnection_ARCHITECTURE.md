@@ -113,11 +113,18 @@ Dynamic window flow:
 WindowService.Open(WindowId)
 -> WindowFactory.CreateWindow(...)
 -> WindowsConfig prefab lookup at Resources/Configs/Windows/windowConfig
--> Zenject IInstantiator under scene UIRoot
+-> modal root with raycast-blocking backdrop under scene UIRoot
+-> Zenject IInstantiator under modal root
 ```
 
 UI may call `GameStateMachine.Enter(...)` or `IWindowService.Open(...)`, but must
 not load scenes or control gameplay service lifecycle.
+
+Every dynamic window gets a shared modal backdrop. The backdrop blocks clicks to
+UI behind the current window and forwards backdrop clicks to the opened
+`BaseWindow`. Windows opt into dismiss-on-backdrop by overriding
+`OnBackdropClicked()`; result windows keep the default no-op and require explicit
+button actions.
 
 The gameplay menu is not a `GameplayPauseState` transition yet:
 

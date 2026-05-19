@@ -9,11 +9,6 @@ namespace _Project.Scripts.Gameplay.Talents
     [RequireComponent(typeof(CanvasGroup))]
     public class TalentNodeView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
-        private static readonly Color LockedColor = new(0.11f, 0.08f, 0.11f, 1f);
-        private static readonly Color NotEnoughCurrencyColor = new(0.22f, 0.12f, 0.1f, 1f);
-        private static readonly Color AvailableColor = new(0.18f, 0.25f, 0.18f, 1f);
-        private static readonly Color BoughtColor = new(0.12f, 0.2f, 0.32f, 1f);
-
         [field: SerializeField] public RectTransform RectTransform { get; private set; }
         [field: SerializeField] private Button Button { get; set; }
         [field: SerializeField] private Image Background { get; set; }
@@ -21,6 +16,12 @@ namespace _Project.Scripts.Gameplay.Talents
         [field: SerializeField] private TextMeshProUGUI TitleLabel { get; set; }
         [field: SerializeField] private TextMeshProUGUI LevelLabel { get; set; }
         [field: SerializeField] private TextMeshProUGUI CostLabel { get; set; }
+
+        [field: Header("Colors")]
+        [field: SerializeField] private Color LockedColor { get; set; } = new(0.11f, 0.08f, 0.11f, 1f);
+        [field: SerializeField] private Color NotEnoughCurrencyColor { get; set; } = new(0.22f, 0.12f, 0.1f, 1f);
+        [field: SerializeField] private Color AvailableColor { get; set; } = new(0.18f, 0.25f, 0.18f, 1f);
+        [field: SerializeField] private Color BoughtColor { get; set; } = new(0.12f, 0.2f, 0.32f, 1f);
 
         private TalentId _talentId;
         private TalentDefinition _talent;
@@ -186,7 +187,7 @@ namespace _Project.Scripts.Gameplay.Talents
                 _canvasGroup = gameObject.AddComponent<CanvasGroup>();
         }
 
-        private static Color ColorFor(TalentNodeViewState state)
+        private Color ColorFor(TalentNodeViewState state)
         {
             return state switch
             {

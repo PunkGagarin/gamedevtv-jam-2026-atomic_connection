@@ -9,6 +9,7 @@ namespace _Project.Scripts.Gameplay.Input.Service
         bool HasAxisInput();
 
         bool GetLeftMouseButtonDown();
+        bool GetLeftMouseButtonRaw();
         Vector2 GetScreenMousePosition();
         Vector2 GetWorldMousePosition();
         bool GetLeftMouseButtonUp();

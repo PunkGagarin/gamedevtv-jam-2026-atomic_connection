@@ -1,5 +1,6 @@
 using _Project.Scripts.Gameplay.Cameras.Provider;
 using _Project.Scripts.Gameplay.Common.Random;
+using _Project.Scripts.Gameplay.Drag;
 using _Project.Scripts.Gameplay.Input.Service;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
@@ -14,9 +15,11 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
     {
         private AtomCore _core;
         private Collider2D _clickCollider;
+        private bool _clickWasStartedOnCore;
 
         [Inject] private IInputService _inputService;
         [Inject] private ICameraProvider _cameraProvider;
+        [Inject] private IDragService _dragService;
         [Inject] private IRandomService _random;
         [Inject] private IFreeAtomFactory _freeAtomFactory;
 
@@ -34,8 +37,30 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
             if (_core == null)
                 return;
 
-            if (_inputService == null || !_inputService.GetLeftMouseButtonDown())
+            if (_inputService == null)
                 return;
+
+            if (_inputService.GetLeftMouseButtonDown())
+                TryStartPendingClick();
+
+            if (!_clickWasStartedOnCore || !_inputService.GetLeftMouseButtonUpRaw())
+                return;
+
+            bool shouldRegisterClick = _inputService.GetLeftMouseButtonUp() &&
+                                       (_dragService == null || !_dragService.DragWasStartedThisPress);
+
+            _clickWasStartedOnCore = false;
+
+            if (!shouldRegisterClick)
+                return;
+
+            if (_core.RegisterAtomClick())
+                CreateAtomForCore();
+        }
+
+        private void TryStartPendingClick()
+        {
+            _clickWasStartedOnCore = false;
 
             Camera camera = _cameraProvider != null ? _cameraProvider.MainCamera : null;
             if (camera == null || _clickCollider == null)
@@ -46,8 +71,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
             if (!_clickCollider.OverlapPoint(worldPosition))
                 return;
 
-            if (_core.RegisterAtomClick())
-                CreateAtomForCore();
+            _clickWasStartedOnCore = true;
         }
 
         private Collider2D GetClickCollider()

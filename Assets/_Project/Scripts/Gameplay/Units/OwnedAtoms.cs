@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
@@ -9,6 +10,8 @@ namespace _Project.Scripts.Gameplay.Units
         private readonly List<FreeAtom> _atoms = new();
 
         public int Count => _atoms.Count;
+
+        public event Action Changed;
 
         public void TakeOwnership(FreeAtom atom, FreeAtomOwnerKind ownerKind)
         {
@@ -24,6 +27,7 @@ namespace _Project.Scripts.Gameplay.Units
 
             atom.transform.SetParent(transform, true);
             atom.AssignOwner(ownerKind, transform);
+            Changed?.Invoke();
         }
 
         public void TickOrbit(float angleDelta)
@@ -48,6 +52,22 @@ namespace _Project.Scripts.Gameplay.Units
 
             result = null;
             return false;
+        }
+
+        public void GetOwned(FreeAtomOwnerKind ownerKind, List<FreeAtom> results)
+        {
+            if (results == null)
+                return;
+
+            results.Clear();
+
+            foreach (FreeAtom atom in _atoms)
+            {
+                if (atom == null || atom.Owner != transform || atom.OwnerKind != ownerKind)
+                    continue;
+
+                results.Add(atom);
+            }
         }
 
         public void ReleaseAll()
@@ -87,7 +107,8 @@ namespace _Project.Scripts.Gameplay.Units
                 atom.Destroyed -= OnAtomDestroyed;
             }
 
-            _atoms.Remove(atom);
+            if (_atoms.Remove(atom))
+                Changed?.Invoke();
         }
     }
 }

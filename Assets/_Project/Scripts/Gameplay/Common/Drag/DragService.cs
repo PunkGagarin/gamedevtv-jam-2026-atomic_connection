@@ -15,6 +15,7 @@ namespace _Project.Scripts.Gameplay.Drag
         private DragStartCandidate _pendingCandidate;
         private IDraggable _currentDraggable;
         private Vector2 _pendingScreenPosition;
+        private bool _dragWasStartedThisPress;
 
         [Inject] private IPhysicsService _physicsService;
         [Inject] private IInputService _inputService;
@@ -22,6 +23,7 @@ namespace _Project.Scripts.Gameplay.Drag
 
         private bool IsDragging => _currentDraggable != null;
         private bool HasPendingDrag => _pendingCandidate.Draggable != null;
+        public bool DragWasStartedThisPress => _dragWasStartedThisPress;
 
         public void Update()
         {
@@ -34,7 +36,10 @@ namespace _Project.Scripts.Gameplay.Drag
             if (!IsDragging)
             {
                 if (_inputService.GetLeftMouseButtonDown())
+                {
+                    _dragWasStartedThisPress = false;
                     TryPrepareDrag(screenPosition, camera);
+                }
                 else if (HasPendingDrag)
                     UpdatePendingDrag(screenPosition, camera);
             }
@@ -45,6 +50,9 @@ namespace _Project.Scripts.Gameplay.Drag
                 if (_inputService.GetLeftMouseButtonUpRaw())
                     EndDrag(screenPosition, camera);
             }
+
+            if (!IsDragging && !HasPendingDrag && !_inputService.GetLeftMouseButtonRaw() && !_inputService.GetLeftMouseButtonUpRaw())
+                _dragWasStartedThisPress = false;
         }
 
         private bool TryPrepareDrag(Vector2 screenPosition, Camera camera)
@@ -92,6 +100,7 @@ namespace _Project.Scripts.Gameplay.Drag
             }
 
             _currentDraggable = draggable;
+            _dragWasStartedThisPress = true;
             ClearPendingDrag();
             draggable.OnDragStart();
             draggable.OnDragMove(GetDragWorldPosition(screenPosition, camera, draggable));

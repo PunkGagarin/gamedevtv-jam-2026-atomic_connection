@@ -8,12 +8,14 @@ using UnityEngine;
 namespace _Project.Scripts.Gameplay.Units.AtomCores
 {
     [RequireComponent(typeof(OwnedAtoms))]
+    [RequireComponent(typeof(OwnedAtomOrbitLayout))]
     [RequireComponent(typeof(AtomProductionProgress))]
     [RequireComponent(typeof(Health))]
     [RequireComponent(typeof(AtomCoreClickInteraction))]
     public class AtomCore : MonoBehaviour
     {
         [field: SerializeField] public OwnedAtoms OwnedAtoms { get; private set; }
+        [field: SerializeField] private OwnedAtomOrbitLayout AtomOrbitLayout { get; set; }
         [field: SerializeField] private AtomProductionProgress ProductionProgress { get; set; }
         [field: SerializeField] private Health Health { get; set; }
         [field: SerializeField] private AtomCoreClickInteraction ClickInteraction { get; set; }
@@ -43,6 +45,9 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
             if (OwnedAtoms == null)
                 OwnedAtoms = GetComponent<OwnedAtoms>();
 
+            if (AtomOrbitLayout == null)
+                AtomOrbitLayout = GetComponent<OwnedAtomOrbitLayout>();
+
             if (ProductionProgress == null)
                 ProductionProgress = GetComponent<AtomProductionProgress>();
 
@@ -61,6 +66,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
 
             Health?.Configure(maxHealth);
             ProductionProgress.Configure(clicksRequired);
+            AtomOrbitLayout?.ConfigureOwnerPlusAtomRadius(FreeAtomOwnerKind.Core, _orbitRadius);
         }
 
         public bool RegisterAtomClick()
@@ -79,13 +85,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
             if (freeAtom == null || freeAtom.OrbitMotion == null)
                 return;
 
-            Vector3 offset = freeAtom.transform.position - transform.position;
-            float angle = offset.sqrMagnitude > 0.001f
-                ? Mathf.Atan2(offset.y, offset.x)
-                : 0;
-
             OwnedAtoms.TakeOwnership(freeAtom, FreeAtomOwnerKind.Core);
-            freeAtom.OrbitMotion.Configure(transform, _orbitRadius + GetColliderRadius(freeAtom.transform), angle);
         }
 
         public void Tick(float deltaTime)

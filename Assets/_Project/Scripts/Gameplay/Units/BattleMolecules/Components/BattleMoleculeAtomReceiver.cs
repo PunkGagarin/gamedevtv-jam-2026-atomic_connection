@@ -12,8 +12,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         [field: SerializeField] private OwnedAtoms OwnedAtoms { get; set; }
         [field: SerializeField] private BattleMoleculeCharge Charge { get; set; }
 
-        private float _atomsPosCircleRadius;
-
         private void Awake()
         {
             if (OwnedAtoms == null)
@@ -21,11 +19,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
             if (Charge == null)
                 Charge = GetComponent<BattleMoleculeCharge>();
-        }
-
-        public void Configure(float atomsPosCircleRadius)
-        {
-            _atomsPosCircleRadius = atomsPosCircleRadius;
         }
 
         public bool CanAcceptDrop(IDraggable draggable)
@@ -40,9 +33,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
             DisableCollider(freeAtom);
 
-            float angle = GetCircleAngle(OwnedAtoms.Count, Charge.AtomsRequired);
             OwnedAtoms.TakeOwnership(freeAtom, FreeAtomOwnerKind.BattleMolecule);
-            freeAtom.OrbitMotion?.Configure(transform, _atomsPosCircleRadius, angle);
             Charge.RegisterAtomCount(OwnedAtoms.Count);
         }
 
@@ -55,14 +46,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             Collider2D col = freeAtom.GetComponent<Collider2D>();
             if (col != null)
                 col.enabled = false;
-        }
-
-        private static float GetCircleAngle(int index, int total)
-        {
-            if (total <= 0)
-                return 0;
-
-            return (index / (float)total) * Mathf.PI * 2f;
         }
     }
 }

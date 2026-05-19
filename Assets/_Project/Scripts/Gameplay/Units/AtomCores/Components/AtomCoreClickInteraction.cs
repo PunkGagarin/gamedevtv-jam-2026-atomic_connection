@@ -1,5 +1,4 @@
 using _Project.Scripts.Gameplay.Cameras.Provider;
-using _Project.Scripts.Gameplay.Common.Physics;
 using _Project.Scripts.Gameplay.Common.Random;
 using _Project.Scripts.Gameplay.Input.Service;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
@@ -10,15 +9,14 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(AtomCore))]
+    [RequireComponent(typeof(Collider2D))]
     public class AtomCoreClickInteraction : MonoBehaviour
     {
-        private const int PHYSICS_LAYER_MASK = ~0;
-
         private AtomCore _core;
+        private Collider2D _clickCollider;
 
         [Inject] private IInputService _inputService;
         [Inject] private ICameraProvider _cameraProvider;
-        [Inject] private IPhysicsService _physicsService;
         [Inject] private IRandomService _random;
         [Inject] private IFreeAtomFactory _freeAtomFactory;
 
@@ -26,6 +24,9 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
         {
             if (_core == null)
                 _core = GetComponent<AtomCore>();
+
+            if (_clickCollider == null)
+                _clickCollider = GetComponent<Collider2D>();
         }
 
         public void Tick()
@@ -37,13 +38,12 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
                 return;
 
             Camera camera = _cameraProvider != null ? _cameraProvider.MainCamera : null;
-            if (camera == null || _physicsService == null)
+            if (camera == null || _clickCollider == null)
                 return;
 
             Vector2 worldPosition = _inputService.GetWorldMousePosition();
-            Collider2D hit = _physicsService.OverlapPoint(worldPosition, PHYSICS_LAYER_MASK);
 
-            if (hit == null || hit.gameObject != gameObject)
+            if (!_clickCollider.OverlapPoint(worldPosition))
                 return;
 
             if (_core.RegisterAtomClick())

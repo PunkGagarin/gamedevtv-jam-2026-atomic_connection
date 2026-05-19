@@ -35,6 +35,21 @@ namespace _Project.Scripts.Gameplay.Units
             }
         }
 
+        public bool TryGetFirstOwned(FreeAtomOwnerKind ownerKind, out FreeAtom result)
+        {
+            foreach (FreeAtom atom in _atoms)
+            {
+                if (atom == null || atom.Owner != transform || atom.OwnerKind != ownerKind)
+                    continue;
+
+                result = atom;
+                return true;
+            }
+
+            result = null;
+            return false;
+        }
+
         public void ReleaseAll()
         {
             for (int i = _atoms.Count - 1; i >= 0; i--)

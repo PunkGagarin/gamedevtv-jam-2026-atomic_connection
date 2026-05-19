@@ -9,5 +9,6 @@ namespace _Project.Scripts.Gameplay.Talents
         BattleMoleculeAttackRadius = 4,
         AtomAutoGeneration = 5,
         AtomAutoCollect = 6,
+        MassMolecule = 7,
     }
 }

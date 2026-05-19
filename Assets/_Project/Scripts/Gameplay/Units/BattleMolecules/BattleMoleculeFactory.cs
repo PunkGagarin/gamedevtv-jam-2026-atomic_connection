@@ -11,6 +11,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
     public class BattleMoleculeFactory : IBattleMoleculeFactory
     {
         private const string BATTLE_MOLECULE_PREFAB_PATH = "Gameplay/Units/BattleMolecule";
+        private const string MASS_BATTLE_MOLECULE_PREFAB_PATH = "Gameplay/Units/MassBattleMolecule";
         private const string BATTLE_MOLECULES_CONTAINER_NAME = "BattleMolecules";
 
         private readonly List<BattleMolecule> _createdMolecules = new();
@@ -25,11 +26,36 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
         public BattleMolecule Create(Vector3 at, BattleMoleculeConfig config)
         {
-            BattleMolecule prefab = _assetProvider.LoadAsset<BattleMolecule>(BATTLE_MOLECULE_PREFAB_PATH);
+            return Create(
+                at,
+                config,
+                BATTLE_MOLECULE_PREFAB_PATH,
+                nameof(BattleMolecule),
+                AdjustedAtomsRequired(config.AtomsRequired));
+        }
+
+        public BattleMolecule CreateMass(Vector3 at, BattleMoleculeConfig config)
+        {
+            return Create(
+                at,
+                config,
+                MASS_BATTLE_MOLECULE_PREFAB_PATH,
+                "MassBattleMolecule",
+                AdjustedAtomsRequired(config.MassMoleculeAtomsRequired));
+        }
+
+        private BattleMolecule Create(
+            Vector3 at,
+            BattleMoleculeConfig config,
+            string prefabPath,
+            string moleculeName,
+            int atomsRequired)
+        {
+            BattleMolecule prefab = _assetProvider.LoadAsset<BattleMolecule>(prefabPath);
 
             if (prefab == null)
             {
-                Debug.LogError($"BattleMolecule prefab is missing at Resources path '{BATTLE_MOLECULE_PREFAB_PATH}'.");
+                Debug.LogError($"BattleMolecule prefab is missing at Resources path '{prefabPath}'.");
                 return null;
             }
 
@@ -39,18 +65,18 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                 Quaternion.identity,
                 _runtimeHierarchy.GetOrCreateContainer(BATTLE_MOLECULES_CONTAINER_NAME));
 
-            molecule.name = nameof(BattleMolecule);
-            molecule.Configure(config, AdjustedAtomsRequired(config));
+            molecule.name = moleculeName;
+            molecule.Configure(config, atomsRequired);
             _createdMolecules.Add(molecule);
             MoleculeCreated?.Invoke(molecule);
 
             return molecule;
         }
 
-        private int AdjustedAtomsRequired(BattleMoleculeConfig config)
+        private int AdjustedAtomsRequired(int atomsRequired)
         {
             float multiplier = 1f + _talentService.BonusOf(TalentType.ProjectileGenerationSpeed);
-            return Mathf.Max(1, Mathf.RoundToInt(config.AtomsRequired / multiplier));
+            return Mathf.Max(1, Mathf.RoundToInt(atomsRequired / multiplier));
         }
 
         public void Cleanup()

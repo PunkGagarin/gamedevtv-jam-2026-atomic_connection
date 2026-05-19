@@ -55,6 +55,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             Charge.Configure(atomsRequired);
             AtomOrbitLayout?.ConfigureFixedRadius(FreeAtomOwnerKind.BattleMolecule, config.AtomsPosCircleRadius);
             AtomOrbit.Configure(config.DepositedAtomsOrbitDegreesPerSecond);
+            ShotQueue.Configure(config);
         }
 
         public void Tick(float deltaTime)

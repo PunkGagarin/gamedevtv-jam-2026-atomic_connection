@@ -30,7 +30,4 @@ MonoBehaviour:
   <CurrencyDropPopupDuration>k__BackingField: 0.7
   <CurrencyDropPopupStartScale>k__BackingField: 0.75
   <CurrencyDropPopupPulseScale>k__BackingField: 1.15
-  <CurrencyDropPopupTextOffset>k__BackingField: {x: 0.1, y: 0, z: 0}
-  <CurrencyDropPopupIconOffset>k__BackingField: {x: -0.1, y: 0, z: 0}
-  <CurrencyDropPopupIconScale>k__BackingField: {x: 0.16, y: 0.16, z: 0.16}
   <CurrencyDropPopupSortingOrder>k__BackingField: 60

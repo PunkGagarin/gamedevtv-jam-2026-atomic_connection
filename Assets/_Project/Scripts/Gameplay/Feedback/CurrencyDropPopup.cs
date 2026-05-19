@@ -32,7 +32,6 @@ namespace _Project.Scripts.Gameplay.Feedback
                 Label.alignment = TextAlignmentOptions.Center;
                 Label.fontSize = config.CurrencyDropPopupFontSize;
                 Label.color = config.CurrencyDropPopupTextColor;
-                Label.transform.localPosition = config.CurrencyDropPopupTextOffset;
 
                 if (Label.TryGetComponent(out MeshRenderer labelRenderer))
                     labelRenderer.sortingOrder = config.CurrencyDropPopupSortingOrder + 1;
@@ -42,8 +41,6 @@ namespace _Project.Scripts.Gameplay.Feedback
             {
                 Icon.sprite = config.IsotopeDropIcon;
                 Icon.color = config.CurrencyDropPopupIconColor;
-                Icon.transform.localPosition = config.CurrencyDropPopupIconOffset;
-                Icon.transform.localScale = config.CurrencyDropPopupIconScale;
                 Icon.sortingOrder = config.CurrencyDropPopupSortingOrder;
                 Icon.gameObject.SetActive(config.IsotopeDropIcon != null);
             }

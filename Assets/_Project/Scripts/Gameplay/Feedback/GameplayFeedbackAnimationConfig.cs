@@ -28,9 +28,6 @@ namespace _Project.Scripts.Gameplay.Feedback
         [field: SerializeField, Min(0f)] public float CurrencyDropPopupDuration { get; private set; } = 0.7f;
         [field: SerializeField, Min(0f)] public float CurrencyDropPopupStartScale { get; private set; } = 0.75f;
         [field: SerializeField, Min(0f)] public float CurrencyDropPopupPulseScale { get; private set; } = 1.15f;
-        [field: SerializeField] public Vector3 CurrencyDropPopupTextOffset { get; private set; } = new(0.1f, 0f, 0f);
-        [field: SerializeField] public Vector3 CurrencyDropPopupIconOffset { get; private set; } = new(-0.1f, 0f, 0f);
-        [field: SerializeField] public Vector3 CurrencyDropPopupIconScale { get; private set; } = new(0.16f, 0.16f, 0.16f);
         [field: SerializeField] public int CurrencyDropPopupSortingOrder { get; private set; } = 60;
     }
 }

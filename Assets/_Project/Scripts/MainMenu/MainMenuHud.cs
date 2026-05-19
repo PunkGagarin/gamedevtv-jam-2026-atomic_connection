@@ -1,4 +1,5 @@
 ﻿using _Project.Scripts.Audio.Domain;
+using _Project.Scripts.Gameplay.Currencies;
 using _Project.Scripts.Gameplay.Levels;
 using _Project.Scripts.Gameplay.Talents;
 using _Project.Scripts.Gameplay.Windows;
@@ -22,6 +23,9 @@ namespace _Project.Scripts.MainMenu
         private Button UpdateButton { get; set; }
 
         [field: SerializeField]
+        private Image UpgradeNotificationImage { get; set; }
+
+        [field: SerializeField]
         private Button ResetButton { get; set; }
 
         [field: SerializeField]
@@ -31,6 +35,7 @@ namespace _Project.Scripts.MainMenu
         [Inject] private AudioService _audio;
         [Inject] private IWindowService _windowService;
         [Inject] private ITalentService _talentService;
+        [Inject] private ICurrencyService _currencyService;
         [Inject] private ILevelSelectionService _levelSelectionService;
 
         private void Awake()
@@ -42,6 +47,29 @@ namespace _Project.Scripts.MainMenu
             CreditsButton.onClick.AddListener(OpenCredits);
         }
 
+        private void Start()
+        {
+            RefreshUpgradeNotification();
+        }
+
+        private void OnEnable()
+        {
+            if (_talentService != null)
+                _talentService.Changed += RefreshUpgradeNotification;
+
+            if (_currencyService != null)
+                _currencyService.Changed += RefreshUpgradeNotification;
+        }
+
+        private void OnDisable()
+        {
+            if (_talentService != null)
+                _talentService.Changed -= RefreshUpgradeNotification;
+
+            if (_currencyService != null)
+                _currencyService.Changed -= RefreshUpgradeNotification;
+        }
+
         private void OnDestroy()
         {
             StartGameButton.onClick.RemoveListener(StartGame);
@@ -49,6 +77,14 @@ namespace _Project.Scripts.MainMenu
             UpdateButton.onClick.RemoveListener(OpenTalentTree);
             ResetButton.onClick.RemoveListener(ResetSavedData);
             CreditsButton.onClick.RemoveListener(OpenCredits);
+        }
+
+        private void RefreshUpgradeNotification()
+        {
+            if (UpgradeNotificationImage == null || _talentService == null)
+                return;
+
+            UpgradeNotificationImage.gameObject.SetActive(_talentService.HasAvailableUpgradeNotification);
         }
 
         private void StartGame()

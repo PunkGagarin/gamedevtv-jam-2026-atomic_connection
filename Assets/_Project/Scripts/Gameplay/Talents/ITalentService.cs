@@ -10,6 +10,7 @@ namespace _Project.Scripts.Gameplay.Talents
 
         IReadOnlyList<TalentDefinition> Talents { get; }
         float AtomGenerationMultiplier { get; }
+        bool HasAvailableUpgradeNotification { get; }
 
         int LevelOf(TalentId talentId);
         CurrencyAmount PriceFor(TalentId talentId);
@@ -18,5 +19,6 @@ namespace _Project.Scripts.Gameplay.Talents
         void ResetProgress();
         float BonusOf(TalentType type);
         bool IsUnlocked(TalentType type);
+        bool ShouldShowNotification(TalentId talentId);
     }
 }

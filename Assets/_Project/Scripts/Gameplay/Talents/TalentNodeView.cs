@@ -13,6 +13,7 @@ namespace _Project.Scripts.Gameplay.Talents
         [field: SerializeField] private Button Button { get; set; }
         [field: SerializeField] private Image Background { get; set; }
         [field: SerializeField] private Image IconImage { get; set; }
+        [field: SerializeField] private Image NotificationImage { get; set; }
         [field: SerializeField] private TextMeshProUGUI TitleLabel { get; set; }
         [field: SerializeField] private TextMeshProUGUI LevelLabel { get; set; }
         [field: SerializeField] private TextMeshProUGUI CostLabel { get; set; }
@@ -66,6 +67,8 @@ namespace _Project.Scripts.Gameplay.Talents
                 Button.interactable = state is TalentNodeViewState.Available
                     or TalentNodeViewState.NotEnoughCurrency
                     or TalentNodeViewState.Maxed;
+
+            RefreshNotificationDot(state);
         }
 
         public void SetVisible(bool visible)
@@ -185,6 +188,14 @@ namespace _Project.Scripts.Gameplay.Talents
 
             if (_canvasGroup == null)
                 _canvasGroup = gameObject.AddComponent<CanvasGroup>();
+        }
+
+        private void RefreshNotificationDot(TalentNodeViewState state)
+        {
+            if (NotificationImage == null)
+                return;
+
+            NotificationImage.gameObject.SetActive(state is TalentNodeViewState.Available or TalentNodeViewState.NotEnoughCurrency);
         }
 
         private Color ColorFor(TalentNodeViewState state)

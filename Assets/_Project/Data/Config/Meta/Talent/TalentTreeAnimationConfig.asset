@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfc12ddfe99b4c3eb17b9f041c24d345, type: 3}
+  m_Name: TalentTreeAnimationConfig
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Talents.TalentTreeAnimationConfig
+  <NodeHoverScale>k__BackingField: 1.2
+  <NodeHoverDuration>k__BackingField: 0.12
+  <NodeRevealStartScale>k__BackingField: 0.72
+  <NodeRevealPulseScale>k__BackingField: 1.12
+  <NodeRevealDuration>k__BackingField: 0.05
+  <NodeRevealFadeDuration>k__BackingField: 0.154
+  <NodeRevealSettleDuration>k__BackingField: 0.18
+  <NodeUnlockPulseScale>k__BackingField: 1.12
+  <NodeUnlockPulseDuration>k__BackingField: 0.18
+  <NodeShakeDuration>k__BackingField: 0.18
+  <NodeShakeStrength>k__BackingField: 8
+  <NodeShakeVibrato>k__BackingField: 12
+  <NodeShakeRandomness>k__BackingField: 65
+  <TooltipOffset>k__BackingField: {x: 0, y: 94}
+  <TooltipStartScaleX>k__BackingField: 1
+  <TooltipStartScaleY>k__BackingField: 0.82
+  <TooltipRevealDuration>k__BackingField: 0.14
+  <ConnectionPulseDuration>k__BackingField: 0.05
+  <ConnectionPulseScale>k__BackingField: 1.45

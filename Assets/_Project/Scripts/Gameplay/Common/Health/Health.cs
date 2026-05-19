@@ -11,6 +11,7 @@ namespace _Project.Scripts.Gameplay.Common.Health
         public bool IsAlive { get; private set; } = true;
 
         public event Action Changed;
+        public event Action<int> Damaged;
         public event Action Died;
 
         private void Awake()
@@ -29,7 +30,12 @@ namespace _Project.Scripts.Gameplay.Common.Health
             if (!IsAlive || amount <= 0)
                 return;
 
+            int previousHealth = CurrentHealth;
             CurrentHealth = Mathf.Max(0, CurrentHealth - amount);
+            int actualDamage = previousHealth - CurrentHealth;
+
+            if (actualDamage > 0)
+                Damaged?.Invoke(actualDamage);
 
             if (CurrentHealth == 0)
                 Kill();

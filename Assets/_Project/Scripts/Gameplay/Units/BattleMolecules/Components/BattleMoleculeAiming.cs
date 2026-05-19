@@ -12,7 +12,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         [field: SerializeField] private BattleMoleculeAimLineView AimLine { get; set; }
         [field: SerializeField] private BattleMoleculeShotQueue ShotQueue { get; set; }
 
-        private Vector3 _aimOrigin;
         private bool _isAiming;
 
         public bool CanStartDrag => Charge.IsCharged;
@@ -33,8 +32,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         public void OnDragStart()
         {
             _isAiming = true;
-            _aimOrigin = transform.position;
-            AimLine.Show(_aimOrigin);
+            AimLine.Show(CurrentAimOrigin());
         }
 
         public void OnDragMove(Vector3 worldPosition)
@@ -42,7 +40,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             if (!_isAiming)
                 return;
 
-            AimLine.SetEnd(GetDragEnd(worldPosition));
+            AimLine.SetSegment(CurrentAimOrigin(), GetDragEnd(worldPosition));
         }
 
         public void OnDragEnd()
@@ -75,14 +73,20 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
         private Vector3 GetDragEnd(Vector3 dragPosition)
         {
-            dragPosition.z = _aimOrigin.z;
+            dragPosition.z = CurrentAimOrigin().z;
             return dragPosition;
         }
 
         private Vector3 GetShotDirection(Vector3 dragPosition)
         {
-            dragPosition.z = _aimOrigin.z;
-            return _aimOrigin - dragPosition;
+            Vector3 origin = CurrentAimOrigin();
+            dragPosition.z = origin.z;
+            return origin - dragPosition;
+        }
+
+        private Vector3 CurrentAimOrigin()
+        {
+            return transform.position;
         }
     }
 }

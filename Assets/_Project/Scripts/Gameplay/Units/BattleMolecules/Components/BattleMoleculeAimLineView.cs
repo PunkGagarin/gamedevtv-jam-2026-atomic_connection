@@ -88,6 +88,12 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             _aimLine.SetPosition(1, end);
         }
 
+        public void SetSegment(Vector3 origin, Vector3 end)
+        {
+            _origin = origin;
+            SetEnd(end);
+        }
+
         public void Hide()
         {
             if (_aimLine != null)

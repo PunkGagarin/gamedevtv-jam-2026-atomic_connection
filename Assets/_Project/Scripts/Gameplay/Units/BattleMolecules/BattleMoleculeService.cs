@@ -3,6 +3,7 @@ using _Project.Scripts.Gameplay.Common.Physics;
 using _Project.Scripts.Gameplay.Common.Time;
 using _Project.Scripts.Gameplay.Enemies;
 using _Project.Scripts.Gameplay.Talents;
+using _Project.Scripts.Gameplay.Units.AtomCores;
 using UnityEngine;
 using Zenject;
 
@@ -18,6 +19,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         [Inject] private IBattleMoleculeFactory _battleMoleculeFactory;
         [Inject] private IPhysicsService _physicsService;
         [Inject] private ITimeService _time;
+        [Inject] private IAtomCoreService _atomCoreService;
         [Inject] private BattleMoleculeConfig _config;
         [Inject] private ITalentService _talentService;
 
@@ -44,6 +46,17 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             }
         }
 
+        public void FixedUpdate()
+        {
+            foreach (BattleMolecule molecule in _battleMoleculeFactory.CreatedMolecules)
+            {
+                if (molecule == null)
+                    continue;
+
+                molecule.FixedTick(Time.fixedDeltaTime);
+            }
+        }
+
         public void Cleanup()
         {
             if (!_isStarted)
@@ -67,6 +80,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                 return;
 
             _trackedMolecules.Add(molecule);
+            molecule.ConfigureCoreOrbit(_atomCoreService.CurrentCoreTransform, _config);
             molecule.ShotRequested += ResolveShot;
         }
 

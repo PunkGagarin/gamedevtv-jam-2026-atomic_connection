@@ -17,6 +17,7 @@ MonoBehaviour:
   <SpawnOffset>k__BackingField: {x: 2, y: 0}
   <AtomsPosCircleRadius>k__BackingField: 0.6
   <DepositedAtomsOrbitDegreesPerSecond>k__BackingField: 90
+  <CoreOrbitDegreesPerSecond>k__BackingField: 45
   <MassMoleculeSpawnOffset>k__BackingField: {x: -2, y: 0}
   <MassMoleculeAtomsRequired>k__BackingField: 5
   <MassMoleculeShotCount>k__BackingField: 5

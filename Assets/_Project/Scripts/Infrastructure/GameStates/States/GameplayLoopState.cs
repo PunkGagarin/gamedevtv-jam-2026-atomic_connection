@@ -12,7 +12,7 @@ using Zenject;
 
 namespace _Project.Scripts.Infrastructure.GameStates.States
 {
-    internal class GameplayLoopState : EndOfFrameExitState
+    internal class GameplayLoopState : EndOfFrameExitState, IFixedUpdateable
     {
         [Inject] private IEnemyService _enemyService;
         [Inject] private IAtomCoreService _atomCoreService;
@@ -57,6 +57,14 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
 
             _battleMoleculeService.Update();
             _levelProgressService.Update();
+        }
+
+        public void FixedUpdate()
+        {
+            if (_pauseService.IsPaused || _terminalTransitionWasRequested)
+                return;
+
+            _battleMoleculeService.FixedUpdate();
         }
 
         protected override void ExitOnEndOfFrame()

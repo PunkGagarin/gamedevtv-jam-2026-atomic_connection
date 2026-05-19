@@ -26,6 +26,11 @@ namespace _Project.Scripts.Infrastructure.GameStates.StateInfrastructure
     {
         void Update();
     }
+
+    public interface IFixedUpdateable
+    {
+        void FixedUpdate();
+    }
     
     public interface IGameState : IExitableState
     {

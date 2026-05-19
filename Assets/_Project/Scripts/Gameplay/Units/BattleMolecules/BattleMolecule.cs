@@ -10,6 +10,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
     [RequireComponent(typeof(BattleMoleculeCharge))]
     [RequireComponent(typeof(BattleMoleculeAtomReceiver))]
     [RequireComponent(typeof(BattleMoleculeAtomOrbit))]
+    [RequireComponent(typeof(BattleMoleculeCoreOrbit))]
     [RequireComponent(typeof(BattleMoleculeShotQueue))]
     public class BattleMolecule : MonoBehaviour
     {
@@ -18,7 +19,9 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         [field: SerializeField] private BattleMoleculeCharge Charge { get; set; }
         [field: SerializeField] private BattleMoleculeAtomReceiver AtomReceiver { get; set; }
         [field: SerializeField] private BattleMoleculeAtomOrbit AtomOrbit { get; set; }
+        [field: SerializeField] private BattleMoleculeCoreOrbit CoreOrbit { get; set; }
         [field: SerializeField] private BattleMoleculeShotQueue ShotQueue { get; set; }
+        [field: SerializeField] public Collider2D CollisionCollider { get; private set; }
 
         public event Action<Vector3, Vector3> ShotRequested
         {
@@ -43,8 +46,14 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             if (AtomOrbit == null)
                 AtomOrbit = GetComponent<BattleMoleculeAtomOrbit>();
 
+            if (CoreOrbit == null)
+                CoreOrbit = GetComponent<BattleMoleculeCoreOrbit>();
+
             if (ShotQueue == null)
                 ShotQueue = GetComponent<BattleMoleculeShotQueue>();
+
+            if (CollisionCollider == null)
+                CollisionCollider = GetComponent<Collider2D>();
         }
 
         public void Configure(BattleMoleculeConfig config, int atomsRequired)
@@ -58,9 +67,22 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             ShotQueue.Configure(config);
         }
 
+        public void ConfigureCoreOrbit(Transform coreTransform, BattleMoleculeConfig config)
+        {
+            if (config == null)
+                return;
+
+            CoreOrbit.Configure(coreTransform, config.CoreOrbitDegreesPerSecond);
+        }
+
         public void Tick(float deltaTime)
         {
             AtomOrbit.Tick(deltaTime);
+        }
+
+        public void FixedTick(float fixedDeltaTime)
+        {
+            CoreOrbit.FixedTick(fixedDeltaTime);
         }
     }
 }

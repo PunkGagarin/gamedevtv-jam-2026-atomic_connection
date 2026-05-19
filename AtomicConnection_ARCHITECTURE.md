@@ -80,8 +80,8 @@ Runtime ownership:
 `GameplayEnterState` creates the core and battle molecule, then enters
 `GameplayLoopState`.
 
-`GameplayLoopState` inherits `EndOfFrameExitState`. It starts/ticks/cleans active
-gameplay services such as `IEnemyService`, `IAtomCoreService`,
+`GameplayLoopState` inherits `EndOfFrameExitState`. It starts, ticks,
+fixed-ticks, and cleans active gameplay services such as `IEnemyService`, `IAtomCoreService`,
 `IBattleMoleculeService`, and `ILevelProgressService`. It skips gameplay ticks
 while `PauseService.IsPaused`; `ExitOnEndOfFrame()` cleans state-owned runtime
 services and objects.
@@ -97,9 +97,10 @@ services, subscribes to core death during `Start()`, and ticks current
 `AtomCore` is the root facade. `AtomCoreClickInteraction` owns hit detection,
 click progress, and generated free atom creation through `FreeAtomFactory`.
 
-`IBattleMoleculeService` ticks created battle molecules and subscribes to
-shot-request events during `Start()`. Each `BattleMolecule` owns its accepted
-atoms, charge, fire request, and molecule atom orbiting through local components.
+`IBattleMoleculeService` ticks created battle molecules, fixed-ticks molecule
+core orbit movement, and subscribes to shot-request events during `Start()`.
+Each `BattleMolecule` owns its accepted atoms, charge, fire request, collision
+collider, and molecule atom orbiting through local components.
 
 `LevelProgressService` owns completion reward/unlock, marks the selected level
 complete through `ILevelSelectionService`, grants reward through

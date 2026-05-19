@@ -11,6 +11,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         [field: SerializeField, Min(1)] public int BaseShotDamage { get; private set; } = 1;
         [field: SerializeField] public float AtomsPosCircleRadius { get; private set; } = 0.6f;
         [field: SerializeField, Min(0f)] public float DepositedAtomsOrbitDegreesPerSecond { get; private set; } = 90f;
+        [field: SerializeField, Min(0f)] public float CoreOrbitDegreesPerSecond { get; private set; } = 45f;
 
         [field: Header("Mass Molecule")]
         [field: SerializeField] public Vector2 MassMoleculeSpawnOffset { get; private set; } = new(-2f, 0f);

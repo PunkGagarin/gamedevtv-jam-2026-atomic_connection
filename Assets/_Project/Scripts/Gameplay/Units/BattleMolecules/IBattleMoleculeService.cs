@@ -4,6 +4,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
     {
         void Start();
         void Update();
+        void FixedUpdate();
         void Cleanup();
     }
 }

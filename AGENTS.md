@@ -90,7 +90,7 @@ Detailed flow notes live in [AtomicConnection_ARCHITECTURE.md](AtomicConnection_
 Keep `AGENTS.md` operational and update the architecture notes when current flow changes.
 
 - State flow is `Bootstrap -> MainMenu -> GameplayEnter -> GameplayLoop`; terminal transitions go to game-over or level-complete states/windows.
-- `GameplayLoopState` owns active service ticking/cleanup and skips gameplay ticks while paused.
+- `GameplayLoopState` owns active service ticking/fixed-ticking/cleanup and skips gameplay ticks while paused.
 - Runtime prefab flow is `Resources` path -> `IAssetProvider` -> Zenject `IInstantiator`; runtime objects belong under gameplay scene hierarchy.
 - Enemy ownership: `EnemyService` coordinates, `EnemySpawner` creates, enemy components own enemy-local behavior, `BossCoreCollision` is the boss one-shot variant.
 - UI may call state/window services, but must not load scenes or control gameplay service lifecycle. Gameplay menu pause is not a `GameplayPauseState` transition yet.

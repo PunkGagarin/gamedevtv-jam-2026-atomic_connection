@@ -9,6 +9,7 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
     {
         private const float PREVIEW_HEIGHT = 280f;
         private const float NODE_RADIUS = 10f;
+        private const float GRID_SIZE = 120f;
 
         private SerializedProperty _talentsProp;
         private int _selectedIndex = -1;
@@ -60,7 +61,10 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
                 return;
 
             EditorGUILayout.Space(8);
-            EditorGUILayout.LabelField("Graph Preview (drag nodes, scroll to zoom, drag bg to pan)", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField("Graph Preview (drag nodes, snap to grid, scroll to zoom, drag bg to pan)", EditorStyles.boldLabel);
+
+            if (GUILayout.Button("Snap All Nodes To Grid", GUILayout.Width(180f)))
+                SnapAllNodesToGrid();
 
             Rect reserved = EditorGUILayout.BeginVertical();
             GUILayout.Space(PREVIEW_HEIGHT);
@@ -77,7 +81,10 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
             Rect topBorder = new Rect(_previewRect.x, _previewRect.y, _previewRect.width, 1f);
             EditorGUI.DrawRect(topBorder, new Color(0.25f, 0.25f, 0.3f, 1f));
 
-            CalculateGraphScale();
+            if (!_isDragging && !_isPanning)
+                CalculateGraphScale();
+
+            DrawGrid();
             DrawConnections();
             DrawNodes();
             HandleEvents();
@@ -173,6 +180,39 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
                     }
                 }
             }
+        }
+
+        private void DrawGrid()
+        {
+            if (Event.current.type != EventType.Repaint)
+                return;
+
+            Vector2 graphMin = ScreenToGraph(_previewRect.min);
+            Vector2 graphMax = ScreenToGraph(_previewRect.max);
+
+            float minX = Mathf.Floor(Mathf.Min(graphMin.x, graphMax.x) / GRID_SIZE) * GRID_SIZE;
+            float maxX = Mathf.Ceil(Mathf.Max(graphMin.x, graphMax.x) / GRID_SIZE) * GRID_SIZE;
+            float minY = Mathf.Floor(Mathf.Min(graphMin.y, graphMax.y) / GRID_SIZE) * GRID_SIZE;
+            float maxY = Mathf.Ceil(Mathf.Max(graphMin.y, graphMax.y) / GRID_SIZE) * GRID_SIZE;
+
+            Handles.BeginGUI();
+            Handles.color = new Color(1f, 1f, 1f, 0.08f);
+
+            for (float x = minX; x <= maxX; x += GRID_SIZE)
+            {
+                Vector2 start = GraphToScreen(new Vector2(x, minY));
+                Vector2 end = GraphToScreen(new Vector2(x, maxY));
+                Handles.DrawLine(start, end);
+            }
+
+            for (float y = minY; y <= maxY; y += GRID_SIZE)
+            {
+                Vector2 start = GraphToScreen(new Vector2(minX, y));
+                Vector2 end = GraphToScreen(new Vector2(maxX, y));
+                Handles.DrawLine(start, end);
+            }
+
+            Handles.EndGUI();
         }
 
         private void DrawNodes()
@@ -286,7 +326,7 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
                 {
                     SerializedProperty dragPosProp = _talentsProp.GetArrayElementAtIndex(_dragIndex)
                         .FindPropertyRelative("<GraphPosition>k__BackingField");
-                    dragPosProp.vector2Value = ScreenToGraph(mousePos - _grabOffset);
+                    dragPosProp.vector2Value = SnapToGrid(ScreenToGraph(mousePos - _grabOffset));
                     serializedObject.ApplyModifiedProperties();
                     e.Use();
                     Repaint();
@@ -324,6 +364,28 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
                     break;
                 }
             }
+        }
+
+        private static Vector2 SnapToGrid(Vector2 position)
+        {
+            return new Vector2(
+                Mathf.Round(position.x / GRID_SIZE) * GRID_SIZE,
+                Mathf.Round(position.y / GRID_SIZE) * GRID_SIZE);
+        }
+
+        private void SnapAllNodesToGrid()
+        {
+            Undo.RecordObject(target, "Snap talent nodes to grid");
+
+            for (int i = 0; i < _talentsProp.arraySize; i++)
+            {
+                SerializedProperty posProp = _talentsProp.GetArrayElementAtIndex(i)
+                    .FindPropertyRelative("<GraphPosition>k__BackingField");
+                posProp.vector2Value = SnapToGrid(posProp.vector2Value);
+            }
+
+            serializedObject.ApplyModifiedProperties();
+            Repaint();
         }
     }
 }

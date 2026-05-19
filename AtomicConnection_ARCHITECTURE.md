@@ -122,9 +122,9 @@ not load scenes or control gameplay service lifecycle.
 
 Every dynamic window gets a shared modal backdrop. The backdrop blocks clicks to
 UI behind the current window and forwards backdrop clicks to the opened
-`BaseWindow`. Windows opt into dismiss-on-backdrop by overriding
-`OnBackdropClicked()`; result windows keep the default no-op and require explicit
-button actions.
+`BaseWindow`. Its color is configured in `WindowsConfig`. Windows opt into
+dismiss-on-backdrop by overriding `OnBackdropClicked()`; result windows keep the
+default no-op and require explicit button actions.
 
 The gameplay menu is not a `GameplayPauseState` transition yet:
 

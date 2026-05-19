@@ -14,11 +14,10 @@ namespace _Project.Scripts.Gameplay.Windows
         private const string MODAL_ROOT_NAME = "WindowModalRoot";
         private const string BACKDROP_NAME = "WindowBackdrop";
 
-        private static readonly Color BackdropColor = new(0f, 0f, 0f, 0.3f);
-
         [Inject] private IInstantiator _instantiator;
 
         private RectTransform _uiRoot;
+        private WindowsConfig _config;
         private Dictionary<WindowId, GameObject> _windowPrefabsById;
 
         public void SetUIRoot(RectTransform uiRoot) =>
@@ -30,7 +29,7 @@ namespace _Project.Scripts.Gameplay.Windows
                 throw new InvalidOperationException("UIRoot is not set. Add UIInitializer to the scene before opening windows.");
 
             RectTransform modalRoot = CreateStretchRect(MODAL_ROOT_NAME, _uiRoot);
-            WindowBackdrop backdrop = CreateBackdrop(modalRoot);
+            WindowBackdrop backdrop = CreateBackdrop(modalRoot, Config.BackdropColor);
             BaseWindow window = _instantiator.InstantiatePrefabForComponent<BaseWindow>(PrefabFor(windowId), modalRoot);
 
             window.SetModalRoot(modalRoot.gameObject);
@@ -40,11 +39,11 @@ namespace _Project.Scripts.Gameplay.Windows
             return window;
         }
 
-        private static WindowBackdrop CreateBackdrop(RectTransform parent)
+        private static WindowBackdrop CreateBackdrop(RectTransform parent, Color backdropColor)
         {
             RectTransform backdropRect = CreateStretchRect(BACKDROP_NAME, parent);
             Image image = backdropRect.gameObject.AddComponent<Image>();
-            image.color = BackdropColor;
+            image.color = backdropColor;
             image.raycastTarget = true;
 
             return backdropRect.gameObject.AddComponent<WindowBackdrop>();
@@ -66,24 +65,27 @@ namespace _Project.Scripts.Gameplay.Windows
 
         private GameObject PrefabFor(WindowId windowId)
         {
-            LoadConfigIfNeeded();
-
-            return _windowPrefabsById.TryGetValue(windowId, out GameObject prefab)
+            return WindowPrefabsById.TryGetValue(windowId, out GameObject prefab)
                 ? prefab
                 : throw new InvalidOperationException($"Prefab config for window {windowId} was not found.");
         }
 
-        private void LoadConfigIfNeeded()
+        private WindowsConfig Config
         {
-            if (_windowPrefabsById != null)
-                return;
+            get
+            {
+                if (_config != null)
+                    return _config;
 
-            WindowsConfig config = Resources.Load<WindowsConfig>(WINDOWS_CONFIG_PATH);
+                _config = Resources.Load<WindowsConfig>(WINDOWS_CONFIG_PATH);
 
-            if (config == null)
-                throw new InvalidOperationException($"Windows config was not found at Resources/{WINDOWS_CONFIG_PATH}.");
-
-            _windowPrefabsById = config.WindowConfigs.ToDictionary(x => x.Id, x => x.Prefab);
+                return _config != null
+                    ? _config
+                    : throw new InvalidOperationException($"Windows config was not found at Resources/{WINDOWS_CONFIG_PATH}.");
+            }
         }
+
+        private Dictionary<WindowId, GameObject> WindowPrefabsById =>
+            _windowPrefabsById ??= Config.WindowConfigs.ToDictionary(x => x.Id, x => x.Prefab);
     }
 }

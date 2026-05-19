@@ -94,7 +94,7 @@ Keep `AGENTS.md` operational and update the architecture notes when current flow
 - Runtime prefab flow is `Resources` path -> `IAssetProvider` -> Zenject `IInstantiator`; runtime objects belong under gameplay scene hierarchy.
 - Enemy ownership: `EnemyService` coordinates, `EnemySpawner` creates, enemy components own enemy-local behavior, `BossCoreCollision` is the boss one-shot variant.
 - UI may call state/window services, but must not load scenes or control gameplay service lifecycle. Gameplay menu pause is not a `GameplayPauseState` transition yet.
-- Dynamic windows opened through `IWindowService` use the shared modal backdrop from `WindowFactory`; outside-click dismissal belongs in the owning window's `OnBackdropClicked()` override.
+- Dynamic windows opened through `IWindowService` use the shared modal backdrop from `WindowFactory`; backdrop color is configured in `WindowsConfig`, while outside-click dismissal belongs in the owning window's `OnBackdropClicked()` override.
 - Zenject wires dependencies; do not `new` DI-owned services. `IInitializable` must not enter states, load scenes, or start gameplay loops.
 - MVP UI may call high-level feature/domain services directly; keep each operation encapsulated in one owning service.
 - Use UniTask for async/time-based work. Coroutines and Unity yield instructions are never used.

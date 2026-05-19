@@ -18,7 +18,7 @@ namespace _Project.Scripts.Gameplay.Talents
         public event Action Changed;
 
         public IReadOnlyList<TalentDefinition> Talents => _config.Talents;
-        public float AtomGenerationMultiplier => 1f + BonusOf(TalentType.AtomGenerationSpeed);
+        public float AtomGenerationMultiplier => 1f + BonusOf(TalentType.CoreClickReduction);
 
         public void Initialize()
         {

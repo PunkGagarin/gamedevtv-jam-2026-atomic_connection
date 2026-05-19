@@ -98,7 +98,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
 
         private bool CanAutoClick()
         {
-            if (_talentService == null || !_talentService.IsUnlocked(TalentType.AtomAutoClick))
+            if (_talentService == null || !_talentService.IsUnlocked(TalentType.CoreAutoGeneration))
                 return false;
 
             if (_inputService.GetLeftMouseButtonRaw())
@@ -107,17 +107,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
             if (_dragService != null && _dragService.IsDragActive)
                 return false;
 
-            return IsMouseOverCore();
-        }
-
-        private bool IsMouseOverCore()
-        {
-            Camera camera = _cameraProvider != null ? _cameraProvider.MainCamera : null;
-            if (camera == null || _clickCollider == null)
-                return false;
-
-            Vector2 worldPosition = _inputService.GetWorldMousePosition();
-            return _clickCollider.OverlapPoint(worldPosition);
+            return true;
         }
 
         private void TryRegisterGeneratedAtomClick()

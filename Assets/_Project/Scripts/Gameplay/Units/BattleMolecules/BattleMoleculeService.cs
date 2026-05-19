@@ -107,7 +107,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                     continue;
 
                 Debug.DrawLine(request.Origin, target.transform.position, Color.yellow, 0.5f);
-                target.TakeDamage(CurrentShotDamage());
+                target.TakeDamage(CurrentShotDamage(request.Kind));
             }
         }
 
@@ -149,13 +149,16 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             if (request.Kind != BattleMoleculeShotKind.Regular)
                 return 1;
 
-            int pierce = Mathf.RoundToInt(_talentService.BonusOf(TalentType.BattleMoleculePierce));
+            int pierce = Mathf.RoundToInt(_talentService.BonusOf(TalentType.PrimaryMoleculePierce));
             return Mathf.Max(1, 1 + pierce);
         }
 
-        private int CurrentShotDamage()
+        private int CurrentShotDamage(BattleMoleculeShotKind kind)
         {
-            float bonusDamage = _talentService.BonusOf(TalentType.BattleMoleculeDamage);
+            TalentType damageType = kind == BattleMoleculeShotKind.Mass
+                ? TalentType.AreaMoleculeDamage
+                : TalentType.PrimaryMoleculeDamage;
+            float bonusDamage = _talentService.BonusOf(damageType);
             return Mathf.Max(1, _config.BaseShotDamage + Mathf.RoundToInt(bonusDamage));
         }
 
@@ -177,13 +180,14 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
         private bool CanAutoLoad()
         {
-            if (!_talentService.IsUnlocked(TalentType.AtomAutoLoad))
-                return false;
-
             if (_inputService != null && _inputService.GetLeftMouseButtonRaw())
                 return false;
 
-            return _dragService == null || !_dragService.IsDragActive;
+            if (_dragService != null && _dragService.IsDragActive)
+                return false;
+
+            return _talentService.IsUnlocked(TalentType.PrimaryMoleculeAutoLoad) ||
+                   _talentService.IsUnlocked(TalentType.AreaMoleculeAutoLoad);
         }
 
         private void AutoLoadMolecules()
@@ -200,11 +204,24 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                 if (molecule == null)
                     continue;
 
+                if (!CanAutoLoadMolecule(molecule))
+                    continue;
+
                 if (!core.OwnedAtoms.TryGetFirstOwned(FreeAtomOwnerKind.Core, out FreeAtom atom))
                     return;
 
                 molecule.TryAutoLoadAtom(atom);
             }
+        }
+
+        private bool CanAutoLoadMolecule(BattleMolecule molecule)
+        {
+            bool isMassMolecule = molecule.name.Contains("MassBattleMolecule");
+            TalentType autoLoadType = isMassMolecule
+                ? TalentType.AreaMoleculeAutoLoad
+                : TalentType.PrimaryMoleculeAutoLoad;
+
+            return _talentService.IsUnlocked(autoLoadType);
         }
 
         private readonly struct EnemyHit

@@ -39,7 +39,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
 
         private void CreateMassBattleMoleculeIfUnlocked()
         {
-            if (!_talentService.IsUnlocked(TalentType.MassMolecule))
+            if (!_talentService.IsUnlocked(TalentType.AreaMolecule))
                 return;
 
             Vector3 offset = _battleMoleculeConfig.MassMoleculeSpawnOffset;

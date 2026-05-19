@@ -92,6 +92,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
             _trackedMolecules.Add(molecule);
             molecule.ConfigureCoreOrbit(_atomCoreService.CurrentCoreTransform, _config);
+            molecule.ConfigureShield(CurrentCore(), CurrentShieldDuration(), _config.ShieldSecondsLostPerDamage);
             molecule.ShotRequested += ResolveShot;
         }
 
@@ -107,7 +108,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                     continue;
 
                 Debug.DrawLine(request.Origin, target.transform.position, Color.yellow, 0.5f);
-                target.TakeDamage(CurrentShotDamage());
+                target.TakeDamage(CurrentShotDamage(request.Kind));
             }
         }
 
@@ -149,13 +150,16 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             if (request.Kind != BattleMoleculeShotKind.Regular)
                 return 1;
 
-            int pierce = Mathf.RoundToInt(_talentService.BonusOf(TalentType.BattleMoleculePierce));
+            int pierce = Mathf.RoundToInt(_talentService.BonusOf(TalentType.PrimaryMoleculePierce));
             return Mathf.Max(1, 1 + pierce);
         }
 
-        private int CurrentShotDamage()
+        private int CurrentShotDamage(BattleMoleculeShotKind kind)
         {
-            float bonusDamage = _talentService.BonusOf(TalentType.BattleMoleculeDamage);
+            TalentType damageType = kind == BattleMoleculeShotKind.Mass
+                ? TalentType.AreaMoleculeDamage
+                : TalentType.PrimaryMoleculeDamage;
+            float bonusDamage = _talentService.BonusOf(damageType);
             return Mathf.Max(1, _config.BaseShotDamage + Mathf.RoundToInt(bonusDamage));
         }
 
@@ -177,20 +181,20 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
         private bool CanAutoLoad()
         {
-            if (!_talentService.IsUnlocked(TalentType.AtomAutoLoad))
-                return false;
-
             if (_inputService != null && _inputService.GetLeftMouseButtonRaw())
                 return false;
 
-            return _dragService == null || !_dragService.IsDragActive;
+            if (_dragService != null && _dragService.IsDragActive)
+                return false;
+
+            return _talentService.IsUnlocked(TalentType.PrimaryMoleculeAutoLoad) ||
+                   _talentService.IsUnlocked(TalentType.ShieldAutoLoad) ||
+                   _talentService.IsUnlocked(TalentType.AreaMoleculeAutoLoad);
         }
 
         private void AutoLoadMolecules()
         {
-            AtomCore core = _atomCoreService.CurrentCoreTransform != null
-                ? _atomCoreService.CurrentCoreTransform.GetComponent<AtomCore>()
-                : null;
+            AtomCore core = CurrentCore();
 
             if (core == null || core.OwnedAtoms == null)
                 return;
@@ -200,11 +204,38 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                 if (molecule == null)
                     continue;
 
+                if (!CanAutoLoadMolecule(molecule))
+                    continue;
+
                 if (!core.OwnedAtoms.TryGetFirstOwned(FreeAtomOwnerKind.Core, out FreeAtom atom))
                     return;
 
                 molecule.TryAutoLoadAtom(atom);
             }
+        }
+
+        private bool CanAutoLoadMolecule(BattleMolecule molecule)
+        {
+            TalentType autoLoadType = molecule.Kind switch
+            {
+                BattleMoleculeKind.Mass => TalentType.AreaMoleculeAutoLoad,
+                BattleMoleculeKind.Shield => TalentType.ShieldAutoLoad,
+                _ => TalentType.PrimaryMoleculeAutoLoad
+            };
+
+            return _talentService.IsUnlocked(autoLoadType);
+        }
+
+        private AtomCore CurrentCore()
+        {
+            return _atomCoreService.CurrentCoreTransform != null
+                ? _atomCoreService.CurrentCoreTransform.GetComponent<AtomCore>()
+                : null;
+        }
+
+        private float CurrentShieldDuration()
+        {
+            return Mathf.Max(0.1f, _config.ShieldDurationSeconds + _talentService.BonusOf(TalentType.ShieldDuration));
         }
 
         private readonly struct EnemyHit

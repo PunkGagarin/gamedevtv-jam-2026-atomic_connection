@@ -14,6 +14,8 @@ namespace _Project.Scripts.Gameplay.Talents
 {
     public class TalentTreeWindow : BaseWindow, IDragHandler
     {
+        private const float PAN_PADDING = 160f;
+
         [field: SerializeField] private Button CloseButton { get; set; }
         [field: SerializeField, FormerlySerializedAs("<GoldLabel>k__BackingField")]
         private TextMeshProUGUI LegacyCurrencyLabel { get; set; }
@@ -40,6 +42,7 @@ namespace _Project.Scripts.Gameplay.Talents
         private readonly HashSet<TalentId> _revealingNodes = new();
         private static readonly HashSet<TalentId> _revealedTalentIds = new();
         private static bool _lastRefreshHadBoughtTalents;
+        private Vector2 _graphContentHalfSize;
         private float _zoom = 1f;
         private bool _isRevealQueuePlaying;
         private Tween _tooltipTween;
@@ -127,6 +130,7 @@ namespace _Project.Scripts.Gameplay.Talents
             Vector3 scale = Vector3.one * _zoom;
             NodesRoot.localScale = scale;
             ConnectionsRoot.localScale = scale;
+            SetGraphPanPosition(ClampPanPosition(NodesRoot.anchoredPosition));
             HideTooltip();
         }
 
@@ -151,6 +155,8 @@ namespace _Project.Scripts.Gameplay.Talents
                     CreateConnection(parent, child);
                 }
             }
+
+            CalculateGraphContentHalfSize();
         }
 
         private void CreateNode(TalentDefinition talent)
@@ -174,6 +180,30 @@ namespace _Project.Scripts.Gameplay.Talents
             connection.Initialize(from, to, _animationConfig);
             connection.SetVisible(false);
             _connections.Add(new TalentConnectionBinding(parent.Id, child.Id, connection));
+        }
+
+        private void CalculateGraphContentHalfSize()
+        {
+            if (_nodesById.Count == 0)
+            {
+                _graphContentHalfSize = NodesRoot.rect.size * 0.5f;
+                return;
+            }
+
+            Vector2 min = new(float.PositiveInfinity, float.PositiveInfinity);
+            Vector2 max = new(float.NegativeInfinity, float.NegativeInfinity);
+
+            foreach (TalentNodeView node in _nodesById.Values)
+            {
+                RectTransform rectTransform = node.RectTransform;
+                Vector2 position = rectTransform.anchoredPosition;
+                Vector2 halfSize = rectTransform.rect.size * 0.5f;
+                min = Vector2.Min(min, position - halfSize);
+                max = Vector2.Max(max, position + halfSize);
+            }
+
+            Vector2 contentHalfSize = Vector2.Max(-min, max);
+            _graphContentHalfSize = Vector2.Max(contentHalfSize, NodesRoot.rect.size * 0.5f);
         }
 
         private void Refresh()
@@ -371,14 +401,30 @@ namespace _Project.Scripts.Gameplay.Talents
         public void OnDrag(PointerEventData eventData)
         {
             Vector2 newPos = NodesRoot.anchoredPosition + eventData.delta / _zoom;
+            SetGraphPanPosition(ClampPanPosition(newPos));
+        }
 
-            float maxPanX = NodesRoot.rect.width * 0.5f;
-            float maxPanY = NodesRoot.rect.height * 0.5f;
-            newPos.x = Mathf.Clamp(newPos.x, -maxPanX, maxPanX);
-            newPos.y = Mathf.Clamp(newPos.y, -maxPanY, maxPanY);
+        private Vector2 ClampPanPosition(Vector2 position)
+        {
+            Vector2 viewportHalfSize = ParentViewportHalfSize();
+            float maxPanX = Mathf.Max(0f, _graphContentHalfSize.x * _zoom - viewportHalfSize.x + PAN_PADDING);
+            float maxPanY = Mathf.Max(0f, _graphContentHalfSize.y * _zoom - viewportHalfSize.y + PAN_PADDING);
+            position.x = Mathf.Clamp(position.x, -maxPanX, maxPanX);
+            position.y = Mathf.Clamp(position.y, -maxPanY, maxPanY);
 
-            NodesRoot.anchoredPosition = newPos;
-            ConnectionsRoot.anchoredPosition = newPos;
+            return position;
+        }
+
+        private Vector2 ParentViewportHalfSize()
+        {
+            RectTransform parent = NodesRoot.parent as RectTransform;
+            return parent != null ? parent.rect.size * 0.5f : Vector2.zero;
+        }
+
+        private void SetGraphPanPosition(Vector2 position)
+        {
+            NodesRoot.anchoredPosition = position;
+            ConnectionsRoot.anchoredPosition = position;
         }
 
         protected override void Cleanup()

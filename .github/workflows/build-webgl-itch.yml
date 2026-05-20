@@ -1,0 +1,129 @@
+name: Build WebGL and Deploy to itch
+
+on:
+  workflow_dispatch:
+    inputs:
+      itch_target:
+        description: "itch target in the form user/game:channel"
+        required: true
+        default: "punkgagarin/atomicconnection:html5"
+      upload_to_itch:
+        description: "Upload the successful build to itch"
+        required: true
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: webgl-itch-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-webgl:
+    name: Build WebGL
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Cache Unity Library
+        uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-WebGL-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-WebGL-
+            Library-
+
+      - name: Build WebGL
+        id: unity_build
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          unityVersion: 6000.4.4f1
+          targetPlatform: WebGL
+          buildsPath: build
+          buildName: AtomicConnection
+
+      - name: Locate WebGL build
+        id: webgl_build
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          webgl_dir="$(find build -name index.html -printf '%h\n' | head -n 1)"
+          if [ -z "$webgl_dir" ]; then
+            echo "::error::Could not find a WebGL index.html under the build folder."
+            find build -maxdepth 5 -type f | sort
+            exit 1
+          fi
+
+          echo "dir=$webgl_dir" >> "$GITHUB_OUTPUT"
+          echo "Found WebGL build at $webgl_dir"
+
+      - name: Prepare build version
+        id: build_version
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          project_version="$(sed -n 's/^[[:space:]]*bundleVersion:[[:space:]]*//p' ProjectSettings/ProjectSettings.asset | head -n 1)"
+          if [ -z "$project_version" ]; then
+            echo "::error::Could not read bundleVersion from ProjectSettings/ProjectSettings.asset."
+            exit 1
+          fi
+
+          version="${project_version}-build.${GITHUB_RUN_NUMBER}"
+
+          echo "value=$version" >> "$GITHUB_OUTPUT"
+          echo "Build version: $version"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AtomicConnection-WebGL-${{ steps.build_version.outputs.value }}
+          path: ${{ steps.webgl_build.outputs.dir }}
+          if-no-files-found: error
+
+      - name: Install butler
+        if: ${{ inputs.upload_to_itch }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          curl --fail --location --retry 3 --retry-delay 5 -o butler.zip https://broth.itch.zone/butler/linux-amd64/LATEST/archive/default
+          unzip -q butler.zip
+          chmod +x butler
+          ./butler -V
+
+      - name: Deploy to itch
+        if: ${{ inputs.upload_to_itch }}
+        shell: bash
+        env:
+          BUTLER_API_KEY: ${{ secrets.BUTLER_API_KEY }}
+          ITCH_TARGET: ${{ inputs.itch_target }}
+          WEBGL_DIR: ${{ steps.webgl_build.outputs.dir }}
+          BUILD_VERSION: ${{ steps.build_version.outputs.value }}
+        run: |
+          set -euo pipefail
+
+          if [[ "$ITCH_TARGET" == "your-itch-username/"* ]]; then
+            echo "::error::Set itch_target to your real itch page, for example username/atomic-connection:html5."
+            exit 1
+          fi
+
+          if [ -z "${BUTLER_API_KEY:-}" ]; then
+            echo "::error::Missing GitHub Actions secret BUTLER_API_KEY."
+            exit 1
+          fi
+
+          ./butler push "$WEBGL_DIR" "$ITCH_TARGET" --userversion "$BUILD_VERSION"

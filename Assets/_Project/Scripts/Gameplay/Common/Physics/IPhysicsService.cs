@@ -13,5 +13,6 @@ namespace _Project.Scripts.Gameplay.Common.Physics
         IEnumerable<Collider2D> CircleCast(Vector3 position, float radius, int layerMask);
         int OverlapCircle(Vector3 worldPosition, float radius, Collider2D[] hits, int layerMask);
         int CircleCastNonAlloc(Vector3 position, float radius, int layerMask, Collider2D[] hitBuffer);
+        void SyncTransforms();
     }
 }

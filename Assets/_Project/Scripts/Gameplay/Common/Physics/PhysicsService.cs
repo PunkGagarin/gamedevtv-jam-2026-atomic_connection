@@ -85,6 +85,9 @@ namespace _Project.Scripts.Gameplay.Common.Physics
         public int OverlapCircle(Vector3 worldPosition, float radius, Collider2D[] hits, int layerMask) =>
             Physics2D.OverlapCircleNonAlloc(worldPosition, radius, hits, layerMask);
 
+        public void SyncTransforms() =>
+            Physics2D.SyncTransforms();
+
         private static void DrawDebug(Vector2 worldPosition, float radius, float seconds, Color color)
         {
             Debug.DrawRay(worldPosition, radius * Vector3.up, color, seconds);

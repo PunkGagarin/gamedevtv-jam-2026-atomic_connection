@@ -19,12 +19,12 @@ namespace _Project.Scripts.Gameplay.Enemies
         [Inject] private IGameplayRuntimeHierarchy _runtimeHierarchy;
         [Inject] private IInstantiator _instantiator;
 
-        public EnemyUnit Create(EnemyDefinition definition, Vector3 at)
+        public EnemyUnit Create(EnemyDefinition definition, int maxHealth, int coreCollisionDamage, Vector3 at)
         {
             if (definition == null)
                 throw new ArgumentNullException(nameof(definition));
 
-            return PoolFor(definition).Create(at);
+            return PoolFor(definition).Create(maxHealth, coreCollisionDamage, at);
         }
 
         public void Cleanup()
@@ -69,7 +69,7 @@ namespace _Project.Scripts.Gameplay.Enemies
                 _instantiator = instantiator;
             }
 
-            public EnemyUnit Create(Vector3 at)
+            public EnemyUnit Create(int maxHealth, int coreCollisionDamage, Vector3 at)
             {
                 Transform parent = _runtimeHierarchy.GetOrCreateContainer(ENEMIES_CONTAINER_NAME);
                 EnemyUnit enemy = GetFromPoolOrCreate(at, Quaternion.identity, parent);
@@ -77,7 +77,7 @@ namespace _Project.Scripts.Gameplay.Enemies
                 enemy.transform.SetParent(parent, true);
                 enemy.transform.SetPositionAndRotation(at, Quaternion.identity);
                 enemy.name = $"{_definition.Id}{nameof(EnemyUnit)}";
-                enemy.Configure(_definition);
+                enemy.Configure(_definition, maxHealth, coreCollisionDamage);
                 enemy.PrepareForSpawn();
 
                 return enemy;

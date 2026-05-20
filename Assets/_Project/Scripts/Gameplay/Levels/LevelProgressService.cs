@@ -20,6 +20,7 @@ namespace _Project.Scripts.Gameplay.Levels
 
         public event Action Completed;
         public CurrencyAmount LastCompletionReward { get; private set; }
+        public bool LastCompletedLevelWasFinal { get; private set; }
         public float RemainingSeconds => Mathf.Max(0f, CurrentLevel.DurationSeconds - _elapsedSeconds);
 
         public void Start()
@@ -29,6 +30,7 @@ namespace _Project.Scripts.Gameplay.Levels
             _isActive = true;
             _completionWasRaised = false;
             LastCompletionReward = _level.CompletionReward;
+            LastCompletedLevelWasFinal = false;
         }
 
         public void Update()
@@ -62,6 +64,7 @@ namespace _Project.Scripts.Gameplay.Levels
             _isActive = false;
             _completionWasRaised = true;
             LastCompletionReward = CurrentLevel.CompletionReward;
+            LastCompletedLevelWasFinal = _levelSelectionService.SelectedLevel >= _levelSelectionService.MaxConfiguredLevel;
             _levelSelectionService.CompleteSelectedLevel();
             _currencyService.Add(LastCompletionReward);
             Completed?.Invoke();

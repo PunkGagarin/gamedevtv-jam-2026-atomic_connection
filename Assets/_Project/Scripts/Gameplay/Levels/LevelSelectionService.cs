@@ -9,6 +9,7 @@ namespace _Project.Scripts.Gameplay.Levels
     {
         [Inject] private IProgressProvider _progressProvider;
         [Inject] private ISaveLoadService _saveLoadService;
+        [Inject] private LevelCatalogConfig _levelCatalog;
 
         public event Action Changed;
 
@@ -21,7 +22,8 @@ namespace _Project.Scripts.Gameplay.Levels
             }
         }
 
-        public int HighestUnlockedLevel => Mathf.Max(1, _progressProvider.ProgressData.CompletedLevelCount + 1);
+        public int HighestUnlockedLevel => Mathf.Min(MaxConfiguredLevel, Mathf.Max(1, _progressProvider.ProgressData.CompletedLevelCount + 1));
+        public int MaxConfiguredLevel => Mathf.Max(1, _levelCatalog.MaxLevelNumber);
         public bool CanSelectPrevious => SelectedLevel > 1;
         public bool CanSelectNext => SelectedLevel < HighestUnlockedLevel;
 

@@ -1,13 +1,9 @@
-using System;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Enemies
 {
     public interface IEnemySpawner
     {
-        event Action BossKilled;
-        void Start(Transform target);
-        void Update();
-        void Cleanup();
+        EnemyUnit Spawn(EnemyDefinition definition, int maxHealth, int coreCollisionDamage, Transform target, float offscreenPadding);
     }
 }

@@ -7,6 +7,7 @@ namespace _Project.Scripts.Gameplay.Levels
         event Action Changed;
         int SelectedLevel { get; }
         int HighestUnlockedLevel { get; }
+        int MaxConfiguredLevel { get; }
         bool CanSelectPrevious { get; }
         bool CanSelectNext { get; }
         void SelectPrevious();

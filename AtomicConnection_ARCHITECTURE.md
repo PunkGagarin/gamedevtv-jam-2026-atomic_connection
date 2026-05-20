@@ -65,13 +65,21 @@ Spawn tracks are independent:
 
 Runtime ownership:
 - `EnemyService` owns wave timing, active enemy tracking, per-frame enemy
-  ticking, death subscriptions, nucleotide rewards, and boss-kill notification.
+  ticking, death subscriptions, non-boss nucleotide pickup spawn requests, and
+  boss-kill notification.
 - `EnemySpawner` is only the spawn helper: choose offscreen position, ask
   `EnemyFactory` to create the unit, apply spawn-time object setup, and keep
   multi-enemy wave spawns clustered in one offscreen sector.
+- `CurrencyPickupService` owns physical currency pickup spawning, cursor-hover
+  collection checks, currency grant on collection, and pickup cleanup.
 - Enemy object-internal behavior stays on focused components.
 - `EnemyMovement` moves enemies directly toward the core; prefab-specific
   movement variants such as `MassEnemyArcMovement` own enemy-local path shapes.
+- Enemy-local runtime behaviors implement `IEnemyRuntimeBehavior`; `EnemyUnit`
+  configures and ticks them while `EnemyService` owns the active enemy loop.
+- Ranged enemies use prefab variants: `RangedEnemyStopMovement` owns stopping
+  near the core, `RangedEnemyAttack` owns telegraph, projectile spawn, projectile
+  ticking, and projectile cleanup.
 - `EnemyCoreCollision` resolves normal overlap damage with the atom core while
   ticked through `EnemyUnit` by `EnemyService`.
 - Boss one-shot core collision is a prefab component variant,
@@ -84,9 +92,9 @@ Runtime ownership:
 
 `GameplayLoopState` inherits `EndOfFrameExitState`. It starts, ticks,
 fixed-ticks, and cleans active gameplay services such as `IEnemyService`, `IAtomCoreService`,
-`IBattleMoleculeService`, and `ILevelProgressService`. It skips gameplay ticks
-while `PauseService.IsPaused`; `ExitOnEndOfFrame()` cleans state-owned runtime
-services and objects.
+`IBattleMoleculeService`, `ICurrencyPickupService`, and
+`ILevelProgressService`. It skips gameplay ticks while `PauseService.IsPaused`;
+`ExitOnEndOfFrame()` cleans state-owned runtime services and objects.
 
 ## Core, Molecule, And Progress
 

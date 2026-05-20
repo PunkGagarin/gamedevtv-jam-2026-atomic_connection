@@ -1,8 +1,7 @@
 using System;
+using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Common.Health;
-using _Project.Scripts.Gameplay.Currencies;
 using _Project.Scripts.Gameplay.Enemies.Components;
-using _Project.Scripts.Gameplay.Feedback;
 using _Project.Scripts.Gameplay.Units.AtomCores;
 using UnityEngine;
 
@@ -16,8 +15,8 @@ namespace _Project.Scripts.Gameplay.Enemies
         [field: SerializeField] private Health Health { get; set; }
         [field: SerializeField] private EnemyMovement Movement { get; set; }
         [field: SerializeField] private EnemyCoreCollision CoreCollision { get; set; }
-        [field: SerializeField] private CurrencyDropPopupView CurrencyDropPopupView { get; set; }
 
+        private readonly List<IEnemyRuntimeBehavior> _runtimeBehaviors = new();
         private EnemyDefinition _definition;
         private int _coreCollisionDamage = 1;
 
@@ -40,8 +39,8 @@ namespace _Project.Scripts.Gameplay.Enemies
             if (CoreCollision == null)
                 CoreCollision = GetComponent<EnemyCoreCollision>();
 
-            if (CurrencyDropPopupView == null)
-                CurrencyDropPopupView = GetComponent<CurrencyDropPopupView>();
+            _runtimeBehaviors.Clear();
+            _runtimeBehaviors.AddRange(GetComponents<IEnemyRuntimeBehavior>());
 
             if (Health != null)
                 Health.Died += OnHealthDied;
@@ -66,6 +65,7 @@ namespace _Project.Scripts.Gameplay.Enemies
         {
             Movement?.Clear();
             CoreCollision?.Clear();
+            ClearRuntimeBehaviors();
 
             if (Health != null)
                 Health.ResetHealth();
@@ -77,18 +77,21 @@ namespace _Project.Scripts.Gameplay.Enemies
         {
             Movement?.Clear();
             CoreCollision?.Clear();
+            ClearRuntimeBehaviors();
             gameObject.SetActive(false);
         }
 
         public void MoveTo(Transform target, float speed)
         {
             Movement?.Configure(target, speed);
+            ConfigureRuntimeBehaviors(target);
         }
 
         public void MoveTo(Transform target, float speed, float groupMovementSign)
         {
             Movement?.ConfigureGroupMovement(groupMovementSign);
             Movement?.Configure(target, speed);
+            ConfigureRuntimeBehaviors(target);
         }
 
         public void CollideWithCore(AtomCore target)
@@ -99,6 +102,12 @@ namespace _Project.Scripts.Gameplay.Enemies
         public void TickMovement(float deltaTime)
         {
             Movement?.Tick(deltaTime);
+        }
+
+        public void TickRuntimeBehaviors(float deltaTime)
+        {
+            foreach (IEnemyRuntimeBehavior behavior in _runtimeBehaviors)
+                behavior.Tick(deltaTime);
         }
 
         public void TickCoreCollision()
@@ -134,9 +143,16 @@ namespace _Project.Scripts.Gameplay.Enemies
                 Kill();
         }
 
-        public void ShowCurrencyDrop(CurrencyAmount reward)
+        private void ConfigureRuntimeBehaviors(Transform target)
         {
-            CurrencyDropPopupView?.Show(reward);
+            foreach (IEnemyRuntimeBehavior behavior in _runtimeBehaviors)
+                behavior.Configure(target);
+        }
+
+        private void ClearRuntimeBehaviors()
+        {
+            foreach (IEnemyRuntimeBehavior behavior in _runtimeBehaviors)
+                behavior.Clear();
         }
 
         private void OnHealthDied()

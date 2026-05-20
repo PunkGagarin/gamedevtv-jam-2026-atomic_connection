@@ -17,17 +17,5 @@ namespace _Project.Scripts.Gameplay.Feedback
         [field: SerializeField, Min(0f)] public float DamagePopupRiseDistance { get; private set; } = 0.65f;
         [field: SerializeField, Min(0f)] public float DamagePopupDuration { get; private set; } = 0.55f;
         [field: SerializeField] public int DamagePopupSortingOrder { get; private set; } = 50;
-
-        [field: Header("Currency Drop Popup")]
-        [field: SerializeField] public Sprite IsotopeDropIcon { get; private set; }
-        [field: SerializeField] public Vector3 CurrencyDropPopupWorldOffset { get; private set; } = new(0f, 1.05f, 0f);
-        [field: SerializeField] public Color CurrencyDropPopupTextColor { get; private set; } = new(0.55f, 1f, 1f, 1f);
-        [field: SerializeField] public Color CurrencyDropPopupIconColor { get; private set; } = Color.white;
-        [field: SerializeField, Min(0.1f)] public float CurrencyDropPopupFontSize { get; private set; } = 0.5f;
-        [field: SerializeField, Min(0f)] public float CurrencyDropPopupRiseDistance { get; private set; } = 0.75f;
-        [field: SerializeField, Min(0f)] public float CurrencyDropPopupDuration { get; private set; } = 0.7f;
-        [field: SerializeField, Min(0f)] public float CurrencyDropPopupStartScale { get; private set; } = 0.75f;
-        [field: SerializeField, Min(0f)] public float CurrencyDropPopupPulseScale { get; private set; } = 1.15f;
-        [field: SerializeField] public int CurrencyDropPopupSortingOrder { get; private set; } = 60;
     }
 }

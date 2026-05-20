@@ -35,4 +35,4 @@
 
 | Секунда | 0 | 4 | 8 | 10 | 12 | 16 | 18 | 20 | 24 | 26 | 28 | 30 | 32 | 34 | 36 | 40 |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Враг | Standard HP2 DMG2 | Standard HP2 DMG2 | Standard HP2 DMG2 | Mass x5 | Standard HP2 DMG2 + Elite HP8 DMG3 | Standard HP2 DMG2 | Mass x5 | Standard HP2 DMG2 | Standard HP2 DMG2 | Mass x5 | Standard HP2 DMG2 + Standard HP4 DMG3 | Elite HP8 DMG3 | Standard HP2 DMG2 | Mass x5 | Standard HP2 DMG2 + Standard HP4 DMG3 | Boss HP50 |
+| Враг | Standard HP2 DMG2 | Standard HP2 DMG2 | Standard HP2 DMG2 | Mass x5 | Standard HP2 DMG2 + Elite HP8 DMG3 | Standard HP2 DMG2 | Mass x5 | Standard HP2 DMG2 + Ranged | Standard HP2 DMG2 | Mass x5 | Standard HP2 DMG2 + Standard HP4 DMG3 | Elite HP8 DMG3 | Standard HP2 DMG2 | Mass x5 | Standard HP2 DMG2 + Standard HP4 DMG3 | Boss HP50 |

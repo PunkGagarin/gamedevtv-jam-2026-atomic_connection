@@ -29,6 +29,7 @@ namespace _Project.Scripts.Gameplay.Talents
         [field: SerializeField, Min(0.1f)] private float MinZoom { get; set; } = 0.55f;
         [field: SerializeField, Min(0.1f)] private float MaxZoom { get; set; } = 1.6f;
         [field: SerializeField, Min(0.01f)] private float ZoomStep { get; set; } = 0.12f;
+        [field: SerializeField, Min(0f)] private float TooltipViewportPadding { get; set; } = 12f;
 
         [Inject] private ITalentService _talentService;
         [Inject] private ICurrencyService _currencyService;
@@ -59,7 +60,7 @@ namespace _Project.Scripts.Gameplay.Talents
 
             HideTooltip();
             BuildGraph();
-            Refresh();
+            Refresh(false);
         }
 
         protected override void SubscribeUpdates()
@@ -96,9 +97,10 @@ namespace _Project.Scripts.Gameplay.Talents
             TooltipTitleLabel.text = talent.Title;
             TooltipDescriptionLabel.text = talent.Description;
             TooltipPanel.gameObject.SetActive(true);
-            TooltipPanel.anchoredPosition = NodesRoot.anchoredPosition +
-                                            nodeTransform.anchoredPosition * _zoom +
-                                            _animationConfig.TooltipOffset;
+            TooltipPanel.anchoredPosition = ClampedTooltipPosition(
+                NodesRoot.anchoredPosition +
+                nodeTransform.anchoredPosition * _zoom +
+                _animationConfig.TooltipOffset);
 
             _tooltipTween?.Kill();
             TooltipPanel.localScale = new Vector3(
@@ -206,51 +208,89 @@ namespace _Project.Scripts.Gameplay.Talents
             _graphContentHalfSize = Vector2.Max(contentHalfSize, NodesRoot.rect.size * 0.5f);
         }
 
-        private void Refresh()
+        private void Refresh() =>
+            Refresh(true);
+
+        private void Refresh(bool animateNewVisibleNodes)
         {
             bool hasBoughtTalents = _talentService.Talents.Any(talent => _talentService.LevelOf(talent.Id) > 0);
             ResetRevealCacheIfProgressWasReset(hasBoughtTalents);
 
+            List<TalentDefinition> newlyVisibleTalents = RefreshTalentNodes(animateNewVisibleNodes);
+            RefreshConnections();
+            PlayNodeRevealQueue(newlyVisibleTalents);
+            _lastRefreshHadBoughtTalents = hasBoughtTalents;
+        }
+
+        private List<TalentDefinition> RefreshTalentNodes(bool animateNewVisibleNodes)
+        {
             List<TalentDefinition> newlyVisibleTalents = new();
 
             foreach (TalentDefinition talent in _talentService.Talents)
-            {
-                int level = _talentService.LevelOf(talent.Id);
-                bool prerequisitesBought = PrerequisitesBought(talent);
-                bool canBuy = _talentService.CanBuy(talent.Id);
-                TalentNodeViewState viewState = ViewStateFor(talent, level, prerequisitesBought, canBuy);
-                bool shouldBeVisible = ShouldBeVisible(talent, level, prerequisitesBought);
-                bool wasVisible = _visibleNodes.Contains(talent.Id);
-
-                if (shouldBeVisible)
-                    _visibleNodes.Add(talent.Id);
-                else
-                    _visibleNodes.Remove(talent.Id);
-
-                _nodesById[talent.Id].Refresh(
-                    talent,
-                    level,
-                    viewState,
-                    _currencyService.Format(talent.PriceForLevel(level)));
-
-                bool shouldAnimateReveal = shouldBeVisible &&
-                                           !wasVisible &&
-                                           !_revealedTalentIds.Contains(talent.Id);
-
-                if (shouldAnimateReveal)
-                {
+                if (RefreshTalentNode(talent, animateNewVisibleNodes))
                     newlyVisibleTalents.Add(talent);
-                    _revealingNodes.Add(talent.Id);
-                    _revealedTalentIds.Add(talent.Id);
-                    _nodesById[talent.Id].SetVisible(false);
-                }
-                else
-                {
-                    if (!_revealingNodes.Contains(talent.Id))
-                        _nodesById[talent.Id].SetVisible(shouldBeVisible);
-                }
+
+            return newlyVisibleTalents;
+        }
+
+        private bool RefreshTalentNode(TalentDefinition talent, bool animateNewVisibleNodes)
+        {
+            int level = _talentService.LevelOf(talent.Id);
+            bool prerequisitesBought = PrerequisitesBought(talent);
+            bool canBuy = _talentService.CanBuy(talent.Id);
+            TalentNodeViewState viewState = ViewStateFor(talent, level, prerequisitesBought, canBuy);
+            bool shouldBeVisible = ShouldBeVisible(talent, level, prerequisitesBought);
+            bool wasVisible = _visibleNodes.Contains(talent.Id);
+
+            SetTalentVisibility(talent.Id, shouldBeVisible);
+
+            _nodesById[talent.Id].Refresh(
+                talent,
+                level,
+                viewState,
+                _currencyService.Format(talent.PriceForLevel(level)));
+
+            if (ShouldAnimateReveal(talent.Id, shouldBeVisible, wasVisible, animateNewVisibleNodes))
+            {
+                PrepareNodeReveal(talent.Id);
+                return true;
             }
 
+            if (!_revealingNodes.Contains(talent.Id))
+                _nodesById[talent.Id].SetVisible(shouldBeVisible);
+
+            return false;
+        }
+
+        private void SetTalentVisibility(TalentId talentId, bool shouldBeVisible)
+        {
+            if (shouldBeVisible)
+                _visibleNodes.Add(talentId);
+            else
+                _visibleNodes.Remove(talentId);
+        }
+
+        private bool ShouldAnimateReveal(
+            TalentId talentId,
+            bool shouldBeVisible,
+            bool wasVisible,
+            bool animateNewVisibleNodes)
+        {
+            return shouldBeVisible &&
+                   !wasVisible &&
+                   animateNewVisibleNodes &&
+                   !_revealedTalentIds.Contains(talentId);
+        }
+
+        private void PrepareNodeReveal(TalentId talentId)
+        {
+            _revealingNodes.Add(talentId);
+            _revealedTalentIds.Add(talentId);
+            _nodesById[talentId].SetVisible(false);
+        }
+
+        private void RefreshConnections()
+        {
             foreach (TalentConnectionBinding connection in _connections)
             {
                 bool parentBought = _talentService.LevelOf(connection.ParentId) > 0;
@@ -264,9 +304,6 @@ namespace _Project.Scripts.Gameplay.Talents
 
                 connection.View.Refresh(parentBought, childBought);
             }
-
-            PlayNodeRevealQueue(newlyVisibleTalents);
-            _lastRefreshHadBoughtTalents = hasBoughtTalents;
         }
 
         private bool ShouldBeVisible(TalentDefinition talent, int level, bool prerequisitesBought)
@@ -419,6 +456,30 @@ namespace _Project.Scripts.Gameplay.Talents
         {
             RectTransform parent = NodesRoot.parent as RectTransform;
             return parent != null ? parent.rect.size * 0.5f : Vector2.zero;
+        }
+
+        private Vector2 ClampedTooltipPosition(Vector2 position)
+        {
+            RectTransform parent = TooltipPanel.parent as RectTransform;
+            if (parent == null)
+                return position;
+
+            Vector2 parentSize = parent.rect.size;
+            Vector2 tooltipSize = TooltipPanel.rect.size;
+            Vector2 pivot = TooltipPanel.pivot;
+            float padding = Mathf.Max(0f, TooltipViewportPadding);
+            float minX = -parentSize.x * 0.5f + tooltipSize.x * pivot.x + padding;
+            float maxX = parentSize.x * 0.5f - tooltipSize.x * (1f - pivot.x) - padding;
+            float minY = -parentSize.y * 0.5f + tooltipSize.y * pivot.y + padding;
+            float maxY = parentSize.y * 0.5f - tooltipSize.y * (1f - pivot.y) - padding;
+
+            if (minX <= maxX)
+                position.x = Mathf.Clamp(position.x, minX, maxX);
+
+            if (minY <= maxY)
+                position.y = Mathf.Clamp(position.y, minY, maxY);
+
+            return position;
         }
 
         private void SetGraphPanPosition(Vector2 position)

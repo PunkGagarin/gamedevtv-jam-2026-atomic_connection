@@ -89,7 +89,11 @@ namespace _Project.Scripts.Gameplay.Talents
         public bool ShouldShowNotification(TalentId talentId)
         {
             TalentDefinition talent = DefinitionFor(talentId);
-            return LevelOf(talentId) < talent.MaxLevel && PrerequisitesBought(talent);
+            int currentLevel = LevelOf(talentId);
+
+            return currentLevel < talent.MaxLevel &&
+                   PrerequisitesBought(talent) &&
+                   _currencyService.CanSpend(talent.PriceForLevel(currentLevel));
         }
 
         private bool PrerequisitesBought(TalentDefinition talent) =>

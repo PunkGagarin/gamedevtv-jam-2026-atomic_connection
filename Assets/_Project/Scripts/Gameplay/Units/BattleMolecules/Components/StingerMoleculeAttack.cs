@@ -38,13 +38,19 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
                 damagedTargets++;
             }
 
-            AimLineView?.ShowShotLine(request, lastDamagedHitPoint);
+            AimLineView?.ShowShotLine(request, ShotLineHitPoint(targetCount, damagedTargets, lastDamagedHitPoint));
         }
 
         private int TargetCount()
         {
             int pierce = Mathf.RoundToInt(TalentService.BonusOf(TalentType.StingerMoleculePierce));
             return Mathf.Max(1, 1 + pierce);
+        }
+
+        private static Vector3? ShotLineHitPoint(int targetCount, int damagedTargets, Vector3? lastDamagedHitPoint)
+        {
+            bool hasUnusedPierce = targetCount > 1 && damagedTargets < targetCount;
+            return hasUnusedPierce ? null : lastDamagedHitPoint;
         }
     }
 }

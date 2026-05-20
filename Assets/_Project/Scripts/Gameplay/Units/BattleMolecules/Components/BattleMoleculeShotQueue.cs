@@ -55,9 +55,9 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             OwnedAtoms.ReleaseAll();
         }
 
-        protected void RequestShot(Vector3 origin, Vector3 direction, BattleMoleculeShotKind kind)
+        protected void RequestShot(Vector3 origin, Vector3 direction, BattleMoleculeShotKind kind, int shotSequenceId = 0)
         {
-            ShotRequested?.Invoke(new BattleMoleculeShotRequest(origin, direction, kind));
+            ShotRequested?.Invoke(new BattleMoleculeShotRequest(origin, direction, kind, shotSequenceId));
         }
 
         protected static Vector3 NormalizeShotDirection(Vector3 direction)

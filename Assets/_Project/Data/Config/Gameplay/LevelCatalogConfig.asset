@@ -187,7 +187,7 @@ MonoBehaviour:
       <EnemyId>k__BackingField: 1
       <MaxHealthOverride>k__BackingField: 0
       <CoreCollisionDamageOverride>k__BackingField: 0
-      <SpawnCount>k__BackingField: 3
+      <SpawnCount>k__BackingField: 5
       <SpawnLimit>k__BackingField: 0
     - <StartTimeSeconds>k__BackingField: 36
       <EndTimeSeconds>k__BackingField: 40
@@ -225,7 +225,7 @@ MonoBehaviour:
       <EnemyId>k__BackingField: 1
       <MaxHealthOverride>k__BackingField: 0
       <CoreCollisionDamageOverride>k__BackingField: 0
-      <SpawnCount>k__BackingField: 3
+      <SpawnCount>k__BackingField: 5
       <SpawnLimit>k__BackingField: 0
     - <StartTimeSeconds>k__BackingField: 12
       <EndTimeSeconds>k__BackingField: 40

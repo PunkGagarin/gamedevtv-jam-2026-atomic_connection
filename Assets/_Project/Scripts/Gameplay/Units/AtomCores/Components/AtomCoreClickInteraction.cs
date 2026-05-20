@@ -98,10 +98,10 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
 
         private bool CanAutoClick()
         {
-            if (_talentService == null || !_talentService.IsUnlocked(TalentType.CoreAutoGeneration))
+            if (_talentService == null || !_talentService.IsUnlocked(TalentType.AutoClick))
                 return false;
 
-            // Автогенерация намеренно работает только при наведении на ядро.
+            // Автоклик намеренно работает только при наведении на ядро.
             if (!IsPointerOverCore())
                 return false;
 

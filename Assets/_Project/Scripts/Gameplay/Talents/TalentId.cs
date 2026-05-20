@@ -3,7 +3,7 @@ namespace _Project.Scripts.Gameplay.Talents
     public enum TalentId
     {
         CoreHealthSmall = 0,
-        CoreAutoGeneration = 1,
+        AutoClick = 1,
         CoreClickReduction = 2,
         CoreHealthLarge = 3,
         PrimaryMoleculeDamageSmall = 4,

@@ -3,7 +3,6 @@ using _Project.Scripts.Gameplay.Drag;
 using _Project.Scripts.Gameplay.Common.Physics;
 using _Project.Scripts.Gameplay.Common.Time;
 using _Project.Scripts.Gameplay.Enemies;
-using _Project.Scripts.Gameplay.Input.Service;
 using _Project.Scripts.Gameplay.Talents;
 using _Project.Scripts.Gameplay.Units.AtomCores;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
@@ -19,8 +18,10 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
         private readonly List<BattleMolecule> _trackedMolecules = new();
         private readonly List<EnemyHit> _enemyHits = new();
+        private readonly List<FreeAtom> _coreAtoms = new();
         private bool _isStarted;
         private float _autoLoadTimer;
+        private int _nextAutoLoadMoleculeIndex;
 
         [Inject] private IBattleMoleculeFactory _battleMoleculeFactory;
         [Inject] private IPhysicsService _physicsService;
@@ -28,7 +29,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         [Inject] private IAtomCoreService _atomCoreService;
         [Inject] private BattleMoleculeConfig _config;
         [Inject] private ITalentService _talentService;
-        [Inject] private IInputService _inputService;
         [Inject] private IDragService _dragService;
 
         public void Start()
@@ -82,7 +82,9 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             }
 
             _trackedMolecules.Clear();
+            _coreAtoms.Clear();
             _autoLoadTimer = 0f;
+            _nextAutoLoadMoleculeIndex = 0;
         }
 
         private void TrackMolecule(BattleMolecule molecule)
@@ -181,12 +183,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
         private bool CanAutoLoad()
         {
-            if (_inputService != null && _inputService.GetLeftMouseButtonRaw())
-                return false;
-
-            if (_dragService != null && _dragService.IsDragActive)
-                return false;
-
             return _talentService.IsUnlocked(TalentType.PrimaryMoleculeAutoLoad) ||
                    _talentService.IsUnlocked(TalentType.ShieldAutoLoad) ||
                    _talentService.IsUnlocked(TalentType.AreaMoleculeAutoLoad);
@@ -199,19 +195,55 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             if (core == null || core.OwnedAtoms == null)
                 return;
 
-            foreach (BattleMolecule molecule in _battleMoleculeFactory.CreatedMolecules)
+            IReadOnlyList<BattleMolecule> molecules = _battleMoleculeFactory.CreatedMolecules;
+            int moleculeCount = molecules.Count;
+            if (moleculeCount == 0)
+                return;
+
+            _nextAutoLoadMoleculeIndex %= moleculeCount;
+            int startIndex = _nextAutoLoadMoleculeIndex;
+
+            for (int offset = 0; offset < moleculeCount; offset++)
             {
+                int moleculeIndex = (startIndex + offset) % moleculeCount;
+                BattleMolecule molecule = molecules[moleculeIndex];
+
                 if (molecule == null)
                     continue;
 
                 if (!CanAutoLoadMolecule(molecule))
                     continue;
 
-                if (!core.OwnedAtoms.TryGetFirstOwned(FreeAtomOwnerKind.Core, out FreeAtom atom))
+                if (!TryGetAutoLoadAtom(core, out FreeAtom atom))
                     return;
 
-                molecule.TryAutoLoadAtom(atom);
+                if (molecule.TryAutoLoadAtom(atom))
+                    _nextAutoLoadMoleculeIndex = (moleculeIndex + 1) % moleculeCount;
             }
+        }
+
+        private bool TryGetAutoLoadAtom(AtomCore core, out FreeAtom atom)
+        {
+            atom = null;
+
+            if (core == null || core.OwnedAtoms == null)
+                return false;
+
+            core.OwnedAtoms.GetOwned(FreeAtomOwnerKind.Core, _coreAtoms);
+
+            foreach (FreeAtom candidate in _coreAtoms)
+            {
+                if (candidate == null)
+                    continue;
+
+                if (_dragService != null && _dragService.IsReserved(candidate))
+                    continue;
+
+                atom = candidate;
+                return true;
+            }
+
+            return false;
         }
 
         private bool CanAutoLoadMolecule(BattleMolecule molecule)

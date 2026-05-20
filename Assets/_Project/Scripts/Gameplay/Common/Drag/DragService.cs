@@ -26,6 +26,12 @@ namespace _Project.Scripts.Gameplay.Drag
         public bool DragWasStartedThisPress => _dragWasStartedThisPress;
         public bool IsDragActive => IsDragging || HasPendingDrag;
 
+        public bool IsReserved(IDraggable draggable)
+        {
+            return draggable != null &&
+                   (_currentDraggable == draggable || _pendingCandidate.Draggable == draggable);
+        }
+
         public void Update()
         {
             Camera camera = _cameraProvider.MainCamera;

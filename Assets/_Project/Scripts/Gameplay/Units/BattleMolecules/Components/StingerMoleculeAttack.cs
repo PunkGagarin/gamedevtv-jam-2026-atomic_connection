@@ -10,6 +10,9 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
     {
         private readonly List<EnemyHit> _enemyHits = new();
 
+        protected override TalentType DamageTalentType => TalentType.StingerMoleculeDamage;
+        protected override TalentType AutoLoadTalentType => TalentType.StingerMoleculeAutoLoad;
+
         protected override void OnDisable()
         {
             base.OnDisable();
@@ -34,7 +37,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
                     continue;
 
                 lastDamagedHitPoint = _enemyHits[i].Point;
-                Damage(target, request.Kind, request.Origin);
+                Damage(target, request.Origin);
                 damagedTargets++;
             }
 

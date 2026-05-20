@@ -144,6 +144,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b86d8a29fa7a482d91c1936f71b78fed, type: 3}
   m_Name:
   m_EditorClassIdentifier:
+  <AimLineWidth>k__BackingField: 0.08
+  <ShotLineWidth>k__BackingField: 0.12
+  <ShotLineLength>k__BackingField: 20
+  <ShotLineSeconds>k__BackingField: 0.12
+  <AimLineSortingOrder>k__BackingField: 10
+  <ShotLineSortingOrder>k__BackingField: 11
+  <AimLineColor>k__BackingField: {r: 1, g: 0.9215686, b: 0.01568628, a: 1}
+  <ShotLineColor>k__BackingField: {r: 0, g: 1, b: 1, a: 1}
 --- !u!114 &11400007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -158,6 +166,8 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   <Charge>k__BackingField: {fileID: 11400002}
   <PulseTarget>k__BackingField: {fileID: 400001}
+  <PulseScale>k__BackingField: 1.18
+  <PulseDuration>k__BackingField: 0.45
 --- !u!114 &11400008
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,5 +1,4 @@
 using _Project.Scripts.Gameplay.Units.BattleMolecules.Components;
-using _Project.Scripts.Gameplay.Units.AtomCores;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
 
@@ -21,7 +20,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         [field: SerializeField] private BattleMoleculeAtomOrbit AtomOrbit { get; set; }
         [field: SerializeField] private BattleMoleculeCoreOrbit CoreOrbit { get; set; }
         [field: SerializeField] private BattleMoleculeShotQueue ShotQueue { get; set; }
-        [field: SerializeField] private MembraneMoleculeActivation MembraneActivation { get; set; }
         [field: SerializeField] public Collider2D CollisionCollider { get; private set; }
 
         public BattleMoleculeKind Kind { get; private set; } = BattleMoleculeKind.Stinger;
@@ -48,9 +46,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
             if (ShotQueue == null)
                 ShotQueue = GetComponent<BattleMoleculeShotQueue>();
-
-            if (MembraneActivation == null)
-                MembraneActivation = GetComponent<MembraneMoleculeActivation>();
 
             if (CollisionCollider == null)
                 CollisionCollider = GetComponent<Collider2D>();
@@ -80,17 +75,11 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         {
             AtomOrbit.Tick(deltaTime);
             CoreOrbit.Tick(deltaTime);
-            MembraneActivation?.Tick();
         }
 
         public bool TryAutoLoadAtom(FreeAtom atom)
         {
             return AtomReceiver != null && AtomReceiver.TryAcceptAtom(atom);
-        }
-
-        public void ConfigureMembrane(AtomCore core, float duration, float secondsLostPerDamage)
-        {
-            MembraneActivation?.Configure(core, duration, secondsLostPerDamage);
         }
     }
 }

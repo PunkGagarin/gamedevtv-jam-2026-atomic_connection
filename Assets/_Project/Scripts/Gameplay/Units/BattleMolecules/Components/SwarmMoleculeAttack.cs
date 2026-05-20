@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Enemies;
+using _Project.Scripts.Gameplay.Talents;
 using _Project.Scripts.Gameplay.Units.BattleMolecules;
 using UnityEngine;
 
@@ -10,6 +11,9 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         private readonly List<EnemyHit> _enemyHits = new();
         private readonly HashSet<EnemyUnit> _shotSequenceHits = new();
         private int _currentShotSequenceId = -1;
+
+        protected override TalentType DamageTalentType => TalentType.SwarmMoleculeDamage;
+        protected override TalentType AutoLoadTalentType => TalentType.SwarmMoleculeAutoLoad;
 
         protected override void OnDisable()
         {
@@ -35,7 +39,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
                 if (target == null || _shotSequenceHits.Contains(target))
                     continue;
 
-                Damage(target, request.Kind, request.Origin);
+                Damage(target, request.Origin);
                 _shotSequenceHits.Add(target);
             }
         }

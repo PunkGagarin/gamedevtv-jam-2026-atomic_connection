@@ -13,6 +13,9 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         [field: SerializeField, Min(0f)] public float DepositedAtomsOrbitDegreesPerSecond { get; private set; } = 90f;
         [field: SerializeField, Min(0f)] public float CoreOrbitDegreesPerSecond { get; private set; } = 45f;
 
+        [field: Header("Auto Load")]
+        [field: SerializeField, Min(0.01f)] public float AutoLoadIntervalSeconds { get; private set; } = 2f;
+
         [field: Header("Membrane Molecule")]
         [field: SerializeField] public Vector2 MembraneMoleculeSpawnOffset { get; private set; } = new(0f, -2f);
         [field: SerializeField, Min(1)] public int MembraneMoleculeAtomsRequired { get; private set; } = 3;

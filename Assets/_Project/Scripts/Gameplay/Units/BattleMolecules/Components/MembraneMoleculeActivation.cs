@@ -1,14 +1,15 @@
 using UnityEngine;
+using _Project.Scripts.Gameplay.Talents;
 using _Project.Scripts.Gameplay.Units;
+using _Project.Scripts.Gameplay.Units.BattleMolecules;
 using _Project.Scripts.Gameplay.UI;
-using _Project.Scripts.Gameplay.Units.AtomCores;
 using _Project.Scripts.Gameplay.Units.AtomCores.Components;
 
 namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
     [RequireComponent(typeof(OwnedAtoms))]
     [RequireComponent(typeof(BattleMoleculeCharge))]
-    public class MembraneMoleculeActivation : MonoBehaviour
+    public class MembraneMoleculeActivation : MonoBehaviour, IBattleMoleculeRuntimeBehavior, IBattleMoleculeAutoLoadRule
     {
         [field: SerializeField] private OwnedAtoms OwnedAtoms { get; set; }
         [field: SerializeField] private BattleMoleculeCharge Charge { get; set; }
@@ -41,14 +42,22 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
                 Charge.Charged -= ActivateMembrane;
         }
 
-        public void Configure(AtomCore core, float duration, float secondsLostPerDamage)
+        public void Configure(BattleMoleculeRuntimeContext context)
         {
-            _coreMembrane = core != null ? core.GetComponent<AtomCoreShield>() : null;
-            _duration = Mathf.Max(0.01f, duration);
-            _secondsLostPerDamage = Mathf.Max(0f, secondsLostPerDamage);
+            _coreMembrane = context.Core != null ? context.Core.GetComponent<AtomCoreShield>() : null;
+
+            float durationBonus = context.BonusOf(TalentType.MembraneMoleculeDuration);
+
+            _duration = context.Config != null
+                ? Mathf.Max(0.01f, context.Config.MembraneDurationSeconds + durationBonus)
+                : 0.01f;
+
+            _secondsLostPerDamage = context.Config != null
+                ? Mathf.Max(0f, context.Config.MembraneSecondsLostPerDamage)
+                : 0f;
         }
 
-        public void Tick()
+        public void Tick(float deltaTime)
         {
             if (_coreMembrane == null || !_coreMembrane.IsActive)
             {
@@ -57,6 +66,11 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             }
 
             ShowProgress(_coreMembrane.NormalizedTime);
+        }
+
+        public bool CanAutoLoad(BattleMoleculeRuntimeContext context)
+        {
+            return context.IsUnlocked(TalentType.MembraneMoleculeAutoLoad);
         }
 
         private void ActivateMembrane()

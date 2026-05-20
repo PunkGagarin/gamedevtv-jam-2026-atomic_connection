@@ -18,6 +18,7 @@ MonoBehaviour:
   <AtomsPosCircleRadius>k__BackingField: 0.6
   <DepositedAtomsOrbitDegreesPerSecond>k__BackingField: 90
   <CoreOrbitDegreesPerSecond>k__BackingField: 20
+  <AutoLoadIntervalSeconds>k__BackingField: 2
   <MembraneMoleculeSpawnOffset>k__BackingField: {x: 0, y: -2}
   <MembraneMoleculeAtomsRequired>k__BackingField: 3
   <MembraneDurationSeconds>k__BackingField: 5

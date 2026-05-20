@@ -10,7 +10,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
     [RequireComponent(typeof(BattleMoleculeShotQueue))]
     [RequireComponent(typeof(BattleMoleculeAimLineView))]
-    public abstract class BattleMoleculeAttack : MonoBehaviour
+    public abstract class BattleMoleculeAttack : MonoBehaviour, IBattleMoleculeAutoLoadRule
     {
         private static readonly RaycastHit2D[] ShotHits = new RaycastHit2D[64];
 
@@ -22,6 +22,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         [Inject] protected ITalentService TalentService;
 
         protected BattleMoleculeAimLineView AimLineView => AimLine;
+        protected abstract TalentType DamageTalentType { get; }
+        protected abstract TalentType AutoLoadTalentType { get; }
 
         protected virtual void Awake()
         {
@@ -73,19 +75,21 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             enemyHits.Sort((a, b) => a.Distance.CompareTo(b.Distance));
         }
 
-        protected int CurrentShotDamage(BattleMoleculeShotKind kind)
+        public bool CanAutoLoad(BattleMoleculeRuntimeContext context)
         {
-            TalentType damageType = kind == BattleMoleculeShotKind.Swarm
-                ? TalentType.SwarmMoleculeDamage
-                : TalentType.StingerMoleculeDamage;
-            float bonusDamage = TalentService.BonusOf(damageType);
+            return context.IsUnlocked(AutoLoadTalentType);
+        }
+
+        protected int CurrentShotDamage()
+        {
+            float bonusDamage = TalentService.BonusOf(DamageTalentType);
             return Mathf.Max(1, Config.BaseShotDamage + Mathf.RoundToInt(bonusDamage));
         }
 
-        protected void Damage(EnemyUnit target, BattleMoleculeShotKind kind, Vector3 origin)
+        protected void Damage(EnemyUnit target, Vector3 origin)
         {
             Debug.DrawLine(origin, target.transform.position, Color.yellow, 0.5f);
-            target.TakeDamage(CurrentShotDamage(kind));
+            target.TakeDamage(CurrentShotDamage());
         }
 
         private static bool ContainsEnemy(List<EnemyHit> enemyHits, EnemyUnit enemy)

@@ -36,6 +36,8 @@ This is a Unity project - there is no CLI build command. Open in Unity `6000.4.4
 
 No project-owned automated tests exist under `Assets/_Project`. Manual validation is done by running the game in the Editor.
 
+Do not run `dotnet build`, MSBuild, or generated solution/project builds as routine validation for this Unity project. They are not the project-owned build path and may fail because the local environment lacks a .NET SDK/MSBuild or Unity-generated references. Use Unity Editor validation when available; otherwise use focused static checks/searches and report the Unity/manual validation gap. Only run CLI solution builds when the user explicitly asks for them or a Unity-compatible build pipeline has been confirmed.
+
 ## Repository Rules
 
 - Keep Unity `.meta` files together with their assets and scripts.
@@ -129,6 +131,7 @@ Keep `AGENTS.md` operational and update the architecture notes when current flow
 
 - When possible, validate Unity changes by opening the project in Unity `6000.4.4f1`.
 - For code-only changes, at minimum check affected C# files for compile-time issues and keep scene/prefab references in sync.
+- Do not attempt `dotnet build`/MSBuild as a fallback validation step for ordinary Unity code changes; prefer targeted static inspection and explicit manual validation notes unless the user asks for CLI build validation.
 - If adding or moving Unity assets, ensure corresponding `.meta` files are present and Unity-valid. Script `.cs.meta` files should contain a `MonoImporter` block, folder `.meta` files should contain `folderAsset: yes` and `DefaultImporter`, and new/moved prefabs or assets must keep stable GUID references. Prefer letting Unity generate or refresh these files when possible.
 - Current manual lifecycle/UI validation should include `MainMenu -> Settings -> Apply/Cancel`, `MainMenu -> Update -> TalentTreeWindow`, `MainMenu -> LevelSelector previous/next arrows`, `MainMenu -> Reset`, `MainMenu -> Gameplay`, `GearButton -> GameplayMenuWindow -> Close`, `GearButton -> GameplayMenuWindow -> Restart`, and `GearButton -> GameplayMenuWindow -> MainMenu`.
 - Current gameplay validation should include `Bootstrap -> LoadMainMenuState -> MainMenuState -> LoadGameplayState -> GameplayEnterState -> GameplayLoopState`, `AtomCore` creation at `GameplayStartPoint`, enemy spawning after first gameplay click, `LevelProgressService` completion into `LevelCompleteState -> LevelCompleteWindow`, first-clear isotope reward persistence, no completion-isotope reward on replay, and cleanup when restarting or returning to main menu.

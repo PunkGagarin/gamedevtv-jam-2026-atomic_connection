@@ -9,12 +9,10 @@ namespace _Project.Scripts.Gameplay.Enemies
 {
     public class EnemySpawner : IEnemySpawner
     {
-        private const float GROUP_SPAWN_SPACING = 0.65f;
-        private const float GROUP_SPAWN_JITTER = 0.12f;
-
         [Inject] private IEnemyFactory _enemyFactory;
         [Inject] private ICameraProvider _cameraProvider;
         [Inject] private IRandomService _random;
+        [Inject] private EnemySpawnerConfig _config;
 
         public IReadOnlyList<EnemyUnit> SpawnGroup(
             EnemyDefinition definition,
@@ -60,15 +58,17 @@ namespace _Project.Scripts.Gameplay.Enemies
             float axisMin = verticalSide ? bottomLeft.y : bottomLeft.x;
             float axisMax = verticalSide ? topRight.y : topRight.x;
             float axisLength = axisMax - axisMin;
-            float groupSpan = Mathf.Min(axisLength, (Mathf.Max(1, count) - 1) * GROUP_SPAWN_SPACING);
+            float groupSpacing = Mathf.Max(0f, _config.GroupSpawnSpacing);
+            float groupJitter = Mathf.Max(0f, _config.GroupSpawnJitter);
+            float groupSpan = Mathf.Min(axisLength, (Mathf.Max(1, count) - 1) * groupSpacing);
             float centerMin = axisMin + groupSpan * 0.5f;
             float centerMax = axisMax - groupSpan * 0.5f;
             float center = centerMin >= centerMax ? (axisMin + axisMax) * 0.5f : _random.Range(centerMin, centerMax);
 
             for (int i = 0; i < count; i++)
             {
-                float offset = count <= 1 ? 0f : (i - (count - 1) * 0.5f) * GROUP_SPAWN_SPACING;
-                float jitter = count <= 1 ? 0f : _random.Range(-GROUP_SPAWN_JITTER, GROUP_SPAWN_JITTER);
+                float offset = count <= 1 ? 0f : (i - (count - 1) * 0.5f) * groupSpacing;
+                float jitter = count <= 1 ? 0f : _random.Range(-groupJitter, groupJitter);
                 float axisValue = Mathf.Clamp(center + offset + jitter, axisMin, axisMax);
                 spawnPositions.Add(PositionOnSide(side, axisValue, bottomLeft, topRight, padding, target.position.z));
             }

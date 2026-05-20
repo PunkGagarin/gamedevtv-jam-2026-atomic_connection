@@ -16,7 +16,6 @@ GameObject:
   - component: {fileID: 11400004}
   - component: {fileID: 11400003}
   - component: {fileID: 11400006}
-  - component: {fileID: 11400007}
   m_Layer: 0
   m_Name: MassEnemyUnit
   m_TagString: Untagged
@@ -92,7 +91,6 @@ MonoBehaviour:
   <Health>k__BackingField: {fileID: 11400001}
   <Movement>k__BackingField: {fileID: 11400002}
   <CoreCollision>k__BackingField: {fileID: 11400004}
-  <CurrencyDropPopupView>k__BackingField: {fileID: 11400007}
 --- !u!114 &11400001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -160,18 +158,6 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier:
   <Health>k__BackingField: {fileID: 11400001}
---- !u!114 &11400007
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4a16c17be5e41b1891061cb0268464a, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
 --- !u!1 &8954845912983384912
 GameObject:
   m_ObjectHideFlags: 0

@@ -3,6 +3,7 @@ using _Project.Scripts.Gameplay.Common.Physics;
 using _Project.Scripts.Gameplay.Common.Random;
 using _Project.Scripts.Gameplay.Common.Time;
 using _Project.Scripts.Gameplay.Currencies;
+using _Project.Scripts.Gameplay.CurrencyDrops;
 using _Project.Scripts.Gameplay.Drag;
 using _Project.Scripts.Gameplay.Enemies;
 using _Project.Scripts.Gameplay.Input.Service;
@@ -39,6 +40,7 @@ namespace _Project.Scripts.Infrastructure
             BindDragService();
             BindSaveLoad();
             BindCurrencyService();
+            BindCurrencyPickupService();
             BindTalentService();
             BindAtomCoreGameplay();
             BindLevelProgress();
@@ -70,6 +72,11 @@ namespace _Project.Scripts.Infrastructure
         private void BindCurrencyService()
         {
             Container.Bind<ICurrencyService>().To<CurrencyService>().AsSingle();
+        }
+
+        private void BindCurrencyPickupService()
+        {
+            Container.Bind<ICurrencyPickupService>().To<CurrencyPickupService>().AsSingle();
         }
 
         private void BindTalentService()

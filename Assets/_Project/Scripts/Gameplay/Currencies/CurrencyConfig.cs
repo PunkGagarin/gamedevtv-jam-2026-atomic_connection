@@ -7,7 +7,6 @@ namespace _Project.Scripts.Gameplay.Currencies
     {
         [field: SerializeField, Min(0)] public int StartingNucleotides { get; private set; } = 500;
         [field: SerializeField, Min(0)] public int StartingIsotopes { get; private set; } = 3;
-        [field: SerializeField, Range(0, 100)] public int RegularEnemyIsotopeDropChancePercent { get; private set; } = 10;
 
         public CurrencyAmount StartingAmount(CurrencyId currencyId)
         {

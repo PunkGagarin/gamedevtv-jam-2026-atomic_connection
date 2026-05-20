@@ -1,8 +1,6 @@
 using System;
 using _Project.Scripts.Gameplay.Common.Health;
-using _Project.Scripts.Gameplay.Currencies;
 using _Project.Scripts.Gameplay.Enemies.Components;
-using _Project.Scripts.Gameplay.Feedback;
 using _Project.Scripts.Gameplay.Units.AtomCores;
 using UnityEngine;
 
@@ -16,7 +14,6 @@ namespace _Project.Scripts.Gameplay.Enemies
         [field: SerializeField] private Health Health { get; set; }
         [field: SerializeField] private EnemyMovement Movement { get; set; }
         [field: SerializeField] private EnemyCoreCollision CoreCollision { get; set; }
-        [field: SerializeField] private CurrencyDropPopupView CurrencyDropPopupView { get; set; }
 
         private EnemyDefinition _definition;
         private int _coreCollisionDamage = 1;
@@ -39,9 +36,6 @@ namespace _Project.Scripts.Gameplay.Enemies
 
             if (CoreCollision == null)
                 CoreCollision = GetComponent<EnemyCoreCollision>();
-
-            if (CurrencyDropPopupView == null)
-                CurrencyDropPopupView = GetComponent<CurrencyDropPopupView>();
 
             if (Health != null)
                 Health.Died += OnHealthDied;
@@ -132,11 +126,6 @@ namespace _Project.Scripts.Gameplay.Enemies
                 Health.TakeDamage(amount);
             else
                 Kill();
-        }
-
-        public void ShowCurrencyDrop(CurrencyAmount reward)
-        {
-            CurrencyDropPopupView?.Show(reward);
         }
 
         private void OnHealthDied()

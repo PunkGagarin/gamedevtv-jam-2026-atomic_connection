@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Common.Physics;
-using _Project.Scripts.Gameplay.Common.Random;
 using _Project.Scripts.Gameplay.Common.Time;
 using _Project.Scripts.Gameplay.Currencies;
+using _Project.Scripts.Gameplay.CurrencyDrops;
 using _Project.Scripts.Gameplay.Levels;
 using UnityEngine;
 using Zenject;
@@ -29,9 +29,7 @@ namespace _Project.Scripts.Gameplay.Enemies
         [Inject] private ILevelSelectionService _levelSelectionService;
         [Inject] private ITimeService _time;
         [Inject] private IPhysicsService _physicsService;
-        [Inject] private IRandomService _random;
-        [Inject] private ICurrencyService _currencyService;
-        [Inject] private CurrencyConfig _currencyConfig;
+        [Inject] private ICurrencyPickupService _currencyPickupService;
 
         public event Action BossKilled;
 
@@ -170,27 +168,15 @@ namespace _Project.Scripts.Gameplay.Enemies
 
         private void OnEnemyKilled(EnemyUnit enemy)
         {
-            _currencyService.Add(new CurrencyAmount(CurrencyId.Nucleotides, enemy.NucleotideReward));
-
             if (enemy.Id == EnemyId.Boss)
             {
                 BossKilled?.Invoke();
                 return;
             }
 
-            TryDropIsotope(enemy);
-        }
-
-        private void TryDropIsotope(EnemyUnit enemy)
-        {
-            int chancePercent = Mathf.Clamp(_currencyConfig.RegularEnemyIsotopeDropChancePercent, 0, 100);
-
-            if (chancePercent <= 0 || _random.Range(0, 100) >= chancePercent)
-                return;
-
-            CurrencyAmount reward = new(CurrencyId.Isotopes, 1);
-            _currencyService.Add(reward);
-            enemy.ShowCurrencyDrop(reward);
+            _currencyPickupService.Spawn(
+                new CurrencyAmount(CurrencyId.Nucleotides, enemy.NucleotideReward),
+                enemy.transform.position);
         }
 
         private void UnsubscribeFromActiveEnemies()

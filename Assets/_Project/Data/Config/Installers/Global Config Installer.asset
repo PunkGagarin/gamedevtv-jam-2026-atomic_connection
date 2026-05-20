@@ -19,5 +19,6 @@ MonoBehaviour:
   <TalentConfig>k__BackingField: {fileID: 11400000, guid: 907e1edd1c3d47638316a956996ea18a, type: 2}
   <TalentTreeAnimationConfig>k__BackingField: {fileID: 11400000, guid: bce6bf2d4dd9419f8e7e472943c48fb5, type: 2}
   <CurrencyConfig>k__BackingField: {fileID: 11400000, guid: 4e47a6bb826243b1a314bea1d9693ab1, type: 2}
+  <CurrencyPickupConfig>k__BackingField: {fileID: 11400000, guid: 85e0cc7119bb4db88d4d8a5e943c68a3, type: 2}
   <LevelCatalogConfig>k__BackingField: {fileID: 11400000, guid: 696754ed6692444f991514347fbe7515, type: 2}
   <EnemySpawnerConfig>k__BackingField: {fileID: 11400000, guid: 8d489ee3818740e1a19a1216fd2de532, type: 2}

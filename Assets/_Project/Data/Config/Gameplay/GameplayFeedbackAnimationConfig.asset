@@ -21,13 +21,3 @@ MonoBehaviour:
   <DamagePopupRiseDistance>k__BackingField: 0.65
   <DamagePopupDuration>k__BackingField: 0.55
   <DamagePopupSortingOrder>k__BackingField: 50
-  <IsotopeDropIcon>k__BackingField: {fileID: 21300000, guid: 2ed045dbe25a49b689caf9471eeec349, type: 3}
-  <CurrencyDropPopupWorldOffset>k__BackingField: {x: 0, y: 1.05, z: 0}
-  <CurrencyDropPopupTextColor>k__BackingField: {r: 0.55, g: 1, b: 1, a: 1}
-  <CurrencyDropPopupIconColor>k__BackingField: {r: 1, g: 1, b: 1, a: 1}
-  <CurrencyDropPopupFontSize>k__BackingField: 0.5
-  <CurrencyDropPopupRiseDistance>k__BackingField: 0.75
-  <CurrencyDropPopupDuration>k__BackingField: 0.7
-  <CurrencyDropPopupStartScale>k__BackingField: 0.75
-  <CurrencyDropPopupPulseScale>k__BackingField: 1.15
-  <CurrencyDropPopupSortingOrder>k__BackingField: 60

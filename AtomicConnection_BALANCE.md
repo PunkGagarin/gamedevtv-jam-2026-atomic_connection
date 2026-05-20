@@ -70,7 +70,28 @@
 | Standard | `Gameplay/Enemies/EnemyUnit` | 1 | 1.0 | 1 | нет | 5 ДНК |
 | Mass | `Gameplay/Enemies/MassEnemyUnit` | 1 | 1.3 | 1 | нет | 4 ДНК |
 | Elite | `Gameplay/Enemies/EliteEnemyUnit` | 2 | 0.75 | 1 | нет | 8 ДНК |
-| Boss | `Gameplay/Enemies/BossEnemyUnit` | 3 | 0.5 | 2 | да | 15 ДНК |
+| Boss | `Gameplay/Enemies/BossEnemyUnit` | 3 | 0.5 | 2 | да | нет; завершает уровень |
+
+### Pickup ДНК
+
+Эти значения сейчас представлены в `CurrencyPickupConfig`.
+
+| Значение | Сейчас |
+|---|---:|
+| Prefab resource path pickup-а валюты | `Gameplay/CurrencyDrops/CurrencyPickup` |
+| Режим отображения pickup-а | `OnePickupPerUnit` |
+| Радиус hover-сбора pickup-а | 0.35 |
+| Радиус случайного разброса при появлении каждой иконки | 0.3 |
+| Scale prefab-а pickup-а | 0.9 |
+| Idle scale animation pickup-а | включена |
+| Idle scale multiplier pickup-а | 1.12 |
+| Idle scale duration pickup-а | 0.55 сек |
+| Scale multiplier иконки при сборе | 1.35 |
+| Длительность scale-up иконки при сборе | 0.12 сек |
+| Смещение popup сбора pickup-а в режиме `SinglePickupWithAmount` | `(0, 0.55, 0)` |
+| Подъём popup сбора pickup-а в режиме `SinglePickupWithAmount` | 0.45 |
+| Длительность popup сбора pickup-а в режиме `SinglePickupWithAmount` | 0.45 сек |
+| Pulse scale popup сбора pickup-а в режиме `SinglePickupWithAmount` | 1.15 |
 
 ### Анимации gameplay feedback
 
@@ -87,18 +108,6 @@
 | Подъём popup урона | 0.65 |
 | Длительность popup урона | 0.55 сек |
 | Sorting order popup урона | 50 |
-| Смещение popup дропа валюты над объектом | `(0, 1.05, 0)` |
-| Цвет текста popup дропа валюты | `(0.55, 1, 1, 1)` |
-| Цвет иконки popup дропа валюты | `(1, 1, 1, 1)` |
-| Размер шрифта popup дропа валюты | 0.5 |
-| Подъём popup дропа валюты | 0.75 |
-| Длительность popup дропа валюты | 0.7 сек |
-| Start scale popup дропа валюты | 0.75 |
-| Pulse scale popup дропа валюты | 1.15 |
-| Смещение текста popup дропа валюты | `(0.1, 0, 0)` |
-| Смещение иконки popup дропа валюты | `(-0.1, 0, 0)` |
-| Scale иконки popup дропа валюты | `(0.16, 0.16, 0.16)` |
-| Sorting order popup дропа валюты | 60 |
 
 ## Целевой дизайн-баланс
 
@@ -175,7 +184,6 @@
 | Урон Swarm II | 1 | `160` ДНК | требует SwarmMolecule и Заряд Swarm; `+10` урона SwarmMolecule |
 
 Стартовый запас валют представлен в `CurrencyConfig`: `0` ДНК и `0` изотопов.
-Шанс выпадения `1` изотопа с не-боссового врага представлен в `CurrencyConfig`: `0%`.
 
 ### Анимации дерева талантов
 

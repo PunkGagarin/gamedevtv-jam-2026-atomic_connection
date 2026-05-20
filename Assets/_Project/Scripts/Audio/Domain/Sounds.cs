@@ -4,5 +4,6 @@ namespace _Project.Scripts.Audio.Domain
     {
         buttonClick = 1,
         buttonClickShortHigh = 2,
+        currencyPickup = 3,
     }
 }

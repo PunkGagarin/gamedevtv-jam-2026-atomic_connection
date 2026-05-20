@@ -29,6 +29,7 @@ namespace _Project.Scripts.Gameplay.Talents
         [field: SerializeField, Min(0.1f)] private float MinZoom { get; set; } = 0.55f;
         [field: SerializeField, Min(0.1f)] private float MaxZoom { get; set; } = 1.6f;
         [field: SerializeField, Min(0.01f)] private float ZoomStep { get; set; } = 0.12f;
+        [field: SerializeField, Min(0f)] private float TooltipViewportPadding { get; set; } = 12f;
 
         [Inject] private ITalentService _talentService;
         [Inject] private ICurrencyService _currencyService;
@@ -96,9 +97,10 @@ namespace _Project.Scripts.Gameplay.Talents
             TooltipTitleLabel.text = talent.Title;
             TooltipDescriptionLabel.text = talent.Description;
             TooltipPanel.gameObject.SetActive(true);
-            TooltipPanel.anchoredPosition = NodesRoot.anchoredPosition +
-                                            nodeTransform.anchoredPosition * _zoom +
-                                            _animationConfig.TooltipOffset;
+            TooltipPanel.anchoredPosition = ClampedTooltipPosition(
+                NodesRoot.anchoredPosition +
+                nodeTransform.anchoredPosition * _zoom +
+                _animationConfig.TooltipOffset);
 
             _tooltipTween?.Kill();
             TooltipPanel.localScale = new Vector3(
@@ -454,6 +456,30 @@ namespace _Project.Scripts.Gameplay.Talents
         {
             RectTransform parent = NodesRoot.parent as RectTransform;
             return parent != null ? parent.rect.size * 0.5f : Vector2.zero;
+        }
+
+        private Vector2 ClampedTooltipPosition(Vector2 position)
+        {
+            RectTransform parent = TooltipPanel.parent as RectTransform;
+            if (parent == null)
+                return position;
+
+            Vector2 parentSize = parent.rect.size;
+            Vector2 tooltipSize = TooltipPanel.rect.size;
+            Vector2 pivot = TooltipPanel.pivot;
+            float padding = Mathf.Max(0f, TooltipViewportPadding);
+            float minX = -parentSize.x * 0.5f + tooltipSize.x * pivot.x + padding;
+            float maxX = parentSize.x * 0.5f - tooltipSize.x * (1f - pivot.x) - padding;
+            float minY = -parentSize.y * 0.5f + tooltipSize.y * pivot.y + padding;
+            float maxY = parentSize.y * 0.5f - tooltipSize.y * (1f - pivot.y) - padding;
+
+            if (minX <= maxX)
+                position.x = Mathf.Clamp(position.x, minX, maxX);
+
+            if (minY <= maxY)
+                position.y = Mathf.Clamp(position.y, minY, maxY);
+
+            return position;
         }
 
         private void SetGraphPanPosition(Vector2 position)

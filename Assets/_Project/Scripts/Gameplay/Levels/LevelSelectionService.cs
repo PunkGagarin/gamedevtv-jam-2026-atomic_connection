@@ -43,15 +43,16 @@ namespace _Project.Scripts.Gameplay.Levels
             SetSelectedLevel(SelectedLevel + 1);
         }
 
-        public void CompleteSelectedLevel()
+        public bool CompleteSelectedLevel()
         {
             ProgressData progressData = _progressProvider.ProgressData;
 
             if (SelectedLevel <= progressData.CompletedLevelCount)
-                return;
+                return false;
 
             progressData.CompletedLevelCount = SelectedLevel;
             SetSelectedLevel(HighestUnlockedLevel);
+            return true;
         }
 
         public void ResetProgress()

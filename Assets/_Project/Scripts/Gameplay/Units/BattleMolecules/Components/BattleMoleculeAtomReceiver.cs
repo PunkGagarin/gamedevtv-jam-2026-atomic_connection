@@ -7,7 +7,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
     [RequireComponent(typeof(OwnedAtoms))]
     [RequireComponent(typeof(BattleMoleculeCharge))]
-    public class BattleMoleculeAtomReceiver : MonoBehaviour, IDropTarget
+    public class BattleMoleculeAtomReceiver : MonoBehaviour
     {
         [field: SerializeField] private OwnedAtoms OwnedAtoms { get; set; }
         [field: SerializeField] private BattleMoleculeCharge Charge { get; set; }
@@ -26,7 +26,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             return draggable is FreeAtom && Charge.CanReceiveAtom(OwnedAtoms.Count);
         }
 
-        public void OnDropAccepted(IDraggable draggable)
+        public void AcceptDrop(IDraggable draggable)
         {
             if (draggable is not FreeAtom freeAtom)
                 return;
@@ -48,10 +48,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             Charge.RegisterAtomCount(OwnedAtoms.Count);
 
             return true;
-        }
-
-        public void OnDropRejected(IDraggable draggable)
-        {
         }
 
         private static void DisableCollider(FreeAtom freeAtom)

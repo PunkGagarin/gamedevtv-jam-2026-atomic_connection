@@ -109,8 +109,8 @@ such as `StingerMoleculeAttack` and `SwarmMoleculeAttack` to resolve
 local shot requests into raycasts, enemy damage, and shot-line feedback.
 
 `LevelProgressService` owns completion reward/unlock, marks the selected level
-complete through `ILevelSelectionService`, grants reward through
-`CurrencyService`, and raises completion for state transition.
+complete through `ILevelSelectionService`, grants first-clear completion reward
+through `CurrencyService`, and raises completion for state transition.
 
 ## UI And Windows
 

@@ -59,7 +59,7 @@ namespace _Project.Scripts.Gameplay.Talents
 
             HideTooltip();
             BuildGraph();
-            Refresh();
+            Refresh(false);
         }
 
         protected override void SubscribeUpdates()
@@ -206,51 +206,89 @@ namespace _Project.Scripts.Gameplay.Talents
             _graphContentHalfSize = Vector2.Max(contentHalfSize, NodesRoot.rect.size * 0.5f);
         }
 
-        private void Refresh()
+        private void Refresh() =>
+            Refresh(true);
+
+        private void Refresh(bool animateNewVisibleNodes)
         {
             bool hasBoughtTalents = _talentService.Talents.Any(talent => _talentService.LevelOf(talent.Id) > 0);
             ResetRevealCacheIfProgressWasReset(hasBoughtTalents);
 
+            List<TalentDefinition> newlyVisibleTalents = RefreshTalentNodes(animateNewVisibleNodes);
+            RefreshConnections();
+            PlayNodeRevealQueue(newlyVisibleTalents);
+            _lastRefreshHadBoughtTalents = hasBoughtTalents;
+        }
+
+        private List<TalentDefinition> RefreshTalentNodes(bool animateNewVisibleNodes)
+        {
             List<TalentDefinition> newlyVisibleTalents = new();
 
             foreach (TalentDefinition talent in _talentService.Talents)
-            {
-                int level = _talentService.LevelOf(talent.Id);
-                bool prerequisitesBought = PrerequisitesBought(talent);
-                bool canBuy = _talentService.CanBuy(talent.Id);
-                TalentNodeViewState viewState = ViewStateFor(talent, level, prerequisitesBought, canBuy);
-                bool shouldBeVisible = ShouldBeVisible(talent, level, prerequisitesBought);
-                bool wasVisible = _visibleNodes.Contains(talent.Id);
-
-                if (shouldBeVisible)
-                    _visibleNodes.Add(talent.Id);
-                else
-                    _visibleNodes.Remove(talent.Id);
-
-                _nodesById[talent.Id].Refresh(
-                    talent,
-                    level,
-                    viewState,
-                    _currencyService.Format(talent.PriceForLevel(level)));
-
-                bool shouldAnimateReveal = shouldBeVisible &&
-                                           !wasVisible &&
-                                           !_revealedTalentIds.Contains(talent.Id);
-
-                if (shouldAnimateReveal)
-                {
+                if (RefreshTalentNode(talent, animateNewVisibleNodes))
                     newlyVisibleTalents.Add(talent);
-                    _revealingNodes.Add(talent.Id);
-                    _revealedTalentIds.Add(talent.Id);
-                    _nodesById[talent.Id].SetVisible(false);
-                }
-                else
-                {
-                    if (!_revealingNodes.Contains(talent.Id))
-                        _nodesById[talent.Id].SetVisible(shouldBeVisible);
-                }
+
+            return newlyVisibleTalents;
+        }
+
+        private bool RefreshTalentNode(TalentDefinition talent, bool animateNewVisibleNodes)
+        {
+            int level = _talentService.LevelOf(talent.Id);
+            bool prerequisitesBought = PrerequisitesBought(talent);
+            bool canBuy = _talentService.CanBuy(talent.Id);
+            TalentNodeViewState viewState = ViewStateFor(talent, level, prerequisitesBought, canBuy);
+            bool shouldBeVisible = ShouldBeVisible(talent, level, prerequisitesBought);
+            bool wasVisible = _visibleNodes.Contains(talent.Id);
+
+            SetTalentVisibility(talent.Id, shouldBeVisible);
+
+            _nodesById[talent.Id].Refresh(
+                talent,
+                level,
+                viewState,
+                _currencyService.Format(talent.PriceForLevel(level)));
+
+            if (ShouldAnimateReveal(talent.Id, shouldBeVisible, wasVisible, animateNewVisibleNodes))
+            {
+                PrepareNodeReveal(talent.Id);
+                return true;
             }
 
+            if (!_revealingNodes.Contains(talent.Id))
+                _nodesById[talent.Id].SetVisible(shouldBeVisible);
+
+            return false;
+        }
+
+        private void SetTalentVisibility(TalentId talentId, bool shouldBeVisible)
+        {
+            if (shouldBeVisible)
+                _visibleNodes.Add(talentId);
+            else
+                _visibleNodes.Remove(talentId);
+        }
+
+        private bool ShouldAnimateReveal(
+            TalentId talentId,
+            bool shouldBeVisible,
+            bool wasVisible,
+            bool animateNewVisibleNodes)
+        {
+            return shouldBeVisible &&
+                   !wasVisible &&
+                   animateNewVisibleNodes &&
+                   !_revealedTalentIds.Contains(talentId);
+        }
+
+        private void PrepareNodeReveal(TalentId talentId)
+        {
+            _revealingNodes.Add(talentId);
+            _revealedTalentIds.Add(talentId);
+            _nodesById[talentId].SetVisible(false);
+        }
+
+        private void RefreshConnections()
+        {
             foreach (TalentConnectionBinding connection in _connections)
             {
                 bool parentBought = _talentService.LevelOf(connection.ParentId) > 0;
@@ -264,9 +302,6 @@ namespace _Project.Scripts.Gameplay.Talents
 
                 connection.View.Refresh(parentBought, childBought);
             }
-
-            PlayNodeRevealQueue(newlyVisibleTalents);
-            _lastRefreshHadBoughtTalents = hasBoughtTalents;
         }
 
         private bool ShouldBeVisible(TalentDefinition talent, int level, bool prerequisitesBought)

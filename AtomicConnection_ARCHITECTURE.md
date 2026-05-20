@@ -75,6 +75,11 @@ Runtime ownership:
 - Enemy object-internal behavior stays on focused components.
 - `EnemyMovement` moves enemies directly toward the core; prefab-specific
   movement variants such as `MassEnemyArcMovement` own enemy-local path shapes.
+- Enemy-local runtime behaviors implement `IEnemyRuntimeBehavior`; `EnemyUnit`
+  configures and ticks them while `EnemyService` owns the active enemy loop.
+- Ranged enemies use prefab variants: `RangedEnemyStopMovement` owns stopping
+  near the core, `RangedEnemyAttack` owns telegraph, projectile spawn, projectile
+  ticking, and projectile cleanup.
 - `EnemyCoreCollision` resolves normal overlap damage with the atom core while
   ticked through `EnemyUnit` by `EnemyService`.
 - Boss one-shot core collision is a prefab component variant,

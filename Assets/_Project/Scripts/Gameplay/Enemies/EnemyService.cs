@@ -151,6 +151,9 @@ namespace _Project.Scripts.Gameplay.Enemies
             for (int i = _activeEnemies.Count - 1; i >= 0; i--)
                 _activeEnemies[i].TickMovement(deltaTime);
 
+            for (int i = _activeEnemies.Count - 1; i >= 0; i--)
+                _activeEnemies[i].TickRuntimeBehaviors(deltaTime);
+
             _physicsService.SyncTransforms();
 
             for (int i = _activeEnemies.Count - 1; i >= 0; i--)

@@ -70,7 +70,26 @@
 | Standard | `Gameplay/Enemies/EnemyUnit` | 1 | 1.0 | 1 | нет | 5 ДНК |
 | Mass | `Gameplay/Enemies/MassEnemyUnit` | 1 | 1.3 | 1 | нет | 4 ДНК |
 | Elite | `Gameplay/Enemies/EliteEnemyUnit` | 2 | 0.75 | 1 | нет | 8 ДНК |
+| Ranged | `Gameplay/Enemies/RangedEnemyUnit` | 2 | 0.65 | 1 projectile | нет | 7 ДНК |
 | Boss | `Gameplay/Enemies/BossEnemyUnit` | 3 | 0.5 | 2 | да | нет; завершает уровень |
+
+### Ranged Enemy Projectile
+
+Эти значения сейчас представлены в prefab-е `Gameplay/Enemies/RangedEnemyUnit` и projectile prefab-е `Gameplay/Enemies/EnemyProjectile`.
+
+| Значение | Сейчас |
+|---|---:|
+| Stop distance | 3.0 |
+| Stop distance jitter | 1.1 |
+| Attack range | 3.05 |
+| Initial attack delay | 0.8 сек |
+| Attack interval | 2.2 сек |
+| Telegraph duration | 0.18 сек |
+| Telegraph scale multiplier | 1.18 |
+| Projectile speed | 4.0 |
+| Projectile damage | 1 |
+| Projectile lifetime | 4.0 сек |
+| Projectile hit radius | 0.35 |
 
 ### Pickup ДНК
 

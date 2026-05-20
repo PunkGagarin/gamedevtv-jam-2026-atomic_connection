@@ -31,6 +31,12 @@ MonoBehaviour:
     <MoveSpeed>k__BackingField: 0.75
     <CoreCollisionDamage>k__BackingField: 1
     <NucleotideReward>k__BackingField: 8
+  - <Id>k__BackingField: 4
+    <PrefabResourcePath>k__BackingField: Gameplay/Enemies/RangedEnemyUnit
+    <MaxHealth>k__BackingField: 2
+    <MoveSpeed>k__BackingField: 0.65
+    <CoreCollisionDamage>k__BackingField: 1
+    <NucleotideReward>k__BackingField: 7
   - <Id>k__BackingField: 3
     <PrefabResourcePath>k__BackingField: Gameplay/Enemies/BossEnemyUnit
     <MaxHealth>k__BackingField: 3

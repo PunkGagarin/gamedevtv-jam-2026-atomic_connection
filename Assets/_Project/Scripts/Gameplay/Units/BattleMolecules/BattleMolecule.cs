@@ -1,6 +1,4 @@
-using System;
 using _Project.Scripts.Gameplay.Units.BattleMolecules.Components;
-using _Project.Scripts.Gameplay.Units.AtomCores;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
 
@@ -22,24 +20,9 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         [field: SerializeField] private BattleMoleculeAtomOrbit AtomOrbit { get; set; }
         [field: SerializeField] private BattleMoleculeCoreOrbit CoreOrbit { get; set; }
         [field: SerializeField] private BattleMoleculeShotQueue ShotQueue { get; set; }
-        [field: SerializeField] private ShieldMoleculeActivation ShieldActivation { get; set; }
         [field: SerializeField] public Collider2D CollisionCollider { get; private set; }
 
-        public BattleMoleculeKind Kind { get; private set; } = BattleMoleculeKind.Regular;
-
-        public event Action<BattleMoleculeShotRequest> ShotRequested
-        {
-            add
-            {
-                if (ShotQueue != null)
-                    ShotQueue.ShotRequested += value;
-            }
-            remove
-            {
-                if (ShotQueue != null)
-                    ShotQueue.ShotRequested -= value;
-            }
-        }
+        public BattleMoleculeKind Kind { get; private set; } = BattleMoleculeKind.Stinger;
 
         private void Awake()
         {
@@ -63,9 +46,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
             if (ShotQueue == null)
                 ShotQueue = GetComponent<BattleMoleculeShotQueue>();
-
-            if (ShieldActivation == null)
-                ShieldActivation = GetComponent<ShieldMoleculeActivation>();
 
             if (CollisionCollider == null)
                 CollisionCollider = GetComponent<Collider2D>();
@@ -94,22 +74,12 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         public void Tick(float deltaTime)
         {
             AtomOrbit.Tick(deltaTime);
-            ShieldActivation?.Tick();
-        }
-
-        public void FixedTick(float fixedDeltaTime)
-        {
-            CoreOrbit.FixedTick(fixedDeltaTime);
+            CoreOrbit.Tick(deltaTime);
         }
 
         public bool TryAutoLoadAtom(FreeAtom atom)
         {
             return AtomReceiver != null && AtomReceiver.TryAcceptAtom(atom);
-        }
-
-        public void ConfigureShield(AtomCore core, float duration, float secondsLostPerDamage)
-        {
-            ShieldActivation?.Configure(core, duration, secondsLostPerDamage);
         }
     }
 }

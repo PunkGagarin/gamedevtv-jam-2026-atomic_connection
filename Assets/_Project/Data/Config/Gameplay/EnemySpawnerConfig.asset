@@ -37,8 +37,11 @@ MonoBehaviour:
     <MoveSpeed>k__BackingField: 0.5
     <CoreCollisionDamage>k__BackingField: 2
     <NucleotideReward>k__BackingField: 15
+  <InitialSpawnDelaySeconds>k__BackingField: 3
   <SpawnIntervalSeconds>k__BackingField: 6
   <OffscreenSpawnPadding>k__BackingField: 1
+  <GroupSpawnSpacing>k__BackingField: 0.65
+  <GroupSpawnJitter>k__BackingField: 0.12
   <MoveSpeed>k__BackingField: 1
   <CoreCollisionDamage>k__BackingField: 1
   <NucleotideReward>k__BackingField: 5

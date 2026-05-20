@@ -12,8 +12,11 @@ namespace _Project.Scripts.Gameplay.Enemies
         [field: SerializeField] public List<EnemyDefinition> Enemies { get; private set; } = new();
 
         [field: Header("Spawn Defaults")]
+        [field: SerializeField, Min(0f)] public float InitialSpawnDelaySeconds { get; private set; } = 3f;
         [field: SerializeField, Min(0.01f)] public float SpawnIntervalSeconds { get; private set; } = 6f;
         [field: SerializeField, Min(0f)] public float OffscreenSpawnPadding { get; private set; } = 1f;
+        [field: SerializeField, Min(0f)] public float GroupSpawnSpacing { get; private set; } = 0.65f;
+        [field: SerializeField, Min(0f)] public float GroupSpawnJitter { get; private set; } = 0.12f;
         [field: SerializeField, Min(0f)] public float MoveSpeed { get; private set; } = 1f;
         [field: SerializeField, Min(1)] public int CoreCollisionDamage { get; private set; } = 1;
         [field: SerializeField, Min(0)] public int NucleotideReward { get; private set; } = 5;

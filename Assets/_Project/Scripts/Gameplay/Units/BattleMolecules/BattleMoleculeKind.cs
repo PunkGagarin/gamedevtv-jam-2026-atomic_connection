@@ -2,8 +2,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 {
     public enum BattleMoleculeKind
     {
-        Regular = 0,
-        Shield = 1,
-        Mass = 2
+        Stinger = 0,
+        Membrane = 1,
+        Swarm = 2
     }
 }

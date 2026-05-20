@@ -8,11 +8,9 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
         [field: SerializeField, Min(0f)] private float ArcFadeDistance { get; set; } = 1.25f;
 
         private float _arcSign = 1f;
-
-        public override void Configure(Transform target, float speed)
+        public override void ConfigureGroupMovement(float movementSign)
         {
-            base.Configure(target, speed);
-            _arcSign = StableArcSign(transform.position);
+            _arcSign = movementSign < 0f ? -1f : 1f;
         }
 
         public override void Tick(float deltaTime)
@@ -49,12 +47,6 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
             float fade = ArcFadeDistance <= 0f ? 1f : Mathf.Clamp01(distance / ArcFadeDistance);
 
             return (direct + tangent * (ArcStrength * fade)).normalized;
-        }
-
-        private static float StableArcSign(Vector3 position)
-        {
-            float seed = Mathf.Sin(position.x * 12.9898f + position.y * 78.233f) * 43758.5453f;
-            return seed - Mathf.Floor(seed) < 0.5f ? -1f : 1f;
         }
     }
 }

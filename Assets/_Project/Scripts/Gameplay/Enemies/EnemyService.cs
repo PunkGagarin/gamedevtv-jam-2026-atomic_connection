@@ -6,7 +6,6 @@ using _Project.Scripts.Gameplay.Common.Time;
 using _Project.Scripts.Gameplay.Currencies;
 using _Project.Scripts.Gameplay.Levels;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using Zenject;
 
 namespace _Project.Scripts.Gameplay.Enemies
@@ -20,6 +19,7 @@ namespace _Project.Scripts.Gameplay.Enemies
         private LevelDefinition _level;
         private bool _isActive;
         private bool _spawnWasStarted;
+        private float _timeToSpawnStart;
         private float _elapsedSeconds;
 
         [Inject] private IEnemySpawner _enemySpawner;
@@ -44,6 +44,7 @@ namespace _Project.Scripts.Gameplay.Enemies
             PrepareSpawnTracks();
             _isActive = target != null;
             _spawnWasStarted = false;
+            _timeToSpawnStart = _enemySpawnerConfig.InitialSpawnDelaySeconds;
             _elapsedSeconds = 0;
         }
 
@@ -52,15 +53,11 @@ namespace _Project.Scripts.Gameplay.Enemies
             if (!_isActive || _target == null)
                 return;
 
-            if (!_spawnWasStarted)
-            {
-                if (FirstGameplayClickWasReceived())
-                    _spawnWasStarted = true;
-
-                return;
-            }
-
             float deltaTime = _time.DeltaTime;
+
+            if (!TickSpawnStartDelay(deltaTime))
+                return;
+
             TickEnemies(deltaTime);
             _elapsedSeconds += deltaTime;
             TickSpawnTracks(deltaTime);
@@ -74,18 +71,24 @@ namespace _Project.Scripts.Gameplay.Enemies
             _level = null;
             _isActive = false;
             _spawnWasStarted = false;
+            _timeToSpawnStart = 0;
             _elapsedSeconds = 0;
             _spawnTracks.Clear();
 
             _enemyFactory.Cleanup();
         }
 
-        private bool FirstGameplayClickWasReceived()
+        private bool TickSpawnStartDelay(float deltaTime)
         {
-            if (!UnityEngine.Input.GetMouseButtonDown(0))
+            if (_spawnWasStarted)
+                return true;
+
+            _timeToSpawnStart -= deltaTime;
+            if (_timeToSpawnStart > 0f)
                 return false;
 
-            return EventSystem.current == null || !EventSystem.current.IsPointerOverGameObject();
+            _spawnWasStarted = true;
+            return true;
         }
 
         private void PrepareSpawnTracks()

@@ -16,6 +16,10 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
             _speed = Mathf.Max(0, speed);
         }
 
+        public virtual void ConfigureGroupMovement(float movementSign)
+        {
+        }
+
         public virtual void Tick(float deltaTime)
         {
             if (_target == null || _speed <= 0 || deltaTime <= 0)

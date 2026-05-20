@@ -195,7 +195,7 @@ namespace _Project.Scripts.Gameplay.Talents
             if (NotificationImage == null)
                 return;
 
-            NotificationImage.gameObject.SetActive(state is TalentNodeViewState.Available or TalentNodeViewState.NotEnoughCurrency);
+            NotificationImage.gameObject.SetActive(state == TalentNodeViewState.Available);
         }
 
         private Color ColorFor(TalentNodeViewState state)

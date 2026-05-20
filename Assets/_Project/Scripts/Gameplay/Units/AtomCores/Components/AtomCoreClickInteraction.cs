@@ -3,6 +3,7 @@ using _Project.Scripts.Gameplay.Common.Random;
 using _Project.Scripts.Gameplay.Drag;
 using _Project.Scripts.Gameplay.Input.Service;
 using _Project.Scripts.Gameplay.Talents;
+using _Project.Scripts.Gameplay.Units;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
 using Zenject;
@@ -14,8 +15,6 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
     [RequireComponent(typeof(Collider2D))]
     public class AtomCoreClickInteraction : MonoBehaviour
     {
-        private const float AUTO_CLICK_INTERVAL_SECONDS = 0.35f;
-
         private AtomCore _core;
         private Collider2D _clickCollider;
         private bool _clickWasStartedOnCore;
@@ -27,6 +26,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
         [Inject] private IRandomService _random;
         [Inject] private IFreeAtomFactory _freeAtomFactory;
         [Inject] private ITalentService _talentService;
+        [Inject] private AtomCoreConfig _config;
 
         private void Awake()
         {
@@ -89,7 +89,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
             }
 
             _autoClickTimer += deltaTime;
-            if (_autoClickTimer < AUTO_CLICK_INTERVAL_SECONDS)
+            if (_autoClickTimer < Mathf.Max(0.01f, _config.AutoClickIntervalSeconds))
                 return;
 
             _autoClickTimer = 0f;
@@ -98,10 +98,10 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
 
         private bool CanAutoClick()
         {
-            if (_talentService == null || !_talentService.IsUnlocked(TalentType.CoreAutoGeneration))
+            if (_talentService == null || !_talentService.IsUnlocked(TalentType.AutoClick))
                 return false;
 
-            // Автогенерация намеренно работает только при наведении на ядро.
+            // Автоклик намеренно работает только при наведении на ядро.
             if (!IsPointerOverCore())
                 return false;
 

@@ -7,16 +7,17 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
     public class BattleMoleculeAimLineView : MonoBehaviour
     {
         private const string SHOT_LINE_OBJECT_NAME = "ShotLine";
-        private const float AIM_LINE_WIDTH = 0.08f;
-        private const float SHOT_LINE_WIDTH = 0.12f;
-        private const float SHOT_LINE_LENGTH = 20f;
-        private const float SHOT_LINE_SECONDS = 0.12f;
-        private const int AIM_LINE_SORTING_ORDER = 10;
-        private const int SHOT_LINE_SORTING_ORDER = 11;
 
         private static Material _lineMaterial;
 
-        [field: SerializeField] private BattleMoleculeShotQueue ShotQueue { get; set; }
+        [field: SerializeField, Min(0f)] private float AimLineWidth { get; set; } = 0.08f;
+        [field: SerializeField, Min(0f)] private float ShotLineWidth { get; set; } = 0.12f;
+        [field: SerializeField, Min(0f)] private float ShotLineLength { get; set; } = 20f;
+        [field: SerializeField, Min(0.01f)] private float ShotLineSeconds { get; set; } = 0.12f;
+        [field: SerializeField] private int AimLineSortingOrder { get; set; } = 10;
+        [field: SerializeField] private int ShotLineSortingOrder { get; set; } = 11;
+        [field: SerializeField] private Color AimLineColor { get; set; } = Color.yellow;
+        [field: SerializeField] private Color ShotLineColor { get; set; } = Color.cyan;
 
         private readonly List<LineRenderer> _shotLines = new();
         private readonly List<float> _shotLineTimesLeft = new();
@@ -25,24 +26,12 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
         private void Awake()
         {
-            if (ShotQueue == null)
-                ShotQueue = GetComponent<BattleMoleculeShotQueue>();
-
-            _aimLine = SetupLine(gameObject, AIM_LINE_WIDTH, AIM_LINE_SORTING_ORDER, Color.yellow);
+            _aimLine = SetupLine(gameObject, AimLineWidth, AimLineSortingOrder, AimLineColor);
             CreateShotLine();
-        }
-
-        private void OnEnable()
-        {
-            if (ShotQueue != null)
-                ShotQueue.ShotRequested += ShowShotLine;
         }
 
         private void OnDisable()
         {
-            if (ShotQueue != null)
-                ShotQueue.ShotRequested -= ShowShotLine;
-
             for (int i = 0; i < _shotLines.Count; i++)
             {
                 _shotLineTimesLeft[i] = 0f;
@@ -67,7 +56,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
                     continue;
                 }
 
-                SetLineColor(shotLine, Color.cyan, _shotLineTimesLeft[i] / SHOT_LINE_SECONDS);
+                SetLineColor(shotLine, ShotLineColor, _shotLineTimesLeft[i] / CurrentShotLineSeconds());
             }
         }
 
@@ -101,7 +90,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
                 _aimLine.enabled = false;
         }
 
-        private void ShowShotLine(BattleMoleculeShotRequest request)
+        public void ShowShotLine(BattleMoleculeShotRequest request, Vector3? hitPoint, float? lineLength = null)
         {
             Vector3 origin = request.Origin;
             Vector3 direction = request.Direction;
@@ -111,12 +100,12 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
             int shotLineIndex = GetAvailableShotLineIndex();
             LineRenderer shotLine = _shotLines[shotLineIndex];
-            Vector3 end = origin + direction.normalized * SHOT_LINE_LENGTH;
+            Vector3 end = hitPoint ?? origin + direction.normalized * Mathf.Max(0f, lineLength ?? ShotLineLength);
 
             shotLine.SetPosition(0, origin);
             shotLine.SetPosition(1, end);
-            _shotLineTimesLeft[shotLineIndex] = SHOT_LINE_SECONDS;
-            SetLineColor(shotLine, Color.cyan, 1f);
+            _shotLineTimesLeft[shotLineIndex] = CurrentShotLineSeconds();
+            SetLineColor(shotLine, ShotLineColor, 1f);
             shotLine.enabled = true;
         }
 
@@ -128,8 +117,9 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
             line.useWorldSpace = true;
             line.positionCount = 2;
-            line.startWidth = width;
-            line.endWidth = width;
+            float lineWidth = Mathf.Max(0f, width);
+            line.startWidth = lineWidth;
+            line.endWidth = lineWidth;
             line.sortingOrder = sortingOrder;
             SetLineColor(line, color, 1f);
             line.enabled = false;
@@ -154,7 +144,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         private int CreateShotLine()
         {
             int index = _shotLines.Count;
-            LineRenderer shotLine = SetupLine(GetOrCreateShotLineObject(index), SHOT_LINE_WIDTH, SHOT_LINE_SORTING_ORDER, Color.cyan);
+            LineRenderer shotLine = SetupLine(GetOrCreateShotLineObject(index), ShotLineWidth, ShotLineSortingOrder, ShotLineColor);
             _shotLines.Add(shotLine);
             _shotLineTimesLeft.Add(0f);
             return index;
@@ -177,6 +167,11 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             color.a = alpha;
             line.startColor = color;
             line.endColor = color;
+        }
+
+        private float CurrentShotLineSeconds()
+        {
+            return Mathf.Max(0.01f, ShotLineSeconds);
         }
 
         private static Material GetLineMaterial()

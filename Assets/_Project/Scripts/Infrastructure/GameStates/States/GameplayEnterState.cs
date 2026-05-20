@@ -21,9 +21,9 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
         public void Enter()
         {
             CreateAtomCore();
-            CreateBattleMolecule();
-            CreateShieldBattleMoleculeIfUnlocked();
-            CreateMassBattleMoleculeIfUnlocked();
+            CreateStingerMolecule();
+            CreateMembraneMoleculeIfUnlocked();
+            CreateSwarmMoleculeIfUnlocked();
             _stateMachine.Enter<GameplayLoopState>();
         }
 
@@ -32,28 +32,28 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
             _atomCoreCreator.Create(_levelStartPointProvider.StartPoint);
         }
 
-        private void CreateBattleMolecule()
+        private void CreateStingerMolecule()
         {
-            Vector3 offset = _battleMoleculeConfig.SpawnOffset;
-            _battleMoleculeFactory.Create(_levelStartPointProvider.StartPoint + offset, _battleMoleculeConfig);
+            Vector3 offset = _battleMoleculeConfig.StingerMoleculeSpawnOffset;
+            _battleMoleculeFactory.CreateStinger(_levelStartPointProvider.StartPoint + offset, _battleMoleculeConfig);
         }
 
-        private void CreateMassBattleMoleculeIfUnlocked()
+        private void CreateSwarmMoleculeIfUnlocked()
         {
-            if (!_talentService.IsUnlocked(TalentType.AreaMolecule))
+            if (!_talentService.IsUnlocked(TalentType.SwarmMolecule))
                 return;
 
-            Vector3 offset = _battleMoleculeConfig.MassMoleculeSpawnOffset;
-            _battleMoleculeFactory.CreateMass(_levelStartPointProvider.StartPoint + offset, _battleMoleculeConfig);
+            Vector3 offset = _battleMoleculeConfig.SwarmMoleculeSpawnOffset;
+            _battleMoleculeFactory.CreateSwarm(_levelStartPointProvider.StartPoint + offset, _battleMoleculeConfig);
         }
 
-        private void CreateShieldBattleMoleculeIfUnlocked()
+        private void CreateMembraneMoleculeIfUnlocked()
         {
-            if (!_talentService.IsUnlocked(TalentType.ShieldMolecule))
+            if (!_talentService.IsUnlocked(TalentType.MembraneMolecule))
                 return;
 
-            Vector3 offset = _battleMoleculeConfig.ShieldMoleculeSpawnOffset;
-            _battleMoleculeFactory.CreateShield(_levelStartPointProvider.StartPoint + offset, _battleMoleculeConfig);
+            Vector3 offset = _battleMoleculeConfig.MembraneMoleculeSpawnOffset;
+            _battleMoleculeFactory.CreateMembrane(_levelStartPointProvider.StartPoint + offset, _battleMoleculeConfig);
         }
 
         public void Exit()

@@ -1,9 +1,6 @@
 using System.Collections.Generic;
-using _Project.Scripts.Gameplay.Drag;
-using _Project.Scripts.Gameplay.Common.Physics;
 using _Project.Scripts.Gameplay.Common.Time;
-using _Project.Scripts.Gameplay.Enemies;
-using _Project.Scripts.Gameplay.Input.Service;
+using _Project.Scripts.Gameplay.Drag;
 using _Project.Scripts.Gameplay.Talents;
 using _Project.Scripts.Gameplay.Units.AtomCores;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
@@ -14,21 +11,18 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 {
     public class BattleMoleculeService : IBattleMoleculeService
     {
-        private const float AUTO_LOAD_INTERVAL_SECONDS = 2f;
-        private static readonly RaycastHit2D[] ShotHits = new RaycastHit2D[64];
-
-        private readonly List<BattleMolecule> _trackedMolecules = new();
-        private readonly List<EnemyHit> _enemyHits = new();
+        private readonly List<IBattleMoleculeRuntimeBehavior> _runtimeBehaviors = new();
+        private readonly List<AutoLoadEntry> _autoLoadEntries = new();
+        private readonly List<FreeAtom> _coreAtoms = new();
         private bool _isStarted;
         private float _autoLoadTimer;
+        private int _nextAutoLoadMoleculeIndex;
 
         [Inject] private IBattleMoleculeFactory _battleMoleculeFactory;
-        [Inject] private IPhysicsService _physicsService;
         [Inject] private ITimeService _time;
         [Inject] private IAtomCoreService _atomCoreService;
         [Inject] private BattleMoleculeConfig _config;
         [Inject] private ITalentService _talentService;
-        [Inject] private IInputService _inputService;
         [Inject] private IDragService _dragService;
 
         public void Start()
@@ -53,18 +47,22 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                 molecule.Tick(_time.DeltaTime);
             }
 
+            foreach (IBattleMoleculeRuntimeBehavior runtimeBehavior in _runtimeBehaviors)
+            {
+                if (runtimeBehavior == null)
+                    continue;
+
+                if (runtimeBehavior is Object unityObject && unityObject == null)
+                    continue;
+
+                runtimeBehavior.Tick(_time.DeltaTime);
+            }
+
             TickAutoLoad(_time.DeltaTime);
         }
 
         public void FixedUpdate()
         {
-            foreach (BattleMolecule molecule in _battleMoleculeFactory.CreatedMolecules)
-            {
-                if (molecule == null)
-                    continue;
-
-                molecule.FixedTick(Time.fixedDeltaTime);
-            }
         }
 
         public void Cleanup()
@@ -75,121 +73,50 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             _isStarted = false;
             _battleMoleculeFactory.MoleculeCreated -= TrackMolecule;
 
-            foreach (BattleMolecule molecule in _trackedMolecules)
-            {
-                if (molecule != null)
-                    molecule.ShotRequested -= ResolveShot;
-            }
-
-            _trackedMolecules.Clear();
+            _runtimeBehaviors.Clear();
+            _autoLoadEntries.Clear();
+            _coreAtoms.Clear();
             _autoLoadTimer = 0f;
+            _nextAutoLoadMoleculeIndex = 0;
         }
 
         private void TrackMolecule(BattleMolecule molecule)
         {
-            if (molecule == null || _trackedMolecules.Contains(molecule))
+            if (molecule == null)
                 return;
 
-            _trackedMolecules.Add(molecule);
             molecule.ConfigureCoreOrbit(_atomCoreService.CurrentCoreTransform, _config);
-            molecule.ConfigureShield(CurrentCore(), CurrentShieldDuration(), _config.ShieldSecondsLostPerDamage);
-            molecule.ShotRequested += ResolveShot;
-        }
 
-        private void ResolveShot(BattleMoleculeShotRequest request)
-        {
-            int targetCount = TargetCountFor(request);
-            FindEnemies(request.Origin, request.Direction);
+            MonoBehaviour[] components = molecule.GetComponents<MonoBehaviour>();
+            BattleMoleculeRuntimeContext context = new(CurrentCore(), _config, _talentService);
 
-            for (int i = 0; i < _enemyHits.Count && i < targetCount; i++)
+            foreach (MonoBehaviour component in components)
             {
-                EnemyUnit target = _enemyHits[i].Enemy;
-                if (target == null)
-                    continue;
+                if (component is IBattleMoleculeRuntimeBehavior runtimeBehavior)
+                {
+                    runtimeBehavior.Configure(context);
+                    _runtimeBehaviors.Add(runtimeBehavior);
+                }
 
-                Debug.DrawLine(request.Origin, target.transform.position, Color.yellow, 0.5f);
-                target.TakeDamage(CurrentShotDamage(request.Kind));
+                if (component is IBattleMoleculeAutoLoadRule autoLoadRule)
+                    _autoLoadEntries.Add(new AutoLoadEntry(molecule, autoLoadRule));
             }
-        }
-
-        private void FindEnemies(Vector3 origin, Vector3 direction)
-        {
-            _enemyHits.Clear();
-
-            int hitCount = _physicsService.RaycastNonAlloc(origin, direction, ~0, ShotHits);
-
-            for (int i = 0; i < hitCount; i++)
-            {
-                RaycastHit2D hit = ShotHits[i];
-                if (hit.collider == null)
-                    continue;
-
-                EnemyUnit enemy = hit.collider.GetComponentInParent<EnemyUnit>();
-                if (enemy == null || !enemy.IsAlive || ContainsEnemy(enemy))
-                    continue;
-
-                _enemyHits.Add(new EnemyHit(enemy, hit.distance));
-            }
-
-            _enemyHits.Sort((a, b) => a.Distance.CompareTo(b.Distance));
-        }
-
-        private bool ContainsEnemy(EnemyUnit enemy)
-        {
-            foreach (EnemyHit hit in _enemyHits)
-            {
-                if (hit.Enemy == enemy)
-                    return true;
-            }
-
-            return false;
-        }
-
-        private int TargetCountFor(BattleMoleculeShotRequest request)
-        {
-            if (request.Kind != BattleMoleculeShotKind.Regular)
-                return 1;
-
-            int pierce = Mathf.RoundToInt(_talentService.BonusOf(TalentType.PrimaryMoleculePierce));
-            return Mathf.Max(1, 1 + pierce);
-        }
-
-        private int CurrentShotDamage(BattleMoleculeShotKind kind)
-        {
-            TalentType damageType = kind == BattleMoleculeShotKind.Mass
-                ? TalentType.AreaMoleculeDamage
-                : TalentType.PrimaryMoleculeDamage;
-            float bonusDamage = _talentService.BonusOf(damageType);
-            return Mathf.Max(1, _config.BaseShotDamage + Mathf.RoundToInt(bonusDamage));
         }
 
         private void TickAutoLoad(float deltaTime)
         {
-            if (deltaTime <= 0f || !CanAutoLoad())
+            if (deltaTime <= 0f || _autoLoadEntries.Count == 0)
             {
                 _autoLoadTimer = 0f;
                 return;
             }
 
             _autoLoadTimer += deltaTime;
-            if (_autoLoadTimer < AUTO_LOAD_INTERVAL_SECONDS)
+            if (_autoLoadTimer < Mathf.Max(0.01f, _config.AutoLoadIntervalSeconds))
                 return;
 
             _autoLoadTimer = 0f;
             AutoLoadMolecules();
-        }
-
-        private bool CanAutoLoad()
-        {
-            if (_inputService != null && _inputService.GetLeftMouseButtonRaw())
-                return false;
-
-            if (_dragService != null && _dragService.IsDragActive)
-                return false;
-
-            return _talentService.IsUnlocked(TalentType.PrimaryMoleculeAutoLoad) ||
-                   _talentService.IsUnlocked(TalentType.ShieldAutoLoad) ||
-                   _talentService.IsUnlocked(TalentType.AreaMoleculeAutoLoad);
         }
 
         private void AutoLoadMolecules()
@@ -199,31 +126,74 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             if (core == null || core.OwnedAtoms == null)
                 return;
 
-            foreach (BattleMolecule molecule in _battleMoleculeFactory.CreatedMolecules)
+            int moleculeCount = _autoLoadEntries.Count;
+            if (moleculeCount == 0)
+                return;
+
+            _nextAutoLoadMoleculeIndex %= moleculeCount;
+            int startIndex = _nextAutoLoadMoleculeIndex;
+            BattleMoleculeRuntimeContext context = new(core, _config, _talentService);
+
+            for (int offset = 0; offset < moleculeCount; offset++)
             {
+                int moleculeIndex = (startIndex + offset) % moleculeCount;
+                AutoLoadEntry entry = _autoLoadEntries[moleculeIndex];
+                BattleMolecule molecule = entry.Molecule;
+
                 if (molecule == null)
                     continue;
 
-                if (!CanAutoLoadMolecule(molecule))
+                if (entry.Rule == null)
                     continue;
 
-                if (!core.OwnedAtoms.TryGetFirstOwned(FreeAtomOwnerKind.Core, out FreeAtom atom))
+                if (entry.Rule is Object unityObject && unityObject == null)
+                    continue;
+
+                if (!entry.Rule.CanAutoLoad(context))
+                    continue;
+
+                if (!TryGetAutoLoadAtom(core, out FreeAtom atom))
                     return;
 
-                molecule.TryAutoLoadAtom(atom);
+                if (molecule.TryAutoLoadAtom(atom))
+                    _nextAutoLoadMoleculeIndex = (moleculeIndex + 1) % moleculeCount;
             }
         }
 
-        private bool CanAutoLoadMolecule(BattleMolecule molecule)
+        private bool TryGetAutoLoadAtom(AtomCore core, out FreeAtom atom)
         {
-            TalentType autoLoadType = molecule.Kind switch
-            {
-                BattleMoleculeKind.Mass => TalentType.AreaMoleculeAutoLoad,
-                BattleMoleculeKind.Shield => TalentType.ShieldAutoLoad,
-                _ => TalentType.PrimaryMoleculeAutoLoad
-            };
+            atom = null;
 
-            return _talentService.IsUnlocked(autoLoadType);
+            if (core == null || core.OwnedAtoms == null)
+                return false;
+
+            core.OwnedAtoms.GetOwned(FreeAtomOwnerKind.Core, _coreAtoms);
+
+            foreach (FreeAtom candidate in _coreAtoms)
+            {
+                if (candidate == null)
+                    continue;
+
+                if (_dragService != null && _dragService.IsReserved(candidate))
+                    continue;
+
+                atom = candidate;
+                return true;
+            }
+
+            return false;
+        }
+
+        private readonly struct AutoLoadEntry
+        {
+            public AutoLoadEntry(BattleMolecule molecule, IBattleMoleculeAutoLoadRule rule)
+            {
+                Molecule = molecule;
+                Rule = rule;
+            }
+
+            public BattleMolecule Molecule { get; }
+            public IBattleMoleculeAutoLoadRule Rule { get; }
         }
 
         private AtomCore CurrentCore()
@@ -231,23 +201,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             return _atomCoreService.CurrentCoreTransform != null
                 ? _atomCoreService.CurrentCoreTransform.GetComponent<AtomCore>()
                 : null;
-        }
-
-        private float CurrentShieldDuration()
-        {
-            return Mathf.Max(0.1f, _config.ShieldDurationSeconds + _talentService.BonusOf(TalentType.ShieldDuration));
-        }
-
-        private readonly struct EnemyHit
-        {
-            public EnemyHit(EnemyUnit enemy, float distance)
-            {
-                Enemy = enemy;
-                Distance = distance;
-            }
-
-            public EnemyUnit Enemy { get; }
-            public float Distance { get; }
         }
     }
 }

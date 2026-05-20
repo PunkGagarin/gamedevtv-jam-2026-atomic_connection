@@ -1,20 +1,21 @@
 using UnityEngine;
+using _Project.Scripts.Gameplay.Talents;
 using _Project.Scripts.Gameplay.Units;
+using _Project.Scripts.Gameplay.Units.BattleMolecules;
 using _Project.Scripts.Gameplay.UI;
-using _Project.Scripts.Gameplay.Units.AtomCores;
 using _Project.Scripts.Gameplay.Units.AtomCores.Components;
 
 namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
     [RequireComponent(typeof(OwnedAtoms))]
     [RequireComponent(typeof(BattleMoleculeCharge))]
-    public class ShieldMoleculeActivation : MonoBehaviour
+    public class MembraneMoleculeActivation : MonoBehaviour, IBattleMoleculeRuntimeBehavior, IBattleMoleculeAutoLoadRule
     {
         [field: SerializeField] private OwnedAtoms OwnedAtoms { get; set; }
         [field: SerializeField] private BattleMoleculeCharge Charge { get; set; }
         [field: SerializeField] private ProgressBar ProgressBar { get; set; }
 
-        private AtomCoreShield _coreShield;
+        private AtomCoreShield _coreMembrane;
         private float _duration;
         private float _secondsLostPerDamage;
 
@@ -32,39 +33,52 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         private void OnEnable()
         {
             if (Charge != null)
-                Charge.Charged += ActivateShield;
+                Charge.Charged += ActivateMembrane;
         }
 
         private void OnDisable()
         {
             if (Charge != null)
-                Charge.Charged -= ActivateShield;
+                Charge.Charged -= ActivateMembrane;
         }
 
-        public void Configure(AtomCore core, float duration, float secondsLostPerDamage)
+        public void Configure(BattleMoleculeRuntimeContext context)
         {
-            _coreShield = core != null ? core.GetComponent<AtomCoreShield>() : null;
-            _duration = Mathf.Max(0.01f, duration);
-            _secondsLostPerDamage = Mathf.Max(0f, secondsLostPerDamage);
+            _coreMembrane = context.Core != null ? context.Core.GetComponent<AtomCoreShield>() : null;
+
+            float durationBonus = context.BonusOf(TalentType.MembraneMoleculeDuration);
+
+            _duration = context.Config != null
+                ? Mathf.Max(0.01f, context.Config.MembraneDurationSeconds + durationBonus)
+                : 0.01f;
+
+            _secondsLostPerDamage = context.Config != null
+                ? Mathf.Max(0f, context.Config.MembraneSecondsLostPerDamage)
+                : 0f;
         }
 
-        public void Tick()
+        public void Tick(float deltaTime)
         {
-            if (_coreShield == null || !_coreShield.IsActive)
+            if (_coreMembrane == null || !_coreMembrane.IsActive)
             {
                 HideProgress();
                 return;
             }
 
-            ShowProgress(_coreShield.NormalizedTime);
+            ShowProgress(_coreMembrane.NormalizedTime);
         }
 
-        private void ActivateShield()
+        public bool CanAutoLoad(BattleMoleculeRuntimeContext context)
         {
-            if (_coreShield == null)
+            return context.IsUnlocked(TalentType.MembraneMoleculeAutoLoad);
+        }
+
+        private void ActivateMembrane()
+        {
+            if (_coreMembrane == null)
                 return;
 
-            _coreShield.Activate(_duration, _secondsLostPerDamage);
+            _coreMembrane.Activate(_duration, _secondsLostPerDamage);
             Charge.Spend();
             OwnedAtoms.ReleaseAll();
             ShowProgress(1f);

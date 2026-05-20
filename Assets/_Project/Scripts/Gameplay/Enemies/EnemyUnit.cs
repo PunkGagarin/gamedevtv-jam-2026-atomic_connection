@@ -85,6 +85,12 @@ namespace _Project.Scripts.Gameplay.Enemies
             Movement?.Configure(target, speed);
         }
 
+        public void MoveTo(Transform target, float speed, float groupMovementSign)
+        {
+            Movement?.ConfigureGroupMovement(groupMovementSign);
+            Movement?.Configure(target, speed);
+        }
+
         public void CollideWithCore(AtomCore target)
         {
             CoreCollision?.Configure(target);

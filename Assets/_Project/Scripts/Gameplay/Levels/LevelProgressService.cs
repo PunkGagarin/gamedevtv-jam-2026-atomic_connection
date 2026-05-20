@@ -20,6 +20,7 @@ namespace _Project.Scripts.Gameplay.Levels
 
         public event Action Completed;
         public CurrencyAmount LastCompletionReward { get; private set; }
+        public bool LastCompletionWasFirstClear { get; private set; }
         public bool LastCompletedLevelWasFinal { get; private set; }
         public float RemainingSeconds => Mathf.Max(0f, CurrentLevel.DurationSeconds - _elapsedSeconds);
 
@@ -30,6 +31,7 @@ namespace _Project.Scripts.Gameplay.Levels
             _isActive = true;
             _completionWasRaised = false;
             LastCompletionReward = _level.CompletionReward;
+            LastCompletionWasFirstClear = false;
             LastCompletedLevelWasFinal = false;
         }
 
@@ -63,10 +65,16 @@ namespace _Project.Scripts.Gameplay.Levels
         {
             _isActive = false;
             _completionWasRaised = true;
-            LastCompletionReward = CurrentLevel.CompletionReward;
+            CurrencyAmount completionReward = CurrentLevel.CompletionReward;
             LastCompletedLevelWasFinal = _levelSelectionService.SelectedLevel >= _levelSelectionService.MaxConfiguredLevel;
-            _levelSelectionService.CompleteSelectedLevel();
-            _currencyService.Add(LastCompletionReward);
+            LastCompletionWasFirstClear = _levelSelectionService.CompleteSelectedLevel();
+            LastCompletionReward = LastCompletionWasFirstClear
+                ? completionReward
+                : new CurrencyAmount(completionReward.CurrencyId, 0);
+
+            if (LastCompletionWasFirstClear)
+                _currencyService.Add(LastCompletionReward);
+
             Completed?.Invoke();
         }
     }

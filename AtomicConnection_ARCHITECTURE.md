@@ -100,15 +100,17 @@ services, subscribes to core death during `Start()`, and ticks current
 manual/auto click progress, and generated free atom creation through
 `FreeAtomFactory`.
 
-`IBattleMoleculeService` ticks created battle molecules, fixed-ticks molecule
-core orbit movement, auto-loads core atoms into molecules when unlocked, and
-subscribes to shot-request events during `Start()`.
+`IBattleMoleculeService` ticks created battle molecules, including transform-based
+core orbit movement, and auto-loads core atoms into molecules when unlocked.
 Each `BattleMolecule` owns its accepted atoms, charge, fire request, collision
-collider, and molecule atom orbiting through local components.
+collider, attack resolution, shot feedback, and molecule atom orbiting through
+local components. Attack-capable molecule prefabs use focused attack components
+such as `StingerMoleculeAttack` and `SwarmMoleculeAttack` to resolve
+local shot requests into raycasts, enemy damage, and shot-line feedback.
 
 `LevelProgressService` owns completion reward/unlock, marks the selected level
-complete through `ILevelSelectionService`, grants reward through
-`CurrencyService`, and raises completion for state transition.
+complete through `ILevelSelectionService`, grants first-clear completion reward
+through `CurrencyService`, and raises completion for state transition.
 
 ## UI And Windows
 
@@ -182,7 +184,8 @@ Talent-adjusted runtime values are applied by the current owner:
 - `AtomCoreService` applies core HP and atom click count
 - `BattleMoleculeFactory` applies atom charge count
 - `AtomCoreClickInteraction` applies AutoClick
-- `BattleMoleculeService` resolves shot damage, Pierce, and AutoLoad
+- molecule-local attack components resolve shot damage and Pierce
+- `BattleMoleculeService` applies AutoLoad
 
 Talent tree uses `TalentConfig`. `TalentService` owns talent progress and
 buying; `CurrencyService` owns saved meta-currencies. Talent progress and

@@ -26,6 +26,12 @@ namespace _Project.Scripts.Gameplay.Drag
         public bool DragWasStartedThisPress => _dragWasStartedThisPress;
         public bool IsDragActive => IsDragging || HasPendingDrag;
 
+        public bool IsReserved(IDraggable draggable)
+        {
+            return draggable != null &&
+                   (_currentDraggable == draggable || _pendingCandidate.Draggable == draggable);
+        }
+
         public void Update()
         {
             Camera camera = _cameraProvider.MainCamera;
@@ -62,6 +68,7 @@ namespace _Project.Scripts.Gameplay.Drag
                 return false;
 
             Vector3 worldPosition = camera.ScreenToWorldPoint(screenPosition);
+            _physicsService.SyncTransforms();
             Collider2D hit = _physicsService.OverlapPoint(worldPosition, ~0);
 
             if (hit == null)
@@ -163,6 +170,7 @@ namespace _Project.Scripts.Gameplay.Drag
                 col.enabled = false;
 
             IDropTarget target = null;
+            _physicsService.SyncTransforms();
             int hitCount = _physicsService.OverlapPointNonAlloc(worldPosition, OverlapHits, ~0);
 
             for (int i = 0; i < hitCount; i++)
@@ -184,6 +192,7 @@ namespace _Project.Scripts.Gameplay.Drag
 
         private DragStartCandidate GetDragStartCandidateAt(Vector3 worldPosition)
         {
+            _physicsService.SyncTransforms();
             int hitCount = _physicsService.OverlapPointNonAlloc(worldPosition, OverlapHits, ~0);
 
             for (int i = 0; i < hitCount; i++)

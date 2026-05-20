@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
-    public class MassBattleMoleculeShotQueue : BattleMoleculeShotQueue
+    public class SwarmMoleculeShotQueue : BattleMoleculeShotQueue
     {
         [field: SerializeField, Min(1)] private int ShotCount { get; set; } = 5;
         [field: SerializeField, Min(0f)] private float SpreadDegrees { get; set; } = 30f;
@@ -15,8 +15,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             if (config == null)
                 return;
 
-            ShotCount = config.MassMoleculeShotCount;
-            SpreadDegrees = config.MassMoleculeShotSpreadDegrees;
+            ShotCount = config.SwarmMoleculeShotCount;
+            SpreadDegrees = config.SwarmMoleculeShotSpreadDegrees;
         }
 
         public override bool TryRequestShot(Vector3 direction)
@@ -45,7 +45,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             {
                 float angle = startAngle + step * i;
                 Vector3 shotDirection = Quaternion.Euler(0f, 0f, angle) * centerDirection;
-                RequestShot(origin, shotDirection.normalized, BattleMoleculeShotKind.Mass, shotSequenceId);
+                RequestShot(origin, shotDirection.normalized, BattleMoleculeShotKind.Swarm, shotSequenceId);
             }
         }
 

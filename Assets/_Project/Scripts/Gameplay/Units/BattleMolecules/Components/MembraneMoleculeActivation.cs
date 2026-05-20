@@ -8,13 +8,13 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
     [RequireComponent(typeof(OwnedAtoms))]
     [RequireComponent(typeof(BattleMoleculeCharge))]
-    public class ShieldMoleculeActivation : MonoBehaviour
+    public class MembraneMoleculeActivation : MonoBehaviour
     {
         [field: SerializeField] private OwnedAtoms OwnedAtoms { get; set; }
         [field: SerializeField] private BattleMoleculeCharge Charge { get; set; }
         [field: SerializeField] private ProgressBar ProgressBar { get; set; }
 
-        private AtomCoreShield _coreShield;
+        private AtomCoreShield _coreMembrane;
         private float _duration;
         private float _secondsLostPerDamage;
 
@@ -32,39 +32,39 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         private void OnEnable()
         {
             if (Charge != null)
-                Charge.Charged += ActivateShield;
+                Charge.Charged += ActivateMembrane;
         }
 
         private void OnDisable()
         {
             if (Charge != null)
-                Charge.Charged -= ActivateShield;
+                Charge.Charged -= ActivateMembrane;
         }
 
         public void Configure(AtomCore core, float duration, float secondsLostPerDamage)
         {
-            _coreShield = core != null ? core.GetComponent<AtomCoreShield>() : null;
+            _coreMembrane = core != null ? core.GetComponent<AtomCoreShield>() : null;
             _duration = Mathf.Max(0.01f, duration);
             _secondsLostPerDamage = Mathf.Max(0f, secondsLostPerDamage);
         }
 
         public void Tick()
         {
-            if (_coreShield == null || !_coreShield.IsActive)
+            if (_coreMembrane == null || !_coreMembrane.IsActive)
             {
                 HideProgress();
                 return;
             }
 
-            ShowProgress(_coreShield.NormalizedTime);
+            ShowProgress(_coreMembrane.NormalizedTime);
         }
 
-        private void ActivateShield()
+        private void ActivateMembrane()
         {
-            if (_coreShield == null)
+            if (_coreMembrane == null)
                 return;
 
-            _coreShield.Activate(_duration, _secondsLostPerDamage);
+            _coreMembrane.Activate(_duration, _secondsLostPerDamage);
             Charge.Spend();
             OwnedAtoms.ReleaseAll();
             ShowProgress(1f);

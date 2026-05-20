@@ -36,7 +36,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             Vector3 shotDirection = NormalizeShotDirection(direction);
 
             SpendCharge();
-            RequestShot(origin, shotDirection, BattleMoleculeShotKind.Regular);
+            RequestShot(origin, shotDirection, BattleMoleculeShotKind.Stinger);
 
             return true;
         }

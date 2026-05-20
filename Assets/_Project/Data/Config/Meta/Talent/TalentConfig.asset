@@ -73,9 +73,7 @@ MonoBehaviour:
   - <Id>k__BackingField: 4
     <Type>k__BackingField: 3
     <Title>k__BackingField: "\u0423\u0440\u043E\u043D I"
-    <Description>k__BackingField: "\u0423\u0432\u0435\u043B\u0438\u0447\u0438\u0432\u0430\u0435\u0442
-      \u0443\u0440\u043E\u043D \u043F\u0435\u0440\u0432\u043E\u0439 \u0431\u043E\u0435\u0432\u043E\u0439
-      \u043C\u043E\u043B\u0435\u043A\u0443\u043B\u044B \u043D\u0430 1."
+    <Description>k__BackingField: "Increases StingerMolecule damage by 1."
     <Icon>k__BackingField: {fileID: 0}
     <MaxLevel>k__BackingField: 1
     <CostCurrency>k__BackingField: 0
@@ -101,11 +99,7 @@ MonoBehaviour:
   - <Id>k__BackingField: 6
     <Type>k__BackingField: 5
     <Title>k__BackingField: "\u041F\u0440\u043E\u0431\u0438\u0442\u0438\u0435"
-    <Description>k__BackingField: "\u0412\u044B\u0441\u0442\u0440\u0435\u043B \u043F\u0435\u0440\u0432\u043E\u0439
-      \u0431\u043E\u0435\u0432\u043E\u0439 \u043C\u043E\u043B\u0435\u043A\u0443\u043B\u044B
-      \u043F\u0440\u043E\u0445\u043E\u0434\u0438\u0442 \u0441\u043A\u0432\u043E\u0437\u044C
-      \u0432\u0440\u0430\u0433\u0430 \u0438 \u0437\u0430\u0434\u0435\u0432\u0430\u0435\u0442
-      \u0446\u0435\u043B\u044C \u0437\u0430 \u043D\u0438\u043C."
+    <Description>k__BackingField: "StingerMolecule shot pierces the first enemy and hits one target behind it."
     <Icon>k__BackingField: {fileID: 0}
     <MaxLevel>k__BackingField: 1
     <CostCurrency>k__BackingField: 1
@@ -117,10 +111,7 @@ MonoBehaviour:
   - <Id>k__BackingField: 7
     <Type>k__BackingField: 6
     <Title>k__BackingField: "\u0410\u0432\u0442\u043E\u0437\u0430\u0440\u044F\u0434\u043A\u0430"
-    <Description>k__BackingField: "\u0410\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438
-      \u0437\u0430\u0440\u044F\u0436\u0430\u0435\u0442 \u043F\u0435\u0440\u0432\u0443\u044E
-      \u0431\u043E\u0435\u0432\u0443\u044E \u043C\u043E\u043B\u0435\u043A\u0443\u043B\u0443
-      \u0441\u0432\u043E\u0431\u043E\u0434\u043D\u044B\u043C\u0438 \u0441\u043D\u0430\u0440\u044F\u0434\u0430\u043C\u0438."
+    <Description>k__BackingField: "Automatically charges StingerMolecule with free projectiles."
     <Icon>k__BackingField: {fileID: 0}
     <MaxLevel>k__BackingField: 1
     <CostCurrency>k__BackingField: 1
@@ -132,9 +123,7 @@ MonoBehaviour:
   - <Id>k__BackingField: 8
     <Type>k__BackingField: 3
     <Title>k__BackingField: "\u0423\u0440\u043E\u043D II"
-    <Description>k__BackingField: "\u0421\u0438\u043B\u044C\u043D\u043E \u0443\u0432\u0435\u043B\u0438\u0447\u0438\u0432\u0430\u0435\u0442
-      \u0443\u0440\u043E\u043D \u043F\u0435\u0440\u0432\u043E\u0439 \u0431\u043E\u0435\u0432\u043E\u0439
-      \u043C\u043E\u043B\u0435\u043A\u0443\u043B\u044B \u043D\u0430 10."
+    <Description>k__BackingField: "Greatly increases StingerMolecule damage by 10."
     <Icon>k__BackingField: {fileID: 0}
     <MaxLevel>k__BackingField: 1
     <CostCurrency>k__BackingField: 0
@@ -159,11 +148,8 @@ MonoBehaviour:
     <IsUnlock>k__BackingField: 1
   - <Id>k__BackingField: 10
     <Type>k__BackingField: 8
-    <Title>k__BackingField: "\u041C\u043E\u043B\u0435\u043A\u0443\u043B\u0430 \u0449\u0438\u0442\u0430"
-    <Description>k__BackingField: "\u0420\u0430\u0437\u0431\u043B\u043E\u043A\u0438\u0440\u0443\u0435\u0442
-      \u0437\u0430\u0449\u0438\u0442\u043D\u0443\u044E \u043C\u043E\u043B\u0435\u043A\u0443\u043B\u0443,
-      \u043A\u043E\u0442\u043E\u0440\u0430\u044F \u0432\u043A\u043B\u044E\u0447\u0430\u0435\u0442
-      \u0449\u0438\u0442 \u0432\u043E\u043A\u0440\u0443\u0433 \u044F\u0434\u0440\u0430."
+    <Title>k__BackingField: "MembraneMolecule"
+    <Description>k__BackingField: "Unlocks MembraneMolecule, a defensive molecule that creates a temporary membrane around the core."
     <Icon>k__BackingField: {fileID: 0}
     <MaxLevel>k__BackingField: 1
     <CostCurrency>k__BackingField: 1
@@ -174,10 +160,8 @@ MonoBehaviour:
     <IsUnlock>k__BackingField: 1
   - <Id>k__BackingField: 11
     <Type>k__BackingField: 9
-    <Title>k__BackingField: "\u041B\u0435\u0433\u043A\u0438\u0439 \u0449\u0438\u0442"
-    <Description>k__BackingField: "\u0423\u043C\u0435\u043D\u044C\u0448\u0430\u0435\u0442
-      \u043A\u043E\u043B\u0438\u0447\u0435\u0441\u0442\u0432\u043E \u0441\u043D\u0430\u0440\u044F\u0434\u043E\u0432
-      \u0434\u043B\u044F \u0432\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u044F \u0449\u0438\u0442\u0430."
+    <Title>k__BackingField: "Light Membrane"
+    <Description>k__BackingField: "Reduces the projectile count needed to activate MembraneMolecule."
     <Icon>k__BackingField: {fileID: 0}
     <MaxLevel>k__BackingField: 1
     <CostCurrency>k__BackingField: 0
@@ -188,10 +172,8 @@ MonoBehaviour:
     <IsUnlock>k__BackingField: 0
   - <Id>k__BackingField: 12
     <Type>k__BackingField: 10
-    <Title>k__BackingField: "\u0414\u043E\u043B\u0433\u0438\u0439 \u0449\u0438\u0442"
-    <Description>k__BackingField: "\u0423\u0432\u0435\u043B\u0438\u0447\u0438\u0432\u0430\u0435\u0442
-      \u0432\u0440\u0435\u043C\u044F \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F
-      \u0449\u0438\u0442\u0430."
+    <Title>k__BackingField: "Long Membrane"
+    <Description>k__BackingField: "Increases membrane duration."
     <Icon>k__BackingField: {fileID: 0}
     <MaxLevel>k__BackingField: 1
     <CostCurrency>k__BackingField: 0
@@ -202,11 +184,8 @@ MonoBehaviour:
     <IsUnlock>k__BackingField: 0
   - <Id>k__BackingField: 13
     <Type>k__BackingField: 11
-    <Title>k__BackingField: "\u0417\u0430\u0440\u044F\u0434 \u0449\u0438\u0442\u0430"
-    <Description>k__BackingField: "\u0410\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438
-      \u0437\u0430\u0440\u044F\u0436\u0430\u0435\u0442 \u043C\u043E\u043B\u0435\u043A\u0443\u043B\u0443
-      \u0449\u0438\u0442\u0430 \u0441\u0432\u043E\u0431\u043E\u0434\u043D\u044B\u043C\u0438
-      \u0441\u043D\u0430\u0440\u044F\u0434\u0430\u043C\u0438."
+    <Title>k__BackingField: "Membrane Charge"
+    <Description>k__BackingField: "Automatically charges MembraneMolecule with free projectiles."
     <Icon>k__BackingField: {fileID: 0}
     <MaxLevel>k__BackingField: 1
     <CostCurrency>k__BackingField: 0
@@ -217,10 +196,8 @@ MonoBehaviour:
     <IsUnlock>k__BackingField: 1
   - <Id>k__BackingField: 14
     <Type>k__BackingField: 12
-    <Title>k__BackingField: "\u041C\u0430\u0441\u0441\u043E\u0432\u0430\u044F \u043C\u043E\u043B\u0435\u043A\u0443\u043B\u0430"
-    <Description>k__BackingField: "\u0420\u0430\u0437\u0431\u043B\u043E\u043A\u0438\u0440\u0443\u0435\u0442
-      \u043C\u043E\u043B\u0435\u043A\u0443\u043B\u0443 \u0441 \u0443\u0440\u043E\u043D\u043E\u043C
-      \u043C\u0430\u0441\u0441\u043E\u0432\u043E\u0433\u043E \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F."
+    <Title>k__BackingField: "SwarmMolecule"
+    <Description>k__BackingField: "Unlocks SwarmMolecule with a piercing swarm volley."
     <Icon>k__BackingField: {fileID: 0}
     <MaxLevel>k__BackingField: 1
     <CostCurrency>k__BackingField: 1
@@ -231,11 +208,8 @@ MonoBehaviour:
     <IsUnlock>k__BackingField: 1
   - <Id>k__BackingField: 15
     <Type>k__BackingField: 13
-    <Title>k__BackingField: "\u041C\u0430\u0441\u0441\u043E\u0432\u044B\u0439 \u0443\u0440\u043E\u043D
-      I"
-    <Description>k__BackingField: "\u0423\u0432\u0435\u043B\u0438\u0447\u0438\u0432\u0430\u0435\u0442
-      \u0443\u0440\u043E\u043D \u043C\u043E\u043B\u0435\u043A\u0443\u043B\u044B \u043C\u0430\u0441\u0441\u043E\u0432\u043E\u0433\u043E
-      \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F \u043D\u0430 1."
+    <Title>k__BackingField: "Swarm Damage I"
+    <Description>k__BackingField: "Increases SwarmMolecule damage by 1."
     <Icon>k__BackingField: {fileID: 0}
     <MaxLevel>k__BackingField: 1
     <CostCurrency>k__BackingField: 0
@@ -246,11 +220,8 @@ MonoBehaviour:
     <IsUnlock>k__BackingField: 0
   - <Id>k__BackingField: 16
     <Type>k__BackingField: 14
-    <Title>k__BackingField: "\u0417\u0430\u0440\u044F\u0434 \u043C\u0430\u0441\u0441\u044B"
-    <Description>k__BackingField: "\u0410\u0432\u0442\u043E\u043C\u0430\u0442\u0438\u0447\u0435\u0441\u043A\u0438
-      \u0437\u0430\u0440\u044F\u0436\u0430\u0435\u0442 \u043C\u043E\u043B\u0435\u043A\u0443\u043B\u0443
-      \u043C\u0430\u0441\u0441\u043E\u0432\u043E\u0433\u043E \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F
-      \u0441\u0432\u043E\u0431\u043E\u0434\u043D\u044B\u043C\u0438 \u0441\u043D\u0430\u0440\u044F\u0434\u0430\u043C\u0438."
+    <Title>k__BackingField: "Swarm Charge"
+    <Description>k__BackingField: "Automatically charges SwarmMolecule with free projectiles."
     <Icon>k__BackingField: {fileID: 0}
     <MaxLevel>k__BackingField: 1
     <CostCurrency>k__BackingField: 0
@@ -261,11 +232,8 @@ MonoBehaviour:
     <IsUnlock>k__BackingField: 1
   - <Id>k__BackingField: 17
     <Type>k__BackingField: 13
-    <Title>k__BackingField: "\u041C\u0430\u0441\u0441\u043E\u0432\u044B\u0439 \u0443\u0440\u043E\u043D
-      II"
-    <Description>k__BackingField: "\u0421\u0438\u043B\u044C\u043D\u043E \u0443\u0432\u0435\u043B\u0438\u0447\u0438\u0432\u0430\u0435\u0442
-      \u0443\u0440\u043E\u043D \u043C\u043E\u043B\u0435\u043A\u0443\u043B\u044B \u043C\u0430\u0441\u0441\u043E\u0432\u043E\u0433\u043E
-      \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u044F \u043D\u0430 10."
+    <Title>k__BackingField: "Swarm Damage II"
+    <Description>k__BackingField: "Greatly increases SwarmMolecule damage by 10."
     <Icon>k__BackingField: {fileID: 0}
     <MaxLevel>k__BackingField: 1
     <CostCurrency>k__BackingField: 0

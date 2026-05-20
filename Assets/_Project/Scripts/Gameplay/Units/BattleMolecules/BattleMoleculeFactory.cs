@@ -10,9 +10,9 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 {
     public class BattleMoleculeFactory : IBattleMoleculeFactory
     {
-        private const string BATTLE_MOLECULE_PREFAB_PATH = "Gameplay/Units/BattleMolecule";
-        private const string SHIELD_BATTLE_MOLECULE_PREFAB_PATH = "Gameplay/Units/ShieldBattleMolecule";
-        private const string MASS_BATTLE_MOLECULE_PREFAB_PATH = "Gameplay/Units/MassBattleMolecule";
+        private const string STINGER_MOLECULE_PREFAB_PATH = "Gameplay/Units/StingerMolecule";
+        private const string MEMBRANE_MOLECULE_PREFAB_PATH = "Gameplay/Units/MembraneMolecule";
+        private const string SWARM_MOLECULE_PREFAB_PATH = "Gameplay/Units/SwarmMolecule";
         private const string BATTLE_MOLECULES_CONTAINER_NAME = "BattleMolecules";
 
         private readonly List<BattleMolecule> _createdMolecules = new();
@@ -24,40 +24,40 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         public IReadOnlyList<BattleMolecule> CreatedMolecules => _createdMolecules;
         public event Action<BattleMolecule> MoleculeCreated;
 
-        public BattleMolecule Create(Vector3 at, BattleMoleculeConfig config)
+        public BattleMolecule CreateStinger(Vector3 at, BattleMoleculeConfig config)
         {
             return Create(
                 at,
                 config,
-                BATTLE_MOLECULE_PREFAB_PATH,
-                nameof(BattleMolecule),
-                AdjustedAtomsRequired(config.AtomsRequired),
-                BattleMoleculeKind.Regular);
+                STINGER_MOLECULE_PREFAB_PATH,
+                "StingerMolecule",
+                AdjustedAtomsRequired(config.StingerMoleculeAtomsRequired),
+                BattleMoleculeKind.Stinger);
         }
 
-        public BattleMolecule CreateShield(Vector3 at, BattleMoleculeConfig config)
+        public BattleMolecule CreateMembrane(Vector3 at, BattleMoleculeConfig config)
         {
-            int atomsRequired = config.ShieldMoleculeAtomsRequired -
-                                Mathf.RoundToInt(_talentService.BonusOf(TalentType.ShieldChargeReduction));
+            int atomsRequired = config.MembraneMoleculeAtomsRequired -
+                                Mathf.RoundToInt(_talentService.BonusOf(TalentType.MembraneMoleculeChargeReduction));
 
             return Create(
                 at,
                 config,
-                SHIELD_BATTLE_MOLECULE_PREFAB_PATH,
-                "ShieldBattleMolecule",
+                MEMBRANE_MOLECULE_PREFAB_PATH,
+                "MembraneMolecule",
                 AdjustedAtomsRequired(atomsRequired),
-                BattleMoleculeKind.Shield);
+                BattleMoleculeKind.Membrane);
         }
 
-        public BattleMolecule CreateMass(Vector3 at, BattleMoleculeConfig config)
+        public BattleMolecule CreateSwarm(Vector3 at, BattleMoleculeConfig config)
         {
             return Create(
                 at,
                 config,
-                MASS_BATTLE_MOLECULE_PREFAB_PATH,
-                "MassBattleMolecule",
-                AdjustedAtomsRequired(config.MassMoleculeAtomsRequired),
-                BattleMoleculeKind.Mass);
+                SWARM_MOLECULE_PREFAB_PATH,
+                "SwarmMolecule",
+                AdjustedAtomsRequired(config.SwarmMoleculeAtomsRequired),
+                BattleMoleculeKind.Swarm);
         }
 
         private BattleMolecule Create(

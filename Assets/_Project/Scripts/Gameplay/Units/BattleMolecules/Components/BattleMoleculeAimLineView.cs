@@ -16,8 +16,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
         private static Material _lineMaterial;
 
-        [field: SerializeField] private BattleMoleculeShotQueue ShotQueue { get; set; }
-
         private readonly List<LineRenderer> _shotLines = new();
         private readonly List<float> _shotLineTimesLeft = new();
         private LineRenderer _aimLine;
@@ -25,24 +23,12 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
         private void Awake()
         {
-            if (ShotQueue == null)
-                ShotQueue = GetComponent<BattleMoleculeShotQueue>();
-
             _aimLine = SetupLine(gameObject, AIM_LINE_WIDTH, AIM_LINE_SORTING_ORDER, Color.yellow);
             CreateShotLine();
         }
 
-        private void OnEnable()
-        {
-            if (ShotQueue != null)
-                ShotQueue.ShotRequested += ShowShotLine;
-        }
-
         private void OnDisable()
         {
-            if (ShotQueue != null)
-                ShotQueue.ShotRequested -= ShowShotLine;
-
             for (int i = 0; i < _shotLines.Count; i++)
             {
                 _shotLineTimesLeft[i] = 0f;
@@ -101,7 +87,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
                 _aimLine.enabled = false;
         }
 
-        private void ShowShotLine(BattleMoleculeShotRequest request)
+        public void ShowShotLine(BattleMoleculeShotRequest request, Vector3? hitPoint, float lineLength = SHOT_LINE_LENGTH)
         {
             Vector3 origin = request.Origin;
             Vector3 direction = request.Direction;
@@ -111,7 +97,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
             int shotLineIndex = GetAvailableShotLineIndex();
             LineRenderer shotLine = _shotLines[shotLineIndex];
-            Vector3 end = origin + direction.normalized * SHOT_LINE_LENGTH;
+            Vector3 end = hitPoint ?? origin + direction.normalized * Mathf.Max(0f, lineLength);
 
             shotLine.SetPosition(0, origin);
             shotLine.SetPosition(1, end);

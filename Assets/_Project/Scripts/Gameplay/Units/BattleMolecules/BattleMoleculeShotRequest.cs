@@ -20,7 +20,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
     public enum BattleMoleculeShotKind
     {
-        Regular = 0,
-        Mass = 1,
+        Stinger = 0,
+        Swarm = 1,
     }
 }

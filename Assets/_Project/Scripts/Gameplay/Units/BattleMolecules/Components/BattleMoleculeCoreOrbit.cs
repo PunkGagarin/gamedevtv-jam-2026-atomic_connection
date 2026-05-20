@@ -2,28 +2,19 @@ using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
-    [RequireComponent(typeof(Rigidbody2D))]
     public class BattleMoleculeCoreOrbit : MonoBehaviour
     {
-        [field: SerializeField] private Rigidbody2D Body { get; set; }
-
         private Transform _center;
         private float _radius;
         private float _angle;
         private float _degreesPerSecond;
-
-        private void Awake()
-        {
-            if (Body == null)
-                Body = GetComponent<Rigidbody2D>();
-        }
 
         public void Configure(Transform center, float degreesPerSecond)
         {
             _center = center;
             _degreesPerSecond = degreesPerSecond;
 
-            if (_center == null || Body == null)
+            if (_center == null)
                 return;
 
             Vector3 offset = transform.position - _center.position;
@@ -32,12 +23,12 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             SnapToOrbit();
         }
 
-        public void FixedTick(float fixedDeltaTime)
+        public void Tick(float deltaTime)
         {
-            if (_center == null || Body == null || _degreesPerSecond <= 0f)
+            if (_center == null || _degreesPerSecond <= 0f || deltaTime <= 0f)
                 return;
 
-            float angleDelta = _degreesPerSecond * Mathf.Deg2Rad * fixedDeltaTime;
+            float angleDelta = _degreesPerSecond * Mathf.Deg2Rad * deltaTime;
             _angle += angleDelta;
             SnapToOrbit();
         }
@@ -46,7 +37,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         {
             Vector2 offset = new(Mathf.Cos(_angle), Mathf.Sin(_angle));
             Vector2 position = (Vector2)_center.position + offset * _radius;
-            Body.MovePosition(position);
+            transform.position = new Vector3(position.x, position.y, transform.position.z);
         }
     }
 }

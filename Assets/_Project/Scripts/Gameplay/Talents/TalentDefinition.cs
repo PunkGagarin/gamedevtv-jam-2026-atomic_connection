@@ -1,12 +1,11 @@
-using System;
 using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Currencies;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Talents
 {
-    [Serializable]
-    public class TalentDefinition
+    [CreateAssetMenu(fileName = "TalentDefinition", menuName = "Game Resources/Talents/Talent Definition")]
+    public class TalentDefinition : ScriptableObject
     {
         [field: SerializeField] public TalentId Id { get; private set; }
         [field: SerializeField] public TalentType Type { get; private set; }

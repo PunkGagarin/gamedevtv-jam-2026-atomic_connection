@@ -4,7 +4,7 @@
 |---|---|
 | Назначение файла | Связать спавн уровней, валюту и доступные апгрейды |
 | Спавн-источник | `Spawn.md` |
-| Конфиг-источники | `LevelCatalogConfig`, `EnemySpawnerConfig`, `BattleMoleculeConfig`, `CurrencyConfig`, `CurrencyPickupConfig`, `TalentConfig` |
+| Конфиг-источники | `LevelCatalogConfig`, `EnemySpawnerConfig`, `BattleMoleculeConfig`, `CurrencyConfig`, `CurrencyPickupConfig`, `TalentConfig` + `TalentDefinition` assets |
 | Когда обновлять | При изменении спавна, наград врагов, наград уровней, стартовых валют, цен или prerequisites апгрейдов |
 | Цель апгрейд-пейсинга | Около 1 meaningful unlock после каждого first-clear уровня; 2 покупки допустимы как catch-up, если игрок копил |
 | Старт угроз | Враги стартуют после 3-секундной задержки активной игры; таблицы волн отсчитываются после этой задержки |

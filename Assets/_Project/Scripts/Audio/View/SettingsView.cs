@@ -31,6 +31,9 @@ namespace _Project.Scripts.Audio.View
             Content.SetActive(true);
         }
 
+        public override void OnBackdropClicked() =>
+            UndoChanges();
+
         protected override void SubscribeUpdates()
         {
             _masterVolumeSlider.onValueChanged.AddListener(UpdateMasterVolume);

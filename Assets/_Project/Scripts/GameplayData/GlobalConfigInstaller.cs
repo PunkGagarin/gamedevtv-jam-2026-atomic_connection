@@ -2,6 +2,9 @@ using System;
 using UnityEngine;
 using Zenject;
 using _Project.Scripts.Gameplay.Currencies;
+using _Project.Scripts.Gameplay.CurrencyDrops;
+using _Project.Scripts.Gameplay.Enemies;
+using _Project.Scripts.Gameplay.Feedback;
 using _Project.Scripts.Gameplay.Levels;
 using _Project.Scripts.Gameplay.Talents;
 using _Project.Scripts.Gameplay.Units;
@@ -14,20 +17,28 @@ namespace _Project.Scripts.GameplayData
     public class GlobalConfigInstaller : ScriptableObjectInstaller
     {
         [field: SerializeField] private LanguageConfig LanguageConfig { get; set; }
-        [field: SerializeField] private UnitClickConfig UnitClickConfig { get; set; }
+        [field: SerializeField] private AtomCoreConfig AtomCoreConfig { get; set; }
         [field: SerializeField] private BattleMoleculeConfig BattleMoleculeConfig { get; set; }
+        [field: SerializeField] private GameplayFeedbackAnimationConfig GameplayFeedbackAnimationConfig { get; set; }
         [field: SerializeField] private TalentConfig TalentConfig { get; set; }
+        [field: SerializeField] private TalentTreeAnimationConfig TalentTreeAnimationConfig { get; set; }
         [field: SerializeField] private CurrencyConfig CurrencyConfig { get; set; }
+        [field: SerializeField] private CurrencyPickupConfig CurrencyPickupConfig { get; set; }
         [field: SerializeField] private LevelCatalogConfig LevelCatalogConfig { get; set; }
+        [field: SerializeField] private EnemySpawnerConfig EnemySpawnerConfig { get; set; }
 
         public override void InstallBindings()
         {
             BindConfig(LanguageConfig);
-            BindConfig(UnitClickConfig);
+            BindConfig(AtomCoreConfig);
             BindConfig(BattleMoleculeConfig);
+            BindConfig(GameplayFeedbackAnimationConfig);
             BindConfig(TalentConfig);
+            BindConfig(TalentTreeAnimationConfig);
             BindConfig(CurrencyConfig);
+            BindConfig(CurrencyPickupConfig);
             BindConfig(LevelCatalogConfig);
+            BindConfig(EnemySpawnerConfig);
         }
 
         private void BindConfig<TConfig>(TConfig config) where TConfig : ScriptableObject

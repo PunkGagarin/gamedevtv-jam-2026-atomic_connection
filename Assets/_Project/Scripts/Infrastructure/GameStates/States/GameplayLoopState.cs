@@ -1,5 +1,6 @@
 using _Project.Scripts.Gameplay.Drag;
 using _Project.Scripts.Gameplay.Enemies;
+using _Project.Scripts.Gameplay.CurrencyDrops;
 using _Project.Scripts.Gameplay.Level;
 using _Project.Scripts.Gameplay.Levels;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
@@ -12,7 +13,7 @@ using Zenject;
 
 namespace _Project.Scripts.Infrastructure.GameStates.States
 {
-    internal class GameplayLoopState : EndOfFrameExitState
+    internal class GameplayLoopState : EndOfFrameExitState, IFixedUpdateable
     {
         [Inject] private IEnemyService _enemyService;
         [Inject] private IAtomCoreService _atomCoreService;
@@ -20,6 +21,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
         [Inject] private IBattleMoleculeFactory _battleMoleculeFactory;
         [Inject] private IBattleMoleculeService _battleMoleculeService;
         [Inject] private IDragService _dragService;
+        [Inject] private ICurrencyPickupService _currencyPickupService;
         [Inject] private ILevelProgressService _levelProgressService;
         [Inject] private IGameplayRuntimeHierarchy _runtimeHierarchy;
         [Inject] private GameStateMachine _stateMachine;
@@ -36,6 +38,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
             _atomCoreService.Start();
             _enemyService.Start(_atomCoreService.CurrentCoreTransform);
             _battleMoleculeService.Start();
+            _currencyPickupService.Start();
             _levelProgressService.Start();
         }
 
@@ -49,14 +52,23 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
             if (_terminalTransitionWasRequested)
                 return;
 
+            _dragService.Update();
+            _currencyPickupService.Update();
             _atomCoreService.Update();
 
             if (_terminalTransitionWasRequested)
                 return;
 
             _battleMoleculeService.Update();
-            _dragService.Update();
             _levelProgressService.Update();
+        }
+
+        public void FixedUpdate()
+        {
+            if (_pauseService.IsPaused || _terminalTransitionWasRequested)
+                return;
+
+            _battleMoleculeService.FixedUpdate();
         }
 
         protected override void ExitOnEndOfFrame()
@@ -65,6 +77,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
             _enemyService.BossKilled -= OnBossKilled;
             _levelProgressService.Completed -= OnLevelCompleted;
             _dragService.CancelDrag();
+            _currencyPickupService.Cleanup();
             _levelProgressService.Cleanup();
             _enemyService.Cleanup();
             _atomCoreService.Cleanup();

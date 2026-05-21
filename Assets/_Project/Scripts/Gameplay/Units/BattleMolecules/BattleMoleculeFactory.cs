@@ -10,7 +10,9 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 {
     public class BattleMoleculeFactory : IBattleMoleculeFactory
     {
-        private const string BATTLE_MOLECULE_PREFAB_PATH = "Gameplay/Units/BattleMolecule";
+        private const string STINGER_MOLECULE_PREFAB_PATH = "Gameplay/Units/StingerMolecule";
+        private const string MEMBRANE_MOLECULE_PREFAB_PATH = "Gameplay/Units/MembraneMolecule";
+        private const string SWARM_MOLECULE_PREFAB_PATH = "Gameplay/Units/SwarmMolecule";
         private const string BATTLE_MOLECULES_CONTAINER_NAME = "BattleMolecules";
 
         private readonly List<BattleMolecule> _createdMolecules = new();
@@ -19,17 +21,58 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         [Inject] private IGameplayRuntimeHierarchy _runtimeHierarchy;
         [Inject] private IInstantiator _instantiator;
         [Inject] private ITalentService _talentService;
-
         public IReadOnlyList<BattleMolecule> CreatedMolecules => _createdMolecules;
         public event Action<BattleMolecule> MoleculeCreated;
 
-        public BattleMolecule Create(Vector3 at, BattleMoleculeConfig config)
+        public BattleMolecule CreateStinger(Vector3 at, BattleMoleculeConfig config)
         {
-            BattleMolecule prefab = _assetProvider.LoadAsset<BattleMolecule>(BATTLE_MOLECULE_PREFAB_PATH);
+            return Create(
+                at,
+                config,
+                STINGER_MOLECULE_PREFAB_PATH,
+                "StingerMolecule",
+                AdjustedAtomsRequired(config.StingerMoleculeAtomsRequired),
+                BattleMoleculeKind.Stinger);
+        }
+
+        public BattleMolecule CreateMembrane(Vector3 at, BattleMoleculeConfig config)
+        {
+            int atomsRequired = config.MembraneMoleculeAtomsRequired -
+                                Mathf.RoundToInt(_talentService.BonusOf(TalentType.MembraneMoleculeChargeReduction));
+
+            return Create(
+                at,
+                config,
+                MEMBRANE_MOLECULE_PREFAB_PATH,
+                "MembraneMolecule",
+                AdjustedAtomsRequired(atomsRequired),
+                BattleMoleculeKind.Membrane);
+        }
+
+        public BattleMolecule CreateSwarm(Vector3 at, BattleMoleculeConfig config)
+        {
+            return Create(
+                at,
+                config,
+                SWARM_MOLECULE_PREFAB_PATH,
+                "SwarmMolecule",
+                AdjustedAtomsRequired(config.SwarmMoleculeAtomsRequired),
+                BattleMoleculeKind.Swarm);
+        }
+
+        private BattleMolecule Create(
+            Vector3 at,
+            BattleMoleculeConfig config,
+            string prefabPath,
+            string moleculeName,
+            int atomsRequired,
+            BattleMoleculeKind kind)
+        {
+            BattleMolecule prefab = _assetProvider.LoadAsset<BattleMolecule>(prefabPath);
 
             if (prefab == null)
             {
-                Debug.LogError($"BattleMolecule prefab is missing at Resources path '{BATTLE_MOLECULE_PREFAB_PATH}'.");
+                Debug.LogError($"BattleMolecule prefab is missing at Resources path '{prefabPath}'.");
                 return null;
             }
 
@@ -39,18 +82,17 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                 Quaternion.identity,
                 _runtimeHierarchy.GetOrCreateContainer(BATTLE_MOLECULES_CONTAINER_NAME));
 
-            molecule.name = nameof(BattleMolecule);
-            molecule.Configure(config, AdjustedAtomsRequired(config));
+            molecule.name = moleculeName;
+            molecule.Configure(config, atomsRequired, kind);
             _createdMolecules.Add(molecule);
             MoleculeCreated?.Invoke(molecule);
 
             return molecule;
         }
 
-        private int AdjustedAtomsRequired(BattleMoleculeConfig config)
+        private int AdjustedAtomsRequired(int atomsRequired)
         {
-            float multiplier = 1f + _talentService.BonusOf(TalentType.ProjectileGenerationSpeed);
-            return Mathf.Max(1, Mathf.RoundToInt(config.AtomsRequired / multiplier));
+            return Mathf.Max(1, atomsRequired);
         }
 
         public void Cleanup()

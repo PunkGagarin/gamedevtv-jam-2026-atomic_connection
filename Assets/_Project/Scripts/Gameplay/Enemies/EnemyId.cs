@@ -5,6 +5,7 @@ namespace _Project.Scripts.Gameplay.Enemies
         Standard = 0,
         Mass = 1,
         Elite = 2,
-        Boss = 3
+        Boss = 3,
+        Ranged = 4
     }
 }

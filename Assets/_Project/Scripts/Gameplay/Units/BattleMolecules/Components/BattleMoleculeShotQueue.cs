@@ -1,5 +1,6 @@
 using System;
 using _Project.Scripts.Gameplay.Units;
+using _Project.Scripts.Gameplay.Units.BattleMolecules;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
@@ -11,7 +12,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         [field: SerializeField] private OwnedAtoms OwnedAtoms { get; set; }
         [field: SerializeField] private BattleMoleculeCharge Charge { get; set; }
 
-        public event Action<Vector3, Vector3> ShotRequested;
+        public event Action<BattleMoleculeShotRequest> ShotRequested;
 
         private void Awake()
         {
@@ -22,19 +23,46 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
                 Charge = GetComponent<BattleMoleculeCharge>();
         }
 
-        public bool TryRequestShot(Vector3 direction)
+        public virtual void Configure(BattleMoleculeConfig config)
         {
-            if (!Charge.IsCharged || direction.sqrMagnitude <= Mathf.Epsilon)
+        }
+
+        public virtual bool TryRequestShot(Vector3 direction)
+        {
+            if (!CanRequestShot(direction))
                 return false;
 
             Vector3 origin = transform.position;
-            Vector3 shotDirection = direction.normalized;
+            Vector3 shotDirection = NormalizeShotDirection(direction);
 
-            Charge.Spend();
-            OwnedAtoms.ReleaseAll();
-            ShotRequested?.Invoke(origin, shotDirection);
+            SpendCharge();
+            RequestShot(origin, shotDirection, BattleMoleculeShotKind.Stinger);
 
             return true;
+        }
+
+        protected bool CanRequestShot(Vector3 direction)
+        {
+            return Charge != null
+                   && OwnedAtoms != null
+                   && Charge.IsCharged
+                   && direction.sqrMagnitude > Mathf.Epsilon;
+        }
+
+        protected void SpendCharge()
+        {
+            Charge.Spend();
+            OwnedAtoms.ReleaseAll();
+        }
+
+        protected void RequestShot(Vector3 origin, Vector3 direction, BattleMoleculeShotKind kind, int shotSequenceId = 0)
+        {
+            ShotRequested?.Invoke(new BattleMoleculeShotRequest(origin, direction, kind, shotSequenceId));
+        }
+
+        protected static Vector3 NormalizeShotDirection(Vector3 direction)
+        {
+            return direction.normalized;
         }
     }
 }

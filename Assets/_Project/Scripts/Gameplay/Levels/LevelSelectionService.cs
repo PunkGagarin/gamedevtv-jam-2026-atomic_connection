@@ -43,15 +43,16 @@ namespace _Project.Scripts.Gameplay.Levels
             SetSelectedLevel(SelectedLevel + 1);
         }
 
-        public void CompleteSelectedLevel()
+        public bool CompleteSelectedLevel()
         {
             ProgressData progressData = _progressProvider.ProgressData;
 
             if (SelectedLevel <= progressData.CompletedLevelCount)
-                return;
+                return false;
 
             progressData.CompletedLevelCount = SelectedLevel;
             SetSelectedLevel(HighestUnlockedLevel);
+            return true;
         }
 
         public void ResetProgress()
@@ -61,6 +62,18 @@ namespace _Project.Scripts.Gameplay.Levels
             progressData.SelectedLevel = 1;
             _saveLoadService.SaveProgress();
             Changed?.Invoke();
+        }
+
+        public void SelectLevelForDebug(int level)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            int clampedLevel = Mathf.Clamp(level, 1, MaxConfiguredLevel);
+            ProgressData progressData = _progressProvider.ProgressData;
+            progressData.CompletedLevelCount = Mathf.Clamp(clampedLevel - 1, 0, MaxConfiguredLevel - 1);
+            progressData.SelectedLevel = clampedLevel;
+            _saveLoadService.SaveProgress();
+            Changed?.Invoke();
+#endif
         }
 
         private void EnsureSelectedLevel()

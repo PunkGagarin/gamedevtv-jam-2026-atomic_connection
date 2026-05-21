@@ -18,7 +18,8 @@ namespace _Project.Scripts.Gameplay.Talents
         public event Action Changed;
 
         public IReadOnlyList<TalentDefinition> Talents => _config.Talents;
-        public float AtomGenerationMultiplier => 1f + BonusOf(TalentType.AtomGenerationSpeed);
+        public float AtomGenerationMultiplier => 1f + BonusOf(TalentType.CoreClickReduction);
+        public bool HasAvailableUpgradeNotification => _config.Talents.Any(talent => ShouldShowNotification(talent.Id));
 
         public void Initialize()
         {
@@ -84,6 +85,16 @@ namespace _Project.Scripts.Gameplay.Talents
 
         public bool IsUnlocked(TalentType type) =>
             _config.Talents.Any(talent => talent.Type == type && talent.IsUnlock && LevelOf(talent.Id) > 0);
+
+        public bool ShouldShowNotification(TalentId talentId)
+        {
+            TalentDefinition talent = DefinitionFor(talentId);
+            int currentLevel = LevelOf(talentId);
+
+            return currentLevel < talent.MaxLevel &&
+                   PrerequisitesBought(talent) &&
+                   _currencyService.CanSpend(talent.PriceForLevel(currentLevel));
+        }
 
         private bool PrerequisitesBought(TalentDefinition talent) =>
             talent.Prerequisites == null || talent.Prerequisites.All(prerequisite => LevelOf(prerequisite) > 0);

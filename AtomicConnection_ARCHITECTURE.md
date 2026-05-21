@@ -65,11 +65,22 @@ Spawn tracks are independent:
 
 Runtime ownership:
 - `EnemyService` owns wave timing, active enemy tracking, per-frame enemy
-  ticking, death subscriptions, nucleotide rewards, and boss-kill notification.
+  ticking, death subscriptions, non-boss nucleotide pickup spawn requests, and
+  boss-kill notification.
 - `EnemySpawner` is only the spawn helper: choose offscreen position, ask
-  `EnemyFactory` to create the unit, and apply spawn-time object setup.
+  `EnemyFactory` to create the unit, apply spawn-time object setup, and keep
+  multi-enemy wave spawns clustered in one offscreen sector.
+- `CurrencyPickupService` owns physical currency pickup spawning, cursor-hover
+  collection checks, currency grant on collection, and pickup cleanup.
 - Enemy object-internal behavior stays on focused components.
-- `EnemyMovement` moves the enemy.
+- `EnemyMovement` moves enemies directly toward the core; prefab-specific
+  movement variants such as `MassEnemyArcMovement` own enemy-local path shapes.
+- Enemy-local runtime behaviors implement `IEnemyRuntimeBehavior`; `EnemyUnit`
+  configures and ticks them while `EnemyService` owns the active enemy loop.
+- Ranged enemies use prefab variants: `RangedEnemyStopMovement` owns stopping
+  near the core, `RangedEnemyAttack` owns telegraph, projectile spawn, projectile
+  ticking, and projectile cleanup. `RangedEnemyAttack` starts its attack timer
+  from the movement component's stopped state instead of a separate attack range.
 - `EnemyCoreCollision` resolves normal overlap damage with the atom core while
   ticked through `EnemyUnit` by `EnemyService`.
 - Boss one-shot core collision is a prefab component variant,
@@ -80,11 +91,11 @@ Runtime ownership:
 `GameplayEnterState` creates the core and battle molecule, then enters
 `GameplayLoopState`.
 
-`GameplayLoopState` inherits `EndOfFrameExitState`. It starts/ticks/cleans active
-gameplay services such as `IEnemyService`, `IAtomCoreService`,
-`IBattleMoleculeService`, and `ILevelProgressService`. It skips gameplay ticks
-while `PauseService.IsPaused`; `ExitOnEndOfFrame()` cleans state-owned runtime
-services and objects.
+`GameplayLoopState` inherits `EndOfFrameExitState`. It starts, ticks,
+fixed-ticks, and cleans active gameplay services such as `IEnemyService`, `IAtomCoreService`,
+`IBattleMoleculeService`, `ICurrencyPickupService`, and
+`ILevelProgressService`. It skips gameplay ticks while `PauseService.IsPaused`;
+`ExitOnEndOfFrame()` cleans state-owned runtime services and objects.
 
 ## Core, Molecule, And Progress
 
@@ -95,15 +106,20 @@ services, subscribes to core death during `Start()`, and ticks current
 `AtomCore`.
 
 `AtomCore` is the root facade. `AtomCoreClickInteraction` owns hit detection,
-click progress, and generated free atom creation through `FreeAtomFactory`.
+manual/auto click progress, and generated free atom creation through
+`FreeAtomFactory`.
 
-`IBattleMoleculeService` ticks created battle molecules and subscribes to
-shot-request events during `Start()`. Each `BattleMolecule` owns its accepted
-atoms, charge, fire request, and molecule atom orbiting through local components.
+`IBattleMoleculeService` ticks created battle molecules, including transform-based
+core orbit movement, and auto-loads core atoms into molecules when unlocked.
+Each `BattleMolecule` owns its accepted atoms, charge, fire request, collision
+collider, attack resolution, shot feedback, and molecule atom orbiting through
+local components. Attack-capable molecule prefabs use focused attack components
+such as `StingerMoleculeAttack` and `SwarmMoleculeAttack` to resolve
+local shot requests into raycasts, enemy damage, and shot-line feedback.
 
 `LevelProgressService` owns completion reward/unlock, marks the selected level
-complete through `ILevelSelectionService`, grants reward through
-`CurrencyService`, and raises completion for state transition.
+complete through `ILevelSelectionService`, grants first-clear completion reward
+through `CurrencyService`, and raises completion for state transition.
 
 ## UI And Windows
 
@@ -113,11 +129,18 @@ Dynamic window flow:
 WindowService.Open(WindowId)
 -> WindowFactory.CreateWindow(...)
 -> WindowsConfig prefab lookup at Resources/Configs/Windows/windowConfig
--> Zenject IInstantiator under scene UIRoot
+-> modal root with raycast-blocking backdrop under scene UIRoot
+-> Zenject IInstantiator under modal root
 ```
 
 UI may call `GameStateMachine.Enter(...)` or `IWindowService.Open(...)`, but must
 not load scenes or control gameplay service lifecycle.
+
+Every dynamic window gets a shared modal backdrop. The backdrop blocks clicks to
+UI behind the current window and forwards backdrop clicks to the opened
+`BaseWindow`. Its color is configured in `WindowsConfig`. Windows opt into
+dismiss-on-backdrop by overriding `OnBackdropClicked()`; result windows keep the
+default no-op and require explicit button actions.
 
 The gameplay menu is not a `GameplayPauseState` transition yet:
 
@@ -163,11 +186,19 @@ installers, bound with `FromInstance(...)`, and injected.
 Dynamic prefab registries map ids to prefabs. `WindowsConfig` is a prefab
 registry, not a numeric settings config.
 
+`AtomCoreConfig` owns core setup values: base core HP, clicks required to
+generate a free atom, generated atom spawn radius, and free atom orbit speed.
+
 Talent-adjusted runtime values are applied by the current owner:
 - `AtomCoreService` applies core HP and atom click count
 - `BattleMoleculeFactory` applies atom charge count
-- `BattleMoleculeService` resolves shot damage
+- `AtomCoreClickInteraction` applies AutoClick
+- molecule-local attack components resolve shot damage and Pierce
+- `BattleMoleculeService` applies AutoLoad
 
 Talent tree uses `TalentConfig`. `TalentService` owns talent progress and
 buying; `CurrencyService` owns saved meta-currencies. Talent progress and
-currencies currently use `PlayerPrefs` as MVP persistence.
+currencies currently use `PlayerPrefs` as MVP persistence. `ProgressData`
+contains a save/progression version; if the stored version does not match the
+current code version, `SaveLoadService` clears saved data and creates fresh
+progress instead of migrating.

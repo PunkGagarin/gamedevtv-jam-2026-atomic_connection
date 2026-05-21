@@ -1,32 +1,36 @@
-using System;
 using _Project.Scripts.Gameplay.Units.BattleMolecules.Components;
+using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 {
     [RequireComponent(typeof(OwnedAtoms))]
+    [RequireComponent(typeof(OwnedAtomOrbitLayout))]
     [RequireComponent(typeof(BattleMoleculeCharge))]
     [RequireComponent(typeof(BattleMoleculeAtomReceiver))]
     [RequireComponent(typeof(BattleMoleculeAtomOrbit))]
+    [RequireComponent(typeof(BattleMoleculeCoreOrbit))]
     [RequireComponent(typeof(BattleMoleculeShotQueue))]
     public class BattleMolecule : MonoBehaviour
     {
         [field: SerializeField] private OwnedAtoms OwnedAtoms { get; set; }
+        [field: SerializeField] private OwnedAtomOrbitLayout AtomOrbitLayout { get; set; }
         [field: SerializeField] private BattleMoleculeCharge Charge { get; set; }
         [field: SerializeField] private BattleMoleculeAtomReceiver AtomReceiver { get; set; }
         [field: SerializeField] private BattleMoleculeAtomOrbit AtomOrbit { get; set; }
+        [field: SerializeField] private BattleMoleculeCoreOrbit CoreOrbit { get; set; }
         [field: SerializeField] private BattleMoleculeShotQueue ShotQueue { get; set; }
+        [field: SerializeField] public Collider2D CollisionCollider { get; private set; }
 
-        public event Action<Vector3, Vector3> ShotRequested
-        {
-            add => ShotQueue.ShotRequested += value;
-            remove => ShotQueue.ShotRequested -= value;
-        }
+        public BattleMoleculeKind Kind { get; private set; } = BattleMoleculeKind.Stinger;
 
         private void Awake()
         {
             if (OwnedAtoms == null)
                 OwnedAtoms = GetComponent<OwnedAtoms>();
+
+            if (AtomOrbitLayout == null)
+                AtomOrbitLayout = GetComponent<OwnedAtomOrbitLayout>();
 
             if (Charge == null)
                 Charge = GetComponent<BattleMoleculeCharge>();
@@ -37,23 +41,45 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             if (AtomOrbit == null)
                 AtomOrbit = GetComponent<BattleMoleculeAtomOrbit>();
 
+            if (CoreOrbit == null)
+                CoreOrbit = GetComponent<BattleMoleculeCoreOrbit>();
+
             if (ShotQueue == null)
                 ShotQueue = GetComponent<BattleMoleculeShotQueue>();
+
+            if (CollisionCollider == null)
+                CollisionCollider = GetComponent<Collider2D>();
         }
 
-        public void Configure(BattleMoleculeConfig config, int atomsRequired)
+        public void Configure(BattleMoleculeConfig config, int atomsRequired, BattleMoleculeKind kind)
         {
             if (config == null)
                 return;
 
+            Kind = kind;
             Charge.Configure(atomsRequired);
-            AtomReceiver.Configure(config.AtomsPosCircleRadius);
+            AtomOrbitLayout?.ConfigureFixedRadius(FreeAtomOwnerKind.BattleMolecule, config.AtomsPosCircleRadius);
             AtomOrbit.Configure(config.DepositedAtomsOrbitDegreesPerSecond);
+            ShotQueue?.Configure(config);
+        }
+
+        public void ConfigureCoreOrbit(Transform coreTransform, BattleMoleculeConfig config)
+        {
+            if (config == null)
+                return;
+
+            CoreOrbit.Configure(coreTransform, config.CoreOrbitDegreesPerSecond);
         }
 
         public void Tick(float deltaTime)
         {
             AtomOrbit.Tick(deltaTime);
+            CoreOrbit.Tick(deltaTime);
+        }
+
+        public bool TryAutoLoadAtom(FreeAtom atom)
+        {
+            return AtomReceiver != null && AtomReceiver.TryAcceptAtom(atom);
         }
     }
 }

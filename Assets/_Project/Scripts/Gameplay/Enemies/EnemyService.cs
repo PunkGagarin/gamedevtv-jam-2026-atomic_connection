@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Common.Physics;
 using _Project.Scripts.Gameplay.Common.Time;
 using _Project.Scripts.Gameplay.Currencies;
+using _Project.Scripts.Gameplay.CurrencyDrops;
 using _Project.Scripts.Gameplay.Levels;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using Zenject;
 
 namespace _Project.Scripts.Gameplay.Enemies
@@ -19,15 +19,17 @@ namespace _Project.Scripts.Gameplay.Enemies
         private LevelDefinition _level;
         private bool _isActive;
         private bool _spawnWasStarted;
+        private float _timeToSpawnStart;
         private float _elapsedSeconds;
 
         [Inject] private IEnemySpawner _enemySpawner;
         [Inject] private IEnemyFactory _enemyFactory;
         [Inject] private LevelCatalogConfig _levelCatalog;
+        [Inject] private EnemySpawnerConfig _enemySpawnerConfig;
         [Inject] private ILevelSelectionService _levelSelectionService;
         [Inject] private ITimeService _time;
         [Inject] private IPhysicsService _physicsService;
-        [Inject] private ICurrencyService _currencyService;
+        [Inject] private ICurrencyPickupService _currencyPickupService;
 
         public event Action BossKilled;
 
@@ -40,6 +42,7 @@ namespace _Project.Scripts.Gameplay.Enemies
             PrepareSpawnTracks();
             _isActive = target != null;
             _spawnWasStarted = false;
+            _timeToSpawnStart = _enemySpawnerConfig.InitialSpawnDelaySeconds;
             _elapsedSeconds = 0;
         }
 
@@ -48,15 +51,11 @@ namespace _Project.Scripts.Gameplay.Enemies
             if (!_isActive || _target == null)
                 return;
 
-            if (!_spawnWasStarted)
-            {
-                if (FirstGameplayClickWasReceived())
-                    _spawnWasStarted = true;
-
-                return;
-            }
-
             float deltaTime = _time.DeltaTime;
+
+            if (!TickSpawnStartDelay(deltaTime))
+                return;
+
             TickEnemies(deltaTime);
             _elapsedSeconds += deltaTime;
             TickSpawnTracks(deltaTime);
@@ -70,18 +69,24 @@ namespace _Project.Scripts.Gameplay.Enemies
             _level = null;
             _isActive = false;
             _spawnWasStarted = false;
+            _timeToSpawnStart = 0;
             _elapsedSeconds = 0;
             _spawnTracks.Clear();
 
             _enemyFactory.Cleanup();
         }
 
-        private bool FirstGameplayClickWasReceived()
+        private bool TickSpawnStartDelay(float deltaTime)
         {
-            if (!UnityEngine.Input.GetMouseButtonDown(0))
+            if (_spawnWasStarted)
+                return true;
+
+            _timeToSpawnStart -= deltaTime;
+            if (_timeToSpawnStart > 0f)
                 return false;
 
-            return EventSystem.current == null || !EventSystem.current.IsPointerOverGameObject();
+            _spawnWasStarted = true;
+            return true;
         }
 
         private void PrepareSpawnTracks()
@@ -114,13 +119,21 @@ namespace _Project.Scripts.Gameplay.Enemies
 
         private void SpawnWave(LevelWaveDefinition wave)
         {
-            EnemyDefinition enemyDefinition = _levelCatalog.EnemyFor(wave.EnemyId);
+            EnemyDefinition enemyDefinition = _enemySpawnerConfig.EnemyFor(wave.EnemyId);
             float offscreenSpawnPadding = _level != null ? _level.OffscreenSpawnPadding : 1f;
             int maxHealth = wave.MaxHealthFor(enemyDefinition);
             int coreCollisionDamage = wave.CoreCollisionDamageFor(enemyDefinition);
 
-            for (int i = 0; i < wave.SpawnCount; i++)
-                TrackEnemy(_enemySpawner.Spawn(enemyDefinition, maxHealth, coreCollisionDamage, _target, offscreenSpawnPadding));
+            foreach (EnemyUnit enemy in _enemySpawner.SpawnGroup(
+                         enemyDefinition,
+                         maxHealth,
+                         coreCollisionDamage,
+                         _target,
+                         offscreenSpawnPadding,
+                         wave.SpawnCount))
+            {
+                TrackEnemy(enemy);
+            }
         }
 
         private void TrackEnemy(EnemyUnit enemy)
@@ -137,6 +150,9 @@ namespace _Project.Scripts.Gameplay.Enemies
         {
             for (int i = _activeEnemies.Count - 1; i >= 0; i--)
                 _activeEnemies[i].TickMovement(deltaTime);
+
+            for (int i = _activeEnemies.Count - 1; i >= 0; i--)
+                _activeEnemies[i].TickRuntimeBehaviors(deltaTime);
 
             _physicsService.SyncTransforms();
 
@@ -155,10 +171,15 @@ namespace _Project.Scripts.Gameplay.Enemies
 
         private void OnEnemyKilled(EnemyUnit enemy)
         {
-            _currencyService.Add(new CurrencyAmount(CurrencyId.Nucleotides, enemy.NucleotideReward));
-
             if (enemy.Id == EnemyId.Boss)
+            {
                 BossKilled?.Invoke();
+                return;
+            }
+
+            _currencyPickupService.Spawn(
+                new CurrencyAmount(CurrencyId.Nucleotides, enemy.NucleotideReward),
+                enemy.transform.position);
         }
 
         private void UnsubscribeFromActiveEnemies()

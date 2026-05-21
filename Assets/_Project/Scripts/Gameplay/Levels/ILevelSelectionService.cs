@@ -12,7 +12,8 @@ namespace _Project.Scripts.Gameplay.Levels
         bool CanSelectNext { get; }
         void SelectPrevious();
         void SelectNext();
-        void CompleteSelectedLevel();
+        bool CompleteSelectedLevel();
         void ResetProgress();
+        void SelectLevelForDebug(int level);
     }
 }

@@ -30,9 +30,14 @@ namespace _Project.Scripts.Gameplay.Windows
         {
             Content.SetActive(true);
             CurrencyAmount reward = _levelProgressService.LastCompletionReward;
-            RewardLabel.text = _levelProgressService.LastCompletedLevelWasFinal
-                ? $"Спасибо что поиграли в игру\nReward: +{reward.Amount} {RewardName(reward.CurrencyId)}"
-                : $"LEVEL COMPLETE\nReward: +{reward.Amount} {RewardName(reward.CurrencyId)}";
+            string title = _levelProgressService.LastCompletedLevelWasFinal
+                ? "Спасибо что поиграли в игру"
+                : "LEVEL COMPLETE";
+            string rewardText = _levelProgressService.LastCompletionWasFirstClear
+                ? $"Reward: +{reward.Amount} {RewardName(reward.CurrencyId)}"
+                : "Reward already claimed";
+
+            RewardLabel.text = $"{title}\n{rewardText}";
         }
 
         protected override void SubscribeUpdates()

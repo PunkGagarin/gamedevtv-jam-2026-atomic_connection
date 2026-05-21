@@ -1,22 +1,24 @@
 using System;
 using _Project.Scripts.Gameplay.Common.Health;
 using _Project.Scripts.Gameplay.Units.AtomCores.Components;
-using _Project.Scripts.Gameplay.Units;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Units.AtomCores
 {
     [RequireComponent(typeof(OwnedAtoms))]
+    [RequireComponent(typeof(OwnedAtomOrbitLayout))]
     [RequireComponent(typeof(AtomProductionProgress))]
     [RequireComponent(typeof(Health))]
     [RequireComponent(typeof(AtomCoreClickInteraction))]
     public class AtomCore : MonoBehaviour
     {
         [field: SerializeField] public OwnedAtoms OwnedAtoms { get; private set; }
+        [field: SerializeField] private OwnedAtomOrbitLayout AtomOrbitLayout { get; set; }
         [field: SerializeField] private AtomProductionProgress ProductionProgress { get; set; }
         [field: SerializeField] private Health Health { get; set; }
         [field: SerializeField] private AtomCoreClickInteraction ClickInteraction { get; set; }
+        [field: SerializeField] private AtomCoreShield Shield { get; set; }
 
         private float _spawnRadiusOffset;
         private float _atomOrbitDegreesPerSecond;
@@ -43,6 +45,9 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
             if (OwnedAtoms == null)
                 OwnedAtoms = GetComponent<OwnedAtoms>();
 
+            if (AtomOrbitLayout == null)
+                AtomOrbitLayout = GetComponent<OwnedAtomOrbitLayout>();
+
             if (ProductionProgress == null)
                 ProductionProgress = GetComponent<AtomProductionProgress>();
 
@@ -51,9 +56,12 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
 
             if (ClickInteraction == null)
                 ClickInteraction = GetComponent<AtomCoreClickInteraction>();
+
+            if (Shield == null)
+                Shield = GetComponent<AtomCoreShield>();
         }
 
-        public void Configure(UnitClickConfig config, int clicksRequired, int maxHealth)
+        public void Configure(AtomCoreConfig config, int clicksRequired, int maxHealth)
         {
             _spawnRadiusOffset = config.SpawnRadiusOffset;
             _atomOrbitDegreesPerSecond = config.FreeAtomOrbitDegreesPerSecond;
@@ -61,6 +69,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
 
             Health?.Configure(maxHealth);
             ProductionProgress.Configure(clicksRequired);
+            AtomOrbitLayout?.ConfigureOwnerPlusAtomRadius(FreeAtomOwnerKind.Core, _orbitRadius);
         }
 
         public bool RegisterAtomClick()
@@ -79,18 +88,13 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
             if (freeAtom == null || freeAtom.OrbitMotion == null)
                 return;
 
-            Vector3 offset = freeAtom.transform.position - transform.position;
-            float angle = offset.sqrMagnitude > 0.001f
-                ? Mathf.Atan2(offset.y, offset.x)
-                : 0;
-
             OwnedAtoms.TakeOwnership(freeAtom, FreeAtomOwnerKind.Core);
-            freeAtom.OrbitMotion.Configure(transform, _orbitRadius + GetColliderRadius(freeAtom.transform), angle);
         }
 
         public void Tick(float deltaTime)
         {
-            ClickInteraction?.Tick();
+            ClickInteraction?.Tick(deltaTime);
+            Shield?.Tick(deltaTime);
 
             float angleDelta = _atomOrbitDegreesPerSecond * Mathf.Deg2Rad * deltaTime;
             OwnedAtoms.TickOrbit(angleDelta);
@@ -98,6 +102,9 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
 
         public void TakeDamage(int amount)
         {
+            if (Shield != null && Shield.TryAbsorbDamage(amount))
+                return;
+
             Health?.TakeDamage(amount);
         }
 

@@ -4,7 +4,17 @@ namespace _Project.Scripts.Gameplay.Windows
 {
     public class BaseWindow : MonoBehaviour
     {
+        private GameObject _modalRoot;
+
         public WindowId Id { get; protected set; }
+        internal GameObject ModalRoot => _modalRoot == null ? gameObject : _modalRoot;
+
+        internal void SetModalRoot(GameObject modalRoot) =>
+            _modalRoot = modalRoot;
+
+        public virtual void OnBackdropClicked()
+        {
+        }
 
         private void Awake() =>
             OnAwake();

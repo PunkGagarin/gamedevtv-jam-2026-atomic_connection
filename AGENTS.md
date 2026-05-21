@@ -23,18 +23,20 @@ do not put the behavior in a service yet. Run these gates before code changes:
 - Event/update: use events/subscriptions/explicit calls for discrete changes; use `Update` only for continuous work.
 - Lifecycle: states decide when; services know how.
 - Unity assets: keep `.meta` files, preserve GUIDs, update prefabs/scenes for serialized fields/components.
-- Docs: update `AtomicConnection_GDD.md` for player-facing rules; update `AtomicConnection_BALANCE.md` for concrete numbers.
+- Docs: update `AtomicConnection_GDD.md` for player-facing rules; update `AtomicConnection_BALANCE.md` for concrete numbers; update `Spawn.md` for level spawn tables whenever `LevelCatalogConfig` waves change; update `Pacing.md` when spawn, currency rewards, level rewards, or upgrade costs/prerequisites change.
 - Validation: run available compile/static checks and report Unity Editor/manual validation gaps.
 
 ## Project
 
-AtomicConnection is a Unity project built with Unity `6000.4.4f1` + URP. Game design is documented in [AtomicConnection_GDD.md](AtomicConnection_GDD.md), while concrete gameplay numbers and tuning tables live in [AtomicConnection_BALANCE.md](AtomicConnection_BALANCE.md). Infrastructure is still template-derived; `Gameplay/Units` and `Gameplay/Enemies` are minimal example features used to exercise lifecycle and DI patterns until production gameplay replaces them.
+AtomicConnection is a Unity project built with Unity `6000.4.4f1` + URP. Game design is documented in [AtomicConnection_GDD.md](AtomicConnection_GDD.md), concrete gameplay numbers and tuning tables live in [AtomicConnection_BALANCE.md](AtomicConnection_BALANCE.md), level spawn tables live in [Spawn.md](Spawn.md), and progression pacing lives in [Pacing.md](Pacing.md). Infrastructure is still template-derived; `Gameplay/Units` and `Gameplay/Enemies` are minimal example features used to exercise lifecycle and DI patterns until production gameplay replaces them.
 
 ## Build & Run
 
 This is a Unity project - there is no CLI build command. Open in Unity `6000.4.4f1` and press Play. Scenes must be loaded in order: `Bootstrap -> MainMenu -> Gameplay` (configured in Build Settings).
 
 No project-owned automated tests exist under `Assets/_Project`. Manual validation is done by running the game in the Editor.
+
+Do not run `dotnet build`, MSBuild, or generated solution/project builds as routine validation for this Unity project. They are not the project-owned build path and may fail because the local environment lacks a .NET SDK/MSBuild or Unity-generated references. Use Unity Editor validation when available; otherwise use focused static checks/searches and report the Unity/manual validation gap. Only run CLI solution builds when the user explicitly asks for them or a Unity-compatible build pipeline has been confirmed.
 
 ## Repository Rules
 
@@ -74,7 +76,7 @@ Prefab rules:
 - `AGENTS.md` is the source of truth for current architecture rules.
 - Keep new or undocumented lifecycle decisions reference-backed by `ecs-survivors`; if a needed decision is neither covered locally nor reference-backed, stop and present it as a separate proposal.
 - After each architecture/lifecycle/UI/DI slice, check whether `AGENTS.md` still matches the implemented architecture. Update it before the final response if current flow, state registration, lifecycle rules, or project conventions changed.
-- Every time code adds gameplay, content, UI behavior, player-facing rules, or other design-relevant behavior that is not already described in `AtomicConnection_GDD.md`, update the GDD in the same task before the final response. Keep concrete gameplay numbers out of the GDD; if the change adds or changes balance values, update `AtomicConnection_BALANCE.md` instead or alongside the GDD. Pure infrastructure refactors that do not change design or player-facing behavior do not require GDD or balance-document updates.
+- Every time code adds gameplay, content, UI behavior, player-facing rules, or other design-relevant behavior that is not already described in `AtomicConnection_GDD.md`, update the GDD in the same task before the final response. Keep concrete gameplay numbers out of the GDD; if the change adds or changes balance values, update `AtomicConnection_BALANCE.md` instead or alongside the GDD. If the change touches `LevelCatalogConfig` waves, update `Spawn.md` as the only detailed spawn-table document and `Pacing.md` if rewards/progression expectations change. Pure infrastructure refactors that do not change design or player-facing behavior do not require GDD or balance-document updates.
 
 ### Layer structure
 
@@ -90,10 +92,11 @@ Detailed flow notes live in [AtomicConnection_ARCHITECTURE.md](AtomicConnection_
 Keep `AGENTS.md` operational and update the architecture notes when current flow changes.
 
 - State flow is `Bootstrap -> MainMenu -> GameplayEnter -> GameplayLoop`; terminal transitions go to game-over or level-complete states/windows.
-- `GameplayLoopState` owns active service ticking/cleanup and skips gameplay ticks while paused.
+- `GameplayLoopState` owns active service ticking/fixed-ticking/cleanup and skips gameplay ticks while paused.
 - Runtime prefab flow is `Resources` path -> `IAssetProvider` -> Zenject `IInstantiator`; runtime objects belong under gameplay scene hierarchy.
-- Enemy ownership: `EnemyService` coordinates, `EnemySpawner` creates, enemy components own enemy-local behavior, `BossCoreCollision` is the boss one-shot variant.
+- Enemy ownership: `EnemyService` coordinates, `EnemySpawner` creates, `CurrencyPickupService` owns physical currency pickup spawning/collection, enemy components own enemy-local behavior, `MassEnemyArcMovement` is the mass-enemy movement variant, `RangedEnemyStopMovement`/`RangedEnemyAttack` are the ranged-enemy variants, and `BossCoreCollision` is the boss one-shot variant.
 - UI may call state/window services, but must not load scenes or control gameplay service lifecycle. Gameplay menu pause is not a `GameplayPauseState` transition yet.
+- Dynamic windows opened through `IWindowService` use the shared modal backdrop from `WindowFactory`; backdrop color is configured in `WindowsConfig`, while outside-click dismissal belongs in the owning window's `OnBackdropClicked()` override.
 - Zenject wires dependencies; do not `new` DI-owned services. `IInitializable` must not enter states, load scenes, or start gameplay loops.
 - MVP UI may call high-level feature/domain services directly; keep each operation encapsulated in one owning service.
 - Use UniTask for async/time-based work. Coroutines and Unity yield instructions are never used.
@@ -119,6 +122,7 @@ Keep `AGENTS.md` operational and update the architecture notes when current flow
 
 - Use field injection for Zenject dependencies. Prefer `[Inject] private SomeService _service;` over constructor injection.
 - Use serialized auto-properties for inspector-exposed fields: `[field: SerializeField] private GameObject Obj { get; set; }`. Do not add new `[SerializeField] private GameObject _obj;` fields.
+- ScriptableObject configs with multiple semantic groups must use editor-friendly `[field: Header("...")]` sections with human-readable names.
 - When converting existing serialized fields to serialized auto-properties, update scene/prefab YAML references to the backing field name, for example `<Obj>k__BackingField`.
 - Prefer `List<T>` over arrays (`T[]`) where possible, including `[field: SerializeField]` collections
 - For new files, prefer usings grouped as System -> UnityEngine -> third-party -> project. In existing files, keep the surrounding order unless the file is already being cleaned up.
@@ -127,9 +131,10 @@ Keep `AGENTS.md` operational and update the architecture notes when current flow
 
 - When possible, validate Unity changes by opening the project in Unity `6000.4.4f1`.
 - For code-only changes, at minimum check affected C# files for compile-time issues and keep scene/prefab references in sync.
+- Do not attempt `dotnet build`/MSBuild as a fallback validation step for ordinary Unity code changes; prefer targeted static inspection and explicit manual validation notes unless the user asks for CLI build validation.
 - If adding or moving Unity assets, ensure corresponding `.meta` files are present and Unity-valid. Script `.cs.meta` files should contain a `MonoImporter` block, folder `.meta` files should contain `folderAsset: yes` and `DefaultImporter`, and new/moved prefabs or assets must keep stable GUID references. Prefer letting Unity generate or refresh these files when possible.
 - Current manual lifecycle/UI validation should include `MainMenu -> Settings -> Apply/Cancel`, `MainMenu -> Update -> TalentTreeWindow`, `MainMenu -> LevelSelector previous/next arrows`, `MainMenu -> Reset`, `MainMenu -> Gameplay`, `GearButton -> GameplayMenuWindow -> Close`, `GearButton -> GameplayMenuWindow -> Restart`, and `GearButton -> GameplayMenuWindow -> MainMenu`.
-- Current gameplay validation should include `Bootstrap -> LoadMainMenuState -> MainMenuState -> LoadGameplayState -> GameplayEnterState -> GameplayLoopState`, `AtomCore` creation at `GameplayStartPoint`, enemy spawning after first gameplay click, `LevelProgressService` completion into `LevelCompleteState -> LevelCompleteWindow`, isotope reward persistence, and cleanup when restarting or returning to main menu.
+- Current gameplay validation should include `Bootstrap -> LoadMainMenuState -> MainMenuState -> LoadGameplayState -> GameplayEnterState -> GameplayLoopState`, `AtomCore` creation at `GameplayStartPoint`, enemy spawning after first gameplay click, ranged enemy stop-and-shoot behavior, projectile damage absorption by membrane, non-boss enemy DNA pickup spawn and hover collection, no boss currency pickup, `LevelProgressService` completion into `LevelCompleteState -> LevelCompleteWindow`, first-clear isotope reward persistence, no completion-isotope reward on replay, and cleanup when restarting or returning to main menu.
 
 ## Git Notes
 

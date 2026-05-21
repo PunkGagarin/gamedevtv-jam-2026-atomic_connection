@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Cameras.Provider;
 using _Project.Scripts.Gameplay.Common.Random;
 using _Project.Scripts.Gameplay.Units.AtomCores;
@@ -11,21 +12,38 @@ namespace _Project.Scripts.Gameplay.Enemies
         [Inject] private IEnemyFactory _enemyFactory;
         [Inject] private ICameraProvider _cameraProvider;
         [Inject] private IRandomService _random;
+        [Inject] private EnemySpawnerConfig _config;
 
-        public EnemyUnit Spawn(EnemyDefinition definition, int maxHealth, int coreCollisionDamage, Transform target, float offscreenPadding)
+        public IReadOnlyList<EnemyUnit> SpawnGroup(
+            EnemyDefinition definition,
+            int maxHealth,
+            int coreCollisionDamage,
+            Transform target,
+            float offscreenPadding,
+            int count)
         {
-            if (!TryGetOffscreenSpawnPosition(target, offscreenPadding, out Vector3 spawnPosition))
-                return null;
+            int spawnCount = Mathf.Max(1, count);
+            List<EnemyUnit> enemies = new(spawnCount);
 
-            EnemyUnit enemy = _enemyFactory.Create(definition, maxHealth, coreCollisionDamage, spawnPosition);
-            enemy.MoveTo(target, definition.MoveSpeed);
-            enemy.CollideWithCore(target != null && target.TryGetComponent(out AtomCore core) ? core : null);
-            return enemy;
+            if (!TryGetOffscreenSpawnPositions(target, offscreenPadding, spawnCount, out List<Vector3> spawnPositions))
+                return enemies;
+
+            float groupMovementSign = _random.Range(0, 2) == 0 ? -1f : 1f;
+
+            foreach (Vector3 spawnPosition in spawnPositions)
+            {
+                EnemyUnit enemy = _enemyFactory.Create(definition, maxHealth, coreCollisionDamage, spawnPosition);
+                enemy.MoveTo(target, definition.MoveSpeed, groupMovementSign);
+                enemy.CollideWithCore(target != null && target.TryGetComponent(out AtomCore core) ? core : null);
+                enemies.Add(enemy);
+            }
+
+            return enemies;
         }
 
-        private bool TryGetOffscreenSpawnPosition(Transform target, float offscreenSpawnPadding, out Vector3 spawnPosition)
+        private bool TryGetOffscreenSpawnPositions(Transform target, float offscreenSpawnPadding, int count, out List<Vector3> spawnPositions)
         {
-            spawnPosition = Vector3.zero;
+            spawnPositions = new List<Vector3>();
 
             Camera camera = _cameraProvider.MainCamera;
             if (camera == null || target == null)
@@ -36,16 +54,37 @@ namespace _Project.Scripts.Gameplay.Enemies
             Vector3 topRight = camera.ViewportToWorldPoint(new Vector3(1, 1, depth));
             float padding = Mathf.Max(0, offscreenSpawnPadding);
             int side = _random.Range(0, 4);
+            bool verticalSide = side <= 1;
+            float axisMin = verticalSide ? bottomLeft.y : bottomLeft.x;
+            float axisMax = verticalSide ? topRight.y : topRight.x;
+            float axisLength = axisMax - axisMin;
+            float groupSpacing = Mathf.Max(0f, _config.GroupSpawnSpacing);
+            float groupJitter = Mathf.Max(0f, _config.GroupSpawnJitter);
+            float groupSpan = Mathf.Min(axisLength, (Mathf.Max(1, count) - 1) * groupSpacing);
+            float centerMin = axisMin + groupSpan * 0.5f;
+            float centerMax = axisMax - groupSpan * 0.5f;
+            float center = centerMin >= centerMax ? (axisMin + axisMax) * 0.5f : _random.Range(centerMin, centerMax);
 
-            spawnPosition = side switch
+            for (int i = 0; i < count; i++)
             {
-                0 => new Vector3(bottomLeft.x - padding, _random.Range(bottomLeft.y, topRight.y), target.position.z),
-                1 => new Vector3(topRight.x + padding, _random.Range(bottomLeft.y, topRight.y), target.position.z),
-                2 => new Vector3(_random.Range(bottomLeft.x, topRight.x), bottomLeft.y - padding, target.position.z),
-                _ => new Vector3(_random.Range(bottomLeft.x, topRight.x), topRight.y + padding, target.position.z)
-            };
+                float offset = count <= 1 ? 0f : (i - (count - 1) * 0.5f) * groupSpacing;
+                float jitter = count <= 1 ? 0f : _random.Range(-groupJitter, groupJitter);
+                float axisValue = Mathf.Clamp(center + offset + jitter, axisMin, axisMax);
+                spawnPositions.Add(PositionOnSide(side, axisValue, bottomLeft, topRight, padding, target.position.z));
+            }
 
             return true;
+        }
+
+        private static Vector3 PositionOnSide(int side, float axisValue, Vector3 bottomLeft, Vector3 topRight, float padding, float z)
+        {
+            return side switch
+            {
+                0 => new Vector3(bottomLeft.x - padding, axisValue, z),
+                1 => new Vector3(topRight.x + padding, axisValue, z),
+                2 => new Vector3(axisValue, bottomLeft.y - padding, z),
+                _ => new Vector3(axisValue, topRight.y + padding, z)
+            };
         }
     }
 }

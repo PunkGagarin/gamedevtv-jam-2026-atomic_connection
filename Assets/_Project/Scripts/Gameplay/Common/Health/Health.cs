@@ -25,6 +25,14 @@ namespace _Project.Scripts.Gameplay.Common.Health
             ResetHealth();
         }
 
+        public void Configure(int maxHealth, int currentHealth)
+        {
+            MaxHealth = Mathf.Max(1, maxHealth);
+            CurrentHealth = Mathf.Clamp(currentHealth, 1, MaxHealth);
+            IsAlive = true;
+            Changed?.Invoke();
+        }
+
         public void TakeDamage(int amount)
         {
             if (!IsAlive || amount <= 0)

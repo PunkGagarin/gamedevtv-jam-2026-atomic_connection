@@ -73,6 +73,31 @@
 | Ranged | `Gameplay/Enemies/RangedEnemyUnit` | 2 | 0.65 | 1 projectile | нет | 7 ДНК |
 | Boss | `Gameplay/Enemies/BossEnemyUnit` | 3 | 0.5 | 2 | да | нет; завершает уровень |
 
+### Enemy Merge
+
+Эти значения сейчас представлены в `EnemyMergeConfig` и совпадают с дефолтами конфига.
+
+| Значение | Default |
+|---|---:|
+| Merge enabled | да |
+| Merge chance | 30% |
+| Merge radius | 5.0 |
+| Merge check interval | 0.5 сек |
+| Merge link width | 0.12 |
+| Merge link z offset | 0.05 |
+| Merge link intermediate point count | 5 |
+| Merge tether minimum distance | 2.32 |
+| Merge tether preferred distance | 2.8 |
+| Merge tether pull strength | 5.5 |
+| Merge tether dead zone | 0.08 |
+| Merge tether tug amplitude | 1.05 |
+| Merge tether tug min frequency | 2.2 |
+| Merge tether tug max frequency | 5.4 |
+| Merge tether contest loser pull | 1.0 |
+| Merge tether contest winner drift | 0.25 |
+| Merge link view resource path | `Gameplay/Enemies/EnemyMergeLinkView` |
+| Excluded enemy ids | Boss |
+
 ### Ranged Enemy Projectile
 
 Эти значения сейчас представлены в prefab-е `Gameplay/Enemies/RangedEnemyUnit` и projectile prefab-е `Gameplay/Enemies/EnemyProjectile`.

@@ -4,7 +4,7 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
     {
         protected override void ApplyCoreCollision()
         {
-            Core.TakeDamage(int.MaxValue);
+            Core.Kill();
         }
     }
 }

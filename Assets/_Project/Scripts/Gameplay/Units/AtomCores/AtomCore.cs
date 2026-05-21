@@ -108,6 +108,11 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
             Health?.TakeDamage(amount);
         }
 
+        public void Kill()
+        {
+            Health?.Kill();
+        }
+
         public void CleanupAtoms()
         {
             OwnedAtoms.ReleaseAll();

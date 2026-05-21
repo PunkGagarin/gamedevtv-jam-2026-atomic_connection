@@ -156,7 +156,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <TelegraphVisualRoot>k__BackingField: {fileID: 400001}
   <ProjectilePrefabResourcePath>k__BackingField: Gameplay/Enemies/EnemyProjectile
-  <AttackRange>k__BackingField: 3.05
   <AttackInterval>k__BackingField: 2.2
   <InitialAttackDelay>k__BackingField: 0.8
   <TelegraphDuration>k__BackingField: 0.18

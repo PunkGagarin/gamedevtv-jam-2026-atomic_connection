@@ -9,12 +9,15 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
 
         private float _currentStopDistance;
 
+        public bool IsStopped { get; private set; }
+
         public override void Configure(Transform target, float speed)
         {
             base.Configure(target, speed);
             _currentStopDistance = Random.Range(
                 Mathf.Max(0f, StopDistance - StopDistanceJitter),
                 StopDistance + StopDistanceJitter);
+            IsStopped = false;
         }
 
         public override void Tick(float deltaTime)
@@ -27,16 +30,24 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
             float stopDistance = Mathf.Max(0f, _currentStopDistance);
 
             if (distance <= stopDistance || distance <= Mathf.Epsilon)
+            {
+                IsStopped = true;
                 return;
+            }
 
-            float step = Mathf.Min(Speed * deltaTime, distance - stopDistance);
+            IsStopped = false;
+
+            float distanceToStop = distance - stopDistance;
+            float step = Mathf.Min(Speed * deltaTime, distanceToStop);
             transform.position += toTarget / distance * step;
+            IsStopped = step >= distanceToStop;
         }
 
         public override void Clear()
         {
             base.Clear();
             _currentStopDistance = 0f;
+            IsStopped = false;
         }
     }
 }

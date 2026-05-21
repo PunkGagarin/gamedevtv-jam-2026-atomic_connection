@@ -64,6 +64,18 @@ namespace _Project.Scripts.Gameplay.Levels
             Changed?.Invoke();
         }
 
+        public void SelectLevelForDebug(int level)
+        {
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            int clampedLevel = Mathf.Clamp(level, 1, MaxConfiguredLevel);
+            ProgressData progressData = _progressProvider.ProgressData;
+            progressData.CompletedLevelCount = Mathf.Clamp(clampedLevel - 1, 0, MaxConfiguredLevel - 1);
+            progressData.SelectedLevel = clampedLevel;
+            _saveLoadService.SaveProgress();
+            Changed?.Invoke();
+#endif
+        }
+
         private void EnsureSelectedLevel()
         {
             ProgressData progressData = _progressProvider.ProgressData;

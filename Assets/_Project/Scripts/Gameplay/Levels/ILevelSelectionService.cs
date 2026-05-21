@@ -14,5 +14,6 @@ namespace _Project.Scripts.Gameplay.Levels
         void SelectNext();
         bool CompleteSelectedLevel();
         void ResetProgress();
+        void SelectLevelForDebug(int level);
     }
 }

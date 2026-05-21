@@ -79,7 +79,8 @@ Runtime ownership:
   configures and ticks them while `EnemyService` owns the active enemy loop.
 - Ranged enemies use prefab variants: `RangedEnemyStopMovement` owns stopping
   near the core, `RangedEnemyAttack` owns telegraph, projectile spawn, projectile
-  ticking, and projectile cleanup.
+  ticking, and projectile cleanup. `RangedEnemyAttack` starts its attack timer
+  from the movement component's stopped state instead of a separate attack range.
 - `EnemyCoreCollision` resolves normal overlap damage with the atom core while
   ticked through `EnemyUnit` by `EnemyService`.
 - Boss one-shot core collision is a prefab component variant,

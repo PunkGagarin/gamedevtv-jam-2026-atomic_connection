@@ -7,13 +7,13 @@ using _Project.Scripts.Infrastructure.AssetManagement;
 
 namespace _Project.Scripts.Gameplay.Enemies.Components
 {
+    [RequireComponent(typeof(RangedEnemyStopMovement))]
     public class RangedEnemyAttack : MonoBehaviour, IEnemyRuntimeBehavior
     {
         private const string PROJECTILE_CONTAINER_NAME = "EnemyProjectiles";
 
         [field: SerializeField] private Transform TelegraphVisualRoot { get; set; }
         [field: SerializeField] private string ProjectilePrefabResourcePath { get; set; } = "Gameplay/Enemies/EnemyProjectile";
-        [field: SerializeField, Min(0f)] private float AttackRange { get; set; } = 3.05f;
         [field: SerializeField, Min(0.01f)] private float AttackInterval { get; set; } = 2.2f;
         [field: SerializeField, Min(0f)] private float InitialAttackDelay { get; set; } = 0.8f;
         [field: SerializeField, Min(0f)] private float TelegraphDuration { get; set; } = 0.18f;
@@ -29,6 +29,7 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
         private float _timeToAttack;
         private float _telegraphTimeRemaining;
         private bool _isTelegraphing;
+        private RangedEnemyStopMovement _stopMovement;
 
         [Inject] private IAssetProvider _assetProvider;
         [Inject] private IGameplayRuntimeHierarchy _runtimeHierarchy;
@@ -39,6 +40,7 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
             if (TelegraphVisualRoot == null)
                 TelegraphVisualRoot = transform;
 
+            _stopMovement = GetComponent<RangedEnemyStopMovement>();
             _baseTelegraphScale = TelegraphVisualRoot.localScale;
         }
 
@@ -73,7 +75,7 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
                 return;
             }
 
-            if (!IsInAttackRange())
+            if (_stopMovement == null || !_stopMovement.IsStopped)
                 return;
 
             _timeToAttack -= deltaTime;
@@ -140,12 +142,6 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
 
             if (projectile.Launch(_target, direction, ProjectileSpeed, ProjectileDamage, ProjectileLifetime))
                 _projectiles.Add(projectile);
-        }
-
-        private bool IsInAttackRange()
-        {
-            float attackRange = Mathf.Max(0f, AttackRange);
-            return Vector2.Distance(transform.position, _target.transform.position) <= attackRange;
         }
 
         private void TickProjectiles(float deltaTime)

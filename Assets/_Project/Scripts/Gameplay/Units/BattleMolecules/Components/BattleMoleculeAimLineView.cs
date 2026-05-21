@@ -6,27 +6,38 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
     public class BattleMoleculeAimLineView : MonoBehaviour
     {
+        private const string AIM_PREVIEW_LINE_OBJECT_NAME = "AimPreviewLine";
         private const string SHOT_LINE_OBJECT_NAME = "ShotLine";
 
         private static Material _lineMaterial;
 
         [field: SerializeField, Min(0f)] private float AimLineWidth { get; set; } = 0.08f;
+        [field: SerializeField, Min(0f)] private float AimPreviewLineWidth { get; set; } = 0.06f;
+        [field: SerializeField, Min(0f)] private float AimPreviewLineLength { get; set; } = 20f;
         [field: SerializeField, Min(0f)] private float ShotLineWidth { get; set; } = 0.12f;
         [field: SerializeField, Min(0f)] private float ShotLineLength { get; set; } = 20f;
         [field: SerializeField, Min(0.01f)] private float ShotLineSeconds { get; set; } = 0.12f;
         [field: SerializeField] private int AimLineSortingOrder { get; set; } = 10;
+        [field: SerializeField] private int AimPreviewLineSortingOrder { get; set; } = 12;
         [field: SerializeField] private int ShotLineSortingOrder { get; set; } = 11;
         [field: SerializeField] private Color AimLineColor { get; set; } = Color.yellow;
+        [field: SerializeField] private Color AimPreviewLineColor { get; set; } = Color.green;
         [field: SerializeField] private Color ShotLineColor { get; set; } = Color.cyan;
 
         private readonly List<LineRenderer> _shotLines = new();
         private readonly List<float> _shotLineTimesLeft = new();
         private LineRenderer _aimLine;
+        private LineRenderer _aimPreviewLine;
         private Vector3 _origin;
 
         private void Awake()
         {
             _aimLine = SetupLine(gameObject, AimLineWidth, AimLineSortingOrder, AimLineColor);
+            _aimPreviewLine = SetupLine(
+                GetOrCreateLineObject(AIM_PREVIEW_LINE_OBJECT_NAME),
+                AimPreviewLineWidth,
+                AimPreviewLineSortingOrder,
+                AimPreviewLineColor);
             CreateShotLine();
         }
 
@@ -39,6 +50,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
                 if (_shotLines[i] != null)
                     _shotLines[i].enabled = false;
             }
+
+            HideAimPreview();
         }
 
         private void Update()
@@ -88,6 +101,30 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         {
             if (_aimLine != null)
                 _aimLine.enabled = false;
+        }
+
+        public void ShowAimPreview(Vector3 origin, Vector3 direction)
+        {
+            if (_aimPreviewLine == null)
+                return;
+
+            if (direction.sqrMagnitude <= Mathf.Epsilon)
+            {
+                HideAimPreview();
+                return;
+            }
+
+            Vector3 end = origin + direction.normalized * Mathf.Max(0f, AimPreviewLineLength);
+
+            _aimPreviewLine.SetPosition(0, origin);
+            _aimPreviewLine.SetPosition(1, end);
+            _aimPreviewLine.enabled = true;
+        }
+
+        public void HideAimPreview()
+        {
+            if (_aimPreviewLine != null)
+                _aimPreviewLine.enabled = false;
         }
 
         public void ShowShotLine(BattleMoleculeShotRequest request, Vector3? hitPoint, float? lineLength = null)
@@ -153,6 +190,11 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         private GameObject GetOrCreateShotLineObject(int index)
         {
             string objectName = index == 0 ? SHOT_LINE_OBJECT_NAME : $"{SHOT_LINE_OBJECT_NAME}_{index}";
+            return GetOrCreateLineObject(objectName);
+        }
+
+        private GameObject GetOrCreateLineObject(string objectName)
+        {
             Transform existing = transform.Find(objectName);
             if (existing != null)
                 return existing.gameObject;

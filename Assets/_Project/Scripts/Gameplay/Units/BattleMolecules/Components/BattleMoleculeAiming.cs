@@ -8,16 +8,18 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
     [RequireComponent(typeof(BattleMoleculeShotQueue))]
     public class BattleMoleculeAiming : MonoBehaviour, IDraggable, IDragReleaseHandler
     {
-        [field: SerializeField] private BattleMoleculeCharge Charge { get; set; }
-        [field: SerializeField] private BattleMoleculeAimLineView AimLine { get; set; }
-        [field: SerializeField] private BattleMoleculeShotQueue ShotQueue { get; set; }
+        [field: SerializeField] protected BattleMoleculeCharge Charge { get; private set; }
+        [field: SerializeField] protected BattleMoleculeAimLineView AimLine { get; private set; }
+        [field: SerializeField] protected BattleMoleculeShotQueue ShotQueue { get; private set; }
 
         private bool _isAiming;
 
-        public bool CanStartDrag => Charge.IsCharged;
+        protected bool IsAiming => _isAiming;
+        protected BattleMoleculeAimLineView AimLineView => AimLine;
+        public bool CanStartDrag => Charge != null && Charge.IsCharged;
         public Transform Transform => transform;
 
-        private void Awake()
+        protected virtual void Awake()
         {
             if (Charge == null)
                 Charge = GetComponent<BattleMoleculeCharge>();
@@ -29,33 +31,38 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
                 ShotQueue = GetComponent<BattleMoleculeShotQueue>();
         }
 
-        public void OnDragStart()
+        public virtual void OnDragStart()
         {
             _isAiming = true;
-            AimLine.Show(CurrentAimOrigin());
+            AimLine?.Show(CurrentAimOrigin());
+            OnAimingStarted();
         }
 
-        public void OnDragMove(Vector3 worldPosition)
+        public virtual void OnDragMove(Vector3 worldPosition)
         {
             if (!_isAiming)
                 return;
 
-            AimLine.SetSegment(CurrentAimOrigin(), GetDragEnd(worldPosition));
+            Vector3 origin = CurrentAimOrigin();
+            Vector3 dragEnd = GetDragEnd(worldPosition);
+
+            AimLine?.SetSegment(origin, dragEnd);
+            OnAimingMoved(origin, dragEnd, GetShotDirection(worldPosition));
         }
 
-        public void OnDragEnd()
+        public virtual void OnDragEnd()
         {
             StopAiming();
         }
 
-        public void OnDragCancel()
+        public virtual void OnDragCancel()
         {
             StopAiming();
         }
 
-        public bool TryHandleDragRelease(Vector3 worldPosition)
+        public virtual bool TryHandleDragRelease(Vector3 worldPosition)
         {
-            if (!Charge.IsCharged)
+            if (Charge == null || ShotQueue == null || !Charge.IsCharged)
                 return false;
 
             Vector3 direction = GetShotDirection(worldPosition);
@@ -65,26 +72,39 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             return ShotQueue.TryRequestShot(direction.normalized);
         }
 
-        private void StopAiming()
+        protected virtual void StopAiming()
         {
             _isAiming = false;
-            AimLine.Hide();
+            AimLine?.Hide();
+            OnAimingStopped();
         }
 
-        private Vector3 GetDragEnd(Vector3 dragPosition)
+        protected virtual void OnAimingStarted()
+        {
+        }
+
+        protected virtual void OnAimingMoved(Vector3 origin, Vector3 dragEnd, Vector3 shotDirection)
+        {
+        }
+
+        protected virtual void OnAimingStopped()
+        {
+        }
+
+        protected Vector3 GetDragEnd(Vector3 dragPosition)
         {
             dragPosition.z = CurrentAimOrigin().z;
             return dragPosition;
         }
 
-        private Vector3 GetShotDirection(Vector3 dragPosition)
+        protected Vector3 GetShotDirection(Vector3 dragPosition)
         {
             Vector3 origin = CurrentAimOrigin();
             dragPosition.z = origin.z;
             return origin - dragPosition;
         }
 
-        private Vector3 CurrentAimOrigin()
+        protected Vector3 CurrentAimOrigin()
         {
             return transform.position;
         }

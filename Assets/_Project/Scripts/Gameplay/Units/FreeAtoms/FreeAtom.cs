@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using _Project.Scripts.Gameplay.Drag;
 using _Project.Scripts.Gameplay.Common.Movement;
+using _Project.Scripts.Gameplay.Drag;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Units.FreeAtoms
@@ -13,6 +13,7 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
         private bool _isDragging;
 
         [field: SerializeField] public OrbitMotion OrbitMotion { get; private set; }
+        [field: SerializeField] private HoverBehaviour HoverBehaviour { get; set; }
 
         public bool CanStartDrag => false;
         public Transform Transform => transform;
@@ -28,6 +29,9 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
         {
             if (OrbitMotion == null)
                 OrbitMotion = GetComponent<OrbitMotion>();
+
+            if (HoverBehaviour == null)
+                HoverBehaviour = GetComponent<HoverBehaviour>();
         }
 
         private void OnDestroy()
@@ -40,6 +44,7 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
             OwnerKind = ownerKind;
             Owner = owner;
             OwnerChanged?.Invoke(this, OwnerKind);
+            RefreshHoverState();
         }
 
         public void ClearOwner()
@@ -48,6 +53,7 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
             Owner = null;
             OrbitMotion?.Clear();
             OwnerChanged?.Invoke(this, OwnerKind);
+            RefreshHoverState();
         }
 
         public void PrepareForSpawn()
@@ -56,6 +62,7 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
             SetCollidersEnabled(true);
             gameObject.SetActive(true);
             ClearOwner();
+            RefreshHoverState();
         }
 
         public void PrepareForPool()
@@ -64,6 +71,7 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
             ClearOwner();
             SetCollidersEnabled(false);
             gameObject.SetActive(false);
+            SetHoverEnabled(false);
         }
 
         public void RequestDespawn()
@@ -74,6 +82,7 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
         public void OnDragStart()
         {
             _isDragging = true;
+            RefreshHoverState();
         }
 
         public void OnDragMove(Vector3 worldPosition)
@@ -84,12 +93,14 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
         public void OnDragEnd()
         {
             _isDragging = false;
+            RefreshHoverState();
         }
 
         public void OnDragCancel()
         {
             _isDragging = false;
             OrbitMotion?.SnapToOrbit();
+            RefreshHoverState();
         }
 
         private void SetCollidersEnabled(bool isEnabled)
@@ -98,6 +109,17 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
 
             foreach (Collider2D col in _colliders)
                 col.enabled = isEnabled;
+        }
+
+        private void SetHoverEnabled(bool isEnabled)
+        {
+            if (HoverBehaviour != null)
+                HoverBehaviour.enabled = isEnabled;
+        }
+
+        private void RefreshHoverState()
+        {
+            SetHoverEnabled(CanStartDrag);
         }
     }
 }

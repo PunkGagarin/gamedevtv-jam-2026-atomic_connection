@@ -106,6 +106,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
                 return;
 
             Health?.TakeDamage(amount);
+            AtomCoreEventBus.RiseOnDamageEvent(amount);
         }
 
         public void Kill()

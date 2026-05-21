@@ -7,6 +7,7 @@ using _Project.Scripts.Gameplay.Currencies;
 using _Project.Scripts.Gameplay.Drag;
 using _Project.Scripts.Gameplay.Input.Service;
 using _Project.Scripts.Gameplay.Level;
+using _Project.Scripts.Gameplay.Talents;
 using _Project.Scripts.Infrastructure.AssetManagement;
 
 namespace _Project.Scripts.Gameplay.CurrencyDrops
@@ -14,8 +15,10 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
     public class CurrencyPickupService : ICurrencyPickupService
     {
         private const string PICKUP_CONTAINER_NAME = "CurrencyPickups";
+        private const string PICKUP_AREA_OBJECT_NAME = "CurrencyPickupArea";
 
         private readonly List<CurrencyPickupView> _pickups = new();
+        private CurrencyPickupAreaView _pickupAreaView;
 
         [Inject] private IAssetProvider _assetProvider;
         [Inject] private ICameraProvider _cameraProvider;
@@ -26,6 +29,7 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
         [Inject] private IInstantiator _instantiator;
         [Inject] private IRandomService _random;
         [Inject] private CurrencyPickupConfig _config;
+        [Inject] private ITalentService _talentService;
 
         public void Start()
         {
@@ -71,13 +75,21 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
         public void Update()
         {
             if (_pickups.Count == 0 || _dragService.IsDragActive)
+            {
+                HidePickupArea();
                 return;
+            }
 
             Camera camera = _cameraProvider.MainCamera;
             if (camera == null)
+            {
+                HidePickupArea();
                 return;
+            }
 
-            Vector3 cursorWorldPosition = camera.ScreenToWorldPoint(_inputService.GetScreenMousePosition());
+            Vector3 cursorWorldPosition = CursorWorldPosition(camera);
+            float pickupAreaHalfSize = CurrentPickupAreaHalfSize();
+            ShowPickupArea(cursorWorldPosition, pickupAreaHalfSize);
 
             for (int i = _pickups.Count - 1; i >= 0; i--)
             {
@@ -88,9 +100,7 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
                     continue;
                 }
 
-                cursorWorldPosition.z = pickup.transform.position.z;
-
-                if (!pickup.Contains(cursorWorldPosition, _config.PickupRadius))
+                if (!pickup.IsInsidePickupArea(cursorWorldPosition, pickupAreaHalfSize))
                     continue;
 
                 CollectAt(i, pickup);
@@ -106,6 +116,7 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
             }
 
             _pickups.Clear();
+            DestroyPickupArea();
         }
 
         private Vector3 SpawnPositionNear(Vector3 worldPosition)
@@ -131,6 +142,65 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
         private void PlayCollectSound()
         {
             // TODO: inject AudioService and play Sounds.currencyPickup when the pickup sound asset is ready.
+        }
+
+        private Vector3 CursorWorldPosition(Camera camera)
+        {
+            Vector3 screenPosition = _inputService.GetScreenMousePosition();
+            screenPosition.z = Mathf.Abs(camera.transform.position.z);
+            Vector3 worldPosition = camera.ScreenToWorldPoint(screenPosition);
+            worldPosition.z = 0f;
+            return worldPosition;
+        }
+
+        private void ShowPickupArea(Vector3 center, float halfSize)
+        {
+            if (!_config.ShowPickupAreaIndicator)
+            {
+                HidePickupArea();
+                return;
+            }
+
+            EnsurePickupArea();
+            _pickupAreaView.Configure(
+                _config.PickupAreaLineWidth,
+                _config.PickupAreaSortingOrder,
+                _config.PickupAreaColor);
+            _pickupAreaView.Show(center, halfSize);
+        }
+
+        private void HidePickupArea()
+        {
+            if (_pickupAreaView != null)
+                _pickupAreaView.Hide();
+        }
+
+        private void EnsurePickupArea()
+        {
+            if (_pickupAreaView != null)
+                return;
+
+            GameObject areaObject = new(PICKUP_AREA_OBJECT_NAME);
+            areaObject.transform.SetParent(_runtimeHierarchy.GetOrCreateContainer(PICKUP_CONTAINER_NAME), false);
+            _pickupAreaView = areaObject.AddComponent<CurrencyPickupAreaView>();
+        }
+
+        private void DestroyPickupArea()
+        {
+            if (_pickupAreaView == null)
+                return;
+
+            Object.Destroy(_pickupAreaView.gameObject);
+            _pickupAreaView = null;
+        }
+
+        private float CurrentPickupAreaHalfSize()
+        {
+            float talentBonus = _talentService != null
+                ? _talentService.BonusOf(TalentType.CurrencyPickupArea)
+                : 0f;
+
+            return Mathf.Max(0f, _config.PickupAreaHalfSize + talentBonus);
         }
     }
 }

@@ -49,8 +49,16 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
             }
         }
 
-        public bool Contains(Vector3 worldPosition, float radius) =>
-            Vector2.Distance(transform.position, worldPosition) <= radius;
+        public bool IsInsidePickupArea(Vector3 areaCenter, float areaHalfSize)
+        {
+            Vector3 pickupCenter = _pickupCollider != null
+                ? _pickupCollider.bounds.center
+                : transform.position;
+
+            float halfSize = Mathf.Max(0f, areaHalfSize);
+            return Mathf.Abs(pickupCenter.x - areaCenter.x) <= halfSize
+                   && Mathf.Abs(pickupCenter.y - areaCenter.y) <= halfSize;
+        }
 
         public void PlayCollected(CurrencyPickupConfig config)
         {

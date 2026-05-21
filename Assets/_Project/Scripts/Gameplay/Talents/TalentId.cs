@@ -20,5 +20,6 @@ namespace _Project.Scripts.Gameplay.Talents
         SwarmMoleculeDamageSmall = 15,
         SwarmMoleculeAutoLoad = 16,
         SwarmMoleculeDamageLarge = 17,
+        CurrencyPickupArea = 18,
     }
 }

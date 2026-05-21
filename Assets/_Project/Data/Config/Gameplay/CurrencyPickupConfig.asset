@@ -14,8 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.CurrencyDrops.CurrencyPickupConfig
   <PickupPrefabResourcePath>k__BackingField: Gameplay/CurrencyDrops/CurrencyPickup
   <DisplayMode>k__BackingField: 1
-  <PickupRadius>k__BackingField: 0.35
+  <PickupAreaHalfSize>k__BackingField: 0.35
   <SpawnJitterRadius>k__BackingField: 1.2
+  <ShowPickupAreaIndicator>k__BackingField: 1
+  <PickupAreaLineWidth>k__BackingField: 0.04
+  <PickupAreaSortingOrder>k__BackingField: 60
+  <PickupAreaColor>k__BackingField: {r: 0.4, g: 1, b: 0.75, a: 0.85}
   <EnableIdleScaleAnimation>k__BackingField: 1
   <IdleScaleMultiplier>k__BackingField: 1.12
   <IdleScaleDuration>k__BackingField: 0.55

@@ -17,8 +17,14 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
         [field: Header("Pickup")]
         [field: SerializeField] public string PickupPrefabResourcePath { get; private set; } = "Gameplay/CurrencyDrops/CurrencyPickup";
         [field: SerializeField] public CurrencyPickupDisplayMode DisplayMode { get; private set; } = CurrencyPickupDisplayMode.OnePickupPerUnit;
-        [field: SerializeField, Min(0f)] public float PickupRadius { get; private set; } = 0.35f;
+        [field: SerializeField, Min(0f)] public float PickupAreaHalfSize { get; private set; } = 0.35f;
         [field: SerializeField, Min(0f)] public float SpawnJitterRadius { get; private set; } = 0.3f;
+
+        [field: Header("Pickup Area Indicator")]
+        [field: SerializeField] public bool ShowPickupAreaIndicator { get; private set; } = true;
+        [field: SerializeField, Min(0f)] public float PickupAreaLineWidth { get; private set; } = 0.04f;
+        [field: SerializeField] public int PickupAreaSortingOrder { get; private set; } = 60;
+        [field: SerializeField] public Color PickupAreaColor { get; private set; } = new(0.4f, 1f, 0.75f, 0.85f);
 
         [field: Header("Idle Animation")]
         [field: SerializeField] public bool EnableIdleScaleAnimation { get; private set; } = true;

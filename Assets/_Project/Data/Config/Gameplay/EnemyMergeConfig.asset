@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10d17161c6f54c8da4028cf1f50516a7, type: 3}
+  m_Name: EnemyMergeConfig
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Enemies.EnemyMergeConfig
+  <MergeEnabled>k__BackingField: 1
+  <MergeChance>k__BackingField: 0.3
+  <MergeRadius>k__BackingField: 5
+  <MergeCheckIntervalSeconds>k__BackingField: 0.5
+  <MergeExcludedEnemyIds>k__BackingField: 0300000001000000
+  <MergeLinkWidth>k__BackingField: 0.12
+  <MergeLinkZOffset>k__BackingField: 0.05
+  <MergeLinkIntermediatePointCount>k__BackingField: 5
+  <MergeLinkViewResourcePath>k__BackingField: Gameplay/Enemies/EnemyMergeLinkView
+  <MergeTetherMinimumDistance>k__BackingField: 2.32
+  <MergeTetherPreferredDistance>k__BackingField: 2.8
+  <MergeTetherPullStrength>k__BackingField: 5.5
+  <MergeTetherDeadZone>k__BackingField: 0.08
+  <MergeTetherTugAmplitude>k__BackingField: 1.05
+  <MergeTetherTugMinFrequency>k__BackingField: 2.2
+  <MergeTetherTugMaxFrequency>k__BackingField: 5.4
+  <MergeTetherContestLoserPull>k__BackingField: 1
+  <MergeTetherContestWinnerDrift>k__BackingField: 0.25

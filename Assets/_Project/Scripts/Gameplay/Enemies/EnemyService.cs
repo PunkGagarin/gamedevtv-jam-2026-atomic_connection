@@ -1,10 +1,14 @@
 using System;
 using System.Collections.Generic;
+using _Project.Scripts.Gameplay.Common.Random;
 using _Project.Scripts.Gameplay.Common.Physics;
 using _Project.Scripts.Gameplay.Common.Time;
 using _Project.Scripts.Gameplay.Currencies;
 using _Project.Scripts.Gameplay.CurrencyDrops;
+using _Project.Scripts.Gameplay.Enemies.Components;
+using _Project.Scripts.Gameplay.Level;
 using _Project.Scripts.Gameplay.Levels;
+using _Project.Scripts.Infrastructure.AssetManagement;
 using UnityEngine;
 using Zenject;
 
@@ -12,8 +16,10 @@ namespace _Project.Scripts.Gameplay.Enemies
 {
     public class EnemyService : IEnemyService
     {
+        private const string ENEMY_MERGE_LINKS_CONTAINER_NAME = "EnemyMergeLinks";
         private readonly List<EnemyUnit> _activeEnemies = new();
         private readonly List<SpawnTrack> _spawnTracks = new();
+        private readonly List<ActiveEnemyMergeLink> _activeMergeLinks = new();
 
         private Transform _target;
         private LevelDefinition _level;
@@ -21,12 +27,18 @@ namespace _Project.Scripts.Gameplay.Enemies
         private bool _spawnWasStarted;
         private float _timeToSpawnStart;
         private float _elapsedSeconds;
+        private float _timeToMergeCheck;
 
         [Inject] private IEnemySpawner _enemySpawner;
         [Inject] private IEnemyFactory _enemyFactory;
+        [Inject] private IAssetProvider _assetProvider;
+        [Inject] private IGameplayRuntimeHierarchy _runtimeHierarchy;
+        [Inject] private IInstantiator _instantiator;
         [Inject] private LevelCatalogConfig _levelCatalog;
         [Inject] private EnemySpawnerConfig _enemySpawnerConfig;
+        [Inject] private EnemyMergeConfig _enemyMergeConfig;
         [Inject] private ILevelSelectionService _levelSelectionService;
+        [Inject] private IRandomService _random;
         [Inject] private ITimeService _time;
         [Inject] private IPhysicsService _physicsService;
         [Inject] private ICurrencyPickupService _currencyPickupService;
@@ -44,6 +56,7 @@ namespace _Project.Scripts.Gameplay.Enemies
             _spawnWasStarted = false;
             _timeToSpawnStart = _enemySpawnerConfig.InitialSpawnDelaySeconds;
             _elapsedSeconds = 0;
+            _timeToMergeCheck = _enemyMergeConfig.MergeCheckIntervalSeconds;
         }
 
         public void Update()
@@ -59,6 +72,7 @@ namespace _Project.Scripts.Gameplay.Enemies
             TickEnemies(deltaTime);
             _elapsedSeconds += deltaTime;
             TickSpawnTracks(deltaTime);
+            TickEnemyMerge(deltaTime);
         }
 
         public void Cleanup()
@@ -71,7 +85,9 @@ namespace _Project.Scripts.Gameplay.Enemies
             _spawnWasStarted = false;
             _timeToSpawnStart = 0;
             _elapsedSeconds = 0;
+            _timeToMergeCheck = 0;
             _spawnTracks.Clear();
+            CleanupMergeLinks();
 
             _enemyFactory.Cleanup();
         }
@@ -146,6 +162,156 @@ namespace _Project.Scripts.Gameplay.Enemies
             _activeEnemies.Add(enemy);
         }
 
+        private void TickEnemyMerge(float deltaTime)
+        {
+            if (!_enemyMergeConfig.MergeEnabled || _activeEnemies.Count < 2)
+                return;
+
+            _timeToMergeCheck -= deltaTime;
+            if (_timeToMergeCheck > 0f)
+                return;
+
+            _timeToMergeCheck = _enemyMergeConfig.MergeCheckIntervalSeconds;
+            TryMergeEnemyPairs();
+        }
+
+        private void TryMergeEnemyPairs()
+        {
+            float mergeRadiusSqr = MergeRadiusSqr();
+
+            for (int i = 0; i < _activeEnemies.Count; i++)
+            {
+                EnemyUnit first = _activeEnemies[i];
+
+                if (!CanMerge(first))
+                    continue;
+
+                EnemyUnit second = FindMergeCandidatePassingChance(first, i + 1, mergeRadiusSqr);
+
+                if (second == null)
+                    continue;
+
+                MergeEnemies(first, second);
+            }
+        }
+
+        private float MergeRadiusSqr()
+        {
+            float mergeRadius = Mathf.Max(0f, _enemyMergeConfig.MergeRadius);
+            return mergeRadius * mergeRadius;
+        }
+
+        private EnemyUnit FindMergeCandidatePassingChance(EnemyUnit first, int startIndex, float mergeRadiusSqr)
+        {
+            for (int i = startIndex; i < _activeEnemies.Count; i++)
+            {
+                EnemyUnit second = _activeEnemies[i];
+
+                if (CanMerge(first, second, mergeRadiusSqr) && RollMergeChance())
+                    return second;
+            }
+
+            return null;
+        }
+
+        private bool RollMergeChance()
+        {
+            float chance = Mathf.Clamp01(_enemyMergeConfig.MergeChance);
+
+            if (chance <= 0f)
+                return false;
+
+            return chance >= 1f || _random.Range(0f, 1f) < chance;
+        }
+
+        private bool CanMerge(EnemyUnit enemy)
+        {
+            return enemy != null
+                   && enemy.IsAlive
+                   && !enemy.IsMergeLinked
+                   && !_enemyMergeConfig.IsMergeExcluded(enemy.Id);
+        }
+
+        private bool CanMerge(EnemyUnit first, EnemyUnit second, float mergeRadiusSqr)
+        {
+            if (!CanMerge(second) || first.Id != second.Id)
+                return false;
+
+            return (first.transform.position - second.transform.position).sqrMagnitude <= mergeRadiusSqr;
+        }
+
+        private void MergeEnemies(EnemyUnit first, EnemyUnit second)
+        {
+            EnemyMergeLinkView linkView = CreateMergeLinkView(first.transform, second.transform);
+            int mergedMaxHealth = first.MaxHealth + second.MaxHealth;
+            int mergedCurrentHealth = first.CurrentHealth + second.CurrentHealth;
+
+            first.BeginMergeLink(second, linkView, mergedMaxHealth, mergedCurrentHealth);
+            second.BeginMergeLink(first, linkView, mergedMaxHealth, mergedCurrentHealth);
+            _activeMergeLinks.Add(new ActiveEnemyMergeLink(first, second, linkView));
+        }
+
+        private EnemyMergeLinkView CreateMergeLinkView(Transform first, Transform second)
+        {
+            EnemyMergeLinkView prefab = _assetProvider.LoadAsset<EnemyMergeLinkView>(_enemyMergeConfig.MergeLinkViewResourcePath);
+
+            if (prefab == null)
+                throw new InvalidOperationException($"Enemy merge link prefab is missing at Resources path '{_enemyMergeConfig.MergeLinkViewResourcePath}'.");
+
+            Transform parent = _runtimeHierarchy.GetOrCreateContainer(ENEMY_MERGE_LINKS_CONTAINER_NAME);
+            EnemyMergeLinkView view = _instantiator.InstantiatePrefabForComponent<EnemyMergeLinkView>(
+                prefab,
+                Vector3.zero,
+                Quaternion.identity,
+                parent);
+
+            view.Configure(
+                first,
+                second,
+                _enemyMergeConfig.MergeLinkWidth,
+                _enemyMergeConfig.MergeLinkZOffset,
+                _enemyMergeConfig.MergeLinkIntermediatePointCount);
+            return view;
+        }
+
+        private void TickMergeLinks(float deltaTime)
+        {
+            for (int i = _activeMergeLinks.Count - 1; i >= 0; i--)
+            {
+                ActiveEnemyMergeLink link = _activeMergeLinks[i];
+
+                if (!link.IsAlive)
+                {
+                    _activeMergeLinks.RemoveAt(i);
+                    continue;
+                }
+
+                link.Tick(deltaTime, _enemyMergeConfig);
+            }
+        }
+
+        private void RemoveMergeLinkFor(EnemyUnit enemy)
+        {
+            for (int i = _activeMergeLinks.Count - 1; i >= 0; i--)
+            {
+                ActiveEnemyMergeLink link = _activeMergeLinks[i];
+
+                if (!link.Contains(enemy))
+                    continue;
+
+                link.ClearEnemyReferences();
+                _activeMergeLinks.RemoveAt(i);
+            }
+        }
+
+        private void CleanupMergeLinks()
+        {
+            foreach (ActiveEnemyMergeLink link in _activeMergeLinks)
+                link.DestroyView();
+
+            _activeMergeLinks.Clear();
+        }
+
         private void TickEnemies(float deltaTime)
         {
             for (int i = _activeEnemies.Count - 1; i >= 0; i--)
@@ -154,6 +320,7 @@ namespace _Project.Scripts.Gameplay.Enemies
             for (int i = _activeEnemies.Count - 1; i >= 0; i--)
                 _activeEnemies[i].TickRuntimeBehaviors(deltaTime);
 
+            TickMergeLinks(deltaTime);
             _physicsService.SyncTransforms();
 
             for (int i = _activeEnemies.Count - 1; i >= 0; i--)
@@ -162,6 +329,7 @@ namespace _Project.Scripts.Gameplay.Enemies
 
         private void OnEnemyDied(EnemyUnit enemy)
         {
+            RemoveMergeLinkFor(enemy);
             enemy.Died -= OnEnemyDied;
             enemy.Killed -= OnEnemyKilled;
 

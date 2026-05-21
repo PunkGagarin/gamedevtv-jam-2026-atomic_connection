@@ -4,7 +4,7 @@
 |---|---|
 | Назначение файла | Связать спавн уровней, валюту и доступные апгрейды |
 | Спавн-источник | `Spawn.md` |
-| Конфиг-источники | `LevelCatalogConfig`, `EnemySpawnerConfig`, `CurrencyConfig`, `CurrencyPickupConfig`, `TalentConfig` |
+| Конфиг-источники | `LevelCatalogConfig`, `EnemySpawnerConfig`, `BattleMoleculeConfig`, `CurrencyConfig`, `CurrencyPickupConfig`, `TalentConfig` |
 | Когда обновлять | При изменении спавна, наград врагов, наград уровней, стартовых валют, цен или prerequisites апгрейдов |
 | Цель апгрейд-пейсинга | Около 1 meaningful unlock после каждого first-clear уровня; 2 покупки допустимы как catch-up, если игрок копил |
 | Старт угроз | Враги стартуют после 3-секундной задержки активной игры; таблицы волн отсчитываются после этой задержки |
@@ -69,7 +69,7 @@
 | Боевой прицел | 1 изотоп | Крепкое ядро | Utility unlock ветки StingerMolecule |
 | Пробитие | 1 изотоп | Урон I | Подготовка к плотным линиям врагов |
 | Автозарядка | 1 изотоп | Урон I | Автоматизирует заряд StingerMolecule |
-| Урон II | 140 ДНК | Боевой прицел + Пробитие | Большой damage breakpoint, не идет сразу после Урон I |
+| Урон II | 140 ДНК | Пробитие | Большой damage breakpoint, не идет сразу после Урон I |
 | Вторая молекула | 1 изотоп | Крепкое ядро | Открывает ветки дополнительных молекул |
 | MembraneMolecule | 1 изотоп | Вторая молекула | Защитная ветка следующего gameplay-среза |
 | Легкая мембрана | 60 ДНК | MembraneMolecule | Уменьшает цену включения мембраны |
@@ -78,7 +78,9 @@
 | SwarmMolecule | 1 изотоп | Вторая молекула | Ответ на проблему массовиков из Level 4 |
 | Урон Swarm I | 80 ДНК | SwarmMolecule | Первый damage breakpoint SwarmMolecule |
 | Заряд Swarm | 1 изотоп | SwarmMolecule | Автоматизирует заряд SwarmMolecule |
-| Урон Swarm II | 160 ДНК | SwarmMolecule + Заряд Swarm | Большой AoE damage breakpoint, не идет сразу после первого урона |
+| Swarm Volley | 120 ДНК | SwarmMolecule | Делает Swarm шире: больше лучей и больше угол залпа |
+| Swarm Reach | 100 ДНК | SwarmMolecule | Увеличивает дальность массовой зачистки |
+| Урон Swarm II | 160 ДНК | Заряд Swarm | Небольшой AoE damage breakpoint; Swarm остается слабее Stinger по одиночной цели |
 
 ## Кривая
 

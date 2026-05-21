@@ -8,7 +8,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         [field: Header("Stinger Molecule")]
         [field: SerializeField] public Vector2 StingerMoleculeSpawnOffset { get; private set; } = new(2f, 0f);
         [field: SerializeField, Min(1)] public int StingerMoleculeAtomsRequired { get; private set; } = 3;
-        [field: SerializeField, Min(1)] public int BaseShotDamage { get; private set; } = 1;
+        [field: SerializeField, Min(1)] public int StingerMoleculeShotDamage { get; private set; } = 3;
         [field: SerializeField] public float AtomsPosCircleRadius { get; private set; } = 0.6f;
         [field: SerializeField, Min(0f)] public float DepositedAtomsOrbitDegreesPerSecond { get; private set; } = 90f;
         [field: SerializeField, Min(0f)] public float CoreOrbitDegreesPerSecond { get; private set; } = 45f;
@@ -25,8 +25,10 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         [field: Header("Swarm Molecule")]
         [field: SerializeField] public Vector2 SwarmMoleculeSpawnOffset { get; private set; } = new(-2f, 0f);
         [field: SerializeField, Min(1)] public int SwarmMoleculeAtomsRequired { get; private set; } = 5;
+        [field: SerializeField, Min(1)] public int SwarmMoleculeShotDamage { get; private set; } = 1;
         [field: SerializeField, Min(1)] public int SwarmMoleculeShotCount { get; private set; } = 5;
         [field: SerializeField, Min(0f)] public float SwarmMoleculeShotSpreadDegrees { get; private set; } = 30f;
+        [field: SerializeField, Min(0f)] public float SwarmMoleculeShotSpreadDegreesPerShotCountBonus { get; private set; } = 10f;
         [field: SerializeField, Min(0f)] public float SwarmMoleculeAttackRange { get; private set; } = 8f;
     }
 }

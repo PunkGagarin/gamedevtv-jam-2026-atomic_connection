@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <StingerMoleculeSpawnOffset>k__BackingField: {x: 2, y: 0}
   <StingerMoleculeAtomsRequired>k__BackingField: 3
-  <BaseShotDamage>k__BackingField: 1
+  <StingerMoleculeShotDamage>k__BackingField: 3
   <AtomsPosCircleRadius>k__BackingField: 0.6
   <DepositedAtomsOrbitDegreesPerSecond>k__BackingField: 90
   <CoreOrbitDegreesPerSecond>k__BackingField: 20
@@ -25,6 +25,8 @@ MonoBehaviour:
   <MembraneSecondsLostPerDamage>k__BackingField: 1
   <SwarmMoleculeSpawnOffset>k__BackingField: {x: -2, y: 0}
   <SwarmMoleculeAtomsRequired>k__BackingField: 5
+  <SwarmMoleculeShotDamage>k__BackingField: 1
   <SwarmMoleculeShotCount>k__BackingField: 5
   <SwarmMoleculeShotSpreadDegrees>k__BackingField: 30
+  <SwarmMoleculeShotSpreadDegreesPerShotCountBonus>k__BackingField: 10
   <SwarmMoleculeAttackRange>k__BackingField: 8

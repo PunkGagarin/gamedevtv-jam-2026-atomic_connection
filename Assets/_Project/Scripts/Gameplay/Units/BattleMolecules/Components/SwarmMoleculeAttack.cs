@@ -12,6 +12,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         private readonly HashSet<EnemyUnit> _shotSequenceHits = new();
         private int _currentShotSequenceId = -1;
 
+        protected override int BaseShotDamage => Config.SwarmMoleculeShotDamage;
         protected override TalentType DamageTalentType => TalentType.SwarmMoleculeDamage;
         protected override TalentType AutoLoadTalentType => TalentType.SwarmMoleculeAutoLoad;
 
@@ -55,7 +56,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
         private float CurrentAttackRange()
         {
-            return Mathf.Max(0f, Config.SwarmMoleculeAttackRange);
+            float rangeBonus = TalentService != null ? TalentService.BonusOf(TalentType.SwarmMoleculeAttackRange) : 0f;
+            return Mathf.Max(0f, Config.SwarmMoleculeAttackRange + rangeBonus);
         }
     }
 }

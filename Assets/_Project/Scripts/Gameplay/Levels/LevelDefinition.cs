@@ -1,12 +1,11 @@
-using System;
 using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Currencies;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Levels
 {
-    [Serializable]
-    public class LevelDefinition
+    [CreateAssetMenu(fileName = "LevelDefinition", menuName = "Game Resources/Configs/Level Definition")]
+    public class LevelDefinition : ScriptableObject
     {
         [field: SerializeField, Min(1)] public int LevelNumber { get; private set; } = 1;
         [field: SerializeField, Min(0.1f)] public float DurationSeconds { get; private set; } = 30f;

@@ -22,6 +22,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         [Inject] protected ITalentService TalentService;
 
         protected BattleMoleculeAimLineView AimLineView => AimLine;
+        protected abstract int BaseShotDamage { get; }
         protected abstract TalentType DamageTalentType { get; }
         protected abstract TalentType AutoLoadTalentType { get; }
 
@@ -82,8 +83,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
         protected int CurrentShotDamage()
         {
-            float bonusDamage = TalentService.BonusOf(DamageTalentType);
-            return Mathf.Max(1, Config.BaseShotDamage + Mathf.RoundToInt(bonusDamage));
+            float bonusDamage = TalentService != null ? TalentService.BonusOf(DamageTalentType) : 0f;
+            return Mathf.Max(1, BaseShotDamage + Mathf.RoundToInt(bonusDamage));
         }
 
         protected void Damage(EnemyUnit target, Vector3 origin)

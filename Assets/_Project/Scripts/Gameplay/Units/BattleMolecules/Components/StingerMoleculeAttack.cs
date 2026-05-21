@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Enemies;
 using _Project.Scripts.Gameplay.Talents;
-using _Project.Scripts.Gameplay.Units.BattleMolecules;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
@@ -10,6 +9,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
     {
         private readonly List<EnemyHit> _enemyHits = new();
 
+        protected override int BaseShotDamage => Config.StingerMoleculeShotDamage;
         protected override TalentType DamageTalentType => TalentType.StingerMoleculeDamage;
         protected override TalentType AutoLoadTalentType => TalentType.StingerMoleculeAutoLoad;
 

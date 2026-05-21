@@ -18,5 +18,7 @@ namespace _Project.Scripts.Gameplay.Talents
         SwarmMoleculeDamage = 13,
         SwarmMoleculeAutoLoad = 14,
         CurrencyPickupArea = 15,
+        SwarmMoleculeShotCount = 16,
+        SwarmMoleculeAttackRange = 17,
     }
 }

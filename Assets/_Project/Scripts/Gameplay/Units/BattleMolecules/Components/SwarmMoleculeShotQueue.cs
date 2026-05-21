@@ -1,5 +1,8 @@
-using _Project.Scripts.Gameplay.Units.BattleMolecules;
 using UnityEngine;
+using Zenject;
+
+using _Project.Scripts.Gameplay.Talents;
+using _Project.Scripts.Gameplay.Units.BattleMolecules;
 
 namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
@@ -7,8 +10,11 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
     {
         [field: SerializeField, Min(1)] private int ShotCount { get; set; } = 5;
         [field: SerializeField, Min(0f)] private float SpreadDegrees { get; set; } = 30f;
+        [field: SerializeField, Min(0f)] private float SpreadDegreesPerShotCountBonus { get; set; } = 10f;
 
         private static int _nextShotSequenceId = 1;
+
+        [Inject] private ITalentService _talentService;
 
         public override void Configure(BattleMoleculeConfig config)
         {
@@ -17,6 +23,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
             ShotCount = config.SwarmMoleculeShotCount;
             SpreadDegrees = config.SwarmMoleculeShotSpreadDegrees;
+            SpreadDegreesPerShotCountBonus = config.SwarmMoleculeShotSpreadDegreesPerShotCountBonus;
         }
 
         public override bool TryRequestShot(Vector3 direction)
@@ -36,8 +43,11 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         private void RequestShotgun(Vector3 origin, Vector3 centerDirection)
         {
             int shotSequenceId = NextShotSequenceId();
-            int shotCount = Mathf.Max(1, ShotCount);
-            float spreadDegrees = Mathf.Max(0f, SpreadDegrees);
+            int bonusShotCount = _talentService != null
+                ? Mathf.Max(0, Mathf.RoundToInt(_talentService.BonusOf(TalentType.SwarmMoleculeShotCount)))
+                : 0;
+            int shotCount = Mathf.Max(1, ShotCount + bonusShotCount);
+            float spreadDegrees = Mathf.Max(0f, SpreadDegrees + bonusShotCount * SpreadDegreesPerShotCountBonus);
             float step = shotCount <= 1 ? 0f : spreadDegrees / (shotCount - 1);
             float startAngle = -spreadDegrees * 0.5f;
 

@@ -10,6 +10,10 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
         private const float PREVIEW_HEIGHT = 280f;
         private const float NODE_RADIUS = 10f;
         private const float GRID_SIZE = 120f;
+        private const string ID_FIELD = "<Id>k__BackingField";
+        private const string TITLE_FIELD = "<Title>k__BackingField";
+        private const string PREREQUISITES_FIELD = "<Prerequisites>k__BackingField";
+        private const string GRAPH_POSITION_FIELD = "<GraphPosition>k__BackingField";
 
         private SerializedProperty _talentsProp;
         private int _selectedIndex = -1;
@@ -96,17 +100,26 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
         {
             _graphBoundsMin = new Vector2(float.MaxValue, float.MaxValue);
             _graphBoundsMax = new Vector2(float.MinValue, float.MinValue);
+            bool hasTalent = false;
 
             for (int i = 0; i < _talentsProp.arraySize; i++)
             {
-                SerializedProperty posProp = _talentsProp.GetArrayElementAtIndex(i)
-                    .FindPropertyRelative("<GraphPosition>k__BackingField");
+                if (!TryGetTalentProperty(i, GRAPH_POSITION_FIELD, out SerializedProperty posProp))
+                    continue;
+
                 Vector2 pos = posProp.vector2Value;
+                hasTalent = true;
 
                 _graphBoundsMin.x = Mathf.Min(_graphBoundsMin.x, pos.x);
                 _graphBoundsMax.x = Mathf.Max(_graphBoundsMax.x, pos.x);
                 _graphBoundsMin.y = Mathf.Min(_graphBoundsMin.y, pos.y);
                 _graphBoundsMax.y = Mathf.Max(_graphBoundsMax.y, pos.y);
+            }
+
+            if (!hasTalent)
+            {
+                _graphBoundsMin = Vector2.zero;
+                _graphBoundsMax = Vector2.one;
             }
 
             float width = Mathf.Max(_graphBoundsMax.x - _graphBoundsMin.x, 1f);
@@ -147,23 +160,28 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
             Dictionary<int, Vector2> talentPositions = new();
             for (int i = 0; i < _talentsProp.arraySize; i++)
             {
-                SerializedProperty talentProp = _talentsProp.GetArrayElementAtIndex(i);
-                SerializedProperty idProp = talentProp.FindPropertyRelative("<Id>k__BackingField");
-                SerializedProperty posProp = talentProp.FindPropertyRelative("<GraphPosition>k__BackingField");
+                if (!TryGetTalentProperty(i, ID_FIELD, out SerializedProperty idProp) ||
+                    !TryGetTalentProperty(i, GRAPH_POSITION_FIELD, out SerializedProperty posProp))
+                {
+                    continue;
+                }
+
                 talentPositions[idProp.intValue] = GraphToScreen(posProp.vector2Value);
             }
 
             for (int i = 0; i < _talentsProp.arraySize; i++)
             {
-                SerializedProperty prereqsProp = _talentsProp.GetArrayElementAtIndex(i)
-                    .FindPropertyRelative("<Prerequisites>k__BackingField");
+                if (!TryGetTalentProperty(i, PREREQUISITES_FIELD, out SerializedProperty prereqsProp) ||
+                    !TryGetTalentProperty(i, ID_FIELD, out SerializedProperty idProp))
+                {
+                    continue;
+                }
 
                 if (prereqsProp == null)
                     continue;
 
-                SerializedProperty idProp = _talentsProp.GetArrayElementAtIndex(i)
-                    .FindPropertyRelative("<Id>k__BackingField");
-                Vector2 childPos = talentPositions[idProp.intValue];
+                if (!talentPositions.TryGetValue(idProp.intValue, out Vector2 childPos))
+                    continue;
 
                 for (int j = 0; j < prereqsProp.arraySize; j++)
                 {
@@ -222,10 +240,12 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
 
             for (int i = 0; i < _talentsProp.arraySize; i++)
             {
-                SerializedProperty talentProp = _talentsProp.GetArrayElementAtIndex(i);
-                SerializedProperty idProp = talentProp.FindPropertyRelative("<Id>k__BackingField");
-                SerializedProperty posProp = talentProp.FindPropertyRelative("<GraphPosition>k__BackingField");
-                SerializedProperty titleProp = talentProp.FindPropertyRelative("<Title>k__BackingField");
+                if (!TryGetTalentProperty(i, ID_FIELD, out SerializedProperty idProp) ||
+                    !TryGetTalentProperty(i, GRAPH_POSITION_FIELD, out SerializedProperty posProp) ||
+                    !TryGetTalentProperty(i, TITLE_FIELD, out SerializedProperty titleProp))
+                {
+                    continue;
+                }
 
                 Vector2 screenPos = GraphToScreen(posProp.vector2Value);
 
@@ -296,8 +316,9 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
 
                     for (int i = _talentsProp.arraySize - 1; i >= 0; i--)
                     {
-                        SerializedProperty posProp = _talentsProp.GetArrayElementAtIndex(i)
-                            .FindPropertyRelative("<GraphPosition>k__BackingField");
+                        if (!TryGetTalentProperty(i, GRAPH_POSITION_FIELD, out SerializedProperty posProp))
+                            continue;
+
                         Vector2 nodeScreenPos = GraphToScreen(posProp.vector2Value);
 
                         if (Vector2.Distance(mousePos, nodeScreenPos) <= NODE_RADIUS + 6f)
@@ -306,7 +327,8 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
                             _dragIndex = i;
                             _grabOffset = mousePos - nodeScreenPos;
                             _isDragging = true;
-                            Undo.RecordObject(target, "Move talent node");
+                            if (TryGetTalentObject(i, out SerializedObject talentObject))
+                                Undo.RecordObject(talentObject.targetObject, "Move talent node");
                             e.Use();
                             Repaint();
                             break;
@@ -324,10 +346,12 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
 
                 case EventType.MouseDrag when _isDragging && _dragIndex >= 0:
                 {
-                    SerializedProperty dragPosProp = _talentsProp.GetArrayElementAtIndex(_dragIndex)
-                        .FindPropertyRelative("<GraphPosition>k__BackingField");
+                    if (!TryGetTalentObject(_dragIndex, out SerializedObject talentObject))
+                        break;
+
+                    SerializedProperty dragPosProp = talentObject.FindProperty(GRAPH_POSITION_FIELD);
                     dragPosProp.vector2Value = SnapToGrid(ScreenToGraph(mousePos - _grabOffset));
-                    serializedObject.ApplyModifiedProperties();
+                    talentObject.ApplyModifiedProperties();
                     e.Use();
                     Repaint();
                     break;
@@ -375,17 +399,46 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
 
         private void SnapAllNodesToGrid()
         {
-            Undo.RecordObject(target, "Snap talent nodes to grid");
-
             for (int i = 0; i < _talentsProp.arraySize; i++)
             {
-                SerializedProperty posProp = _talentsProp.GetArrayElementAtIndex(i)
-                    .FindPropertyRelative("<GraphPosition>k__BackingField");
+                if (!TryGetTalentObject(i, out SerializedObject talentObject))
+                    continue;
+
+                Undo.RecordObject(talentObject.targetObject, "Snap talent nodes to grid");
+                SerializedProperty posProp = talentObject.FindProperty(GRAPH_POSITION_FIELD);
                 posProp.vector2Value = SnapToGrid(posProp.vector2Value);
+                talentObject.ApplyModifiedProperties();
             }
 
-            serializedObject.ApplyModifiedProperties();
             Repaint();
+        }
+
+        private bool TryGetTalentObject(int index, out SerializedObject talentObject)
+        {
+            talentObject = null;
+
+            if (_talentsProp == null || index < 0 || index >= _talentsProp.arraySize)
+                return false;
+
+            UnityEngine.Object talent = _talentsProp.GetArrayElementAtIndex(index).objectReferenceValue;
+
+            if (talent == null)
+                return false;
+
+            talentObject = new SerializedObject(talent);
+            talentObject.Update();
+            return true;
+        }
+
+        private bool TryGetTalentProperty(int index, string propertyName, out SerializedProperty property)
+        {
+            property = null;
+
+            if (!TryGetTalentObject(index, out SerializedObject talentObject))
+                return false;
+
+            property = talentObject.FindProperty(propertyName);
+            return property != null;
         }
     }
 }

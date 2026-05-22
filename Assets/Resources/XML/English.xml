@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language LANG="English" ID="1">
   <text key="MAIN_MENU_START_GAME">Start Game</text>
   <text key="MAIN_MENU_SETTINGS">Settings</text>
@@ -30,10 +30,10 @@
   <text key="COMMON_MAIN_MENU">Main Menu</text>
   <text key="CURRENCY_NUCLEOTIDES">DNA</text>
   <text key="CURRENCY_NUCLEOTIDES_SHORT">DNA</text>
-  <text key="CURRENCY_NUCLEOTIDES_BALANCE_SUFFIX"> DNA</text>
+  <text key="CURRENCY_NUCLEOTIDES_BALANCE_SUFFIX">DNA</text>
   <text key="CURRENCY_ISOTOPES">isotopes</text>
   <text key="CURRENCY_ISOTOPES_SHORT">iso.</text>
-  <text key="CURRENCY_ISOTOPES_BALANCE_SUFFIX"> isotope</text>
+  <text key="CURRENCY_ISOTOPES_BALANCE_SUFFIX">isotope</text>
   <text key="TALENT_NODE_MAX">MAX</text>
   <text key="TALENT_CORE_HEALTH_SMALL_TITLE">Sturdy Core</text>
   <text key="TALENT_CORE_HEALTH_SMALL_DESC">Increases core health by 1.</text>
@@ -73,6 +73,8 @@
   <text key="TALENT_SWARM_MOLECULE_DAMAGE_LARGE_DESC">Increases SwarmMolecule damage by 2.</text>
   <text key="TALENT_CURRENCY_PICKUP_AREA_TITLE">Wide Collection</text>
   <text key="TALENT_CURRENCY_PICKUP_AREA_DESC">Increases currency pickup radius.</text>
+  <text key="TALENT_CONNECTION_ATOM_SPEED_TITLE">Fast Flow</text>
+  <text key="TALENT_CONNECTION_ATOM_SPEED_DESC">Speeds up the atom connection flow from the core to the active battle molecule by 25% per level.</text>
   <text key="TALENT_SWARM_MOLECULE_SHOT_COUNT_TITLE">Swarm Volley</text>
   <text key="TALENT_SWARM_MOLECULE_SHOT_COUNT_DESC">Adds more SwarmMolecule projectiles and widens the volley.</text>
   <text key="TALENT_SWARM_MOLECULE_ATTACK_RANGE_TITLE">Swarm Reach</text>

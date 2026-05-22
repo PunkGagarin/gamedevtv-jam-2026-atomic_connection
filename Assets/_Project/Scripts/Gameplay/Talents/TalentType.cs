@@ -20,5 +20,6 @@ namespace _Project.Scripts.Gameplay.Talents
         CurrencyPickupArea = 15,
         SwarmMoleculeShotCount = 16,
         SwarmMoleculeAttackRange = 17,
+        ConnectionAtomSpeed = 18,
     }
 }

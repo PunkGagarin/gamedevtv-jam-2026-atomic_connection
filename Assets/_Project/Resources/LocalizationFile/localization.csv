@@ -72,6 +72,8 @@ TALENT_SWARM_MOLECULE_DAMAGE_LARGE_TITLE,Урон роя II,Swarm Damage II
 TALENT_SWARM_MOLECULE_DAMAGE_LARGE_DESC,Увеличивает урон SwarmMolecule на 2.,Increases SwarmMolecule damage by 2.
 TALENT_CURRENCY_PICKUP_AREA_TITLE,Широкий сбор,Wide Collection
 TALENT_CURRENCY_PICKUP_AREA_DESC,Увеличивает радиус подбора валюты.,Increases currency pickup radius.
+TALENT_CONNECTION_ATOM_SPEED_TITLE,Ускоренный поток,Fast Flow
+TALENT_CONNECTION_ATOM_SPEED_DESC,Ускоряет connection-поток атомов от ядра к активной боевой молекуле на 25% за уровень.,Speeds up the atom connection flow from the core to the active battle molecule by 25% per level.
 TALENT_SWARM_MOLECULE_SHOT_COUNT_TITLE,Залп роя,Swarm Volley
 TALENT_SWARM_MOLECULE_SHOT_COUNT_DESC,Добавляет снаряды SwarmMolecule и расширяет залп.,Adds more SwarmMolecule projectiles and widens the volley.
 TALENT_SWARM_MOLECULE_ATTACK_RANGE_TITLE,Дальность роя,Swarm Reach

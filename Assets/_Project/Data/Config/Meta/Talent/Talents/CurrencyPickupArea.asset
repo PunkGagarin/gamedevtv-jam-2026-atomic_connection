@@ -16,10 +16,11 @@ MonoBehaviour:
   <Type>k__BackingField: 15
   <Title>k__BackingField: TALENT_CURRENCY_PICKUP_AREA_TITLE
   <Description>k__BackingField: TALENT_CURRENCY_PICKUP_AREA_DESC
+  <Icon>k__BackingField: {fileID: 0}
   <MaxLevel>k__BackingField: 4
   <CostCurrency>k__BackingField: 0
   <CostsByLevel>k__BackingField: 1e0000003c0000006400000096000000
   <Prerequisites>k__BackingField: 02000000
-  <GraphPosition>k__BackingField: {x: -480, y: 240}
+  <GraphPosition>k__BackingField: {x: -240, y: 480}
   <BonusPerLevel>k__BackingField: 0.15
   <IsUnlock>k__BackingField: 0

@@ -14,7 +14,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
     {
         private const float ARRIVAL_DISTANCE = 0.03f;
         private const float MIN_FLOW_RADIUS = 0.1f;
-        private const string AB_TEST_PARALLEL_ATOM_FEED_KEY = "AtomicConnection.AbTest.ParallelAtomFeed";
 
         private readonly List<IBattleMoleculeRuntimeBehavior> _runtimeBehaviors = new();
         private readonly List<FreeAtom> _coreAtoms = new();
@@ -382,10 +381,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             if (atomsRemaining <= 0)
                 return 0;
 
-            if (PlayerPrefs.GetInt(AB_TEST_PARALLEL_ATOM_FEED_KEY, 0) != 0)
-                return atomsRemaining;
-
-            return _flowAtoms.Count == 0 ? 1 : 0;
+            return atomsRemaining;
         }
 
         private int CountFlowAtomsTargeting(BattleMolecule target)

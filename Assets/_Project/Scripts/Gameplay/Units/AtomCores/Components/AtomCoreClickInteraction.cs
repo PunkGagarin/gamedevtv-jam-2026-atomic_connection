@@ -5,6 +5,7 @@ using _Project.Scripts.Gameplay.Input.Service;
 using _Project.Scripts.Gameplay.Units;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
+using UnityEngine.Events;
 using Zenject;
 
 namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
@@ -18,11 +19,23 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
         private Collider2D _clickCollider;
         private bool _clickWasStartedOnCore;
 
-        [Inject] private IInputService _inputService;
-        [Inject] private ICameraProvider _cameraProvider;
-        [Inject] private IDragService _dragService;
-        [Inject] private IRandomService _random;
-        [Inject] private IFreeAtomFactory _freeAtomFactory;
+        [Inject]
+        private IInputService _inputService;
+
+        [Inject]
+        private ICameraProvider _cameraProvider;
+
+        [Inject]
+        private IDragService _dragService;
+
+        [Inject]
+        private IRandomService _random;
+
+        [Inject]
+        private IFreeAtomFactory _freeAtomFactory;
+
+        [SerializeField]
+        private UnityEvent OnClickEvent;
 
         private void Awake()
         {
@@ -47,8 +60,9 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
             if (!_clickWasStartedOnCore || !_inputService.GetLeftMouseButtonUpRaw())
                 return;
 
-            bool shouldRegisterClick = _inputService.GetLeftMouseButtonUp() &&
-                                       (_dragService == null || !_dragService.DragWasStartedThisPress);
+            bool shouldRegisterClick =
+                _inputService.GetLeftMouseButtonUp()
+                && (_dragService == null || !_dragService.DragWasStartedThisPress);
 
             _clickWasStartedOnCore = false;
 
@@ -70,6 +84,8 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
 
             if (!_clickCollider.OverlapPoint(worldPosition))
                 return;
+
+            OnClickEvent?.Invoke();
 
             _clickWasStartedOnCore = true;
         }

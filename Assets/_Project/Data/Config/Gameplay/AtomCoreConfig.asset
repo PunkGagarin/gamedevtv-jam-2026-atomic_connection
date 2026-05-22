@@ -15,5 +15,5 @@ MonoBehaviour:
   <CoreMaxHealth>k__BackingField: 2
   <ClicksToGenerateFreeAtom>k__BackingField: 4
   <AutoClickIntervalSeconds>k__BackingField: 0.35
-  <SpawnRadiusOffset>k__BackingField: 1
+  <SpawnRadiusOffset>k__BackingField: 33.73
   <FreeAtomOrbitDegreesPerSecond>k__BackingField: 60

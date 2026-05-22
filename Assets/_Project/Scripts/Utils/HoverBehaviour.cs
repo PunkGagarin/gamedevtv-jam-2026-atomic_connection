@@ -16,7 +16,7 @@ public class HoverBehaviour : MonoBehaviour
     private Vector3 _originalScale;
     private Tween _tween;
 
-    [field: SerializeField] public bool CanHover { get; set; } = true;
+    public bool CanHover => this.enabled;
 
     private void Awake()
     {

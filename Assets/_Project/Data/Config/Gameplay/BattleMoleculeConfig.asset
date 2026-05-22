@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f636fc0da8ab43528d99f7c64ba358c4, type: 3}
   m_Name: BattleMoleculeConfig
   m_EditorClassIdentifier: 
-  <StingerMoleculeSpawnOffset>k__BackingField: {x: 2, y: 0}
+  <StingerMoleculeSpawnOffset>k__BackingField: {x: 5, y: 0}
   <StingerMoleculeAtomsRequired>k__BackingField: 3
   <StingerMoleculeShotDamage>k__BackingField: 3
   <AtomsPosCircleRadius>k__BackingField: 0.6

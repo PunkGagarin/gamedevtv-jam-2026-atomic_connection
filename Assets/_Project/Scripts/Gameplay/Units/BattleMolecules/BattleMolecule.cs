@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Units.BattleMolecules.Components;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
@@ -16,6 +17,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
     [RequireComponent(typeof(BattleMoleculeShotQueue))]
     public class BattleMolecule : MonoBehaviour
     {
+        private readonly List<SpriteRenderer> _spriteRenderers = new();
+
         [field: SerializeField] private OwnedAtoms OwnedAtoms { get; set; }
         [field: SerializeField] private OwnedAtomOrbitLayout AtomOrbitLayout { get; set; }
         [field: SerializeField] private BattleMoleculeCharge Charge { get; set; }
@@ -26,6 +29,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         [field: SerializeField] private BattleMoleculeConnectionView ConnectionView { get; set; }
         [field: SerializeField] private BattleMoleculeShotQueue ShotQueue { get; set; }
         [field: SerializeField] public Collider2D CollisionCollider { get; private set; }
+
+        private float _atomOrbitArrivalRadius;
 
         public BattleMoleculeKind Kind { get; private set; } = BattleMoleculeKind.Stinger;
         public bool IsBonded => Bond != null && Bond.IsBonded;
@@ -76,6 +81,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
             if (CollisionCollider == null)
                 CollisionCollider = GetComponent<Collider2D>();
+
+            GetComponentsInChildren(true, _spriteRenderers);
         }
 
         private void OnEnable()
@@ -98,6 +105,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             Kind = kind;
             Bond.Configure(bondAtomsRequired);
             Charge.Configure(atomsRequired);
+            _atomOrbitArrivalRadius = Mathf.Max(0f, config.AtomsPosCircleRadius);
             AtomOrbitLayout?.ConfigureFixedRadius(FreeAtomOwnerKind.BattleMolecule, config.AtomsPosCircleRadius);
             AtomOrbit.Configure(config.DepositedAtomsOrbitDegreesPerSecond);
             ShotQueue?.Configure(config);
@@ -137,6 +145,32 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             return CollisionCollider != null && CollisionCollider.OverlapPoint(worldPosition);
         }
 
+        public Vector3 GetConnectionArrivalPosition(Vector3 fromPosition, float incomingAtomRadius)
+        {
+            float arrivalRadius = ConnectionArrivalRadius(incomingAtomRadius);
+
+            if (arrivalRadius <= 0f)
+                return transform.position;
+
+            Vector3 offset = fromPosition - transform.position;
+            offset.z = 0f;
+            if (offset.sqrMagnitude <= Mathf.Epsilon)
+                return transform.position;
+
+            return transform.position + offset.normalized * arrivalRadius;
+        }
+
+        public bool IsConnectionArrivalReached(Vector3 fromPosition, float incomingAtomRadius, float tolerance)
+        {
+            float arrivalRadius = ConnectionArrivalRadius(incomingAtomRadius) + Mathf.Max(0f, tolerance);
+            if (arrivalRadius <= 0f)
+                return false;
+
+            Vector3 offset = fromPosition - transform.position;
+            offset.z = 0f;
+            return offset.sqrMagnitude <= arrivalRadius * arrivalRadius;
+        }
+
         public void SetActiveFeedVisual(bool isActive)
         {
             if (ConnectionView == null)
@@ -157,6 +191,42 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                 return;
 
             ConnectionView.SetVisible(IsBonded);
+        }
+
+        private float ConnectionArrivalRadius(float incomingAtomRadius)
+        {
+            float visualArrivalRadius = VisualRadius() + Mathf.Max(0f, incomingAtomRadius);
+            return Mathf.Max(_atomOrbitArrivalRadius, visualArrivalRadius);
+        }
+
+        private float VisualRadius()
+        {
+            float radius = CollisionCollider != null
+                ? RadiusFromBounds(CollisionCollider.bounds)
+                : 0f;
+
+            foreach (SpriteRenderer spriteRenderer in _spriteRenderers)
+            {
+                if (spriteRenderer == null)
+                    continue;
+
+                radius = Mathf.Max(radius, RadiusFromBounds(spriteRenderer.bounds));
+            }
+
+            return radius;
+        }
+
+        private Vector3 CenterOffset(Bounds bounds)
+        {
+            Vector3 offset = bounds.center - transform.position;
+            offset.z = 0f;
+            return offset;
+        }
+
+        private float RadiusFromBounds(Bounds bounds)
+        {
+            Vector3 extents = bounds.extents;
+            return CenterOffset(bounds).magnitude + Mathf.Max(extents.x, extents.y);
         }
     }
 }

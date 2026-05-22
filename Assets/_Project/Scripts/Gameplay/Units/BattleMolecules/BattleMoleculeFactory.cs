@@ -32,6 +32,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                 STINGER_MOLECULE_PREFAB_PATH,
                 "StingerMolecule",
                 AdjustedAtomsRequired(config.StingerMoleculeAtomsRequired),
+                AdjustedAtomsRequired(config.StingerMoleculeBondAtomsRequired),
                 BattleMoleculeKind.Stinger);
         }
 
@@ -46,6 +47,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                 MEMBRANE_MOLECULE_PREFAB_PATH,
                 "MembraneMolecule",
                 AdjustedAtomsRequired(atomsRequired),
+                AdjustedAtomsRequired(config.MembraneMoleculeBondAtomsRequired),
                 BattleMoleculeKind.Membrane);
         }
 
@@ -57,6 +59,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                 SWARM_MOLECULE_PREFAB_PATH,
                 "SwarmMolecule",
                 AdjustedAtomsRequired(config.SwarmMoleculeAtomsRequired),
+                AdjustedAtomsRequired(config.SwarmMoleculeBondAtomsRequired),
                 BattleMoleculeKind.Swarm);
         }
 
@@ -66,6 +69,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             string prefabPath,
             string moleculeName,
             int atomsRequired,
+            int bondAtomsRequired,
             BattleMoleculeKind kind)
         {
             BattleMolecule prefab = _assetProvider.LoadAsset<BattleMolecule>(prefabPath);
@@ -83,7 +87,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                 _runtimeHierarchy.GetOrCreateContainer(BATTLE_MOLECULES_CONTAINER_NAME));
 
             molecule.name = moleculeName;
-            molecule.Configure(config, atomsRequired, kind);
+            molecule.Configure(config, atomsRequired, bondAtomsRequired, kind);
             _createdMolecules.Add(molecule);
             MoleculeCreated?.Invoke(molecule);
 

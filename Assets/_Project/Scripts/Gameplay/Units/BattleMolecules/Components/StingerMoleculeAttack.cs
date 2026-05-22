@@ -11,7 +11,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
         protected override int BaseShotDamage => Config.StingerMoleculeShotDamage;
         protected override TalentType DamageTalentType => TalentType.StingerMoleculeDamage;
-        protected override TalentType AutoLoadTalentType => TalentType.StingerMoleculeAutoLoad;
 
         protected override void OnDisable()
         {

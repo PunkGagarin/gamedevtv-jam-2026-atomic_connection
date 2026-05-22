@@ -179,9 +179,17 @@ namespace _Project.Scripts.Gameplay.Drag
                 if (hit == null || hit == col)
                     continue;
 
-                target = hit.GetComponent<IDropTarget>();
-                if (target != null)
+                IDropTarget candidate = hit.GetComponent<IDropTarget>() ?? hit.GetComponentInParent<IDropTarget>();
+                if (candidate == null)
+                    continue;
+
+                target ??= candidate;
+
+                if (_currentDraggable != null && candidate.CanAcceptDrop(_currentDraggable))
+                {
+                    target = candidate;
                     break;
+                }
             }
 
             if (col != null)
@@ -200,6 +208,10 @@ namespace _Project.Scripts.Gameplay.Drag
                 Collider2D hit = OverlapHits[i];
                 if (hit == null)
                     continue;
+
+                IDraggable directDraggable = hit.GetComponent<IDraggable>();
+                if (directDraggable != null && directDraggable.CanStartDrag)
+                    return new DragStartCandidate(directDraggable, true);
 
                 IDragSource dragSource = hit.GetComponentInParent<IDragSource>();
                 IDraggable draggable = dragSource?.GetDraggable();

@@ -9,8 +9,7 @@ namespace _Project.Scripts.Gameplay.Units
         [field: SerializeField, Min(1)] public int CoreMaxHealth { get; private set; } = 2;
 
         [field: Header("Atom Production")]
-        [field: SerializeField, Min(1)] public int ClicksToGenerateFreeAtom { get; private set; } = 4;
-        [field: SerializeField, Min(0.01f)] public float AutoClickIntervalSeconds { get; private set; } = 0.35f;
+        [field: SerializeField, Min(1)] public int ClicksToGenerateFreeAtom { get; private set; } = 6;
 
         [field: Header("Free Atom Placement")]
         [field: SerializeField, Min(0f)] public float SpawnRadiusOffset { get; private set; } = 0.6f;

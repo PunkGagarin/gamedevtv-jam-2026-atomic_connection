@@ -75,6 +75,11 @@
   <text key="TALENT_CURRENCY_PICKUP_AREA_DESC">Увеличивает радиус подбора валюты.</text>
   <text key="TALENT_CONNECTION_ATOM_SPEED_TITLE">Ускоренный поток</text>
   <text key="TALENT_CONNECTION_ATOM_SPEED_DESC">Ускоряет connection-поток атомов от ядра к активной боевой молекуле на 25% за уровень.</text>
+  <text key="TALENT_STINGER_MOLECULE_CRITICAL_CHANCE_TITLE">Точный укол</text>
+  <text key="TALENT_STINGER_MOLECULE_CRITICAL_CHANCE_DESC">Дает StingerMolecule 10% шанс нанести критический урон за уровень.</text>
+  <text key="TALENT_STINGER_MOLECULE_CRITICAL_REWARD_TITLE">ДНК-выброс</text>
+  <text key="TALENT_STINGER_MOLECULE_CRITICAL_REWARD_DESC">Увеличивает награду за критические убийства StingerMolecule на 50% за уровень.</text>
+  <text key="DAMAGE_POPUP_CRITICAL">Критический урон!</text>
   <text key="TALENT_SWARM_MOLECULE_SHOT_COUNT_TITLE">Залп роя</text>
   <text key="TALENT_SWARM_MOLECULE_SHOT_COUNT_DESC">Добавляет снаряды SwarmMolecule и расширяет залп.</text>
   <text key="TALENT_SWARM_MOLECULE_ATTACK_RANGE_TITLE">Дальность роя</text>

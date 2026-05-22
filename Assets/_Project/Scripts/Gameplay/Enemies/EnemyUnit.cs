@@ -30,6 +30,7 @@ namespace _Project.Scripts.Gameplay.Enemies
         public int CurrentHealth => Health?.CurrentHealth ?? MaxHealth;
         public int CoreCollisionDamage => _mergeGroup?.CoreCollisionDamage ?? _coreCollisionDamage;
         public int NucleotideReward => _definition?.NucleotideReward ?? 0;
+        public float KillRewardMultiplier { get; private set; } = 1f;
 
         internal EnemyMergeGroup MergeGroup => _mergeGroup;
         internal bool IsMergeLinkEndpointAlive => Health == null || Health.IsAlive;
@@ -80,6 +81,7 @@ namespace _Project.Scripts.Gameplay.Enemies
             Movement?.Clear();
             CoreCollision?.Clear();
             ClearRuntimeBehaviors();
+            KillRewardMultiplier = 1f;
 
             if (Health != null)
                 Health.ResetHealth();
@@ -93,6 +95,7 @@ namespace _Project.Scripts.Gameplay.Enemies
             Movement?.Clear();
             CoreCollision?.Clear();
             ClearRuntimeBehaviors();
+            KillRewardMultiplier = 1f;
             gameObject.SetActive(false);
         }
 
@@ -157,16 +160,26 @@ namespace _Project.Scripts.Gameplay.Enemies
 
         public void TakeDamage(int amount)
         {
+            TakeDamage(amount, 1f, false);
+        }
+
+        public void TakeDamage(int amount, float killRewardMultiplier, bool isCritical)
+        {
             if (_mergeGroup != null)
             {
-                _mergeGroup.TakeDamage(amount, this);
+                _mergeGroup.TakeDamage(amount, this, killRewardMultiplier, isCritical);
                 return;
             }
 
+            KillRewardMultiplier = Mathf.Max(0f, killRewardMultiplier);
+
             if (Health != null)
-                Health.TakeDamage(amount);
+                Health.TakeDamage(amount, isCritical);
             else
                 Kill();
+
+            if (IsAlive)
+                KillRewardMultiplier = 1f;
         }
 
         internal void AssignMergeGroup(EnemyMergeGroup mergeGroup)
@@ -196,19 +209,19 @@ namespace _Project.Scripts.Gameplay.Enemies
                 Health.Configure(maxHealth, currentHealth);
         }
 
-        internal void ApplyMergeDamage(int amount)
+        internal void ApplyMergeDamage(int amount, bool isCritical)
         {
             if (Health == null)
                 return;
 
             Health.Died -= OnHealthDied;
-            Health.TakeDamage(amount);
+            Health.TakeDamage(amount, isCritical);
             Health.Died += OnHealthDied;
         }
 
-        internal void DieFromMergeGroupDamage()
+        internal void DieFromMergeGroupDamage(float killRewardMultiplier)
         {
-            DieFromMergeGroupSingle(true);
+            DieFromMergeGroupSingle(true, killRewardMultiplier);
         }
 
         internal void DieFromMergeGroupCore()
@@ -216,8 +229,10 @@ namespace _Project.Scripts.Gameplay.Enemies
             DieFromMergeGroupSingle(false);
         }
 
-        private void DieFromMergeGroupSingle(bool killedByPlayer)
+        private void DieFromMergeGroupSingle(bool killedByPlayer, float killRewardMultiplier = 1f)
         {
+            KillRewardMultiplier = Mathf.Max(0f, killRewardMultiplier);
+
             if (Health != null)
             {
                 Health.Died -= OnHealthDied;
@@ -233,6 +248,8 @@ namespace _Project.Scripts.Gameplay.Enemies
 
         private void DieFromCoreSingle()
         {
+            KillRewardMultiplier = 1f;
+
             if (Health != null)
             {
                 Health.Died -= OnHealthDied;

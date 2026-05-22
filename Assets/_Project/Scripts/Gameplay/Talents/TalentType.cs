@@ -21,5 +21,7 @@ namespace _Project.Scripts.Gameplay.Talents
         SwarmMoleculeShotCount = 16,
         SwarmMoleculeAttackRange = 17,
         ConnectionAtomSpeed = 18,
+        StingerMoleculeCriticalChance = 19,
+        StingerMoleculeCriticalReward = 20,
     }
 }

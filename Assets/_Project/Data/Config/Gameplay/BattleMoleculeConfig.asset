@@ -16,6 +16,7 @@ MonoBehaviour:
   <StingerMoleculeBondAtomsRequired>k__BackingField: 1
   <StingerMoleculeAtomsRequired>k__BackingField: 5
   <StingerMoleculeShotDamage>k__BackingField: 3
+  <StingerMoleculeCriticalDamageMultiplier>k__BackingField: 2
   <AtomsPosCircleRadius>k__BackingField: 0.6
   <DepositedAtomsOrbitDegreesPerSecond>k__BackingField: 90
   <CoreOrbitDegreesPerSecond>k__BackingField: 20

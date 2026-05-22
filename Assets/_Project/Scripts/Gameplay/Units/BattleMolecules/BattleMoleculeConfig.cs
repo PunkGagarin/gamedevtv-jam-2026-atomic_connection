@@ -10,6 +10,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         [field: SerializeField, Min(1)] public int StingerMoleculeBondAtomsRequired { get; private set; } = 1;
         [field: SerializeField, Min(1)] public int StingerMoleculeAtomsRequired { get; private set; } = 5;
         [field: SerializeField, Min(1)] public int StingerMoleculeShotDamage { get; private set; } = 3;
+        [field: SerializeField, Min(1f)] public float StingerMoleculeCriticalDamageMultiplier { get; private set; } = 2f;
         [field: SerializeField] public float AtomsPosCircleRadius { get; private set; } = 0.6f;
         [field: SerializeField, Min(0f)] public float DepositedAtomsOrbitDegreesPerSecond { get; private set; } = 90f;
         [field: SerializeField, Min(0f)] public float CoreOrbitDegreesPerSecond { get; private set; } = 45f;

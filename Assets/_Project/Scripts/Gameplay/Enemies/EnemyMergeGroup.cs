@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Enemies
 {
@@ -18,6 +19,7 @@ namespace _Project.Scripts.Gameplay.Enemies
         private float _configuredDeathWaveStepSeconds;
         private float _deathWaveStepSeconds;
         private float _timeToNextDeath;
+        private float _deathWaveKillRewardMultiplier = 1f;
 
         public int CoreCollisionDamage
         {
@@ -93,17 +95,17 @@ namespace _Project.Scripts.Gameplay.Enemies
             SyncHealth();
         }
 
-        public void TakeDamage(int amount, EnemyUnit damagedMember)
+        public void TakeDamage(int amount, EnemyUnit damagedMember, float killRewardMultiplier, bool isCritical)
         {
             if (amount <= 0 || IsDeathWaveActive)
                 return;
 
             CurrentHealth -= amount;
-            damagedMember?.ApplyMergeDamage(amount);
+            damagedMember?.ApplyMergeDamage(amount, isCritical);
 
             if (CurrentHealth <= 0)
             {
-                StartDeathWave(damagedMember, true);
+                StartDeathWave(damagedMember, true, killRewardMultiplier);
                 return;
             }
 
@@ -112,12 +114,12 @@ namespace _Project.Scripts.Gameplay.Enemies
 
         public void DieFromCore(EnemyUnit origin)
         {
-            StartDeathWave(origin, false);
+            StartDeathWave(origin, false, 1f);
         }
 
         public void DieFromMemberKill(EnemyUnit origin)
         {
-            StartDeathWave(origin, true);
+            StartDeathWave(origin, true, 1f);
         }
 
         public void TickDeathWave(float deltaTime)
@@ -166,13 +168,14 @@ namespace _Project.Scripts.Gameplay.Enemies
             member.ClearMergeGroupReference(this);
         }
 
-        private void StartDeathWave(EnemyUnit origin, bool killedByPlayer)
+        private void StartDeathWave(EnemyUnit origin, bool killedByPlayer, float killRewardMultiplier)
         {
             if (IsDeathWaveActive)
                 return;
 
             IsDeathWaveActive = true;
             _deathWaveKilledByPlayer = killedByPlayer;
+            _deathWaveKillRewardMultiplier = Mathf.Max(0f, killedByPlayer ? killRewardMultiplier : 1f);
             _deathWaveIndex = 0;
             _deathWaveStepSeconds = _configuredDeathWaveStepSeconds;
             _timeToNextDeath = 0f;
@@ -224,7 +227,7 @@ namespace _Project.Scripts.Gameplay.Enemies
             DestroyLinksFor(member);
 
             if (_deathWaveKilledByPlayer)
-                member.DieFromMergeGroupDamage();
+                member.DieFromMergeGroupDamage(_deathWaveKillRewardMultiplier);
             else
                 member.DieFromMergeGroupCore();
         }

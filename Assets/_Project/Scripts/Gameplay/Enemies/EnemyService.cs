@@ -494,8 +494,10 @@ namespace _Project.Scripts.Gameplay.Enemies
                 return;
             }
 
+            int reward = Mathf.Max(0, Mathf.RoundToInt(enemy.NucleotideReward * enemy.KillRewardMultiplier));
+
             _currencyPickupService.Spawn(
-                new CurrencyAmount(CurrencyId.Nucleotides, enemy.NucleotideReward),
+                new CurrencyAmount(CurrencyId.Nucleotides, reward),
                 enemy.transform.position);
         }
 

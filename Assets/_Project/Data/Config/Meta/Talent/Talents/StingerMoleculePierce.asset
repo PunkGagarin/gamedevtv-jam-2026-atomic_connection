@@ -16,10 +16,11 @@ MonoBehaviour:
   <Type>k__BackingField: 5
   <Title>k__BackingField: TALENT_STINGER_MOLECULE_PIERCE_TITLE
   <Description>k__BackingField: TALENT_STINGER_MOLECULE_PIERCE_DESC
+  <Icon>k__BackingField: {fileID: 0}
   <MaxLevel>k__BackingField: 1
   <CostCurrency>k__BackingField: 1
   <CostsByLevel>k__BackingField: 01000000
   <Prerequisites>k__BackingField: 04000000
-  <GraphPosition>k__BackingField: {x: 480, y: 0}
+  <GraphPosition>k__BackingField: {x: 240, y: -240}
   <BonusPerLevel>k__BackingField: 1
   <IsUnlock>k__BackingField: 1

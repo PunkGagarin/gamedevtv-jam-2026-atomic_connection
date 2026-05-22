@@ -5,6 +5,7 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
     public class EnemyMergeLinkView : MonoBehaviour
     {
         [field: SerializeField] private LineRenderer Line { get; set; }
+        [field: SerializeField] private Color LineColor { get; set; } = new(0.1f, 0.95f, 1f, 1f);
 
         private Transform _from;
         private Transform _to;
@@ -54,6 +55,8 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
             float lineWidth = Mathf.Max(0f, width);
             Line.startWidth = lineWidth;
             Line.endWidth = lineWidth;
+            Line.startColor = LineColor;
+            Line.endColor = LineColor;
             Line.enabled = true;
         }
     }

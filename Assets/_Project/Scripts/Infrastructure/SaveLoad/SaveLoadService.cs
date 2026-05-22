@@ -5,7 +5,7 @@ namespace _Project.Scripts.Infrastructure.SaveLoad
 {
     public class SaveLoadService : ISaveLoadService
     {
-        private const int CURRENT_PROGRESS_VERSION = 2;
+        private const int CURRENT_PROGRESS_VERSION = 3;
         private const string PROGRESS_KEY = "AtomicConnection.Progress";
 
         private readonly IProgressProvider _progressProvider;

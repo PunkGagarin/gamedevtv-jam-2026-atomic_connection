@@ -19,7 +19,7 @@ MonoBehaviour:
   <MaxLevel>k__BackingField: 1
   <CostCurrency>k__BackingField: 0
   <CostsByLevel>k__BackingField: a0000000
-  <Prerequisites>k__BackingField: 10000000
+  <Prerequisites>k__BackingField: 0f000000
   <GraphPosition>k__BackingField: {x: -240, y: -840}
   <BonusPerLevel>k__BackingField: 2
   <IsUnlock>k__BackingField: 0

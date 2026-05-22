@@ -26,6 +26,14 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
                    && currentAtomsCount < _atomsRequired;
         }
 
+        public int RemainingAtoms(int currentAtomsCount)
+        {
+            if (_atomsRequired <= 0 || IsCharged)
+                return 0;
+
+            return Mathf.Max(0, _atomsRequired - currentAtomsCount);
+        }
+
         public void RegisterAtomCount(int atomsCount)
         {
             if (_atomsRequired <= 0 || IsCharged || atomsCount < _atomsRequired)

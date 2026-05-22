@@ -5,6 +5,7 @@ namespace _Project.Scripts.Gameplay.Drag
         bool DragWasStartedThisPress { get; }
         bool IsDragActive { get; }
 
+        bool IsDragging(IDraggable draggable);
         bool IsReserved(IDraggable draggable);
         void Update();
         void CancelDrag();

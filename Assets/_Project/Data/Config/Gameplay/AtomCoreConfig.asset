@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: AtomCoreConfig
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Units.AtomCoreConfig
   <CoreMaxHealth>k__BackingField: 2
-  <ClicksToGenerateFreeAtom>k__BackingField: 4
-  <AutoClickIntervalSeconds>k__BackingField: 0.35
+  <ClicksToGenerateFreeAtom>k__BackingField: 6
   <SpawnRadiusOffset>k__BackingField: 1
   <FreeAtomOrbitDegreesPerSecond>k__BackingField: 60

@@ -9,7 +9,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
     [RequireComponent(typeof(OwnedAtoms))]
     [RequireComponent(typeof(BattleMoleculeCharge))]
-    public class MembraneMoleculeActivation : MonoBehaviour, IBattleMoleculeRuntimeBehavior, IBattleMoleculeAutoLoadRule
+    public class MembraneMoleculeActivation : MonoBehaviour, IBattleMoleculeRuntimeBehavior
     {
         [field: SerializeField] private OwnedAtoms OwnedAtoms { get; set; }
         [field: SerializeField] private BattleMoleculeCharge Charge { get; set; }
@@ -66,11 +66,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             }
 
             ShowProgress(_coreMembrane.NormalizedTime);
-        }
-
-        public bool CanAutoLoad(BattleMoleculeRuntimeContext context)
-        {
-            return context.IsUnlocked(TalentType.MembraneMoleculeAutoLoad);
         }
 
         private void ActivateMembrane()

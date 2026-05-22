@@ -31,6 +31,9 @@ namespace _Project.Scripts.MainMenu
         [field: SerializeField]
         private Button CreditsButton { get; set; }
 
+        [field: SerializeField]
+        private Toggle AbTestToggle { get; set; }
+
         [Inject] private GameStateMachine _stateMachine;
         [Inject] private AudioService _audio;
         [Inject] private IWindowService _windowService;

@@ -11,15 +11,20 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
     {
         private readonly List<Collider2D> _colliders = new();
         private bool _isDragging;
+        private bool _isInConnectionFlow;
+        private Vector3 _baseLocalScale;
+        private bool _baseLocalScaleCaptured;
 
         [field: SerializeField] public OrbitMotion OrbitMotion { get; private set; }
         [field: SerializeField] private HoverBehaviour HoverBehaviour { get; set; }
 
-        public bool CanStartDrag => false;
+        public bool CanStartDrag => _isInConnectionFlow;
         public Transform Transform => transform;
         public FreeAtomOwnerKind OwnerKind { get; private set; }
         public Transform Owner { get; private set; }
-        public bool CanOrbit => !_isDragging;
+        public bool CanOrbit => !_isDragging && !_isInConnectionFlow;
+        public bool IsInConnectionFlow => _isInConnectionFlow;
+        public bool CanArrangeInOrbit => !_isInConnectionFlow;
 
         public event Action<FreeAtom> Destroyed;
         public event Action<FreeAtom> DespawnRequested;
@@ -27,6 +32,8 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
 
         private void Awake()
         {
+            CaptureBaseLocalScale();
+
             if (OrbitMotion == null)
                 OrbitMotion = GetComponent<OrbitMotion>();
 
@@ -59,6 +66,8 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
         public void PrepareForSpawn()
         {
             _isDragging = false;
+            _isInConnectionFlow = false;
+            ResetLocalScale();
             SetCollidersEnabled(true);
             gameObject.SetActive(true);
             ClearOwner();
@@ -68,7 +77,9 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
         public void PrepareForPool()
         {
             _isDragging = false;
+            _isInConnectionFlow = false;
             ClearOwner();
+            ResetLocalScale();
             SetCollidersEnabled(false);
             gameObject.SetActive(false);
             SetHoverEnabled(false);
@@ -82,6 +93,7 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
         public void OnDragStart()
         {
             _isDragging = true;
+            _isInConnectionFlow = false;
             RefreshHoverState();
         }
 
@@ -103,6 +115,18 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
             RefreshHoverState();
         }
 
+        public void BeginConnectionFlow()
+        {
+            _isInConnectionFlow = true;
+            RefreshHoverState();
+        }
+
+        public void EndConnectionFlow()
+        {
+            _isInConnectionFlow = false;
+            RefreshHoverState();
+        }
+
         private void SetCollidersEnabled(bool isEnabled)
         {
             GetComponentsInChildren(true, _colliders);
@@ -119,7 +143,22 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
 
         private void RefreshHoverState()
         {
-            SetHoverEnabled(CanStartDrag);
+            SetHoverEnabled(false);
+        }
+
+        private void CaptureBaseLocalScale()
+        {
+            if (_baseLocalScaleCaptured)
+                return;
+
+            _baseLocalScale = transform.localScale;
+            _baseLocalScaleCaptured = true;
+        }
+
+        private void ResetLocalScale()
+        {
+            CaptureBaseLocalScale();
+            transform.localScale = _baseLocalScale;
         }
     }
 }

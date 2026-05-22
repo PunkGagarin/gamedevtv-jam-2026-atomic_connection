@@ -61,6 +61,12 @@ namespace _Project.Scripts.Gameplay.Units
 
             OwnedAtoms.GetOwned(_ownerKind, _atomsBuffer);
 
+            for (int i = _atomsBuffer.Count - 1; i >= 0; i--)
+            {
+                if (_atomsBuffer[i] == null || !_atomsBuffer[i].CanArrangeInOrbit)
+                    _atomsBuffer.RemoveAt(i);
+            }
+
             int count = _atomsBuffer.Count;
             if (count <= 0)
                 return;

@@ -10,7 +10,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
     [RequireComponent(typeof(BattleMoleculeShotQueue))]
     [RequireComponent(typeof(BattleMoleculeAimLineView))]
-    public abstract class BattleMoleculeAttack : MonoBehaviour, IBattleMoleculeAutoLoadRule
+    public abstract class BattleMoleculeAttack : MonoBehaviour
     {
         private static readonly RaycastHit2D[] ShotHits = new RaycastHit2D[64];
 
@@ -24,7 +24,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         protected BattleMoleculeAimLineView AimLineView => AimLine;
         protected abstract int BaseShotDamage { get; }
         protected abstract TalentType DamageTalentType { get; }
-        protected abstract TalentType AutoLoadTalentType { get; }
 
         protected virtual void Awake()
         {
@@ -74,11 +73,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             }
 
             enemyHits.Sort((a, b) => a.Distance.CompareTo(b.Distance));
-        }
-
-        public bool CanAutoLoad(BattleMoleculeRuntimeContext context)
-        {
-            return context.IsUnlocked(AutoLoadTalentType);
         }
 
         protected int CurrentShotDamage()

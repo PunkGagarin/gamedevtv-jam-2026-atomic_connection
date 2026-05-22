@@ -7,10 +7,22 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
     [RequireComponent(typeof(OwnedAtoms))]
     [RequireComponent(typeof(BattleMoleculeCharge))]
+    [RequireComponent(typeof(BattleMoleculeBond))]
     public class BattleMoleculeAtomReceiver : MonoBehaviour
     {
         [field: SerializeField] private OwnedAtoms OwnedAtoms { get; set; }
         [field: SerializeField] private BattleMoleculeCharge Charge { get; set; }
+        [field: SerializeField] private BattleMoleculeBond Bond { get; set; }
+
+        public bool CanReceiveConnectionAtom => Bond != null
+                                                && Bond.IsBonded
+                                                && Charge != null
+                                                && OwnedAtoms != null
+                                                && Charge.CanReceiveAtom(OwnedAtoms.Count);
+
+        public int ConnectionAtomsRemaining => Bond != null && Bond.IsBonded && Charge != null && OwnedAtoms != null
+            ? Charge.RemainingAtoms(OwnedAtoms.Count)
+            : 0;
 
         private void Awake()
         {
@@ -19,11 +31,17 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
             if (Charge == null)
                 Charge = GetComponent<BattleMoleculeCharge>();
+
+            if (Bond == null)
+                Bond = GetComponent<BattleMoleculeBond>();
         }
 
         public bool CanAcceptDrop(IDraggable draggable)
         {
-            return draggable is FreeAtom && Charge.CanReceiveAtom(OwnedAtoms.Count);
+            if (draggable is not FreeAtom)
+                return false;
+
+            return Bond != null && Bond.CanReceiveAtom || CanReceiveConnectionAtom;
         }
 
         public void AcceptDrop(IDraggable draggable)
@@ -31,17 +49,29 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             if (draggable is not FreeAtom freeAtom)
                 return;
 
-            TryAcceptAtom(freeAtom);
+            if (Bond != null && Bond.CanReceiveAtom)
+            {
+                TryAcceptBondAtom(freeAtom);
+                return;
+            }
+
+            TryReceiveConnectionAtom(freeAtom);
         }
 
-        public bool TryAcceptAtom(FreeAtom freeAtom)
+        public bool TryAcceptBondAtom(FreeAtom freeAtom)
         {
-            if (freeAtom == null || Charge == null || OwnedAtoms == null)
+            if (freeAtom == null || Bond == null)
                 return false;
 
-            if (!Charge.CanReceiveAtom(OwnedAtoms.Count))
+            return Bond.TryAcceptAtom(freeAtom);
+        }
+
+        public bool TryReceiveConnectionAtom(FreeAtom freeAtom)
+        {
+            if (freeAtom == null || !CanReceiveConnectionAtom)
                 return false;
 
+            freeAtom.EndConnectionFlow();
             DisableCollider(freeAtom);
 
             OwnedAtoms.TakeOwnership(freeAtom, FreeAtomOwnerKind.BattleMolecule);

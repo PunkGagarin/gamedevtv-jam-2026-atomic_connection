@@ -12,19 +12,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f636fc0da8ab43528d99f7c64ba358c4, type: 3}
   m_Name: BattleMoleculeConfig
   m_EditorClassIdentifier: 
-  <StingerMoleculeSpawnOffset>k__BackingField: {x: 5, y: 0}
-  <StingerMoleculeAtomsRequired>k__BackingField: 3
+  <StingerMoleculeSpawnOffset>k__BackingField: {x: 2, y: 0}
+  <StingerMoleculeBondAtomsRequired>k__BackingField: 1
+  <StingerMoleculeAtomsRequired>k__BackingField: 5
   <StingerMoleculeShotDamage>k__BackingField: 3
   <AtomsPosCircleRadius>k__BackingField: 0.6
   <DepositedAtomsOrbitDegreesPerSecond>k__BackingField: 90
   <CoreOrbitDegreesPerSecond>k__BackingField: 20
-  <AutoLoadIntervalSeconds>k__BackingField: 2
+  <ConnectionAtomTravelSpeed>k__BackingField: 1
+  <ConnectionCoreRimDegreesPerSecond>k__BackingField: 60
+  <ConnectionLineWidth>k__BackingField: 0.08
+  <ConnectionLineZOffset>k__BackingField: 0.05
+  <ConnectionLineSortingOrder>k__BackingField: -1
+  <ConnectionInactiveColor>k__BackingField: {r: 0.357, g: 0.925, b: 1, a: 0.45}
+  <ConnectionActiveColor>k__BackingField: {r: 0.357, g: 0.925, b: 1, a: 0.95}
   <MembraneMoleculeSpawnOffset>k__BackingField: {x: 0, y: -2}
+  <MembraneMoleculeBondAtomsRequired>k__BackingField: 1
   <MembraneMoleculeAtomsRequired>k__BackingField: 3
   <MembraneDurationSeconds>k__BackingField: 5
   <MembraneSecondsLostPerDamage>k__BackingField: 1
   <SwarmMoleculeSpawnOffset>k__BackingField: {x: -2, y: 0}
-  <SwarmMoleculeAtomsRequired>k__BackingField: 5
+  <SwarmMoleculeBondAtomsRequired>k__BackingField: 1
+  <SwarmMoleculeAtomsRequired>k__BackingField: 7
   <SwarmMoleculeShotDamage>k__BackingField: 1
   <SwarmMoleculeShotCount>k__BackingField: 5
   <SwarmMoleculeShotSpreadDegrees>k__BackingField: 30

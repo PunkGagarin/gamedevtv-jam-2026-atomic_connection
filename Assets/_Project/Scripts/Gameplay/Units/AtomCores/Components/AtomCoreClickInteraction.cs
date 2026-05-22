@@ -2,7 +2,6 @@ using _Project.Scripts.Gameplay.Cameras.Provider;
 using _Project.Scripts.Gameplay.Common.Random;
 using _Project.Scripts.Gameplay.Drag;
 using _Project.Scripts.Gameplay.Input.Service;
-using _Project.Scripts.Gameplay.Talents;
 using _Project.Scripts.Gameplay.Units;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
@@ -18,15 +17,12 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
         private AtomCore _core;
         private Collider2D _clickCollider;
         private bool _clickWasStartedOnCore;
-        private float _autoClickTimer;
 
         [Inject] private IInputService _inputService;
         [Inject] private ICameraProvider _cameraProvider;
         [Inject] private IDragService _dragService;
         [Inject] private IRandomService _random;
         [Inject] private IFreeAtomFactory _freeAtomFactory;
-        [Inject] private ITalentService _talentService;
-        [Inject] private AtomCoreConfig _config;
 
         private void Awake()
         {
@@ -44,8 +40,6 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
 
             if (_inputService == null)
                 return;
-
-            TickAutoClick(deltaTime);
 
             if (_inputService.GetLeftMouseButtonDown())
                 TryStartPendingClick();
@@ -78,50 +72,6 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
                 return;
 
             _clickWasStartedOnCore = true;
-        }
-
-        private void TickAutoClick(float deltaTime)
-        {
-            if (deltaTime <= 0f || !CanAutoClick())
-            {
-                _autoClickTimer = 0f;
-                return;
-            }
-
-            _autoClickTimer += deltaTime;
-            if (_autoClickTimer < Mathf.Max(0.01f, _config.AutoClickIntervalSeconds))
-                return;
-
-            _autoClickTimer = 0f;
-            TryRegisterGeneratedAtomClick();
-        }
-
-        private bool CanAutoClick()
-        {
-            if (_talentService == null || !_talentService.IsUnlocked(TalentType.AutoClick))
-                return false;
-
-            // Автоклик намеренно работает только при наведении на ядро.
-            if (!IsPointerOverCore())
-                return false;
-
-            if (_inputService.GetLeftMouseButtonRaw())
-                return false;
-
-            if (_dragService != null && _dragService.IsDragActive)
-                return false;
-
-            return true;
-        }
-
-        private bool IsPointerOverCore()
-        {
-            Camera camera = _cameraProvider != null ? _cameraProvider.MainCamera : null;
-            if (camera == null || _clickCollider == null)
-                return false;
-
-            Vector2 worldPosition = _inputService.GetWorldMousePosition();
-            return _clickCollider.OverlapPoint(worldPosition);
         }
 
         private void TryRegisterGeneratedAtomClick()

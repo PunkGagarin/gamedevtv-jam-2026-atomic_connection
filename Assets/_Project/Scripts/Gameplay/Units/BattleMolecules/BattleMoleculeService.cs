@@ -349,7 +349,14 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
         private bool MoveAtomToMolecule(BattleMolecule target, FlowAtomState flowAtom, float deltaTime)
         {
-            return MoveFlowAtomTowards(flowAtom, target.transform.position, _config.ConnectionAtomTravelSpeed * deltaTime);
+            float atomRadius = AtomRadius(flowAtom.Atom);
+            if (target.IsConnectionArrivalReached(flowAtom.Atom.transform.position, atomRadius, ARRIVAL_DISTANCE))
+                return true;
+
+            Vector3 destination = target.GetConnectionArrivalPosition(
+                flowAtom.Atom.transform.position,
+                atomRadius);
+            return MoveFlowAtomTowards(flowAtom, destination, _config.ConnectionAtomTravelSpeed * deltaTime);
         }
 
         private bool MoveFlowAtomTowards(FlowAtomState flowAtom, Vector3 destination, float maxDistance)
@@ -499,6 +506,16 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             return offset.sqrMagnitude > Mathf.Epsilon
                 ? Mathf.Atan2(offset.y, offset.x)
                 : 0f;
+        }
+
+        private static float AtomRadius(FreeAtom atom)
+        {
+            Collider2D col = atom != null ? atom.GetComponent<Collider2D>() : null;
+            if (col == null)
+                return 0f;
+
+            Vector3 extents = col.bounds.extents;
+            return Mathf.Max(extents.x, extents.y);
         }
 
         private AtomCore CurrentCore()

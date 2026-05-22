@@ -1,0 +1,37 @@
+Ключ,Russian,English
+MAIN_MENU_TITLE,Dragon Lair,Dragon Lair
+MAIN_MENU_START_GAME,Начать игру,Start Game
+MAIN_MENU_SETTINGS,Настройки,Settings
+MAIN_MENU_CREDITS,Разработчики,Credits
+PAUSE_POPUP_RETURN_TO_GAME,Вернуться в игру,Return to game
+PAUSE_POPUP_RETURN_TO_MAIN_MENU,Вернуться в меню,Return to menu
+PAUSE_POPUP_SETTINGS,Настройки,Settings
+PAUSE_POPUP_TITLE,Пауза,Paused
+CREDITS_POPUP_TITLE,Авторы,Credits
+CREDITS_POPUP_DESC,"@punkgagarin - Гейм дизайн, Программирование%%@Madgine_Solis - художник%%@K1wi_Zzz - художник","@punkgagarin - Game Design, Programming%%@Madgine_Solis - artist%%@K1wi_Zzz - ui designer"
+CREDITS_POPUP_CLOSE,Закрыть,Close
+SETTINGS_AUDIO_TITLE,Аудио,Audio
+SETTINGS_AUDIO_MASTER_TITLE,Мастер,Master
+SETTINGS_AUDIO_SFX_TITLE,Sfx,Sfx
+SETTINGS_AUDIO_MUSIC_TITLE,Музыка,Music
+SETTINGS_LANG_TITLE,Выбрать язык,Select language
+SETTINGS_LANG_RU,Русский,Русский
+SETTINGS_LANG_EN,English,English
+SETTINGS_CANCEL,Отмена,Cancel
+SETTINGS_OK,Применить,Apply
+GUILD,Гильдия,Guild
+SKILLS,Навыки,Skills
+UNTIS_COUNT,Сейчас ворует:,Currently stealing:
+GOLD_PER_CLICK,Золота за клик,Gold per click
+SPEED_MOVE,Скорость ,Move speed
+HIRE_A_UNIT,Нанять вора,Hire a unit
+SHEAKY_SILENT,Громкость,Sneaky silent
+GOLD_PER_UNIT_MOVE,Золото юнита,Gold per unit
+CLOSE,Закрыть,Close
+RETRY,Повторить,Restart
+THANKS,Спасибо за игру!,Thanks for playing!
+MENU,В меню,Menu
+UNIT_GEM_CHANCE,Шанс гема,Gem chance
+UNIT_GEM_AMOUNT,Кол-во гемов,Gem amount
+HIRE_CROW,Купить ворону,Buy crow
+GOLD_PER_CROW,Золото вороны,Crow gold

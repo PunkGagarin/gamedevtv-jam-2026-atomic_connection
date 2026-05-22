@@ -8,6 +8,7 @@ using Zenject;
 using DG.Tweening;
 using _Project.Scripts.Gameplay.Currencies;
 using _Project.Scripts.Gameplay.Windows;
+using _Project.Scripts.GameplayData;
 using UnityEngine.Serialization;
 
 namespace _Project.Scripts.Gameplay.Talents
@@ -35,6 +36,7 @@ namespace _Project.Scripts.Gameplay.Talents
         [Inject] private ICurrencyService _currencyService;
         [Inject] private IWindowService _windowService;
         [Inject] private TalentTreeAnimationConfig _animationConfig;
+        [Inject] private UiThemeConfig _themeConfig;
 
         private readonly Dictionary<TalentId, TalentNodeView> _nodesById = new();
         private readonly Dictionary<TalentId, TalentDefinition> _talentsById = new();
@@ -58,6 +60,7 @@ namespace _Project.Scripts.Gameplay.Talents
             if (LegacyCurrencyLabel != null)
                 LegacyCurrencyLabel.enabled = false;
 
+            ApplyTheme();
             HideTooltip();
             BuildGraph();
             Refresh(false);
@@ -119,6 +122,21 @@ namespace _Project.Scripts.Gameplay.Talents
                 _tooltipTween?.Kill();
                 TooltipPanel.gameObject.SetActive(false);
             }
+        }
+
+        private void ApplyTheme()
+        {
+            ApplyTooltipFontSize(TooltipTitleLabel);
+            ApplyTooltipFontSize(TooltipDescriptionLabel);
+        }
+
+        private void ApplyTooltipFontSize(TextMeshProUGUI label)
+        {
+            if (label == null || _themeConfig == null)
+                return;
+
+            label.fontSize = _themeConfig.CurrencyTextFontSize;
+            label.fontSizeMax = _themeConfig.CurrencyTextFontSize;
         }
 
         private void Update()

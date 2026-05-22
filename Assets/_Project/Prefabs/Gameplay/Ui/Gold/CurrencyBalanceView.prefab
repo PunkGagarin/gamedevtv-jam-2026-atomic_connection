@@ -113,7 +113,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 40, y: -24}
-  m_SizeDelta: {x: 187.313, y: 150}
+  m_SizeDelta: {x: 412.9677, y: 150}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &2809836008732426373
 CanvasRenderer:
@@ -137,6 +137,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _isotopesLabel: {fileID: 6782347126427809234}
   _nucleotidesLabel: {fileID: 719494187370471418}
+  _isotopesSuffix: " \u0438\u0437\u043E\u0442\u043E\u043F"
+  _nucleotidesSuffix: " \u0434\u043D\u043A"
 --- !u!114 &7094185534317629792
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -198,7 +200,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 304.7002, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7621756618529872945
 CanvasRenderer:
@@ -471,8 +473,8 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 10
-  m_ChildForceExpandWidth: 1
+  m_Spacing: 20
+  m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
   m_ChildControlHeight: 0
@@ -514,7 +516,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 304.7002, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2897779952469253559
 CanvasRenderer:
@@ -712,8 +714,8 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 10
-  m_ChildForceExpandWidth: 1
+  m_Spacing: 20
+  m_ChildForceExpandWidth: 0
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
   m_ChildControlHeight: 0

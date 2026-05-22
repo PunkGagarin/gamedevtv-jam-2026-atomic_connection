@@ -115,6 +115,7 @@ namespace _Project.Scripts.MainMenu
         private void OpenCredits()
         {
             _audio.PlaySound(Sounds.buttonClick);
+            _windowService.Open(WindowId.CreditsWindow);
         }
     }
 }

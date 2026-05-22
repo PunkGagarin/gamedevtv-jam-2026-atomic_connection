@@ -50,18 +50,21 @@ namespace _Project.Scripts.Gameplay.Talents
             Button.onClick.AddListener(OnClicked);
         }
 
-        public void Refresh(TalentDefinition talent, int level, TalentNodeViewState state, string priceText)
+        public void Refresh(TalentDefinition talent, int level, TalentNodeViewState state, string titleText, string priceText)
         {
             _state = state;
 
             if (Background != null)
                 Background.color = ColorFor(state);
 
+            if (TitleLabel != null)
+                TitleLabel.text = titleText;
+
             if (LevelLabel != null)
                 LevelLabel.text = $"{level}/{talent.MaxLevel}";
 
             if (CostLabel != null)
-                CostLabel.text = state == TalentNodeViewState.Maxed ? "MAX" : priceText;
+                CostLabel.text = state == TalentNodeViewState.Maxed ? _window.Localize("TALENT_NODE_MAX") : priceText;
 
             if (Button != null)
                 Button.interactable = state is TalentNodeViewState.Available

@@ -4,16 +4,23 @@ using TMPro;
 using UnityEngine;
 using Zenject;
 using _Project.Scripts.Gameplay.Feedback;
+using _Project.Scripts.GameplayData;
+using _Project.Scripts.Localization;
 
 namespace _Project.Scripts.Gameplay.Currencies
 {
     public class CurrencyBalanceView : MonoBehaviour
     {
         [Inject] private GameplayFeedbackAnimationConfig _animationConfig;
+        [Inject] private UiThemeConfig _themeConfig;
         [Inject] private ICurrencyService _currencyService;
+        [Inject] private LanguageService _languageService;
+        [Inject] private LocalizationTool _localizationTool;
 
         [SerializeField] private TextMeshProUGUI _isotopesLabel;
         [SerializeField] private TextMeshProUGUI _nucleotidesLabel;
+        [SerializeField] private string _isotopesKey;
+        [SerializeField] private string _nucleotidesKey;
 
         private int _displayedNucleotides;
         private int _displayedIsotopes;
@@ -27,6 +34,8 @@ namespace _Project.Scripts.Gameplay.Currencies
 
         private void Awake()
         {
+            ApplyTheme();
+
             if (_nucleotidesLabel != null)
                 _nucleotidesBaseScale = _nucleotidesLabel.rectTransform.localScale;
 
@@ -34,6 +43,7 @@ namespace _Project.Scripts.Gameplay.Currencies
                 _isotopesBaseScale = _isotopesLabel.rectTransform.localScale;
 
             _currencyService.Changed += Refresh;
+            _languageService.OnSwitchLanguage += Refresh;
             Refresh();
         }
 
@@ -41,6 +51,9 @@ namespace _Project.Scripts.Gameplay.Currencies
         {
             if (_currencyService != null)
                 _currencyService.Changed -= Refresh;
+
+            if (_languageService != null)
+                _languageService.OnSwitchLanguage -= Refresh;
 
             _nucleotidesValueTween?.Kill();
             _isotopesValueTween?.Kill();
@@ -60,8 +73,8 @@ namespace _Project.Scripts.Gameplay.Currencies
             {
                 _displayedNucleotides = nucleotides;
                 _displayedIsotopes = isotopes;
-                SetLabel(_nucleotidesLabel, _displayedNucleotides);
-                SetLabel(_isotopesLabel, _displayedIsotopes);
+                SetLabel(_nucleotidesLabel, _displayedNucleotides, Localize(_nucleotidesKey));
+                SetLabel(_isotopesLabel, _displayedIsotopes, Localize(_isotopesKey));
                 _isInitialized = true;
                 return;
             }
@@ -73,7 +86,8 @@ namespace _Project.Scripts.Gameplay.Currencies
                 value => _displayedNucleotides = value,
                 ref _nucleotidesValueTween,
                 ref _nucleotidesPulseTween,
-                _nucleotidesBaseScale);
+                _nucleotidesBaseScale,
+                Localize(_nucleotidesKey));
 
             AnimateLabel(
                 _isotopesLabel,
@@ -82,7 +96,8 @@ namespace _Project.Scripts.Gameplay.Currencies
                 value => _displayedIsotopes = value,
                 ref _isotopesValueTween,
                 ref _isotopesPulseTween,
-                _isotopesBaseScale);
+                _isotopesBaseScale,
+                Localize(_isotopesKey));
         }
 
         private void AnimateLabel(
@@ -92,10 +107,17 @@ namespace _Project.Scripts.Gameplay.Currencies
             Action<int> setDisplayedValue,
             ref Tween valueTween,
             ref Tween pulseTween,
-            Vector3 baseScale)
+            Vector3 baseScale,
+            string suffix)
         {
-            if (label == null || displayedValue == targetValue)
+            if (label == null)
                 return;
+
+            if (displayedValue == targetValue)
+            {
+                SetLabel(label, targetValue, suffix);
+                return;
+            }
 
             int startValue = displayedValue;
             valueTween?.Kill();
@@ -105,13 +127,13 @@ namespace _Project.Scripts.Gameplay.Currencies
                 .To(() => startValue, value =>
                 {
                     setDisplayedValue(value);
-                    SetLabel(label, value);
+                    SetLabel(label, value, suffix);
                 }, targetValue, _animationConfig.CurrencyChangeDuration)
                 .SetEase(Ease.OutCubic)
                 .OnComplete(() =>
                 {
                     setDisplayedValue(targetValue);
-                    SetLabel(label, targetValue);
+                    SetLabel(label, targetValue, suffix);
                 });
 
             label.rectTransform.localScale = baseScale;
@@ -124,10 +146,28 @@ namespace _Project.Scripts.Gameplay.Currencies
                     .SetEase(Ease.InSine));
         }
 
-        private static void SetLabel(TextMeshProUGUI label, int value)
+        private void ApplyTheme()
+        {
+            ApplyCurrencyFontSize(_nucleotidesLabel);
+            ApplyCurrencyFontSize(_isotopesLabel);
+        }
+
+        private void ApplyCurrencyFontSize(TextMeshProUGUI label)
+        {
+            if (label == null || _themeConfig == null)
+                return;
+
+            label.fontSize = _themeConfig.CurrencyTextFontSize;
+            label.fontSizeMax = _themeConfig.CurrencyTextFontSize;
+        }
+
+        private static void SetLabel(TextMeshProUGUI label, int value, string suffix)
         {
             if (label != null)
-                label.text = value.ToString();
+                label.text = $"{value}{suffix}";
         }
+
+        private string Localize(string key) =>
+            string.IsNullOrWhiteSpace(key) ? string.Empty : _localizationTool.GetText(key);
     }
 }

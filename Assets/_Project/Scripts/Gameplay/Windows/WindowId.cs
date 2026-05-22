@@ -7,5 +7,6 @@ namespace _Project.Scripts.Gameplay.Windows
         GameOverWindow = 2,
         TalentTreeWindow = 3,
         LevelCompleteWindow = 4,
+        CreditsWindow = 5,
     }
 }

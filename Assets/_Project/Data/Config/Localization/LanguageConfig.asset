@@ -13,4 +13,6 @@ MonoBehaviour:
   m_Name: LanguageConfig
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Localization.LanguageConfig
   <DefaultLanguage>k__BackingField: 1
-  <LocalizationTextAssets>k__BackingField: []
+  <LocalizationTextAssets>k__BackingField:
+  - {fileID: 4900000, guid: c46b88fb165a34d279076adde63ae5d7, type: 3}
+  - {fileID: 4900000, guid: 633ac8eb3a3be44b0ba41a0ade69c3f4, type: 3}

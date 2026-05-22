@@ -17,6 +17,7 @@ namespace _Project.Scripts.GameplayData
     public class GlobalConfigInstaller : ScriptableObjectInstaller
     {
         [field: SerializeField] private LanguageConfig LanguageConfig { get; set; }
+        [field: SerializeField] private UiThemeConfig UiThemeConfig { get; set; }
         [field: SerializeField] private AtomCoreConfig AtomCoreConfig { get; set; }
         [field: SerializeField] private BattleMoleculeConfig BattleMoleculeConfig { get; set; }
         [field: SerializeField] private GameplayFeedbackAnimationConfig GameplayFeedbackAnimationConfig { get; set; }
@@ -31,6 +32,7 @@ namespace _Project.Scripts.GameplayData
         public override void InstallBindings()
         {
             BindConfig(LanguageConfig);
+            BindConfig(UiThemeConfig);
             BindConfig(AtomCoreConfig);
             BindConfig(BattleMoleculeConfig);
             BindConfig(GameplayFeedbackAnimationConfig);

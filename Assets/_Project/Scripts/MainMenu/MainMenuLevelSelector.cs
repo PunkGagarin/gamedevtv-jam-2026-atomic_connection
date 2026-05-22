@@ -1,4 +1,5 @@
 using _Project.Scripts.Gameplay.Levels;
+using _Project.Scripts.Localization;
 using TMPro;
 using UnityEngine;
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
@@ -16,12 +17,15 @@ namespace _Project.Scripts.MainMenu
         [field: SerializeField] private TextMeshProUGUI LevelLabel { get; set; }
 
         [Inject] private ILevelSelectionService _levelSelectionService;
+        [Inject] private LanguageService _languageService;
+        [Inject] private LocalizationTool _localizationTool;
 
         private void Start()
         {
             PreviousButton.onClick.AddListener(SelectPrevious);
             NextButton.onClick.AddListener(SelectNext);
             _levelSelectionService.Changed += Refresh;
+            _languageService.OnSwitchLanguage += Refresh;
             Refresh();
         }
 
@@ -32,6 +36,9 @@ namespace _Project.Scripts.MainMenu
 
             if (_levelSelectionService != null)
                 _levelSelectionService.Changed -= Refresh;
+
+            if (_languageService != null)
+                _languageService.OnSwitchLanguage -= Refresh;
         }
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
@@ -53,7 +60,9 @@ namespace _Project.Scripts.MainMenu
 
         private void Refresh()
         {
-            LevelLabel.text = $"Level {_levelSelectionService.SelectedLevel}";
+            LevelLabel.text = string.Format(
+                _localizationTool.GetText("MAIN_MENU_LEVEL_FORMAT"),
+                _levelSelectionService.SelectedLevel);
             PreviousButton.gameObject.SetActive(_levelSelectionService.CanSelectPrevious);
             NextButton.gameObject.SetActive(_levelSelectionService.CanSelectNext);
         }

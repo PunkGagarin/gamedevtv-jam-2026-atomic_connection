@@ -21,15 +21,20 @@ namespace _Project.Scripts.Gameplay.Drag
         [Inject] private IInputService _inputService;
         [Inject] private ICameraProvider _cameraProvider;
 
-        private bool IsDragging => _currentDraggable != null;
+        private bool HasCurrentDrag => _currentDraggable != null;
         private bool HasPendingDrag => _pendingCandidate.Draggable != null;
         public bool DragWasStartedThisPress => _dragWasStartedThisPress;
-        public bool IsDragActive => IsDragging || HasPendingDrag;
+        public bool IsDragActive => HasCurrentDrag || HasPendingDrag;
 
         public bool IsReserved(IDraggable draggable)
         {
             return draggable != null &&
                    (_currentDraggable == draggable || _pendingCandidate.Draggable == draggable);
+        }
+
+        public bool IsDragging(IDraggable draggable)
+        {
+            return draggable != null && _currentDraggable == draggable;
         }
 
         public void Update()
@@ -40,7 +45,7 @@ namespace _Project.Scripts.Gameplay.Drag
 
             Vector2 screenPosition = _inputService.GetScreenMousePosition();
 
-            if (!IsDragging)
+            if (!HasCurrentDrag)
             {
                 if (_inputService.GetLeftMouseButtonDown())
                 {
@@ -58,7 +63,7 @@ namespace _Project.Scripts.Gameplay.Drag
                     EndDrag(screenPosition, camera);
             }
 
-            if (!IsDragging && !HasPendingDrag && !_inputService.GetLeftMouseButtonRaw() && !_inputService.GetLeftMouseButtonUpRaw())
+            if (!HasCurrentDrag && !HasPendingDrag && !_inputService.GetLeftMouseButtonRaw() && !_inputService.GetLeftMouseButtonUpRaw())
                 _dragWasStartedThisPress = false;
         }
 

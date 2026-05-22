@@ -159,7 +159,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             if (core == null || core.OwnedAtoms == null || deltaTime <= 0f)
                 return;
 
-            if (_flowAtom != null && _dragService != null && _dragService.IsReserved(_flowAtom))
+            if (_flowAtom != null && _dragService != null && _dragService.IsDragging(_flowAtom))
             {
                 ReleaseFlowAtomControl();
                 return;

@@ -33,6 +33,9 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         public bool CanReceiveConnectionAtom => IsBonded
                                                 && AtomReceiver != null
                                                 && AtomReceiver.CanReceiveConnectionAtom;
+        public int ConnectionAtomsRemaining => IsBonded && AtomReceiver != null
+            ? AtomReceiver.ConnectionAtomsRemaining
+            : 0;
 
         public event Action<BattleMolecule> Bonded;
 

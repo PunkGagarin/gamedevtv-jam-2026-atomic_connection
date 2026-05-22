@@ -13,6 +13,8 @@ namespace _Project.Scripts.MainMenu
 {
     public class MainMenuHud : MonoBehaviour
     {
+        private const string AB_TEST_PARALLEL_ATOM_FEED_KEY = "AtomicConnection.AbTest.ParallelAtomFeed";
+
         [field: SerializeField]
         private Button StartGameButton { get; set; }
 
@@ -31,6 +33,9 @@ namespace _Project.Scripts.MainMenu
         [field: SerializeField]
         private Button CreditsButton { get; set; }
 
+        [field: SerializeField]
+        private Toggle AbTestToggle { get; set; }
+
         [Inject] private GameStateMachine _stateMachine;
         [Inject] private AudioService _audio;
         [Inject] private IWindowService _windowService;
@@ -45,11 +50,15 @@ namespace _Project.Scripts.MainMenu
             UpdateButton.onClick.AddListener(OpenTalentTree);
             ResetButton.onClick.AddListener(ResetSavedData);
             CreditsButton.onClick.AddListener(OpenCredits);
+
+            if (AbTestToggle != null)
+                AbTestToggle.onValueChanged.AddListener(SetAbTestEnabled);
         }
 
         private void Start()
         {
             RefreshUpgradeNotification();
+            RefreshAbTestToggle();
         }
 
         private void OnEnable()
@@ -77,6 +86,9 @@ namespace _Project.Scripts.MainMenu
             UpdateButton.onClick.RemoveListener(OpenTalentTree);
             ResetButton.onClick.RemoveListener(ResetSavedData);
             CreditsButton.onClick.RemoveListener(OpenCredits);
+
+            if (AbTestToggle != null)
+                AbTestToggle.onValueChanged.RemoveListener(SetAbTestEnabled);
         }
 
         private void RefreshUpgradeNotification()
@@ -116,6 +128,21 @@ namespace _Project.Scripts.MainMenu
         {
             _audio.PlaySound(Sounds.buttonClick);
             _windowService.Open(WindowId.CreditsWindow);
+        }
+
+        private void RefreshAbTestToggle()
+        {
+            if (AbTestToggle == null)
+                return;
+
+            AbTestToggle.SetIsOnWithoutNotify(PlayerPrefs.GetInt(AB_TEST_PARALLEL_ATOM_FEED_KEY, 0) != 0);
+        }
+
+        private void SetAbTestEnabled(bool isEnabled)
+        {
+            _audio.PlaySound(Sounds.buttonClick);
+            PlayerPrefs.SetInt(AB_TEST_PARALLEL_ATOM_FEED_KEY, isEnabled ? 1 : 0);
+            PlayerPrefs.Save();
         }
     }
 }

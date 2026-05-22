@@ -20,6 +20,10 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
                                                 && OwnedAtoms != null
                                                 && Charge.CanReceiveAtom(OwnedAtoms.Count);
 
+        public int ConnectionAtomsRemaining => Bond != null && Bond.IsBonded && Charge != null && OwnedAtoms != null
+            ? Charge.RemainingAtoms(OwnedAtoms.Count)
+            : 0;
+
         private void Awake()
         {
             if (OwnedAtoms == null)

@@ -19,19 +19,23 @@ namespace _Project.Scripts.Gameplay.Enemies
         private readonly List<IEnemyRuntimeBehavior> _runtimeBehaviors = new();
         private EnemyDefinition _definition;
         private int _coreCollisionDamage = 1;
-        private EnemyUnit _mergePartner;
-        private EnemyMergeLinkView _mergeLinkView;
+        private EnemyMergeGroup _mergeGroup;
         private int _preMergeMaxHealth;
         private int _preMergeCurrentHealth;
         private int _preMergeCoreCollisionDamage;
 
         public EnemyId Id => _definition?.Id ?? EnemyId.Standard;
-        public bool IsAlive => Health == null || Health.IsAlive;
-        public bool IsMergeLinked => _mergePartner != null;
+        public bool IsAlive => (Health == null || Health.IsAlive) && (_mergeGroup == null || !_mergeGroup.IsDeathWaveActive);
         public int MaxHealth => Health?.MaxHealth ?? 1;
         public int CurrentHealth => Health?.CurrentHealth ?? MaxHealth;
-        public int CoreCollisionDamage => _coreCollisionDamage + (_mergePartner != null ? _mergePartner._coreCollisionDamage : 0);
+        public int CoreCollisionDamage => _mergeGroup?.CoreCollisionDamage ?? _coreCollisionDamage;
         public int NucleotideReward => _definition?.NucleotideReward ?? 0;
+
+        internal EnemyMergeGroup MergeGroup => _mergeGroup;
+        internal bool IsMergeLinkEndpointAlive => Health == null || Health.IsAlive;
+        internal int MergeMaxHealthContribution => _mergeGroup == null ? MaxHealth : _preMergeMaxHealth;
+        internal int MergeCurrentHealthContribution => _mergeGroup == null ? CurrentHealth : _preMergeCurrentHealth;
+        internal int MergeCoreCollisionDamageContribution => _mergeGroup == null ? _coreCollisionDamage : _preMergeCoreCollisionDamage;
 
         public event Action<EnemyUnit> Died;
         public event Action<EnemyUnit> Killed;
@@ -64,7 +68,7 @@ namespace _Project.Scripts.Gameplay.Enemies
         {
             _definition = definition ?? throw new ArgumentNullException(nameof(definition));
             _coreCollisionDamage = Mathf.Max(1, coreCollisionDamage);
-            ClearMergeLink(false, true);
+            ClearMergeGroup();
 
             if (Health != null)
                 Health.Configure(maxHealth);
@@ -72,7 +76,7 @@ namespace _Project.Scripts.Gameplay.Enemies
 
         public void PrepareForSpawn()
         {
-            ClearMergeLink(false, true);
+            ClearMergeGroup();
             Movement?.Clear();
             CoreCollision?.Clear();
             ClearRuntimeBehaviors();
@@ -85,7 +89,7 @@ namespace _Project.Scripts.Gameplay.Enemies
 
         public void PrepareForPool()
         {
-            ClearMergeLink(false, true);
+            ClearMergeGroup();
             Movement?.Clear();
             CoreCollision?.Clear();
             ClearRuntimeBehaviors();
@@ -128,6 +132,12 @@ namespace _Project.Scripts.Gameplay.Enemies
 
         public void Kill()
         {
+            if (_mergeGroup != null)
+            {
+                _mergeGroup.DieFromMemberKill(this);
+                return;
+            }
+
             if (Health != null)
                 Health.Kill();
             else
@@ -136,27 +146,20 @@ namespace _Project.Scripts.Gameplay.Enemies
 
         public void DieFromCore()
         {
-            EnemyUnit partner = _mergePartner;
-            EnemyMergeLinkView linkView = _mergeLinkView;
-            ClearMergeLink(false, false);
-
-            if (partner != null)
+            if (_mergeGroup != null)
             {
-                partner.ClearMergeLink(false, false);
-                partner.DieFromCoreSingle();
+                _mergeGroup.DieFromCore(this);
+                return;
             }
-
-            if (linkView != null)
-                Destroy(linkView.gameObject);
 
             DieFromCoreSingle();
         }
 
         public void TakeDamage(int amount)
         {
-            if (_mergePartner != null)
+            if (_mergeGroup != null)
             {
-                TakeMergedDamage(amount);
+                _mergeGroup.TakeDamage(amount, this);
                 return;
             }
 
@@ -166,49 +169,66 @@ namespace _Project.Scripts.Gameplay.Enemies
                 Kill();
         }
 
-        public void BeginMergeLink(EnemyUnit partner, EnemyMergeLinkView linkView, int mergedMaxHealth, int mergedCurrentHealth)
+        internal void AssignMergeGroup(EnemyMergeGroup mergeGroup)
         {
-            if (partner == null)
+            if (mergeGroup == null)
                 return;
 
-            _mergePartner = partner;
-            _mergeLinkView = linkView;
-            _preMergeMaxHealth = MaxHealth;
-            _preMergeCurrentHealth = CurrentHealth;
-            _preMergeCoreCollisionDamage = _coreCollisionDamage;
-
-            if (Health != null)
-                Health.Configure(mergedMaxHealth, mergedCurrentHealth);
-        }
-
-        public void RestoreAfterMergeBreak()
-        {
-            ClearMergeLink(true, false);
-        }
-
-        public void ClearMergeLinkView()
-        {
-            _mergeLinkView = null;
-        }
-
-        private void TakeMergedDamage(int amount)
-        {
-            if (Health == null)
+            if (_mergeGroup == null)
             {
-                Kill();
-                return;
+                _preMergeMaxHealth = MaxHealth;
+                _preMergeCurrentHealth = CurrentHealth;
+                _preMergeCoreCollisionDamage = _coreCollisionDamage;
             }
 
-            Health.TakeDamage(amount);
-
-            if (_mergePartner != null && Health.IsAlive)
-                _mergePartner.SyncMergeHealth(CurrentHealth);
+            _mergeGroup = mergeGroup;
         }
 
-        private void SyncMergeHealth(int currentHealth)
+        internal void ClearMergeGroupReference(EnemyMergeGroup mergeGroup)
+        {
+            if (_mergeGroup == mergeGroup)
+                _mergeGroup = null;
+        }
+
+        internal void SyncMergeHealth(int maxHealth, int currentHealth)
         {
             if (Health != null)
-                Health.Configure(MaxHealth, currentHealth);
+                Health.Configure(maxHealth, currentHealth);
+        }
+
+        internal void ApplyMergeDamage(int amount)
+        {
+            if (Health == null)
+                return;
+
+            Health.Died -= OnHealthDied;
+            Health.TakeDamage(amount);
+            Health.Died += OnHealthDied;
+        }
+
+        internal void DieFromMergeGroupDamage()
+        {
+            DieFromMergeGroupSingle(true);
+        }
+
+        internal void DieFromMergeGroupCore()
+        {
+            DieFromMergeGroupSingle(false);
+        }
+
+        private void DieFromMergeGroupSingle(bool killedByPlayer)
+        {
+            if (Health != null)
+            {
+                Health.Died -= OnHealthDied;
+                Health.Kill();
+                Health.Died += OnHealthDied;
+            }
+
+            if (killedByPlayer)
+                Killed?.Invoke(this);
+
+            Died?.Invoke(this);
         }
 
         private void DieFromCoreSingle()
@@ -237,40 +257,29 @@ namespace _Project.Scripts.Gameplay.Enemies
 
         private void OnHealthDied()
         {
-            BreakMergeBecauseOfDeath();
+            if (_mergeGroup != null)
+            {
+                _mergeGroup.DieFromMemberKill(this);
+                return;
+            }
+
             Killed?.Invoke(this);
             Died?.Invoke(this);
         }
 
-        private void BreakMergeBecauseOfDeath()
+        private void ClearMergeGroup()
         {
-            EnemyUnit partner = _mergePartner;
-            EnemyMergeLinkView linkView = _mergeLinkView;
-            ClearMergeLink(false, false);
+            EnemyMergeGroup mergeGroup = _mergeGroup;
 
-            if (partner != null)
-                partner.RestoreAfterMergeBreak();
-
-            if (linkView != null)
-                Destroy(linkView.gameObject);
-        }
-
-        private void ClearMergeLink(bool restoreStats, bool destroyView)
-        {
-            EnemyMergeLinkView linkView = _mergeLinkView;
-            _mergePartner = null;
-            _mergeLinkView = null;
-
-            if (restoreStats)
+            if (mergeGroup != null && mergeGroup.IsDeathWaveActive)
             {
-                _coreCollisionDamage = Mathf.Max(1, _preMergeCoreCollisionDamage);
-
-                if (Health != null)
-                    Health.Configure(_preMergeMaxHealth, _preMergeCurrentHealth);
+                mergeGroup.ReleaseDeathWaveMember(this);
+                return;
             }
 
-            if (destroyView && linkView != null)
-                Destroy(linkView.gameObject);
+            _mergeGroup = null;
+
+            mergeGroup?.ClearMembers();
         }
     }
 }

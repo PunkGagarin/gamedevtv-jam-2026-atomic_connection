@@ -85,6 +85,9 @@
 | Merge chance | 30% |
 | Merge radius | 5.0 |
 | Merge check interval | 0.5 сек |
+| Max merge group size | 5 |
+| Max merge links per enemy | 2 |
+| Merge death wave step | 0.08 сек |
 | Merge link width | 0.12 |
 | Merge link z offset | 0.05 |
 | Merge link intermediate point count | 5 |

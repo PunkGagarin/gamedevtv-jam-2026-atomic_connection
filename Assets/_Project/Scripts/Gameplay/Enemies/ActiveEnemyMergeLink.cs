@@ -15,6 +15,7 @@ namespace _Project.Scripts.Gameplay.Enemies
         private readonly EnemyMergeLinkView _view;
         private readonly float _tugPhase;
         private readonly float _tugFrequency01;
+        private bool _isDestroyed;
 
         public ActiveEnemyMergeLink(EnemyUnit first, EnemyUnit second, EnemyMergeLinkView view)
         {
@@ -25,27 +26,50 @@ namespace _Project.Scripts.Gameplay.Enemies
             _tugFrequency01 = PairNoise(91.73f);
         }
 
-        public bool IsAlive => _first != null && _second != null && _first.IsMergeLinked && _second.IsMergeLinked && _view != null;
+        public EnemyUnit First => _first;
+        public EnemyUnit Second => _second;
+        public bool IsAlive => !_isDestroyed && _first != null && _second != null && _first.IsMergeLinkEndpointAlive && _second.IsMergeLinkEndpointAlive && _view != null;
 
         public bool Contains(EnemyUnit enemy)
         {
-            return _first == enemy || _second == enemy;
+            return !_isDestroyed && (_first == enemy || _second == enemy);
+        }
+
+        public bool Connects(EnemyUnit first, EnemyUnit second)
+        {
+            return !_isDestroyed && ((_first == first && _second == second) || (_first == second && _second == first));
+        }
+
+        public EnemyUnit NeighborOf(EnemyUnit enemy)
+        {
+            if (_isDestroyed)
+                return null;
+
+            if (_first == enemy)
+                return _second;
+
+            if (_second == enemy)
+                return _first;
+
+            return null;
         }
 
         public void Tick(float deltaTime, EnemyMergeConfig config)
         {
+            if (_isDestroyed)
+                return;
+
             ApplyTetherMotion(deltaTime, config);
             _view.Tick();
         }
 
-        public void ClearEnemyReferences()
-        {
-            _first?.ClearMergeLinkView();
-            _second?.ClearMergeLinkView();
-        }
-
         public void DestroyView()
         {
+            if (_isDestroyed)
+                return;
+
+            _isDestroyed = true;
+
             if (_view != null)
                 Object.Destroy(_view.gameObject);
         }

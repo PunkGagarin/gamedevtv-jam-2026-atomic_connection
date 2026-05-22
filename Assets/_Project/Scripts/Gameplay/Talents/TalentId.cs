@@ -23,5 +23,8 @@ namespace _Project.Scripts.Gameplay.Talents
         CurrencyPickupArea = 18,
         SwarmMoleculeShotCount = 19,
         SwarmMoleculeAttackRange = 20,
+        ConnectionAtomSpeed = 21,
+        StingerMoleculeCriticalChance = 22,
+        StingerMoleculeCriticalReward = 23,
     }
 }

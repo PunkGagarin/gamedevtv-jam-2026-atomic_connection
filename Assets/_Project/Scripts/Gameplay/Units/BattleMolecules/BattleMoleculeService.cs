@@ -290,7 +290,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             switch (flowAtom.Phase)
             {
                 case FlowPhase.MoveToRim:
-                    if (MoveAtomToCoreRim(core, flowAtom, deltaTime))
+                    if (MoveAtomToCoreRim(core, flowAtom, deltaTime, true))
                         flowAtom.Phase = FlowPhase.OrbitToConnection;
                     break;
                 case FlowPhase.OrbitToConnection:
@@ -319,7 +319,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             if (flowAtom.Atom == null)
                 return true;
 
-            if (!MoveAtomToCoreRim(core, flowAtom, deltaTime))
+            if (!MoveAtomToCoreRim(core, flowAtom, deltaTime, false))
                 return false;
 
             flowAtom.Atom.EndConnectionFlow();
@@ -327,18 +327,19 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             return true;
         }
 
-        private bool MoveAtomToCoreRim(AtomCore core, FlowAtomState flowAtom, float deltaTime)
+        private bool MoveAtomToCoreRim(AtomCore core, FlowAtomState flowAtom, float deltaTime, bool useTalentSpeed)
         {
             float angle = AngleFromCoreTo(core, flowAtom.Atom.transform.position);
+            float speed = useTalentSpeed ? ConnectionAtomTravelSpeed() : _config.ConnectionAtomTravelSpeed;
             return MoveFlowAtomTowards(flowAtom, CoreRimPosition(core, flowAtom, angle),
-                _config.ConnectionAtomTravelSpeed * deltaTime);
+                speed * deltaTime);
         }
 
         private bool MoveAtomAlongCoreRim(AtomCore core, BattleMolecule target, FlowAtomState flowAtom, float deltaTime)
         {
             float currentAngle = AngleFromCoreTo(core, flowAtom.Atom.transform.position) * Mathf.Rad2Deg;
             float targetAngle = AngleFromCoreTo(core, target.transform.position) * Mathf.Rad2Deg;
-            float angleStep = _config.ConnectionCoreRimDegreesPerSecond * deltaTime;
+            float angleStep = ConnectionCoreRimDegreesPerSecond() * deltaTime;
             float nextAngle = angleStep > 0f
                 ? Mathf.MoveTowardsAngle(currentAngle, targetAngle, angleStep)
                 : targetAngle;
@@ -356,7 +357,23 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             Vector3 destination = target.GetConnectionArrivalPosition(
                 flowAtom.Atom.transform.position,
                 atomRadius);
-            return MoveFlowAtomTowards(flowAtom, destination, _config.ConnectionAtomTravelSpeed * deltaTime);
+            return MoveFlowAtomTowards(flowAtom, destination, ConnectionAtomTravelSpeed() * deltaTime);
+        }
+
+        private float ConnectionAtomSpeedMultiplier()
+        {
+            float bonus = _talentService != null ? _talentService.BonusOf(TalentType.ConnectionAtomSpeed) : 0f;
+            return Mathf.Max(0f, 1f + bonus);
+        }
+
+        private float ConnectionAtomTravelSpeed()
+        {
+            return _config.ConnectionAtomTravelSpeed * ConnectionAtomSpeedMultiplier();
+        }
+
+        private float ConnectionCoreRimDegreesPerSecond()
+        {
+            return _config.ConnectionCoreRimDegreesPerSecond * ConnectionAtomSpeedMultiplier();
         }
 
         private bool MoveFlowAtomTowards(FlowAtomState flowAtom, Vector3 destination, float maxDistance)

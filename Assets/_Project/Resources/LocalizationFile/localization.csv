@@ -72,6 +72,13 @@ TALENT_SWARM_MOLECULE_DAMAGE_LARGE_TITLE,Урон роя II,Swarm Damage II
 TALENT_SWARM_MOLECULE_DAMAGE_LARGE_DESC,Увеличивает урон SwarmMolecule на 2.,Increases SwarmMolecule damage by 2.
 TALENT_CURRENCY_PICKUP_AREA_TITLE,Широкий сбор,Wide Collection
 TALENT_CURRENCY_PICKUP_AREA_DESC,Увеличивает радиус подбора валюты.,Increases currency pickup radius.
+TALENT_CONNECTION_ATOM_SPEED_TITLE,Ускоренный поток,Fast Flow
+TALENT_CONNECTION_ATOM_SPEED_DESC,Ускоряет connection-поток атомов от ядра к активной боевой молекуле на 25% за уровень.,Speeds up the atom connection flow from the core to the active battle molecule by 25% per level.
+TALENT_STINGER_MOLECULE_CRITICAL_CHANCE_TITLE,Точный укол,Precise Sting
+TALENT_STINGER_MOLECULE_CRITICAL_CHANCE_DESC,Дает StingerMolecule 10% шанс нанести критический урон за уровень.,Gives StingerMolecule a 10% chance to deal critical damage per level.
+TALENT_STINGER_MOLECULE_CRITICAL_REWARD_TITLE,ДНК-выброс,DNA Burst
+TALENT_STINGER_MOLECULE_CRITICAL_REWARD_DESC,Увеличивает награду за критические убийства StingerMolecule на 50% за уровень.,Increases the reward from enemies killed by a StingerMolecule critical hit by 50% per level.
+DAMAGE_POPUP_CRITICAL,Критический урон!,Critical hit!
 TALENT_SWARM_MOLECULE_SHOT_COUNT_TITLE,Залп роя,Swarm Volley
 TALENT_SWARM_MOLECULE_SHOT_COUNT_DESC,Добавляет снаряды SwarmMolecule и расширяет залп.,Adds more SwarmMolecule projectiles and widens the volley.
 TALENT_SWARM_MOLECULE_ATTACK_RANGE_TITLE,Дальность роя,Swarm Reach

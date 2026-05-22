@@ -2,6 +2,7 @@ using _Project.Scripts.Gameplay.Currencies;
 using _Project.Scripts.Gameplay.Levels;
 using _Project.Scripts.Infrastructure.GameStates.StateMachine;
 using _Project.Scripts.Infrastructure.GameStates.States;
+using _Project.Scripts.Localization;
 using _Project.Scripts.Utils.Pause;
 using TMPro;
 using UnityEngine;
@@ -20,6 +21,7 @@ namespace _Project.Scripts.Gameplay.Windows
         [Inject] private GameStateMachine _stateMachine;
         [Inject] private PauseService _pauseService;
         [Inject] private ILevelProgressService _levelProgressService;
+        [Inject] private LocalizationTool _localizationTool;
 
         protected override void OnAwake()
         {
@@ -31,11 +33,14 @@ namespace _Project.Scripts.Gameplay.Windows
             Content.SetActive(true);
             CurrencyAmount reward = _levelProgressService.LastCompletionReward;
             string title = _levelProgressService.LastCompletedLevelWasFinal
-                ? "Спасибо что поиграли в игру"
-                : "LEVEL COMPLETE";
+                ? _localizationTool.GetText("LEVEL_COMPLETE_FINAL_TITLE")
+                : _localizationTool.GetText("LEVEL_COMPLETE_TITLE");
             string rewardText = _levelProgressService.LastCompletionWasFirstClear
-                ? $"Reward: +{reward.Amount} {RewardName(reward.CurrencyId)}"
-                : "Reward already claimed";
+                ? string.Format(
+                    _localizationTool.GetText("LEVEL_COMPLETE_REWARD_FORMAT"),
+                    reward.Amount,
+                    RewardName(reward.CurrencyId))
+                : _localizationTool.GetText("LEVEL_COMPLETE_REWARD_CLAIMED");
 
             RewardLabel.text = $"{title}\n{rewardText}";
         }
@@ -64,14 +69,16 @@ namespace _Project.Scripts.Gameplay.Windows
             _stateMachine.Enter<LoadGameplayState>();
         }
 
-        private static string RewardName(CurrencyId currencyId)
+        private string RewardName(CurrencyId currencyId)
         {
-            return currencyId switch
+            string key = currencyId switch
             {
-                CurrencyId.Nucleotides => "nucleotides",
-                CurrencyId.Isotopes => "isotopes",
-                _ => currencyId.ToString()
+                CurrencyId.Nucleotides => "CURRENCY_NUCLEOTIDES",
+                CurrencyId.Isotopes => "CURRENCY_ISOTOPES",
+                _ => null
             };
+
+            return key == null ? currencyId.ToString() : _localizationTool.GetText(key);
         }
     }
 }

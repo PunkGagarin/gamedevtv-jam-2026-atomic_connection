@@ -14,12 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Talents.TalentDefinition
   <Id>k__BackingField: 18
   <Type>k__BackingField: 15
-  <Title>k__BackingField: "\u0428\u0438\u0440\u043E\u043A\u0438\u0439 \u0441\u0431\u043E\u0440"
-  <Description>k__BackingField: "\u0423\u0432\u0435\u043B\u0438\u0447\u0438\u0432\u0430\u0435\u0442
-    \u043A\u0432\u0430\u0434\u0440\u0430\u0442\u043D\u0443\u044E \u043E\u0431\u043B\u0430\u0441\u0442\u044C
-    \u043F\u043E\u0434\u0431\u043E\u0440\u0430 \u0414\u041D\u041A \u0432\u043E\u043A\u0440\u0443\u0433
-    \u043A\u0443\u0440\u0441\u043E\u0440\u0430."
-  <Icon>k__BackingField: {fileID: 0}
+  <Title>k__BackingField: TALENT_CURRENCY_PICKUP_AREA_TITLE
+  <Description>k__BackingField: TALENT_CURRENCY_PICKUP_AREA_DESC
   <MaxLevel>k__BackingField: 4
   <CostCurrency>k__BackingField: 0
   <CostsByLevel>k__BackingField: 1e0000003c0000006400000096000000

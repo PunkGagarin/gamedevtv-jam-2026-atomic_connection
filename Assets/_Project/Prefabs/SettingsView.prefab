@@ -260,7 +260,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7bad83c90fe747ad82f6472b7fc19acf, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Jam.Scripts.Localization.ToLocalize
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Localization.ToLocalize
   _key: SETTINGS_CANCEL
   _fontAsset: {fileID: 0}
 --- !u!1 &1323040876716641978
@@ -1021,7 +1021,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7bad83c90fe747ad82f6472b7fc19acf, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Jam.Scripts.ToLocalize
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Localization.ToLocalize
   _key: SETTINGS_LANG_RU
   _fontAsset: {fileID: 0}
 --- !u!1 &4043278814911003592
@@ -1173,7 +1173,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7bad83c90fe747ad82f6472b7fc19acf, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Jam.Scripts.Localization.ToLocalize
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Localization.ToLocalize
   _key: SETTINGS_OK
   _fontAsset: {fileID: 0}
 --- !u!1 &4167449082937532633
@@ -1325,7 +1325,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7bad83c90fe747ad82f6472b7fc19acf, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Jam.Scripts.Localization.ToLocalize
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Localization.ToLocalize
   _key: SETTINGS_AUDIO_MASTER_TITLE
   _fontAsset: {fileID: 0}
 --- !u!1 &4244429381247936999
@@ -1748,7 +1748,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7bad83c90fe747ad82f6472b7fc19acf, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Jam.Scripts.Localization.ToLocalize
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Localization.ToLocalize
   _key: SETTINGS_AUDIO_SFX_TITLE
   _fontAsset: {fileID: 0}
 --- !u!1 &4527870781240561008
@@ -2143,7 +2143,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7bad83c90fe747ad82f6472b7fc19acf, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Jam.Scripts.ToLocalize
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Localization.ToLocalize
   _key: SETTINGS_LANG_EN
   _fontAsset: {fileID: 0}
 --- !u!1 &5107014964502509887
@@ -2295,7 +2295,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7bad83c90fe747ad82f6472b7fc19acf, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Jam.Scripts.Localization.ToLocalize
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Localization.ToLocalize
   _key: SETTINGS_LANG_TITLE
   _fontAsset: {fileID: 0}
 --- !u!1 &5250691481921814071
@@ -2744,7 +2744,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7bad83c90fe747ad82f6472b7fc19acf, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Jam.Scripts.Localization.ToLocalize
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Localization.ToLocalize
   _key: SETTINGS_AUDIO_TITLE
   _fontAsset: {fileID: 0}
 --- !u!1 &6467781491178413794
@@ -3178,7 +3178,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7bad83c90fe747ad82f6472b7fc19acf, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Jam.Scripts.Localization.ToLocalize
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Localization.ToLocalize
   _key: SETTINGS_AUDIO_MUSIC_TITLE
   _fontAsset: {fileID: 0}
 --- !u!1 &7624629284590113207

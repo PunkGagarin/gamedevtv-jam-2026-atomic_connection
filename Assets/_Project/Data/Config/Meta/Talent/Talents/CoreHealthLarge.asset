@@ -14,10 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Talents.TalentDefinition
   <Id>k__BackingField: 3
   <Type>k__BackingField: 0
-  <Title>k__BackingField: "\u041F\u0440\u043E\u0447\u043D\u043E\u0435 \u044F\u0434\u0440\u043E"
-  <Description>k__BackingField: "\u0421\u0438\u043B\u044C\u043D\u043E \u0443\u0432\u0435\u043B\u0438\u0447\u0438\u0432\u0430\u0435\u0442
-    HP \u044F\u0434\u0440\u0430 \u043D\u0430 10."
-  <Icon>k__BackingField: {fileID: 0}
+  <Title>k__BackingField: TALENT_CORE_HEALTH_LARGE_TITLE
+  <Description>k__BackingField: TALENT_CORE_HEALTH_LARGE_DESC
   <MaxLevel>k__BackingField: 1
   <CostCurrency>k__BackingField: 0
   <CostsByLevel>k__BackingField: 46000000

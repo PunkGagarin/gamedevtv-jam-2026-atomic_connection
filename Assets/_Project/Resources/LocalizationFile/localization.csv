@@ -1,37 +1,78 @@
 Ключ,Russian,English
-MAIN_MENU_TITLE,Dragon Lair,Dragon Lair
 MAIN_MENU_START_GAME,Начать игру,Start Game
 MAIN_MENU_SETTINGS,Настройки,Settings
-MAIN_MENU_CREDITS,Разработчики,Credits
-PAUSE_POPUP_RETURN_TO_GAME,Вернуться в игру,Return to game
-PAUSE_POPUP_RETURN_TO_MAIN_MENU,Вернуться в меню,Return to menu
-PAUSE_POPUP_SETTINGS,Настройки,Settings
-PAUSE_POPUP_TITLE,Пауза,Paused
+MAIN_MENU_CREDITS,Авторы,Credits
+MAIN_MENU_UPGRADE,Улучшения,Upgrades
+MAIN_MENU_RESET,Сброс,Reset
+MAIN_MENU_LEVEL_FORMAT,Уровень {0},Level {0}
+PAUSE_POPUP_RETURN_TO_GAME,Продолжить,Resume
+PAUSE_POPUP_RESTART,Перезапустить,Restart
+PAUSE_POPUP_RETURN_TO_MAIN_MENU,В меню,Menu
+GAME_OVER_TITLE,Ядро разрушено,Core Destroyed
+LEVEL_COMPLETE_TITLE,Уровень пройден,Level Complete
+LEVEL_COMPLETE_FINAL_TITLE,"Спасибо, что поиграли в игру",Thanks for playing
+LEVEL_COMPLETE_REWARD_FORMAT,Награда: +{0} {1},Reward: +{0} {1}
+LEVEL_COMPLETE_REWARD_CLAIMED,Награда уже получена,Reward already claimed
 CREDITS_POPUP_TITLE,Авторы,Credits
-CREDITS_POPUP_DESC,"@punkgagarin - Гейм дизайн, Программирование%%@Madgine_Solis - художник%%@K1wi_Zzz - художник","@punkgagarin - Game Design, Programming%%@Madgine_Solis - artist%%@K1wi_Zzz - ui designer"
+CREDITS_POPUP_DESC,"@punkgagarin - геймдизайнер, программист%%@Madgine_Solis - программист%%@the_nomah - художник%%@CoderLivingDeath - тех артист","@punkgagarin - game designer, programmer%%@Madgine_Solis - programmer%%@the_nomah - artist%%@CoderLivingDeath - tech artist"
 CREDITS_POPUP_CLOSE,Закрыть,Close
 SETTINGS_AUDIO_TITLE,Аудио,Audio
-SETTINGS_AUDIO_MASTER_TITLE,Мастер,Master
-SETTINGS_AUDIO_SFX_TITLE,Sfx,Sfx
-SETTINGS_AUDIO_MUSIC_TITLE,Музыка,Music
-SETTINGS_LANG_TITLE,Выбрать язык,Select language
+SETTINGS_AUDIO_MASTER_TITLE,Общая громкость,Master volume
+SETTINGS_AUDIO_SFX_TITLE,Звуки,SFX volume
+SETTINGS_AUDIO_MUSIC_TITLE,Музыка,Music volume
+SETTINGS_LANG_TITLE,Язык,Language
 SETTINGS_LANG_RU,Русский,Русский
-SETTINGS_LANG_EN,English,English
+SETTINGS_LANG_EN,Английский,English
 SETTINGS_CANCEL,Отмена,Cancel
 SETTINGS_OK,Применить,Apply
-GUILD,Гильдия,Guild
-SKILLS,Навыки,Skills
-UNTIS_COUNT,Сейчас ворует:,Currently stealing:
-GOLD_PER_CLICK,Золота за клик,Gold per click
-SPEED_MOVE,Скорость ,Move speed
-HIRE_A_UNIT,Нанять вора,Hire a unit
-SHEAKY_SILENT,Громкость,Sneaky silent
-GOLD_PER_UNIT_MOVE,Золото юнита,Gold per unit
-CLOSE,Закрыть,Close
-RETRY,Повторить,Restart
-THANKS,Спасибо за игру!,Thanks for playing!
-MENU,В меню,Menu
-UNIT_GEM_CHANCE,Шанс гема,Gem chance
-UNIT_GEM_AMOUNT,Кол-во гемов,Gem amount
-HIRE_CROW,Купить ворону,Buy crow
-GOLD_PER_CROW,Золото вороны,Crow gold
+COMMON_RESTART,Повторить,Restart
+COMMON_MAIN_MENU,Главное меню,Main Menu
+CURRENCY_NUCLEOTIDES,ДНК,DNA
+CURRENCY_NUCLEOTIDES_SHORT,ДНК,DNA
+CURRENCY_NUCLEOTIDES_BALANCE_SUFFIX, ДНК, DNA
+CURRENCY_ISOTOPES,изотопы,isotopes
+CURRENCY_ISOTOPES_SHORT,изот.,iso.
+CURRENCY_ISOTOPES_BALANCE_SUFFIX, изотоп, isotope
+TALENT_NODE_MAX,МАКС,MAX
+TALENT_CORE_HEALTH_SMALL_TITLE,Крепкое ядро,Sturdy Core
+TALENT_CORE_HEALTH_SMALL_DESC,Увеличивает здоровье ядра на 1.,Increases core health by 1.
+TALENT_AUTO_CLICK_TITLE,Автогенерация,Auto Generation
+TALENT_AUTO_CLICK_DESC,Ядро автоматически создаёт заряд без клика.,The core automatically creates a charge without a click.
+TALENT_CORE_CLICK_REDUCTION_TITLE,Быстрая сборка,Quick Assembly
+TALENT_CORE_CLICK_REDUCTION_DESC,Уменьшает время восстановления клика ядра.,Reduces the core click cooldown.
+TALENT_CORE_HEALTH_LARGE_TITLE,Прочное ядро,Reinforced Core
+TALENT_CORE_HEALTH_LARGE_DESC,Сильно увеличивает здоровье ядра.,Greatly increases core health.
+TALENT_STINGER_MOLECULE_DAMAGE_SMALL_TITLE,Урон I,Damage I
+TALENT_STINGER_MOLECULE_DAMAGE_SMALL_DESC,Увеличивает урон StingerMolecule на 1.,Increases StingerMolecule damage by 1.
+TALENT_STINGER_MOLECULE_AIM_TITLE,Боевой прицел,Combat Aim
+TALENT_STINGER_MOLECULE_AIM_DESC,Показывает направление выстрела StingerMolecule.,Shows the StingerMolecule shot direction.
+TALENT_STINGER_MOLECULE_PIERCE_TITLE,Пробитие,Pierce
+TALENT_STINGER_MOLECULE_PIERCE_DESC,Выстрел StingerMolecule пробивает первого врага и летит дальше.,StingerMolecule shot pierces the first enemy and keeps flying.
+TALENT_STINGER_MOLECULE_AUTO_LOAD_TITLE,Автозарядка,Auto Charge
+TALENT_STINGER_MOLECULE_AUTO_LOAD_DESC,StingerMolecule автоматически получает бесплатные заряды.,Automatically charges StingerMolecule with free shots.
+TALENT_STINGER_MOLECULE_DAMAGE_LARGE_TITLE,Урон II,Damage II
+TALENT_STINGER_MOLECULE_DAMAGE_LARGE_DESC,Сильно увеличивает урон StingerMolecule на 10.,Greatly increases StingerMolecule damage by 10.
+TALENT_EXTRA_BATTLE_MOLECULE_TITLE,Вторая молекула,Second Molecule
+TALENT_EXTRA_BATTLE_MOLECULE_DESC,Разблокирует вторую боевую молекулу.,Unlocks a second battle molecule.
+TALENT_MEMBRANE_MOLECULE_TITLE,Мембранная молекула,Membrane Molecule
+TALENT_MEMBRANE_MOLECULE_DESC,Разблокирует защитную мембранную молекулу.,Unlocks a defensive membrane molecule.
+TALENT_MEMBRANE_MOLECULE_CHARGE_REDUCTION_TITLE,Лёгкая мембрана,Light Membrane
+TALENT_MEMBRANE_MOLECULE_CHARGE_REDUCTION_DESC,Уменьшает число зарядов для активации мембраны.,Reduces the projectile count needed to activate the membrane.
+TALENT_MEMBRANE_MOLECULE_DURATION_TITLE,Долгая мембрана,Long Membrane
+TALENT_MEMBRANE_MOLECULE_DURATION_DESC,Увеличивает длительность мембраны.,Increases membrane duration.
+TALENT_MEMBRANE_MOLECULE_AUTO_LOAD_TITLE,Заряд мембраны,Membrane Charge
+TALENT_MEMBRANE_MOLECULE_AUTO_LOAD_DESC,Мембрана автоматически получает бесплатные заряды.,Automatically charges MembraneMolecule with free projectiles.
+TALENT_SWARM_MOLECULE_TITLE,Роевая молекула,Swarm Molecule
+TALENT_SWARM_MOLECULE_DESC,Разблокирует роевую молекулу с пробивающим залпом.,Unlocks SwarmMolecule with a piercing swarm volley.
+TALENT_SWARM_MOLECULE_DAMAGE_SMALL_TITLE,Урон роя I,Swarm Damage I
+TALENT_SWARM_MOLECULE_DAMAGE_SMALL_DESC,Увеличивает урон SwarmMolecule на 1.,Increases SwarmMolecule damage by 1.
+TALENT_SWARM_MOLECULE_AUTO_LOAD_TITLE,Заряд роя,Swarm Charge
+TALENT_SWARM_MOLECULE_AUTO_LOAD_DESC,SwarmMolecule автоматически получает бесплатные снаряды.,Automatically charges SwarmMolecule with free projectiles.
+TALENT_SWARM_MOLECULE_DAMAGE_LARGE_TITLE,Урон роя II,Swarm Damage II
+TALENT_SWARM_MOLECULE_DAMAGE_LARGE_DESC,Увеличивает урон SwarmMolecule на 2.,Increases SwarmMolecule damage by 2.
+TALENT_CURRENCY_PICKUP_AREA_TITLE,Широкий сбор,Wide Collection
+TALENT_CURRENCY_PICKUP_AREA_DESC,Увеличивает радиус подбора валюты.,Increases currency pickup radius.
+TALENT_SWARM_MOLECULE_SHOT_COUNT_TITLE,Залп роя,Swarm Volley
+TALENT_SWARM_MOLECULE_SHOT_COUNT_DESC,Добавляет снаряды SwarmMolecule и расширяет залп.,Adds more SwarmMolecule projectiles and widens the volley.
+TALENT_SWARM_MOLECULE_ATTACK_RANGE_TITLE,Дальность роя,Swarm Reach
+TALENT_SWARM_MOLECULE_ATTACK_RANGE_DESC,Увеличивает дальность залпа SwarmMolecule.,Increases SwarmMolecule volley range.

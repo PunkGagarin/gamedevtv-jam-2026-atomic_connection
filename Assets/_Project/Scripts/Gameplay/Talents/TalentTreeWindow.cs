@@ -9,6 +9,7 @@ using DG.Tweening;
 using _Project.Scripts.Gameplay.Currencies;
 using _Project.Scripts.Gameplay.Windows;
 using _Project.Scripts.GameplayData;
+using _Project.Scripts.Localization;
 using UnityEngine.Serialization;
 
 namespace _Project.Scripts.Gameplay.Talents
@@ -37,6 +38,8 @@ namespace _Project.Scripts.Gameplay.Talents
         [Inject] private IWindowService _windowService;
         [Inject] private TalentTreeAnimationConfig _animationConfig;
         [Inject] private UiThemeConfig _themeConfig;
+        [Inject] private LanguageService _languageService;
+        [Inject] private LocalizationTool _localizationTool;
 
         private readonly Dictionary<TalentId, TalentNodeView> _nodesById = new();
         private readonly Dictionary<TalentId, TalentDefinition> _talentsById = new();
@@ -71,6 +74,7 @@ namespace _Project.Scripts.Gameplay.Talents
             CloseButton.onClick.AddListener(Close);
             _talentService.Changed += Refresh;
             _currencyService.Changed += Refresh;
+            _languageService.OnSwitchLanguage += RefreshOnLanguageChanged;
         }
 
         protected override void UnsubscribeUpdates()
@@ -80,6 +84,7 @@ namespace _Project.Scripts.Gameplay.Talents
 
             _talentService.Changed -= Refresh;
             _currencyService.Changed -= Refresh;
+            _languageService.OnSwitchLanguage -= RefreshOnLanguageChanged;
         }
 
         public TalentNodePurchaseResult TryBuy(TalentId talentId)
@@ -97,8 +102,8 @@ namespace _Project.Scripts.Gameplay.Talents
             if (TooltipPanel == null)
                 return;
 
-            TooltipTitleLabel.text = talent.Title;
-            TooltipDescriptionLabel.text = talent.Description;
+            TooltipTitleLabel.text = Localize(talent.Title);
+            TooltipDescriptionLabel.text = Localize(talent.Description);
             TooltipPanel.gameObject.SetActive(true);
             TooltipPanel.anchoredPosition = ClampedTooltipPosition(
                 NodesRoot.anchoredPosition +
@@ -266,6 +271,7 @@ namespace _Project.Scripts.Gameplay.Talents
                 talent,
                 level,
                 viewState,
+                Localize(talent.Title),
                 _currencyService.Format(talent.PriceForLevel(level)));
 
             if (ShouldAnimateReveal(talent.Id, shouldBeVisible, wasVisible, animateNewVisibleNodes))
@@ -348,6 +354,15 @@ namespace _Project.Scripts.Gameplay.Talents
             return talent.Prerequisites == null ||
                    talent.Prerequisites.All(prerequisite => _talentService.LevelOf(prerequisite) > 0);
         }
+
+        private void RefreshOnLanguageChanged()
+        {
+            HideTooltip();
+            Refresh(false);
+        }
+
+        public string Localize(string key) =>
+            string.IsNullOrWhiteSpace(key) ? string.Empty : _localizationTool.GetText(key);
 
         private void ResetRevealCacheIfProgressWasReset(bool hasBoughtTalents)
         {

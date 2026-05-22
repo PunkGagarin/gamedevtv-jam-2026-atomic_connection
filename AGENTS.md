@@ -23,6 +23,7 @@ do not put the behavior in a service yet. Run these gates before code changes:
 - Event/update: use events/subscriptions/explicit calls for discrete changes; use `Update` only for continuous work.
 - Lifecycle: states decide when; services know how.
 - Unity assets: keep `.meta` files, preserve GUIDs, update prefabs/scenes for serialized fields/components.
+- Localization: every new player-facing text, and every discovered existing text without localization, must be added through the localization flow. Use `ToLocalize` on static text components, `LocalizationTool`/localized keys for dynamic strings, update `Assets/_Project/Resources/LocalizationFile/localization.csv`, and regenerate/update the Russian and English XML language files.
 - Docs: update `AtomicConnection_GDD.md` for player-facing rules; update `AtomicConnection_BALANCE.md` for concrete numbers; update `Spawn.md` for level spawn tables whenever `LevelCatalogConfig` waves change; update `Pacing.md` when spawn, currency rewards, level rewards, or upgrade costs/prerequisites change.
 - Validation: run available compile/static checks and report Unity Editor/manual validation gaps.
 
@@ -124,6 +125,7 @@ Keep `AGENTS.md` operational and update the architecture notes when current flow
 - Use serialized auto-properties for inspector-exposed fields: `[field: SerializeField] private GameObject Obj { get; set; }`. Do not add new `[SerializeField] private GameObject _obj;` fields.
 - ScriptableObject configs with multiple semantic groups must use editor-friendly `[field: Header("...")]` sections with human-readable names.
 - When converting existing serialized fields to serialized auto-properties, update scene/prefab YAML references to the backing field name, for example `<Obj>k__BackingField`.
+- UI text must not be left as raw player-facing strings. Static `TextMeshProUGUI` labels use `ToLocalize` with a key; dynamic text uses localized format/name keys from `LocalizationTool`.
 - Prefer `List<T>` over arrays (`T[]`) where possible, including `[field: SerializeField]` collections
 - For new files, prefer usings grouped as System -> UnityEngine -> third-party -> project. In existing files, keep the surrounding order unless the file is already being cleaned up.
 

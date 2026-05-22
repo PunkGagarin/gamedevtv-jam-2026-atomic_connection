@@ -1,5 +1,6 @@
 using System;
 using _Project.Scripts.Infrastructure.SaveLoad;
+using _Project.Scripts.Localization;
 using UnityEngine;
 using Zenject;
 
@@ -9,6 +10,7 @@ namespace _Project.Scripts.Gameplay.Currencies
     {
         [Inject] private IProgressProvider _progressProvider;
         [Inject] private ISaveLoadService _saveLoadService;
+        [Inject] private LocalizationTool _localizationTool;
 
         public event Action Changed;
 
@@ -59,14 +61,16 @@ namespace _Project.Scripts.Gameplay.Currencies
             return $"{BalanceOf(currencyId)} {NameOf(currencyId)}";
         }
 
-        private static string NameOf(CurrencyId currencyId)
+        private string NameOf(CurrencyId currencyId)
         {
-            return currencyId switch
+            string key = currencyId switch
             {
-                CurrencyId.Nucleotides => "ДНК",
-                CurrencyId.Isotopes => "изот.",
-                _ => currencyId.ToString()
+                CurrencyId.Nucleotides => "CURRENCY_NUCLEOTIDES_SHORT",
+                CurrencyId.Isotopes => "CURRENCY_ISOTOPES_SHORT",
+                _ => null
             };
+
+            return key == null ? currencyId.ToString() : _localizationTool.GetText(key);
         }
     }
 }

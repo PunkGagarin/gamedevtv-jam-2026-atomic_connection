@@ -149,7 +149,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7bad83c90fe747ad82f6472b7fc19acf, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Jam.Scripts.Localization.ToLocalize
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Localization.ToLocalize
   _key: CREDITS_POPUP_TITLE
   _fontAsset: {fileID: 0}
 --- !u!1 &3822797994686687259
@@ -381,7 +381,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7bad83c90fe747ad82f6472b7fc19acf, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Jam.Scripts.Localization.ToLocalize
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Localization.ToLocalize
   _key: CREDITS_POPUP_DESC
   _fontAsset: {fileID: 0}
 --- !u!1 &7153619256938191155
@@ -608,7 +608,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7bad83c90fe747ad82f6472b7fc19acf, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Jam.Scripts.Localization.ToLocalize
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Localization.ToLocalize
   _key: CREDITS_POPUP_CLOSE
   _fontAsset: {fileID: 0}
 --- !u!1 &9046815776756350453

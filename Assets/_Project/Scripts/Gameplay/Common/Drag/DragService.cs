@@ -21,15 +21,20 @@ namespace _Project.Scripts.Gameplay.Drag
         [Inject] private IInputService _inputService;
         [Inject] private ICameraProvider _cameraProvider;
 
-        private bool IsDragging => _currentDraggable != null;
+        private bool HasCurrentDrag => _currentDraggable != null;
         private bool HasPendingDrag => _pendingCandidate.Draggable != null;
         public bool DragWasStartedThisPress => _dragWasStartedThisPress;
-        public bool IsDragActive => IsDragging || HasPendingDrag;
+        public bool IsDragActive => HasCurrentDrag || HasPendingDrag;
 
         public bool IsReserved(IDraggable draggable)
         {
             return draggable != null &&
                    (_currentDraggable == draggable || _pendingCandidate.Draggable == draggable);
+        }
+
+        public bool IsDragging(IDraggable draggable)
+        {
+            return draggable != null && _currentDraggable == draggable;
         }
 
         public void Update()
@@ -40,7 +45,7 @@ namespace _Project.Scripts.Gameplay.Drag
 
             Vector2 screenPosition = _inputService.GetScreenMousePosition();
 
-            if (!IsDragging)
+            if (!HasCurrentDrag)
             {
                 if (_inputService.GetLeftMouseButtonDown())
                 {
@@ -58,7 +63,7 @@ namespace _Project.Scripts.Gameplay.Drag
                     EndDrag(screenPosition, camera);
             }
 
-            if (!IsDragging && !HasPendingDrag && !_inputService.GetLeftMouseButtonRaw() && !_inputService.GetLeftMouseButtonUpRaw())
+            if (!HasCurrentDrag && !HasPendingDrag && !_inputService.GetLeftMouseButtonRaw() && !_inputService.GetLeftMouseButtonUpRaw())
                 _dragWasStartedThisPress = false;
         }
 
@@ -179,9 +184,17 @@ namespace _Project.Scripts.Gameplay.Drag
                 if (hit == null || hit == col)
                     continue;
 
-                target = hit.GetComponent<IDropTarget>();
-                if (target != null)
+                IDropTarget candidate = hit.GetComponent<IDropTarget>() ?? hit.GetComponentInParent<IDropTarget>();
+                if (candidate == null)
+                    continue;
+
+                target ??= candidate;
+
+                if (_currentDraggable != null && candidate.CanAcceptDrop(_currentDraggable))
+                {
+                    target = candidate;
                     break;
+                }
             }
 
             if (col != null)
@@ -200,6 +213,10 @@ namespace _Project.Scripts.Gameplay.Drag
                 Collider2D hit = OverlapHits[i];
                 if (hit == null)
                     continue;
+
+                IDraggable directDraggable = hit.GetComponent<IDraggable>();
+                if (directDraggable != null && directDraggable.CanStartDrag)
+                    return new DragStartCandidate(directDraggable, true);
 
                 IDragSource dragSource = hit.GetComponentInParent<IDragSource>();
                 IDraggable draggable = dragSource?.GetDraggable();

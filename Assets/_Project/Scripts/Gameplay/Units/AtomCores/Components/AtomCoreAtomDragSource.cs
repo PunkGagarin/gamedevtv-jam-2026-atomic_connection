@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Drag;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
@@ -8,6 +9,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
     [RequireComponent(typeof(AtomCore))]
     public class AtomCoreAtomDragSource : MonoBehaviour, IDragSource
     {
+        private readonly List<FreeAtom> _atomsBuffer = new();
         private AtomCore _core;
 
         private void Awake()
@@ -23,9 +25,21 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
             if (_core == null || !_core.IsAlive || _core.OwnedAtoms == null)
                 return null;
 
-            return _core.OwnedAtoms.TryGetFirstOwned(FreeAtomOwnerKind.Core, out FreeAtom atom)
-                ? atom
-                : null;
+            _core.OwnedAtoms.GetOwned(FreeAtomOwnerKind.Core, _atomsBuffer);
+            FreeAtom fallback = null;
+
+            foreach (FreeAtom atom in _atomsBuffer)
+            {
+                if (atom == null)
+                    continue;
+
+                fallback ??= atom;
+
+                if (!atom.IsInConnectionFlow)
+                    return atom;
+            }
+
+            return fallback;
         }
     }
 }

@@ -14,7 +14,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
         protected override int BaseShotDamage => Config.SwarmMoleculeShotDamage;
         protected override TalentType DamageTalentType => TalentType.SwarmMoleculeDamage;
-        protected override TalentType AutoLoadTalentType => TalentType.SwarmMoleculeAutoLoad;
 
         protected override void OnDisable()
         {

@@ -18,7 +18,7 @@ MonoBehaviour:
   <Description>k__BackingField: TALENT_CORE_HEALTH_LARGE_DESC
   <MaxLevel>k__BackingField: 1
   <CostCurrency>k__BackingField: 0
-  <CostsByLevel>k__BackingField: 46000000
+  <CostsByLevel>k__BackingField: 0e000000
   <Prerequisites>k__BackingField: 00000000
   <GraphPosition>k__BackingField: {x: 0, y: 240}
   <BonusPerLevel>k__BackingField: 10

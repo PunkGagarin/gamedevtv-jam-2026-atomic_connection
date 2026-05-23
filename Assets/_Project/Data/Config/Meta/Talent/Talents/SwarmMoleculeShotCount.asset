@@ -18,7 +18,7 @@ MonoBehaviour:
   <Description>k__BackingField: TALENT_SWARM_MOLECULE_SHOT_COUNT_DESC
   <MaxLevel>k__BackingField: 1
   <CostCurrency>k__BackingField: 0
-  <CostsByLevel>k__BackingField: 78000000
+  <CostsByLevel>k__BackingField: 18000000
   <Prerequisites>k__BackingField: 0e000000
   <GraphPosition>k__BackingField: {x: 240, y: -480}
   <BonusPerLevel>k__BackingField: 2

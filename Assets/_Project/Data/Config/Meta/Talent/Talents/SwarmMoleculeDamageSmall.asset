@@ -18,7 +18,7 @@ MonoBehaviour:
   <Description>k__BackingField: TALENT_SWARM_MOLECULE_DAMAGE_SMALL_DESC
   <MaxLevel>k__BackingField: 1
   <CostCurrency>k__BackingField: 0
-  <CostsByLevel>k__BackingField: 50000000
+  <CostsByLevel>k__BackingField: 10000000
   <Prerequisites>k__BackingField: 0e000000
   <GraphPosition>k__BackingField: {x: 240, y: -720}
   <BonusPerLevel>k__BackingField: 1

@@ -18,7 +18,7 @@ MonoBehaviour:
   <Description>k__BackingField: TALENT_CORE_CLICK_REDUCTION_DESC
   <MaxLevel>k__BackingField: 1
   <CostCurrency>k__BackingField: 0
-  <CostsByLevel>k__BackingField: 23000000
+  <CostsByLevel>k__BackingField: 07000000
   <Prerequisites>k__BackingField: 00000000
   <GraphPosition>k__BackingField: {x: -240, y: 240}
   <BonusPerLevel>k__BackingField: 0.25

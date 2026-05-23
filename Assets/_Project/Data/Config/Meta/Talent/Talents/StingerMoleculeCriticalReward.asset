@@ -18,8 +18,8 @@ MonoBehaviour:
   <Description>k__BackingField: TALENT_STINGER_MOLECULE_CRITICAL_REWARD_DESC
   <Icon>k__BackingField: {fileID: 0}
   <MaxLevel>k__BackingField: 3
-  <CostCurrency>k__BackingField: 0
-  <CostsByLevel>k__BackingField: 64000000aa00000004010000
+  <CostCurrency>k__BackingField: 2
+  <CostsByLevel>k__BackingField: 060000000a00000010000000
   <Prerequisites>k__BackingField: 16000000
   <GraphPosition>k__BackingField: {x: 720, y: 0}
   <BonusPerLevel>k__BackingField: 0.5

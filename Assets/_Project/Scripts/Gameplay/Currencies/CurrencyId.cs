@@ -4,5 +4,6 @@ namespace _Project.Scripts.Gameplay.Currencies
     {
         Nucleotides = 0,
         Isotopes = 1,
+        Radicals = 2,
     }
 }

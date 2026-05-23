@@ -56,17 +56,13 @@ namespace _Project.Scripts.Gameplay.Currencies
             return $"{amount.Amount} {NameOf(amount.CurrencyId)}";
         }
 
-        public string FormatBalance(CurrencyId currencyId)
-        {
-            return $"{BalanceOf(currencyId)} {NameOf(currencyId)}";
-        }
-
         private string NameOf(CurrencyId currencyId)
         {
             string key = currencyId switch
             {
                 CurrencyId.Nucleotides => "CURRENCY_NUCLEOTIDES_SHORT",
                 CurrencyId.Isotopes => "CURRENCY_ISOTOPES_SHORT",
+                CurrencyId.Radicals => "CURRENCY_RADICALS_SHORT",
                 _ => null
             };
 

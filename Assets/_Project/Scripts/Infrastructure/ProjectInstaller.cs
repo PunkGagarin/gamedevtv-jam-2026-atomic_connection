@@ -93,6 +93,7 @@ namespace _Project.Scripts.Infrastructure
             Container.Bind<IFreeAtomFactory>().To<FreeAtomFactory>().AsSingle();
             Container.Bind<IEnemyFactory>().To<EnemyFactory>().AsSingle();
             Container.Bind<IEnemySpawner>().To<EnemySpawner>().AsSingle();
+            Container.Bind<IEnemyKillRewardService>().To<EnemyKillRewardService>().AsSingle();
             Container.Bind<IEnemyProjectileService>().To<EnemyProjectileService>().AsSingle();
             Container.Bind<IEnemyService>().To<EnemyService>().AsSingle();
         }

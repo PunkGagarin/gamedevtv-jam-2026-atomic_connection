@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -17,30 +18,23 @@ namespace _Project.Scripts.Gameplay.Currencies
         [Inject] private LanguageService _languageService;
         [Inject] private LocalizationTool _localizationTool;
 
-        [SerializeField] private TextMeshProUGUI _isotopesLabel;
-        [SerializeField] private TextMeshProUGUI _nucleotidesLabel;
-        [SerializeField] private string _isotopesKey;
-        [SerializeField] private string _nucleotidesKey;
+        [field: SerializeField] private List<CurrencyBalanceBinding> Balances { get; set; } = new();
 
-        private int _displayedNucleotides;
-        private int _displayedIsotopes;
+        private readonly Dictionary<CurrencyId, int> _displayedValues = new();
+        private readonly Dictionary<CurrencyId, Vector3> _baseScales = new();
+        private readonly Dictionary<CurrencyId, Tween> _valueTweens = new();
+        private readonly Dictionary<CurrencyId, Tween> _pulseTweens = new();
         private bool _isInitialized;
-        private Vector3 _nucleotidesBaseScale;
-        private Vector3 _isotopesBaseScale;
-        private Tween _nucleotidesValueTween;
-        private Tween _isotopesValueTween;
-        private Tween _nucleotidesPulseTween;
-        private Tween _isotopesPulseTween;
 
         private void Awake()
         {
             ApplyTheme();
 
-            if (_nucleotidesLabel != null)
-                _nucleotidesBaseScale = _nucleotidesLabel.rectTransform.localScale;
-
-            if (_isotopesLabel != null)
-                _isotopesBaseScale = _isotopesLabel.rectTransform.localScale;
+            foreach (CurrencyBalanceBinding binding in Balances)
+            {
+                if (binding.Label != null)
+                    _baseScales[binding.CurrencyId] = binding.Label.rectTransform.localScale;
+            }
 
             _currencyService.Changed += Refresh;
             _languageService.OnSwitchLanguage += Refresh;
@@ -55,10 +49,11 @@ namespace _Project.Scripts.Gameplay.Currencies
             if (_languageService != null)
                 _languageService.OnSwitchLanguage -= Refresh;
 
-            _nucleotidesValueTween?.Kill();
-            _isotopesValueTween?.Kill();
-            _nucleotidesPulseTween?.Kill();
-            _isotopesPulseTween?.Kill();
+            foreach (Tween tween in _valueTweens.Values)
+                tween?.Kill();
+
+            foreach (Tween tween in _pulseTweens.Values)
+                tween?.Kill();
         }
 
         private void Refresh()
@@ -66,52 +61,39 @@ namespace _Project.Scripts.Gameplay.Currencies
             if (_currencyService == null)
                 return;
 
-            int nucleotides = _currencyService.BalanceOf(CurrencyId.Nucleotides);
-            int isotopes = _currencyService.BalanceOf(CurrencyId.Isotopes);
-
             if (!_isInitialized)
             {
-                _displayedNucleotides = nucleotides;
-                _displayedIsotopes = isotopes;
-                SetLabel(_nucleotidesLabel, _displayedNucleotides, Localize(_nucleotidesKey));
-                SetLabel(_isotopesLabel, _displayedIsotopes, Localize(_isotopesKey));
+                foreach (CurrencyBalanceBinding binding in Balances)
+                {
+                    int value = _currencyService.BalanceOf(binding.CurrencyId);
+                    _displayedValues[binding.CurrencyId] = value;
+                    SetLabel(binding.Label, value, Localize(binding.BalanceSuffixKey));
+                }
+
                 _isInitialized = true;
                 return;
             }
 
-            AnimateLabel(
-                _nucleotidesLabel,
-                _displayedNucleotides,
-                nucleotides,
-                value => _displayedNucleotides = value,
-                ref _nucleotidesValueTween,
-                ref _nucleotidesPulseTween,
-                _nucleotidesBaseScale,
-                Localize(_nucleotidesKey));
-
-            AnimateLabel(
-                _isotopesLabel,
-                _displayedIsotopes,
-                isotopes,
-                value => _displayedIsotopes = value,
-                ref _isotopesValueTween,
-                ref _isotopesPulseTween,
-                _isotopesBaseScale,
-                Localize(_isotopesKey));
+            foreach (CurrencyBalanceBinding binding in Balances)
+                RefreshBinding(binding);
         }
 
-        private void AnimateLabel(
-            TextMeshProUGUI label,
-            int displayedValue,
-            int targetValue,
-            Action<int> setDisplayedValue,
-            ref Tween valueTween,
-            ref Tween pulseTween,
-            Vector3 baseScale,
-            string suffix)
+        private void RefreshBinding(CurrencyBalanceBinding binding)
         {
+            int displayedValue = _displayedValues.TryGetValue(binding.CurrencyId, out int value) ? value : 0;
+            int targetValue = _currencyService.BalanceOf(binding.CurrencyId);
+            Vector3 baseScale = _baseScales.TryGetValue(binding.CurrencyId, out Vector3 scale) ? scale : Vector3.one;
+
+            AnimateLabel(binding, displayedValue, targetValue, baseScale);
+        }
+
+        private void AnimateLabel(CurrencyBalanceBinding binding, int displayedValue, int targetValue, Vector3 baseScale)
+        {
+            TextMeshProUGUI label = binding.Label;
             if (label == null)
                 return;
+
+            string suffix = Localize(binding.BalanceSuffixKey);
 
             if (displayedValue == targetValue)
             {
@@ -120,24 +102,27 @@ namespace _Project.Scripts.Gameplay.Currencies
             }
 
             int startValue = displayedValue;
-            valueTween?.Kill();
-            pulseTween?.Kill();
+            if (_valueTweens.TryGetValue(binding.CurrencyId, out Tween valueTween))
+                valueTween?.Kill();
 
-            valueTween = DOTween
+            if (_pulseTweens.TryGetValue(binding.CurrencyId, out Tween pulseTween))
+                pulseTween?.Kill();
+
+            _valueTweens[binding.CurrencyId] = DOTween
                 .To(() => startValue, value =>
                 {
-                    setDisplayedValue(value);
+                    _displayedValues[binding.CurrencyId] = value;
                     SetLabel(label, value, suffix);
                 }, targetValue, _animationConfig.CurrencyChangeDuration)
                 .SetEase(Ease.OutCubic)
                 .OnComplete(() =>
                 {
-                    setDisplayedValue(targetValue);
+                    _displayedValues[binding.CurrencyId] = targetValue;
                     SetLabel(label, targetValue, suffix);
                 });
 
             label.rectTransform.localScale = baseScale;
-            pulseTween = DOTween.Sequence()
+            _pulseTweens[binding.CurrencyId] = DOTween.Sequence()
                 .Append(label.rectTransform
                     .DOScale(baseScale * _animationConfig.CurrencyPulseScale, _animationConfig.CurrencyPulseDuration)
                     .SetEase(Ease.OutSine))
@@ -148,8 +133,8 @@ namespace _Project.Scripts.Gameplay.Currencies
 
         private void ApplyTheme()
         {
-            ApplyCurrencyFontSize(_nucleotidesLabel);
-            ApplyCurrencyFontSize(_isotopesLabel);
+            foreach (CurrencyBalanceBinding binding in Balances)
+                ApplyCurrencyFontSize(binding.Label);
         }
 
         private void ApplyCurrencyFontSize(TextMeshProUGUI label)
@@ -164,10 +149,18 @@ namespace _Project.Scripts.Gameplay.Currencies
         private static void SetLabel(TextMeshProUGUI label, int value, string suffix)
         {
             if (label != null)
-                label.text = $"{value}{suffix}";
+                label.text = $"{value} {suffix}";
         }
 
         private string Localize(string key) =>
             string.IsNullOrWhiteSpace(key) ? string.Empty : _localizationTool.GetText(key);
+
+        [Serializable]
+        private class CurrencyBalanceBinding
+        {
+            [field: SerializeField] public CurrencyId CurrencyId { get; private set; }
+            [field: SerializeField] public TextMeshProUGUI Label { get; private set; }
+            [field: SerializeField] public string BalanceSuffixKey { get; private set; }
+        }
     }
 }

@@ -12,6 +12,5 @@ namespace _Project.Scripts.Gameplay.Currencies
         void Add(CurrencyAmount reward);
         void SetBalance(CurrencyId currencyId, int amount);
         string Format(CurrencyAmount amount);
-        string FormatBalance(CurrencyId currencyId);
     }
 }

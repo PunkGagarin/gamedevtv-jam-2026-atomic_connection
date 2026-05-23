@@ -16,9 +16,9 @@ MonoBehaviour:
   <NodeHoverDuration>k__BackingField: 0.12
   <NodeRevealStartScale>k__BackingField: 0.72
   <NodeRevealPulseScale>k__BackingField: 1.12
-  <NodeRevealDuration>k__BackingField: 0.05
-  <NodeRevealFadeDuration>k__BackingField: 0.154
-  <NodeRevealSettleDuration>k__BackingField: 0.18
+  <NodeRevealDuration>k__BackingField: 0.01
+  <NodeRevealFadeDuration>k__BackingField: 0.1
+  <NodeRevealSettleDuration>k__BackingField: 0.1
   <NodeUnlockPulseScale>k__BackingField: 1.12
   <NodeUnlockPulseDuration>k__BackingField: 0.18
   <NodeShakeDuration>k__BackingField: 0.18
@@ -29,5 +29,5 @@ MonoBehaviour:
   <TooltipStartScaleX>k__BackingField: 1
   <TooltipStartScaleY>k__BackingField: 0.82
   <TooltipRevealDuration>k__BackingField: 0.14
-  <ConnectionPulseDuration>k__BackingField: 0.05
+  <ConnectionPulseDuration>k__BackingField: 0.01
   <ConnectionPulseScale>k__BackingField: 1.45

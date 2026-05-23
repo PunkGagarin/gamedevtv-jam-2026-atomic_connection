@@ -25,6 +25,8 @@ GameObject:
   - component: {fileID: 9110000000000000000}
   - component: {fileID: 4199615189738945176}
   - component: {fileID: 4892306979794530531}
+  - component: {fileID: 6307342063345184201}
+  - component: {fileID: 6307342063345184202}
   - component: {fileID: 3720869832442661001}
   m_Layer: 0
   m_Name: AtomCore
@@ -319,8 +321,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1d94e942fc9c4cb6be0bf5fa73ddf9a2, type: 3}
   m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Units.AtomCores.Components.AtomCoreConnectionAtomFlow
-  <OwnedAtoms>k__BackingField: {fileID: 11400001}
   <AtomReceiver>k__BackingField: {fileID: 6190877939686151709}
+  <AtomSource>k__BackingField: {fileID: 6307342063345184201}
+  <AtomMotion>k__BackingField: {fileID: 6307342063345184202}
+--- !u!114 &6307342063345184201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9905f37742e44cee95931161f4067466, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Units.AtomCores.Components.AtomCoreConnectionAtomSource
+  <OwnedAtoms>k__BackingField: {fileID: 11400001}
+--- !u!114 &6307342063345184202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82af521fbc8c4d3d880441e33c26cf85, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Units.AtomCores.Components.AtomCoreConnectionAtomMotion
 --- !u!1 &7256588296169355026
 GameObject:
   m_ObjectHideFlags: 0

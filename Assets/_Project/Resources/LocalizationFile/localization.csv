@@ -33,6 +33,9 @@ CURRENCY_NUCLEOTIDES_BALANCE_SUFFIX, ДНК, DNA
 CURRENCY_ISOTOPES,изотопы,isotopes
 CURRENCY_ISOTOPES_SHORT,изот.,iso.
 CURRENCY_ISOTOPES_BALANCE_SUFFIX, изотоп, isotope
+CURRENCY_RADICALS,радикалы,radicals
+CURRENCY_RADICALS_SHORT,рад.,rad.
+CURRENCY_RADICALS_BALANCE_SUFFIX, рад., rad.
 TALENT_NODE_MAX,МАКС,MAX
 TALENT_CORE_HEALTH_SMALL_TITLE,Крепкое ядро,Sturdy Core
 TALENT_CORE_HEALTH_SMALL_DESC,Увеличивает здоровье ядра на 1.,Increases core health by 1.
@@ -83,3 +86,11 @@ TALENT_SWARM_MOLECULE_SHOT_COUNT_TITLE,Залп роя,Swarm Volley
 TALENT_SWARM_MOLECULE_SHOT_COUNT_DESC,Добавляет снаряды SwarmMolecule и расширяет залп.,Adds more SwarmMolecule projectiles and widens the volley.
 TALENT_SWARM_MOLECULE_ATTACK_RANGE_TITLE,Дальность роя,Swarm Reach
 TALENT_SWARM_MOLECULE_ATTACK_RANGE_DESC,Увеличивает дальность залпа SwarmMolecule.,Increases SwarmMolecule volley range.
+TALENT_NUCLEOTIDE_FLAT_KILL_REWARD_TITLE,Нуклеоидный след,Nucleoid Trace
+TALENT_NUCLEOTIDE_FLAT_KILL_REWARD_DESC,Каждый обычный враг оставляет на 1 ДНК больше.,Each non-boss enemy leaves 1 more DNA.
+TALENT_NUCLEOTIDE_EXTRA_DROP_CHANCE_TITLE,Избыточный нуклеоид,Excess Nucleoid
+TALENT_NUCLEOTIDE_EXTRA_DROP_CHANCE_DESC,Даёт 20% шанс получить дополнительную 1 ДНК с обычного врага за уровень.,Gives a 20% chance per level to gain 1 extra DNA from a non-boss enemy.
+TALENT_RADICAL_DROP_CHANCE_TITLE,Радикальный след,Radical Trace
+TALENT_RADICAL_DROP_CHANCE_DESC,Даёт 20% шанс получить 1 радикал с обычного врага за уровень. Доступно после второго уровня.,Gives a 20% chance per level to gain 1 radical from a non-boss enemy. Available after level two.
+TALENT_RADICAL_DROP_CHANCE_LARGE_TITLE,Радикальный резонанс,Radical Resonance
+TALENT_RADICAL_DROP_CHANCE_LARGE_DESC,Ещё на 20% повышает шанс получить 1 радикал с обычного врага за уровень.,Adds another 20% chance per level to gain 1 radical from a non-boss enemy.

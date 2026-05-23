@@ -34,3 +34,5 @@ MonoBehaviour:
     <Icon>k__BackingField: {fileID: 21300000, guid: eff0a37881f24d6fbbe3b8f81245624f, type: 3}
   - <CurrencyId>k__BackingField: 1
     <Icon>k__BackingField: {fileID: 21300000, guid: 2ed045dbe25a49b689caf9471eeec349, type: 3}
+  - <CurrencyId>k__BackingField: 2
+    <Icon>k__BackingField: {fileID: 21300000, guid: b8cf7557a718e426b9854ea0e22a4dcd, type: 3}

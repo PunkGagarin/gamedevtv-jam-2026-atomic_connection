@@ -85,8 +85,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1d839a39eaed4524a28b56ce0c8dc9d2, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   <AmountState>k__BackingField: {fileID: 11400010}
   <HitArea>k__BackingField: {fileID: 11400011}
   <Feedback>k__BackingField: {fileID: 11400012}
@@ -100,8 +100,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 375afa6958b84f7fb9523b1522eacdcb, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11400011
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -112,8 +112,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c0a47057e3f948d299a8a90237b67580, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   <Collider>k__BackingField: {fileID: 5800000}
   <Colliders>k__BackingField: {fileID: 11400013}
 --- !u!114 &11400012
@@ -126,8 +126,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 48ea9f7744c04ee29166f5f0e6b13608, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   <Icon>k__BackingField: {fileID: 21200000}
   <CollectPopupLabel>k__BackingField: {fileID: 11400001}
 --- !u!114 &11400013
@@ -140,8 +140,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9cf7401d29fd48f38801387adb1927e6, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &100001
 GameObject:
   m_ObjectHideFlags: 0
@@ -223,7 +223,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 45
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: eff0a37881f24d6fbbe3b8f81245624f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b8cf7557a718e426b9854ea0e22a4dcd, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -329,8 +329,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9541d86e2fd84c1d9990edf0852d74ab, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0

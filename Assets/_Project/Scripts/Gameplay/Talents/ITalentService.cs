@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using _Project.Scripts.Gameplay.Currencies;
 
 namespace _Project.Scripts.Gameplay.Talents
 {
@@ -10,10 +9,10 @@ namespace _Project.Scripts.Gameplay.Talents
 
         IReadOnlyList<TalentDefinition> Talents { get; }
         float AtomGenerationMultiplier { get; }
+        int CompletedLevelCount { get; }
         bool HasAvailableUpgradeNotification { get; }
 
         int LevelOf(TalentId talentId);
-        CurrencyAmount PriceFor(TalentId talentId);
         bool CanBuy(TalentId talentId);
         bool Buy(TalentId talentId);
         void ResetProgress();

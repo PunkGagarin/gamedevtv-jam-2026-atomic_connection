@@ -24,3 +24,4 @@ MonoBehaviour:
   <LevelCatalogConfig>k__BackingField: {fileID: 11400000, guid: 696754ed6692444f991514347fbe7515, type: 2}
   <EnemySpawnerConfig>k__BackingField: {fileID: 11400000, guid: 8d489ee3818740e1a19a1216fd2de532, type: 2}
   <EnemyMergeConfig>k__BackingField: {fileID: 11400000, guid: 0bde1f50800146cfbb3cdddcf62def71, type: 2}
+  <EnemyKillRewardConfig>k__BackingField: {fileID: 11400000, guid: 4bf0697325db4c95b5b71dc0bd02d355, type: 2}

@@ -34,6 +34,9 @@
   <text key="CURRENCY_ISOTOPES">isotopes</text>
   <text key="CURRENCY_ISOTOPES_SHORT">iso.</text>
   <text key="CURRENCY_ISOTOPES_BALANCE_SUFFIX">isotope</text>
+  <text key="CURRENCY_RADICALS">radicals</text>
+  <text key="CURRENCY_RADICALS_SHORT">rad.</text>
+  <text key="CURRENCY_RADICALS_BALANCE_SUFFIX">rad.</text>
   <text key="TALENT_NODE_MAX">MAX</text>
   <text key="TALENT_CORE_HEALTH_SMALL_TITLE">Sturdy Core</text>
   <text key="TALENT_CORE_HEALTH_SMALL_DESC">Increases core health by 1.</text>
@@ -84,4 +87,12 @@
   <text key="TALENT_SWARM_MOLECULE_SHOT_COUNT_DESC">Adds more SwarmMolecule projectiles and widens the volley.</text>
   <text key="TALENT_SWARM_MOLECULE_ATTACK_RANGE_TITLE">Swarm Reach</text>
   <text key="TALENT_SWARM_MOLECULE_ATTACK_RANGE_DESC">Increases SwarmMolecule volley range.</text>
+  <text key="TALENT_NUCLEOTIDE_FLAT_KILL_REWARD_TITLE">Nucleoid Trace</text>
+  <text key="TALENT_NUCLEOTIDE_FLAT_KILL_REWARD_DESC">Each non-boss enemy leaves 1 more DNA.</text>
+  <text key="TALENT_NUCLEOTIDE_EXTRA_DROP_CHANCE_TITLE">Excess Nucleoid</text>
+  <text key="TALENT_NUCLEOTIDE_EXTRA_DROP_CHANCE_DESC">Gives a 20% chance per level to gain 1 extra DNA from a non-boss enemy.</text>
+  <text key="TALENT_RADICAL_DROP_CHANCE_TITLE">Radical Trace</text>
+  <text key="TALENT_RADICAL_DROP_CHANCE_DESC">Gives a 20% chance per level to gain 1 radical from a non-boss enemy. Available after level two.</text>
+  <text key="TALENT_RADICAL_DROP_CHANCE_LARGE_TITLE">Radical Resonance</text>
+  <text key="TALENT_RADICAL_DROP_CHANCE_LARGE_DESC">Adds another 20% chance per level to gain 1 radical from a non-boss enemy.</text>
 </Language>

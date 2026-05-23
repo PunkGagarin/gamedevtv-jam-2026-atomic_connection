@@ -1,3 +1,4 @@
+using _Project.Scripts.Gameplay.Common.Progress;
 using _Project.Scripts.Gameplay.UI;
 using UnityEngine;
 
@@ -7,24 +8,23 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
     {
         [field: SerializeField] private ProgressBar ProgressBar { get; set; }
 
-        private int _clicksRemaining;
-        private int _clicksRequired;
+        private readonly CompletionThreshold _clicks = new();
 
         public void Configure(int clicksRequired)
         {
-            _clicksRequired = clicksRequired;
+            _clicks.Configure(clicksRequired);
             ResetProgress();
         }
 
         public bool RegisterClick()
         {
-            if (_clicksRequired <= 0)
+            if (!_clicks.HasRequirement)
                 return false;
 
-            _clicksRemaining--;
+            bool isComplete = _clicks.Advance();
             UpdateProgressBar();
 
-            if (_clicksRemaining > 0)
+            if (!isComplete)
                 return false;
 
             ResetProgress();
@@ -33,16 +33,16 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
 
         public void ResetProgress()
         {
-            _clicksRemaining = _clicksRequired;
+            _clicks.Reset();
             UpdateProgressBar();
         }
 
         private void UpdateProgressBar()
         {
-            if (ProgressBar == null || _clicksRequired <= 0)
+            if (ProgressBar == null || !_clicks.HasRequirement)
                 return;
 
-            ProgressBar.SetProgress(1f - (float)_clicksRemaining / _clicksRequired);
+            ProgressBar.SetProgress(_clicks.Normalized);
         }
     }
 }

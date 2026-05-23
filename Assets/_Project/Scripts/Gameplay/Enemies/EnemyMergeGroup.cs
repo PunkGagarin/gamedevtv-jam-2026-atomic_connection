@@ -117,11 +117,6 @@ namespace _Project.Scripts.Gameplay.Enemies
             StartDeathWave(origin, false, 1f);
         }
 
-        public void DieFromMemberKill(EnemyUnit origin)
-        {
-            StartDeathWave(origin, true, 1f);
-        }
-
         public void TickDeathWave(float deltaTime)
         {
             if (!IsDeathWaveActive)
@@ -241,7 +236,7 @@ namespace _Project.Scripts.Gameplay.Enemies
                 if (link == null || !link.Contains(member))
                     continue;
 
-                link.DestroyView();
+                link.DestroyVisual();
                 _links.RemoveAt(i);
             }
         }
@@ -249,7 +244,7 @@ namespace _Project.Scripts.Gameplay.Enemies
         private void DestroyAllLinks()
         {
             foreach (ActiveEnemyMergeLink link in _links)
-                link?.DestroyView();
+                link?.DestroyVisual();
 
             _links.Clear();
         }

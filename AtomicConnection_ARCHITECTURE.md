@@ -72,15 +72,21 @@ Runtime ownership:
   multi-enemy wave spawns clustered in one offscreen sector.
 - `CurrencyPickupService` owns physical currency pickup spawning, cursor-hover
   collection checks, currency grant on collection, and pickup cleanup.
-- Enemy object-internal behavior stays on focused components.
+- `CurrencyPickup` is the pickup prefab facade. Pickup amount, hit-area checks,
+  and collection feedback are component-owned.
+- Enemy object-internal behavior stays on focused components. `EnemyUnit` is
+  only the public facade over `EnemyIdentity`, `EnemyVitality`,
+  `EnemyMergeState`, `EnemyRuntimeBehaviors`, and `EnemyLifecycle`.
 - `EnemyMovement` moves enemies directly toward the core; prefab-specific
   movement variants such as `MassEnemyArcMovement` own enemy-local path shapes.
-- Enemy-local runtime behaviors implement `IEnemyRuntimeBehavior`; `EnemyUnit`
-  configures and ticks them while `EnemyService` owns the active enemy loop.
+- Enemy-local runtime behaviors implement `IEnemyRuntimeBehavior`;
+  `EnemyRuntimeBehaviors` configures and ticks them while `EnemyService` owns
+  the active enemy loop.
 - Ranged enemies use prefab variants: `RangedEnemyStopMovement` owns stopping
-  near the core, `RangedEnemyAttack` owns telegraph, projectile spawn, projectile
-  ticking, and projectile cleanup. `RangedEnemyAttack` starts its attack timer
-  from the movement component's stopped state instead of a separate attack range.
+  near the core, and `RangedEnemyAttack` owns only local cooldown/telegraph and
+  sends shot requests. `EnemyProjectileService` owns projectile spawning,
+  ticking, and cleanup; the `EnemyProjectile` root is a facade over projectile
+  motion, lifetime, target-hit, damage, and runtime components.
 - `EnemyCoreCollision` resolves normal overlap damage with the atom core while
   ticked through `EnemyUnit` by `EnemyService`.
 - Boss one-shot core collision is a prefab component variant,
@@ -93,29 +99,53 @@ Runtime ownership:
 
 `GameplayLoopState` inherits `EndOfFrameExitState`. It starts, ticks,
 fixed-ticks, and cleans active gameplay services such as `IEnemyService`, `IAtomCoreService`,
-`IBattleMoleculeService`, `ICurrencyPickupService`, and
+`IBattleMoleculeService`, `IEnemyProjectileService`, `ICurrencyPickupService`, and
 `ILevelProgressService`. It skips gameplay ticks while `PauseService.IsPaused`;
 `ExitOnEndOfFrame()` cleans state-owned runtime services and objects.
 
 ## Core, Molecule, And Progress
 
 `AtomCoreService` implements both setup-facing `IAtomCoreCreator` and
-active-loop-facing `IAtomCoreService`. It creates/destroys the core, applies core
-HP and atom click count, exposes current core transform for active targeting
-services, subscribes to core death during `Start()`, and ticks current
-`AtomCore`.
+active-loop-facing `IAtomCoreService`. It creates/destroys the core, polls core
+click input during the active gameplay loop, creates generated free atoms
+through `FreeAtomFactory`, applies core HP and atom click count, exposes current
+core transform for active targeting services, subscribes to core death during
+`Start()`, and ticks current `AtomCore`.
 
-`AtomCore` is the root facade. `AtomCoreClickInteraction` owns hit detection,
-manual/auto click progress, and generated free atom creation through
-`FreeAtomFactory`.
+`AtomCore` is the root facade: it exposes core-facing methods/properties and
+passes ticks to focused components, but does not own behavior logic.
+`AtomCoreClickInteraction` owns only local click hit-tests and click progress,
+delegating point hit-tests to `PointHitArea`; generated atom ownership intake
+belongs to `OwnedAtomReceiver`.
+`AtomOrbit` owns owned atom orbit ticking for both the core and battle
+molecules, while `AtomCoreHealth` owns HP, death, and shield-gated damage
+resolution.
 
-`IBattleMoleculeService` ticks created battle molecules, including transform-based
-core orbit movement, and auto-loads core atoms into molecules when unlocked.
-Each `BattleMolecule` owns its accepted atoms, charge, fire request, collision
-collider, attack resolution, shot feedback, and molecule atom orbiting through
-local components. Attack-capable molecule prefabs use focused attack components
-such as `StingerMoleculeAttack` and `SwarmMoleculeAttack` to resolve
-local shot requests into raycasts, enemy damage, and shot-line feedback.
+`IBattleMoleculeService` ticks created battle molecules and auto-loads core
+atoms into molecules when unlocked. `BattleMolecule` is a facade: setup,
+identity, bond event relays, point hit-tests, core orbit/connection-line
+coordination, connection arrival geometry, atom orbiting, charge consumption,
+atom receiving, shot requests, and attacks are owned by focused components. The
+connection line is a gameplay visual component (`BattleMoleculeConnectionVisual`)
+that observes bond changes directly; gameplay objects do not add MVP-style
+Presenter/Controller/View/ViewModel layers. Attack-capable
+molecule prefabs use focused attack components such as `StingerMoleculeAttack`
+and `SwarmMoleculeAttack` to resolve local shot requests into raycasts, enemy
+damage, and shot-line feedback.
+
+`FreeAtom` is also a facade. Ownership, despawn/destroy events, drag behavior,
+connection-flow/drag state, collider enable/disable, spawn/pool reset, initial
+scale reset, orbit motion, ownership intake, and radius lookup are
+component-owned. Shared local components such as `AtomOrbit`,
+`OwnedAtomReceiver`, `ObjectRadius`, `PointHitArea`, `ColliderSet`, and
+`InitialLocalScale` should be reused instead of duplicating simple entity logic
+per unit type.
+
+Common gameplay helpers carry duplicated local math/state: `CompletionThreshold`
+owns required/current/completed counter math for click, bond, and charge
+progress; `OrbitMath` owns orbit angle/position math; `RandomGeometry` owns
+random point sampling; `SquareArea2D` and `CircleArea2D` own reusable hit-area
+math; `LineRendererUtility` owns runtime line setup/material/color.
 
 `LevelProgressService` owns completion reward/unlock, marks the selected level
 complete through `ILevelSelectionService`, grants first-clear completion reward
@@ -192,7 +222,6 @@ generate a free atom, generated atom spawn radius, and free atom orbit speed.
 Talent-adjusted runtime values are applied by the current owner:
 - `AtomCoreService` applies core HP and atom click count
 - `BattleMoleculeFactory` applies atom charge count
-- `AtomCoreClickInteraction` applies AutoClick
 - molecule-local attack components resolve shot damage and Pierce
 - `BattleMoleculeService` applies AutoLoad
 

@@ -38,7 +38,7 @@
   <text key="TALENT_CORE_HEALTH_SMALL_TITLE">Sturdy Core</text>
   <text key="TALENT_CORE_HEALTH_SMALL_DESC">Increases core health by 1.</text>
   <text key="TALENT_AUTO_CLICK_TITLE">Auto Generation</text>
-  <text key="TALENT_AUTO_CLICK_DESC">The core automatically creates a charge without a click.</text>
+  <text key="TALENT_AUTO_CLICK_DESC">The core automatically creates a charge without a click while the cursor is over the core.</text>
   <text key="TALENT_CORE_CLICK_REDUCTION_TITLE">Quick Assembly</text>
   <text key="TALENT_CORE_CLICK_REDUCTION_DESC">Reduces the core click cooldown.</text>
   <text key="TALENT_CORE_HEALTH_LARGE_TITLE">Reinforced Core</text>

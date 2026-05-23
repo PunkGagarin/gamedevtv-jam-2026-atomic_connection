@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Common.Random;
-using _Project.Scripts.Gameplay.Common.Physics;
 using _Project.Scripts.Gameplay.Common.Time;
 using _Project.Scripts.Gameplay.Currencies;
 using _Project.Scripts.Gameplay.CurrencyDrops;
@@ -41,7 +40,6 @@ namespace _Project.Scripts.Gameplay.Enemies
         [Inject] private ILevelSelectionService _levelSelectionService;
         [Inject] private IRandomService _random;
         [Inject] private ITimeService _time;
-        [Inject] private IPhysicsService _physicsService;
         [Inject] private ICurrencyPickupService _currencyPickupService;
 
         public event Action BossKilled;
@@ -276,8 +274,8 @@ namespace _Project.Scripts.Gameplay.Enemies
 
         private void LinkEnemies(EnemyUnit first, EnemyUnit second)
         {
-            EnemyMergeLinkView linkView = CreateMergeLinkView(first.transform, second.transform);
-            ActiveEnemyMergeLink link = new(first, second, linkView);
+            EnemyMergeLinkVisual linkVisual = CreateMergeLinkVisual(first.transform, second.transform);
+            ActiveEnemyMergeLink link = new(first, second, linkVisual);
             EnemyMergeGroup group = ResolveMergeGroup(first, second);
 
             group.AddLink(link);
@@ -322,27 +320,27 @@ namespace _Project.Scripts.Gameplay.Enemies
             return Mathf.Max(0f, _enemyMergeConfig.MergeDeathWaveStepSeconds);
         }
 
-        private EnemyMergeLinkView CreateMergeLinkView(Transform first, Transform second)
+        private EnemyMergeLinkVisual CreateMergeLinkVisual(Transform first, Transform second)
         {
-            EnemyMergeLinkView prefab = _assetProvider.LoadAsset<EnemyMergeLinkView>(_enemyMergeConfig.MergeLinkViewResourcePath);
+            EnemyMergeLinkVisual prefab = _assetProvider.LoadAsset<EnemyMergeLinkVisual>(_enemyMergeConfig.MergeLinkVisualResourcePath);
 
             if (prefab == null)
-                throw new InvalidOperationException($"Enemy merge link prefab is missing at Resources path '{_enemyMergeConfig.MergeLinkViewResourcePath}'.");
+                throw new InvalidOperationException($"Enemy merge link prefab is missing at Resources path '{_enemyMergeConfig.MergeLinkVisualResourcePath}'.");
 
             Transform parent = _runtimeHierarchy.GetOrCreateContainer(ENEMY_MERGE_LINKS_CONTAINER_NAME);
-            EnemyMergeLinkView view = _instantiator.InstantiatePrefabForComponent<EnemyMergeLinkView>(
+            EnemyMergeLinkVisual visual = _instantiator.InstantiatePrefabForComponent<EnemyMergeLinkVisual>(
                 prefab,
                 Vector3.zero,
                 Quaternion.identity,
                 parent);
 
-            view.Configure(
+            visual.Configure(
                 first,
                 second,
                 _enemyMergeConfig.MergeLinkWidth,
                 _enemyMergeConfig.MergeLinkZOffset,
                 _enemyMergeConfig.MergeLinkIntermediatePointCount);
-            return view;
+            return visual;
         }
 
         private void TickMergeLinks(float deltaTime)
@@ -353,12 +351,12 @@ namespace _Project.Scripts.Gameplay.Enemies
 
                 if (!link.IsAlive || !IsMergeLinkStillValid(link))
                 {
-                    link.DestroyView();
+                    link.DestroyVisual();
                     _activeMergeLinks.RemoveAt(i);
                     continue;
                 }
 
-                link.Tick(deltaTime, _enemyMergeConfig);
+                link.Tick(deltaTime, _elapsedSeconds, _enemyMergeConfig);
             }
         }
 
@@ -371,7 +369,7 @@ namespace _Project.Scripts.Gameplay.Enemies
                 if (!link.Contains(enemy))
                     continue;
 
-                link.DestroyView();
+                link.DestroyVisual();
                 _activeMergeLinks.RemoveAt(i);
             }
 
@@ -381,7 +379,7 @@ namespace _Project.Scripts.Gameplay.Enemies
         private void CleanupMergeLinks()
         {
             foreach (ActiveEnemyMergeLink link in _activeMergeLinks)
-                link.DestroyView();
+                link.DestroyVisual();
 
             _activeMergeLinks.Clear();
         }
@@ -464,7 +462,6 @@ namespace _Project.Scripts.Gameplay.Enemies
                 _activeEnemies[i].TickRuntimeBehaviors(deltaTime);
 
             TickMergeLinks(deltaTime);
-            _physicsService.SyncTransforms();
 
             for (int i = _activeEnemies.Count - 1; i >= 0; i--)
                 _activeEnemies[i].TickCoreCollision();

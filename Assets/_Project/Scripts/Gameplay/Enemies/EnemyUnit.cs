@@ -1,115 +1,97 @@
 using System;
-using System.Collections.Generic;
-using _Project.Scripts.Gameplay.Common.Health;
 using _Project.Scripts.Gameplay.Enemies.Components;
 using _Project.Scripts.Gameplay.Units.AtomCores;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Enemies
 {
-    [RequireComponent(typeof(Health))]
+    [RequireComponent(typeof(EnemyIdentity))]
+    [RequireComponent(typeof(EnemyVitality))]
+    [RequireComponent(typeof(EnemyMergeState))]
+    [RequireComponent(typeof(EnemyRuntimeBehaviors))]
+    [RequireComponent(typeof(EnemyLifecycle))]
     [RequireComponent(typeof(EnemyMovement))]
     [RequireComponent(typeof(EnemyCoreCollision))]
     public class EnemyUnit : MonoBehaviour
     {
-        [field: SerializeField] private Health Health { get; set; }
+        [field: SerializeField] private EnemyIdentity Identity { get; set; }
+        [field: SerializeField] private EnemyVitality Vitality { get; set; }
+        [field: SerializeField] private EnemyMergeState Merge { get; set; }
+        [field: SerializeField] private EnemyRuntimeBehaviors RuntimeBehaviors { get; set; }
+        [field: SerializeField] private EnemyLifecycle Lifecycle { get; set; }
         [field: SerializeField] private EnemyMovement Movement { get; set; }
         [field: SerializeField] private EnemyCoreCollision CoreCollision { get; set; }
 
-        private readonly List<IEnemyRuntimeBehavior> _runtimeBehaviors = new();
-        private EnemyDefinition _definition;
-        private int _coreCollisionDamage = 1;
-        private EnemyMergeGroup _mergeGroup;
-        private int _preMergeMaxHealth;
-        private int _preMergeCurrentHealth;
-        private int _preMergeCoreCollisionDamage;
+        public EnemyId Id => Identity.Id;
+        public bool IsAlive => Vitality.IsAlive && !Merge.IsDeathWaveActive;
+        public int CoreCollisionDamage => Merge.CoreCollisionDamage;
+        public int NucleotideReward => Identity.NucleotideReward;
+        public float KillRewardMultiplier => Vitality.KillRewardMultiplier;
 
-        public EnemyId Id => _definition?.Id ?? EnemyId.Standard;
-        public bool IsAlive => (Health == null || Health.IsAlive) && (_mergeGroup == null || !_mergeGroup.IsDeathWaveActive);
-        public int MaxHealth => Health?.MaxHealth ?? 1;
-        public int CurrentHealth => Health?.CurrentHealth ?? MaxHealth;
-        public int CoreCollisionDamage => _mergeGroup?.CoreCollisionDamage ?? _coreCollisionDamage;
-        public int NucleotideReward => _definition?.NucleotideReward ?? 0;
-        public float KillRewardMultiplier { get; private set; } = 1f;
+        internal EnemyMergeGroup MergeGroup => Merge.Group;
+        internal bool IsMergeLinkEndpointAlive => Vitality.IsAlive;
+        internal int MergeMaxHealthContribution => Merge.MaxHealthContribution;
+        internal int MergeCurrentHealthContribution => Merge.CurrentHealthContribution;
+        internal int MergeCoreCollisionDamageContribution => Merge.CoreCollisionDamageContribution;
 
-        internal EnemyMergeGroup MergeGroup => _mergeGroup;
-        internal bool IsMergeLinkEndpointAlive => Health == null || Health.IsAlive;
-        internal int MergeMaxHealthContribution => _mergeGroup == null ? MaxHealth : _preMergeMaxHealth;
-        internal int MergeCurrentHealthContribution => _mergeGroup == null ? CurrentHealth : _preMergeCurrentHealth;
-        internal int MergeCoreCollisionDamageContribution => _mergeGroup == null ? _coreCollisionDamage : _preMergeCoreCollisionDamage;
+        public event Action<EnemyUnit> Died
+        {
+            add => Vitality.Died += value;
+            remove => Vitality.Died -= value;
+        }
 
-        public event Action<EnemyUnit> Died;
-        public event Action<EnemyUnit> Killed;
+        public event Action<EnemyUnit> Killed
+        {
+            add => Vitality.Killed += value;
+            remove => Vitality.Killed -= value;
+        }
 
         private void Awake()
         {
-            if (Health == null)
-                Health = GetComponent<Health>();
+            if (Identity == null)
+                Identity = GetComponent<EnemyIdentity>();
+
+            if (Vitality == null)
+                Vitality = GetComponent<EnemyVitality>();
+
+            if (Merge == null)
+                Merge = GetComponent<EnemyMergeState>();
+
+            if (RuntimeBehaviors == null)
+                RuntimeBehaviors = GetComponent<EnemyRuntimeBehaviors>();
+
+            if (Lifecycle == null)
+                Lifecycle = GetComponent<EnemyLifecycle>();
 
             if (Movement == null)
                 Movement = GetComponent<EnemyMovement>();
 
             if (CoreCollision == null)
                 CoreCollision = GetComponent<EnemyCoreCollision>();
-
-            _runtimeBehaviors.Clear();
-            _runtimeBehaviors.AddRange(GetComponents<IEnemyRuntimeBehavior>());
-
-            if (Health != null)
-                Health.Died += OnHealthDied;
-        }
-
-        private void OnDestroy()
-        {
-            if (Health != null)
-                Health.Died -= OnHealthDied;
         }
 
         public void Configure(EnemyDefinition definition, int maxHealth, int coreCollisionDamage)
         {
-            _definition = definition ?? throw new ArgumentNullException(nameof(definition));
-            _coreCollisionDamage = Mathf.Max(1, coreCollisionDamage);
-            ClearMergeGroup();
-
-            if (Health != null)
-                Health.Configure(maxHealth);
+            Identity.Configure(definition, coreCollisionDamage);
+            Merge.ClearGroup();
+            Vitality.Configure(maxHealth);
         }
 
         public void PrepareForSpawn()
         {
-            ClearMergeGroup();
-            Movement?.Clear();
-            CoreCollision?.Clear();
-            ClearRuntimeBehaviors();
-            KillRewardMultiplier = 1f;
-
-            if (Health != null)
-                Health.ResetHealth();
-
-            gameObject.SetActive(true);
+            Lifecycle.PrepareForSpawn();
         }
 
         public void PrepareForPool()
         {
-            ClearMergeGroup();
-            Movement?.Clear();
-            CoreCollision?.Clear();
-            ClearRuntimeBehaviors();
-            KillRewardMultiplier = 1f;
-            gameObject.SetActive(false);
-        }
-
-        public void MoveTo(Transform target, float speed)
-        {
-            Movement?.Configure(target, speed);
-            ConfigureRuntimeBehaviors(target);
+            Lifecycle.PrepareForPool();
         }
 
         public void MoveTo(Transform target, float speed, float groupMovementSign)
         {
             Movement?.ConfigureGroupMovement(groupMovementSign);
             Movement?.Configure(target, speed);
-            ConfigureRuntimeBehaviors(target);
+            RuntimeBehaviors.Configure(target);
         }
 
         public void CollideWithCore(AtomCore target)
@@ -124,8 +106,7 @@ namespace _Project.Scripts.Gameplay.Enemies
 
         public void TickRuntimeBehaviors(float deltaTime)
         {
-            foreach (IEnemyRuntimeBehavior behavior in _runtimeBehaviors)
-                behavior.Tick(deltaTime);
+            RuntimeBehaviors.Tick(deltaTime);
         }
 
         public void TickCoreCollision()
@@ -133,29 +114,9 @@ namespace _Project.Scripts.Gameplay.Enemies
             CoreCollision?.Tick();
         }
 
-        public void Kill()
-        {
-            if (_mergeGroup != null)
-            {
-                _mergeGroup.DieFromMemberKill(this);
-                return;
-            }
-
-            if (Health != null)
-                Health.Kill();
-            else
-                Died?.Invoke(this);
-        }
-
         public void DieFromCore()
         {
-            if (_mergeGroup != null)
-            {
-                _mergeGroup.DieFromCore(this);
-                return;
-            }
-
-            DieFromCoreSingle();
+            Merge.DieFromCore();
         }
 
         public void TakeDamage(int amount)
@@ -165,138 +126,37 @@ namespace _Project.Scripts.Gameplay.Enemies
 
         public void TakeDamage(int amount, float killRewardMultiplier, bool isCritical)
         {
-            if (_mergeGroup != null)
-            {
-                _mergeGroup.TakeDamage(amount, this, killRewardMultiplier, isCritical);
-                return;
-            }
-
-            KillRewardMultiplier = Mathf.Max(0f, killRewardMultiplier);
-
-            if (Health != null)
-                Health.TakeDamage(amount, isCritical);
-            else
-                Kill();
-
-            if (IsAlive)
-                KillRewardMultiplier = 1f;
+            Merge.TakeDamage(amount, killRewardMultiplier, isCritical);
         }
 
         internal void AssignMergeGroup(EnemyMergeGroup mergeGroup)
         {
-            if (mergeGroup == null)
-                return;
-
-            if (_mergeGroup == null)
-            {
-                _preMergeMaxHealth = MaxHealth;
-                _preMergeCurrentHealth = CurrentHealth;
-                _preMergeCoreCollisionDamage = _coreCollisionDamage;
-            }
-
-            _mergeGroup = mergeGroup;
+            Merge.AssignGroup(mergeGroup);
         }
 
         internal void ClearMergeGroupReference(EnemyMergeGroup mergeGroup)
         {
-            if (_mergeGroup == mergeGroup)
-                _mergeGroup = null;
+            Merge.ClearGroupReference(mergeGroup);
         }
 
         internal void SyncMergeHealth(int maxHealth, int currentHealth)
         {
-            if (Health != null)
-                Health.Configure(maxHealth, currentHealth);
+            Merge.SyncHealth(maxHealth, currentHealth);
         }
 
         internal void ApplyMergeDamage(int amount, bool isCritical)
         {
-            if (Health == null)
-                return;
-
-            Health.Died -= OnHealthDied;
-            Health.TakeDamage(amount, isCritical);
-            Health.Died += OnHealthDied;
+            Merge.ApplyDamage(amount, isCritical);
         }
 
         internal void DieFromMergeGroupDamage(float killRewardMultiplier)
         {
-            DieFromMergeGroupSingle(true, killRewardMultiplier);
+            Vitality.DieFromMergeGroupDamage(killRewardMultiplier);
         }
 
         internal void DieFromMergeGroupCore()
         {
-            DieFromMergeGroupSingle(false);
-        }
-
-        private void DieFromMergeGroupSingle(bool killedByPlayer, float killRewardMultiplier = 1f)
-        {
-            KillRewardMultiplier = Mathf.Max(0f, killRewardMultiplier);
-
-            if (Health != null)
-            {
-                Health.Died -= OnHealthDied;
-                Health.Kill();
-                Health.Died += OnHealthDied;
-            }
-
-            if (killedByPlayer)
-                Killed?.Invoke(this);
-
-            Died?.Invoke(this);
-        }
-
-        private void DieFromCoreSingle()
-        {
-            KillRewardMultiplier = 1f;
-
-            if (Health != null)
-            {
-                Health.Died -= OnHealthDied;
-                Health.Kill();
-                Health.Died += OnHealthDied;
-            }
-
-            Died?.Invoke(this);
-        }
-
-        private void ConfigureRuntimeBehaviors(Transform target)
-        {
-            foreach (IEnemyRuntimeBehavior behavior in _runtimeBehaviors)
-                behavior.Configure(target);
-        }
-
-        private void ClearRuntimeBehaviors()
-        {
-            foreach (IEnemyRuntimeBehavior behavior in _runtimeBehaviors)
-                behavior.Clear();
-        }
-
-        private void OnHealthDied()
-        {
-            if (_mergeGroup != null)
-            {
-                _mergeGroup.DieFromMemberKill(this);
-                return;
-            }
-
-            Killed?.Invoke(this);
-            Died?.Invoke(this);
-        }
-
-        private void ClearMergeGroup()
-        {
-            EnemyMergeGroup mergeGroup = _mergeGroup;
-
-            if (mergeGroup != null && mergeGroup.IsDeathWaveActive)
-            {
-                mergeGroup.ReleaseDeathWaveMember(this);
-                return;
-            }
-
-            _mergeGroup = null;
-
-            mergeGroup?.ClearMembers();
+            Vitality.DieFromMergeGroupCore();
         }
     }
 }

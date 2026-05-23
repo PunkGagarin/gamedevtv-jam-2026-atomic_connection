@@ -35,23 +35,8 @@ namespace _Project.Scripts.Gameplay.Units
             foreach (FreeAtom atom in _atoms)
             {
                 if (atom.CanOrbit)
-                    atom.OrbitMotion?.Tick(angleDelta);
+                    atom.TickOrbit(angleDelta);
             }
-        }
-
-        public bool TryGetFirstOwned(FreeAtomOwnerKind ownerKind, out FreeAtom result)
-        {
-            foreach (FreeAtom atom in _atoms)
-            {
-                if (atom == null || atom.Owner != transform || atom.OwnerKind != ownerKind)
-                    continue;
-
-                result = atom;
-                return true;
-            }
-
-            result = null;
-            return false;
         }
 
         public void GetOwned(FreeAtomOwnerKind ownerKind, List<FreeAtom> results)

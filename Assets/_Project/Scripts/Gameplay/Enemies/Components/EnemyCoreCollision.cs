@@ -1,3 +1,4 @@
+using _Project.Scripts.Gameplay.Units;
 using _Project.Scripts.Gameplay.Units.AtomCores;
 using UnityEngine;
 
@@ -10,7 +11,8 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
 
         private EnemyUnit _enemy;
         private AtomCore _core;
-        private Collider2D _coreCollider;
+        private float _radius;
+        private float _coreRadius;
 
         protected EnemyUnit Enemy => _enemy;
         protected AtomCore Core => _core;
@@ -26,15 +28,16 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
         public void Configure(AtomCore core)
         {
             _core = core;
-            _coreCollider = core != null ? core.GetComponent<Collider2D>() : null;
+            _radius = ObjectRadius.RadiusOf(transform);
+            _coreRadius = core != null ? ObjectRadius.RadiusOf(core.transform) : 0f;
         }
 
         public void Tick()
         {
-            if (_enemy == null || !_enemy.IsAlive || _core == null || _coreCollider == null || Collider == null)
+            if (_enemy == null || !_enemy.IsAlive || _core == null || Collider == null)
                 return;
 
-            if (!Collider.Distance(_coreCollider).isOverlapped)
+            if (!IsOverlappingCore())
                 return;
 
             ApplyCoreCollision();
@@ -44,12 +47,22 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
         public void Clear()
         {
             _core = null;
-            _coreCollider = null;
+            _coreRadius = 0f;
         }
 
         protected virtual void ApplyCoreCollision()
         {
             _core.TakeDamage(_enemy.CoreCollisionDamage);
+        }
+
+        private bool IsOverlappingCore()
+        {
+            float distance = _radius + _coreRadius;
+            if (distance <= 0f)
+                return false;
+
+            Vector2 offset = transform.position - _core.transform.position;
+            return offset.sqrMagnitude <= distance * distance;
         }
     }
 }

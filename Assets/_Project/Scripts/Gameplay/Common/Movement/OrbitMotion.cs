@@ -1,3 +1,4 @@
+using _Project.Scripts.Gameplay.Common.Physics;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Common.Movement
@@ -8,13 +9,34 @@ namespace _Project.Scripts.Gameplay.Common.Movement
         private float _radius;
         private float _angle;
 
-        public bool IsConfigured => _center != null;
+        private bool IsConfigured => _center != null;
+
+        private void Awake()
+        {
+            Rigidbody2DUtility.EnsureKinematicForMovingCollider(gameObject);
+        }
 
         public void Configure(Transform center, float radius, float angle)
         {
             _center = center;
             _radius = radius;
             _angle = angle;
+            SnapToOrbit();
+        }
+
+        public void ConfigureFromCurrentOffset(Transform center)
+        {
+            _center = center;
+
+            if (_center == null)
+            {
+                Clear();
+                return;
+            }
+
+            Vector3 offset = transform.position - _center.position;
+            _radius = new Vector2(offset.x, offset.y).magnitude;
+            _angle = OrbitMath.AngleFromCenter(_center.position, transform.position);
             SnapToOrbit();
         }
 
@@ -32,8 +54,7 @@ namespace _Project.Scripts.Gameplay.Common.Movement
             if (!IsConfigured)
                 return;
 
-            Vector3 offset = new Vector3(Mathf.Cos(_angle), Mathf.Sin(_angle), 0) * _radius;
-            transform.position = _center.position + offset;
+            transform.position = OrbitMath.PositionOnCircle(_center.position, _radius, _angle, transform.position.z);
         }
 
         public void Clear()

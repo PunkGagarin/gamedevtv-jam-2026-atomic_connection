@@ -13,9 +13,10 @@ using Zenject;
 
 namespace _Project.Scripts.Infrastructure.GameStates.States
 {
-    internal class GameplayLoopState : EndOfFrameExitState, IFixedUpdateable
+    internal class GameplayLoopState : EndOfFrameExitState
     {
         [Inject] private IEnemyService _enemyService;
+        [Inject] private IEnemyProjectileService _enemyProjectileService;
         [Inject] private IAtomCoreService _atomCoreService;
         [Inject] private IFreeAtomFactory _freeAtomFactory;
         [Inject] private IBattleMoleculeFactory _battleMoleculeFactory;
@@ -48,6 +49,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
                 return;
 
             _enemyService.Update();
+            _enemyProjectileService.Update();
 
             if (_terminalTransitionWasRequested)
                 return;
@@ -63,14 +65,6 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
             _levelProgressService.Update();
         }
 
-        public void FixedUpdate()
-        {
-            if (_pauseService.IsPaused || _terminalTransitionWasRequested)
-                return;
-
-            _battleMoleculeService.FixedUpdate();
-        }
-
         protected override void ExitOnEndOfFrame()
         {
             _atomCoreService.CoreDied -= OnCoreDied;
@@ -79,6 +73,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
             _dragService.CancelDrag();
             _currencyPickupService.Cleanup();
             _levelProgressService.Cleanup();
+            _enemyProjectileService.Cleanup();
             _enemyService.Cleanup();
             _atomCoreService.Cleanup();
             _battleMoleculeService.Cleanup();

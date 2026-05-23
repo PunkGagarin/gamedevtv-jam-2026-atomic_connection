@@ -8,7 +8,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
     public class SwarmMoleculeAttack : BattleMoleculeAttack
     {
-        private readonly List<EnemyHit> _enemyHits = new();
         private readonly HashSet<EnemyUnit> _shotSequenceHits = new();
         private int _currentShotSequenceId = -1;
 
@@ -18,7 +17,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         protected override void OnDisable()
         {
             base.OnDisable();
-            _enemyHits.Clear();
             _shotSequenceHits.Clear();
             _currentShotSequenceId = -1;
         }
@@ -30,18 +28,10 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
             float attackRange = CurrentAttackRange();
             PrepareShotSequence(request);
-            FindEnemies(request.Origin, request.Direction, attackRange, _enemyHits);
-            AimLineView?.ShowShotLine(request, null, attackRange);
+            FindEnemies(request.Origin, request.Direction, attackRange, EnemyHits);
+            AimLine?.ShowShotLine(request, null, attackRange);
 
-            foreach (EnemyHit hit in _enemyHits)
-            {
-                EnemyUnit target = hit.Enemy;
-                if (target == null || _shotSequenceHits.Contains(target))
-                    continue;
-
-                Damage(target, request.Origin);
-                _shotSequenceHits.Add(target);
-            }
+            DamageEnemies(request.Origin, int.MaxValue, _shotSequenceHits, out _);
         }
 
         private void PrepareShotSequence(BattleMoleculeShotRequest request)

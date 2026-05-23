@@ -1,164 +1,119 @@
 using System;
-using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Common.Movement;
+using _Project.Scripts.Gameplay.Common.Physics;
 using _Project.Scripts.Gameplay.Drag;
+using _Project.Scripts.Gameplay.Units.FreeAtoms.Components;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Units.FreeAtoms
 {
     [RequireComponent(typeof(OrbitMotion))]
-    public class FreeAtom : MonoBehaviour, IDraggable
+    [RequireComponent(typeof(ObjectRadius))]
+    [RequireComponent(typeof(ColliderSet))]
+    [RequireComponent(typeof(InitialLocalScale))]
+    [RequireComponent(typeof(FreeAtomOwnership))]
+    [RequireComponent(typeof(FreeAtomState))]
+    [RequireComponent(typeof(FreeAtomDrag))]
+    [RequireComponent(typeof(FreeAtomLifetime))]
+    [RequireComponent(typeof(FreeAtomLifecycle))]
+    public class FreeAtom : MonoBehaviour
     {
-        private readonly List<Collider2D> _colliders = new();
-        private bool _isDragging;
-        private bool _isInConnectionFlow;
-        private Vector3 _baseLocalScale;
-        private bool _baseLocalScaleCaptured;
+        [field: SerializeField] private OrbitMotion OrbitMotion { get; set; }
+        [field: SerializeField] private ObjectRadius RadiusProvider { get; set; }
+        [field: SerializeField] private ColliderSet ColliderSet { get; set; }
+        [field: SerializeField] private FreeAtomOwnership Ownership { get; set; }
+        [field: SerializeField] private FreeAtomState State { get; set; }
+        [field: SerializeField] private FreeAtomDrag Drag { get; set; }
+        [field: SerializeField] private FreeAtomLifetime Lifetime { get; set; }
+        [field: SerializeField] private FreeAtomLifecycle Lifecycle { get; set; }
 
-        [field: SerializeField] public OrbitMotion OrbitMotion { get; private set; }
-        [field: SerializeField] private HoverBehaviour HoverBehaviour { get; set; }
-
-        public bool CanStartDrag => _isInConnectionFlow;
+        public IDraggable Draggable => Drag;
         public Transform Transform => transform;
-        public FreeAtomOwnerKind OwnerKind { get; private set; }
-        public Transform Owner { get; private set; }
-        public bool CanOrbit => !_isDragging && !_isInConnectionFlow;
-        public bool IsInConnectionFlow => _isInConnectionFlow;
-        public bool CanArrangeInOrbit => !_isInConnectionFlow;
+        public FreeAtomOwnerKind OwnerKind => Ownership.OwnerKind;
+        public Transform Owner => Ownership.Owner;
+        public bool CanOrbit => State.CanOrbit;
+        public bool IsInConnectionFlow => State.IsInConnectionFlow;
+        public bool CanArrangeInOrbit => State.CanArrangeInOrbit;
+        public float Radius => RadiusProvider.Radius;
 
-        public event Action<FreeAtom> Destroyed;
-        public event Action<FreeAtom> DespawnRequested;
-        public event Action<FreeAtom, FreeAtomOwnerKind> OwnerChanged;
+        public event Action<FreeAtom> Destroyed
+        {
+            add => Lifetime.Destroyed += value;
+            remove => Lifetime.Destroyed -= value;
+        }
+
+        public event Action<FreeAtom> DespawnRequested
+        {
+            add => Lifetime.DespawnRequested += value;
+            remove => Lifetime.DespawnRequested -= value;
+        }
+
+        public event Action<FreeAtom, FreeAtomOwnerKind> OwnerChanged
+        {
+            add => Ownership.OwnerChanged += value;
+            remove => Ownership.OwnerChanged -= value;
+        }
 
         private void Awake()
         {
-            CaptureBaseLocalScale();
-
-            if (OrbitMotion == null)
-                OrbitMotion = GetComponent<OrbitMotion>();
-
-            if (HoverBehaviour == null)
-                HoverBehaviour = GetComponent<HoverBehaviour>();
-        }
-
-        private void OnDestroy()
-        {
-            Destroyed?.Invoke(this);
+            OrbitMotion = GetComponent<OrbitMotion>();
+            RadiusProvider = GetComponent<ObjectRadius>();
+            ColliderSet = GetComponent<ColliderSet>();
+            Ownership = GetComponent<FreeAtomOwnership>();
+            State = GetComponent<FreeAtomState>();
+            Drag = GetComponent<FreeAtomDrag>();
+            Lifetime = GetComponent<FreeAtomLifetime>();
+            Lifecycle = GetComponent<FreeAtomLifecycle>();
         }
 
         public void AssignOwner(FreeAtomOwnerKind ownerKind, Transform owner)
         {
-            OwnerKind = ownerKind;
-            Owner = owner;
-            OwnerChanged?.Invoke(this, OwnerKind);
-            RefreshHoverState();
+            Ownership.AssignOwner(ownerKind, owner);
         }
 
         public void ClearOwner()
         {
-            OwnerKind = FreeAtomOwnerKind.None;
-            Owner = null;
-            OrbitMotion?.Clear();
-            OwnerChanged?.Invoke(this, OwnerKind);
-            RefreshHoverState();
+            Ownership.ClearOwner();
         }
 
         public void PrepareForSpawn()
         {
-            _isDragging = false;
-            _isInConnectionFlow = false;
-            ResetLocalScale();
-            SetCollidersEnabled(true);
-            gameObject.SetActive(true);
-            ClearOwner();
-            RefreshHoverState();
+            Lifecycle.PrepareForSpawn();
         }
 
         public void PrepareForPool()
         {
-            _isDragging = false;
-            _isInConnectionFlow = false;
-            ClearOwner();
-            ResetLocalScale();
-            SetCollidersEnabled(false);
-            gameObject.SetActive(false);
-            SetHoverEnabled(false);
+            Lifecycle.PrepareForPool();
         }
 
         public void RequestDespawn()
         {
-            DespawnRequested?.Invoke(this);
-        }
-
-        public void OnDragStart()
-        {
-            _isDragging = true;
-            _isInConnectionFlow = false;
-            RefreshHoverState();
-        }
-
-        public void OnDragMove(Vector3 worldPosition)
-        {
-            transform.position = worldPosition;
-        }
-
-        public void OnDragEnd()
-        {
-            _isDragging = false;
-            RefreshHoverState();
-        }
-
-        public void OnDragCancel()
-        {
-            _isDragging = false;
-            OrbitMotion?.SnapToOrbit();
-            RefreshHoverState();
+            Lifetime.RequestDespawn();
         }
 
         public void BeginConnectionFlow()
         {
-            _isInConnectionFlow = true;
-            RefreshHoverState();
+            State.BeginConnectionFlow();
         }
 
         public void EndConnectionFlow()
         {
-            _isInConnectionFlow = false;
-            RefreshHoverState();
+            State.EndConnectionFlow();
         }
 
-        private void SetCollidersEnabled(bool isEnabled)
+        public void SetCollisionEnabled(bool isEnabled)
         {
-            GetComponentsInChildren(true, _colliders);
-
-            foreach (Collider2D col in _colliders)
-                col.enabled = isEnabled;
+            ColliderSet.SetEnabled(isEnabled);
         }
 
-        private void SetHoverEnabled(bool isEnabled)
+        public void ConfigureOrbit(Transform center, float radius, float angle)
         {
-            if (HoverBehaviour != null)
-                HoverBehaviour.enabled = isEnabled;
+            OrbitMotion.Configure(center, radius, angle);
         }
 
-        private void RefreshHoverState()
+        public void TickOrbit(float angleDelta)
         {
-            SetHoverEnabled(false);
-        }
-
-        private void CaptureBaseLocalScale()
-        {
-            if (_baseLocalScaleCaptured)
-                return;
-
-            _baseLocalScale = transform.localScale;
-            _baseLocalScaleCaptured = true;
-        }
-
-        private void ResetLocalScale()
-        {
-            CaptureBaseLocalScale();
-            transform.localScale = _baseLocalScale;
+            OrbitMotion.Tick(angleDelta);
         }
     }
 }

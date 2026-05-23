@@ -1,8 +1,18 @@
 using System;
+using UnityEngine;
 
-public static class AtomCoreEventBus
+namespace _Project.Scripts.Gameplay.Units.AtomCores
 {
-    public static event Action<float> OnDamageEvent;
+    public static class AtomCoreEventBus
+    {
+        public static event Action<float> OnDamageEvent;
 
-    public static void RiseOnDamageEvent(float amount) => OnDamageEvent?.Invoke(amount);
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStaticState()
+        {
+            OnDamageEvent = null;
+        }
+
+        public static void RiseOnDamageEvent(float amount) => OnDamageEvent?.Invoke(amount);
+    }
 }

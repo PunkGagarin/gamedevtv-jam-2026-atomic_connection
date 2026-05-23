@@ -53,6 +53,13 @@ namespace _Project.Scripts.Gameplay.Talents
         private bool _isRevealQueuePlaying;
         private Tween _tooltipTween;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStaticState()
+        {
+            _revealedTalentIds.Clear();
+            _lastRefreshHadBoughtTalents = false;
+        }
+
         protected override void OnAwake()
         {
             Id = WindowId.TalentTreeWindow;

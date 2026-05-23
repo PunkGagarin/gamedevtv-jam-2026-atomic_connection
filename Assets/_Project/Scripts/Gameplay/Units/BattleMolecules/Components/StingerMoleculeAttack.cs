@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using _Project.Scripts.Gameplay.Enemies;
 using _Project.Scripts.Gameplay.Talents;
 using UnityEngine;
 
@@ -7,8 +5,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
     public class StingerMoleculeAttack : BattleMoleculeAttack
     {
-        private readonly List<EnemyHit> _enemyHits = new();
-
         protected override int BaseShotDamage => Config.StingerMoleculeShotDamage;
         protected override TalentType DamageTalentType => TalentType.StingerMoleculeDamage;
         protected override bool UsesCriticalHits => true;
@@ -16,35 +12,17 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         protected override TalentType CriticalRewardTalentType => TalentType.StingerMoleculeCriticalReward;
         protected override float CriticalDamageMultiplier => Config.StingerMoleculeCriticalDamageMultiplier;
 
-        protected override void OnDisable()
-        {
-            base.OnDisable();
-            _enemyHits.Clear();
-        }
-
         protected override void ResolveShot(BattleMoleculeShotRequest request)
         {
             if (request.Kind != BattleMoleculeShotKind.Stinger)
                 return;
 
-            FindEnemies(request.Origin, request.Direction, Mathf.Infinity, _enemyHits);
+            FindEnemies(request.Origin, request.Direction, Mathf.Infinity, EnemyHits);
 
             int targetCount = TargetCount();
-            int damagedTargets = 0;
-            Vector3? lastDamagedHitPoint = null;
+            int damagedTargets = DamageEnemies(request.Origin, targetCount, null, out Vector3? lastDamagedHitPoint);
 
-            for (int i = 0; i < _enemyHits.Count && damagedTargets < targetCount; i++)
-            {
-                EnemyUnit target = _enemyHits[i].Enemy;
-                if (target == null)
-                    continue;
-
-                lastDamagedHitPoint = _enemyHits[i].Point;
-                Damage(target, request.Origin);
-                damagedTargets++;
-            }
-
-            AimLineView?.ShowShotLine(request, ShotLineHitPoint(targetCount, damagedTargets, lastDamagedHitPoint));
+            AimLine?.ShowShotLine(request, ShotLineHitPoint(targetCount, damagedTargets, lastDamagedHitPoint));
         }
 
         private int TargetCount()

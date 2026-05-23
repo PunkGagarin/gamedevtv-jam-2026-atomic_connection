@@ -38,7 +38,7 @@
   <text key="TALENT_CORE_HEALTH_SMALL_TITLE">Крепкое ядро</text>
   <text key="TALENT_CORE_HEALTH_SMALL_DESC">Увеличивает здоровье ядра на 1.</text>
   <text key="TALENT_AUTO_CLICK_TITLE">Автогенерация</text>
-  <text key="TALENT_AUTO_CLICK_DESC">Ядро автоматически создаёт заряд без клика.</text>
+  <text key="TALENT_AUTO_CLICK_DESC">Ядро автоматически создаёт заряд без клика при наведении курсора на ядро.</text>
   <text key="TALENT_CORE_CLICK_REDUCTION_TITLE">Быстрая сборка</text>
   <text key="TALENT_CORE_CLICK_REDUCTION_DESC">Уменьшает время восстановления клика ядра.</text>
   <text key="TALENT_CORE_HEALTH_LARGE_TITLE">Прочное ядро</text>

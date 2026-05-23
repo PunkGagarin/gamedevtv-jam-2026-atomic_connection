@@ -1,4 +1,3 @@
-using _Project.Scripts.Gameplay.Common.Rendering;
 using _Project.Scripts.Gameplay.Units.BattleMolecules;
 using UnityEngine;
 
@@ -9,20 +8,23 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
     public class BattleMoleculeConnectionVisual : MonoBehaviour
     {
         [field: SerializeField] private BattleMoleculeBond Bond { get; set; }
+        [field: SerializeField] private BattleMoleculeConnectionLineVisual LineVisualPrefab { get; set; }
 
-        private LineRenderer _line;
+        private BattleMoleculeConnectionLineVisual _lineVisual;
         private Transform _core;
         private float _zOffset;
+        private float _lineWidth;
+        private int _sortingOrder;
         private Color _inactiveColor = Color.cyan;
         private Color _activeColor = Color.white;
         private bool _isActiveConnection;
+        private bool _missingLineVisualPrefabLogged;
 
         private void Awake()
         {
             if (Bond == null)
                 Bond = GetComponent<BattleMoleculeBond>();
 
-            EnsureLine();
             SetVisible(false);
         }
 
@@ -51,9 +53,11 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             if (config != null)
             {
                 _zOffset = config.ConnectionLineZOffset;
+                _lineWidth = config.ConnectionLineWidth;
+                _sortingOrder = config.ConnectionLineSortingOrder;
                 _inactiveColor = config.ConnectionInactiveColor;
                 _activeColor = config.ConnectionActiveColor;
-                ConfigureLine(config.ConnectionLineWidth, config.ConnectionLineSortingOrder);
+                ConfigureLine();
             }
 
             RefreshVisibility();
@@ -67,9 +71,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
         private void SetVisible(bool isVisible)
         {
-            EnsureLine();
-
-            _line.enabled = isVisible;
+            if (EnsureLineVisual())
+                _lineVisual.SetVisible(isVisible);
         }
 
         public void SetActiveConnection(bool isActive)
@@ -80,7 +83,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
         public void Tick()
         {
-            if (_core == null || _line == null || !_line.enabled)
+            if (_core == null || !EnsureLineVisual() || !_lineVisual.IsVisible)
                 return;
 
             Vector3 from = _core.position;
@@ -88,35 +91,45 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             from.z += _zOffset;
             to.z += _zOffset;
 
-            _line.SetPosition(0, from);
-            _line.SetPosition(1, to);
+            _lineVisual.SetEndpoints(from, to);
         }
 
-        private void ConfigureLine(float width, int sortingOrder)
+        private void ConfigureLine()
         {
-            EnsureLine();
-
-            _line.positionCount = 2;
-            LineRendererUtility.Configure(
-                _line,
-                width,
-                sortingOrder,
-                _isActiveConnection ? _activeColor : _inactiveColor,
-                _line.enabled);
-            RefreshColor();
+            if (EnsureLineVisual())
+                _lineVisual.Configure(_lineWidth, _sortingOrder, CurrentColor());
         }
 
         private void RefreshColor()
         {
-            if (_line == null)
-                return;
-
-            LineRendererUtility.SetColor(_line, _isActiveConnection ? _activeColor : _inactiveColor);
+            if (EnsureLineVisual())
+                _lineVisual.SetColor(CurrentColor());
         }
 
-        private void EnsureLine()
+        private Color CurrentColor()
         {
-            _line = LineRendererUtility.Ensure(gameObject, _line);
+            return _isActiveConnection ? _activeColor : _inactiveColor;
+        }
+
+        private bool EnsureLineVisual()
+        {
+            if (_lineVisual != null)
+                return true;
+
+            if (LineVisualPrefab == null)
+            {
+                if (!_missingLineVisualPrefabLogged)
+                {
+                    Debug.LogError($"{nameof(BattleMoleculeConnectionVisual)} on '{name}' is missing a line visual prefab.", this);
+                    _missingLineVisualPrefabLogged = true;
+                }
+
+                return false;
+            }
+
+            _lineVisual = Instantiate(LineVisualPrefab, transform);
+            _lineVisual.name = LineVisualPrefab.name;
+            return _lineVisual != null;
         }
     }
 }

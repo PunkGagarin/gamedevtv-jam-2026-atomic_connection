@@ -298,6 +298,7 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier:
   <Bond>k__BackingField: {fileID: 11400013}
+  <LineVisualPrefab>k__BackingField: {fileID: 11400000, guid: 1918e1a54c9245de8ce27944c5efeec9, type: 3}
 --- !u!114 &11400015
 MonoBehaviour:
   m_ObjectHideFlags: 0

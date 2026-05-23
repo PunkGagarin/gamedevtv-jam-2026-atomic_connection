@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 11400022}
   - component: {fileID: 11400023}
   - component: {fileID: 11400024}
-  - component: {fileID: 11400025}
+  - component: {fileID: 2307286238306762874}
   m_Layer: 0
   m_Name: EliteEnemyUnit
   m_TagString: Untagged
@@ -92,8 +92,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f61aabb6da2d4ae790d93e393090b9cb, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   <Identity>k__BackingField: {fileID: 11400020}
   <Vitality>k__BackingField: {fileID: 11400021}
   <Merge>k__BackingField: {fileID: 11400022}
@@ -102,75 +102,6 @@ MonoBehaviour:
   <Movement>k__BackingField: {fileID: 11400002}
   <Knockback>k__BackingField: {fileID: 11400025}
   <CoreCollision>k__BackingField: {fileID: 11400004}
---- !u!114 &11400020
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ad6f0d09dd34d258cfab17849eddcdf, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
---- !u!114 &11400021
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c21685b9b854258bea086b11c48a343, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
-  <Enemy>k__BackingField: {fileID: 11400000}
-  <Health>k__BackingField: {fileID: 11400001}
---- !u!114 &11400022
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9b7d4048e7140dc9720f146fefde062, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
-  <Identity>k__BackingField: {fileID: 11400020}
-  <Vitality>k__BackingField: {fileID: 11400021}
---- !u!114 &11400023
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56a636d8938f4c78aeaa63754fc62a01, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
---- !u!114 &11400024
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9946626e6bfb4c2bb0e95c457702d8c3, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
-  <Movement>k__BackingField: {fileID: 11400002}
-  <CoreCollision>k__BackingField: {fileID: 11400004}
-  <RuntimeBehaviors>k__BackingField: {fileID: 11400023}
-  <Vitality>k__BackingField: {fileID: 11400021}
-  <Merge>k__BackingField: {fileID: 11400022}
 --- !u!114 &11400001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -181,8 +112,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ff2c2ddace054125831907a5a47a9f7b, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -193,20 +124,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8b8d15b3421b42be9f84bcbdf4e60932, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
---- !u!114 &11400025
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97670ec007be4875a5f742d49e6b56cf, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11400004
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -217,8 +136,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0b64005da21d47f1b390447e18046577, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   <Collider>k__BackingField: {fileID: 5800000}
 --- !u!114 &11400003
 MonoBehaviour:
@@ -230,8 +149,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7dba4a77b49a4c3aa38606e9fdf407d1, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   <Health>k__BackingField: {fileID: 11400001}
   <ProgressBar>k__BackingField: {fileID: 7005959491}
   <HideWhenSinglePoint>k__BackingField: 0
@@ -245,9 +164,92 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 32dfe34dd92f4516b98210fc257aab5a, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   <Health>k__BackingField: {fileID: 11400001}
+--- !u!114 &11400020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ad6f0d09dd34d258cfab17849eddcdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &11400021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c21685b9b854258bea086b11c48a343, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Enemy>k__BackingField: {fileID: 11400000}
+  <Health>k__BackingField: {fileID: 11400001}
+--- !u!114 &11400022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9b7d4048e7140dc9720f146fefde062, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Enemy>k__BackingField: {fileID: 0}
+  <Identity>k__BackingField: {fileID: 11400020}
+  <Vitality>k__BackingField: {fileID: 11400021}
+--- !u!114 &11400023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56a636d8938f4c78aeaa63754fc62a01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &11400024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9946626e6bfb4c2bb0e95c457702d8c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Movement>k__BackingField: {fileID: 11400002}
+  <CoreCollision>k__BackingField: {fileID: 11400004}
+  <RuntimeBehaviors>k__BackingField: {fileID: 11400023}
+  <Vitality>k__BackingField: {fileID: 11400021}
+  <Merge>k__BackingField: {fileID: 11400022}
+--- !u!114 &2307286238306762874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 055a414bcadfdb746a18a75f6a20b04b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDieEffectorBehaviour
+  enemyVitality: {fileID: 11400021}
 --- !u!1 &8954845912983384912
 GameObject:
   m_ObjectHideFlags: 0
@@ -306,7 +308,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -410,5 +412,5 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ad6f804328db48d8b3104fa377f98d47, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 

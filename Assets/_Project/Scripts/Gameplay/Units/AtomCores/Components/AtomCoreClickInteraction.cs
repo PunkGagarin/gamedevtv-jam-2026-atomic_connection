@@ -1,6 +1,8 @@
+using _Project.Scripts.Audio.Domain;
 using _Project.Scripts.Gameplay.Units;
 using UnityEngine;
 using UnityEngine.Events;
+using Zenject;
 
 namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
 {
@@ -17,6 +19,12 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
 
         [SerializeField]
         private UnityEvent OnClickEvent;
+
+        [Inject]
+        private AudioService _audioService;
+
+        [SerializeField]
+        private Sounds _clickSound;
 
         private void Awake()
         {
@@ -40,6 +48,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
         public bool RegisterClick()
         {
             OnClickEvent?.Invoke();
+            _audioService.PlaySound(_clickSound.ToString());
             return ProductionProgress.RegisterClick();
         }
     }

@@ -214,7 +214,7 @@ MonoBehaviour:
   <Balances>k__BackingField:
   - <CurrencyId>k__BackingField: 0
     <Label>k__BackingField: {fileID: 719494187370471418}
-    <BalanceSuffixKey>k__BackingField: CURRENCY_DNA_BALANCE_SUFFIX
+    <BalanceSuffixKey>k__BackingField: CURRENCY_NUCLEOTIDES_BALANCE_SUFFIX
   - <CurrencyId>k__BackingField: 1
     <Label>k__BackingField: {fileID: 6782347126427809234}
     <BalanceSuffixKey>k__BackingField: CURRENCY_ISOTOPES_BALANCE_SUFFIX
@@ -954,7 +954,7 @@ GameObject:
   - component: {fileID: 5848591249516830169}
   - component: {fileID: 1301444477174444307}
   m_Layer: 5
-  m_Name: DNA
+  m_Name: Nucleotids
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

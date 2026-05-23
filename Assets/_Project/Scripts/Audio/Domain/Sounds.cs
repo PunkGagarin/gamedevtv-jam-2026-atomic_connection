@@ -14,6 +14,7 @@
         popWithEcho = 11,
         pulsating = 12,
         singlePop = 13,
+        BubbleClick = 15,
         intenseBgm = 14,
     }
 }

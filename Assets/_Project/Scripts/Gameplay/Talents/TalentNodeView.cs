@@ -3,6 +3,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
+using _Project.Scripts.Gameplay.Currencies;
 
 namespace _Project.Scripts.Gameplay.Talents
 {
@@ -17,6 +18,10 @@ namespace _Project.Scripts.Gameplay.Talents
         [field: SerializeField] private TextMeshProUGUI TitleLabel { get; set; }
         [field: SerializeField] private TextMeshProUGUI LevelLabel { get; set; }
         [field: SerializeField] private TextMeshProUGUI CostLabel { get; set; }
+        [field: SerializeField] private Image CostIconImage { get; set; }
+
+        [field: Header("Cost Layout")]
+        [field: SerializeField, Min(0f)] private float CostIconSpacing { get; set; } = 5f;
 
         [field: Header("Colors")]
         [field: SerializeField] private Color LockedColor { get; set; } = new(0.11f, 0.08f, 0.11f, 1f);
@@ -50,7 +55,13 @@ namespace _Project.Scripts.Gameplay.Talents
             Button.onClick.AddListener(OnClicked);
         }
 
-        public void Refresh(TalentDefinition talent, int level, TalentNodeViewState state, string titleText, string priceText)
+        public void Refresh(
+            TalentDefinition talent,
+            int level,
+            TalentNodeViewState state,
+            string titleText,
+            CurrencyAmount price,
+            Sprite priceIcon)
         {
             _state = state;
 
@@ -63,8 +74,20 @@ namespace _Project.Scripts.Gameplay.Talents
             if (LevelLabel != null)
                 LevelLabel.text = $"{level}/{talent.MaxLevel}";
 
+            bool showPriceIcon = state != TalentNodeViewState.Maxed && priceIcon != null;
+
             if (CostLabel != null)
-                CostLabel.text = state == TalentNodeViewState.Maxed ? _window.Localize("TALENT_NODE_MAX") : priceText;
+                CostLabel.text = state == TalentNodeViewState.Maxed
+                    ? _window.Localize("TALENT_NODE_MAX")
+                    : price.Amount.ToString();
+
+            if (CostIconImage != null)
+            {
+                CostIconImage.sprite = priceIcon;
+                CostIconImage.gameObject.SetActive(showPriceIcon);
+            }
+
+            RefreshCostLayout(showPriceIcon);
 
             if (Button != null)
                 Button.interactable = state is TalentNodeViewState.Available
@@ -72,6 +95,32 @@ namespace _Project.Scripts.Gameplay.Talents
                     or TalentNodeViewState.Maxed;
 
             RefreshNotificationDot(state);
+        }
+
+        private void RefreshCostLayout(bool showPriceIcon)
+        {
+            if (CostLabel == null)
+                return;
+
+            RectTransform labelTransform = CostLabel.rectTransform;
+            RectTransform container = labelTransform.parent as RectTransform;
+            RectTransform iconTransform = CostIconImage != null ? CostIconImage.rectTransform : null;
+            float containerWidth = container != null ? container.rect.width : labelTransform.rect.width;
+            float iconWidth = showPriceIcon && iconTransform != null ? iconTransform.rect.width : 0f;
+            float spacing = showPriceIcon ? CostIconSpacing : 0f;
+            float maxLabelWidth = Mathf.Max(0f, containerWidth - iconWidth - spacing);
+
+            CostLabel.ForceMeshUpdate();
+            float labelWidth = Mathf.Min(CostLabel.preferredWidth, maxLabelWidth);
+
+            CostLabel.alignment = TextAlignmentOptions.Center;
+            labelTransform.sizeDelta = new Vector2(labelWidth, labelTransform.sizeDelta.y);
+            labelTransform.anchoredPosition = new Vector2(showPriceIcon ? -(iconWidth + spacing) * 0.5f : 0f, labelTransform.anchoredPosition.y);
+
+            if (!showPriceIcon || iconTransform == null)
+                return;
+
+            iconTransform.anchoredPosition = new Vector2((labelWidth + spacing) * 0.5f, iconTransform.anchoredPosition.y);
         }
 
         public void SetVisible(bool visible)

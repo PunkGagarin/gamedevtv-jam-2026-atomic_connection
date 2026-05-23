@@ -36,7 +36,11 @@ MonoBehaviour:
   <MembraneMoleculeBondAtomsRequired>k__BackingField: 1
   <MembraneMoleculeAtomsRequired>k__BackingField: 3
   <MembraneDurationSeconds>k__BackingField: 5
-  <MembraneSecondsLostPerDamage>k__BackingField: 1
+  <MembraneIntegrity>k__BackingField: 3
+  <MembraneCooldownSeconds>k__BackingField: 6
+  <MembraneKnockbackRadius>k__BackingField: 2.5
+  <MembraneKnockbackDistance>k__BackingField: 0.8
+  <MembraneKnockbackDurationSeconds>k__BackingField: 0.18
   <SwarmMoleculeSpawnOffset>k__BackingField: {x: -2, y: 0}
   <SwarmMoleculeBondAtomsRequired>k__BackingField: 1
   <SwarmMoleculeAtomsRequired>k__BackingField: 7

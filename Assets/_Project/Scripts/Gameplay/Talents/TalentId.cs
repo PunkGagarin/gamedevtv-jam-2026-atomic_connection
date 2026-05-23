@@ -31,5 +31,7 @@ namespace _Project.Scripts.Gameplay.Talents
         RadicalDropChance = 26,
         RadicalDropChanceLarge = 27,
         StingerMoleculeChargeReduction = 28,
+        MembraneMoleculeIntegrity = 29,
+        MembraneMoleculeCooldownReduction = 30,
     }
 }

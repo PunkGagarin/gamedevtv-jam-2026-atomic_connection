@@ -27,5 +27,7 @@ namespace _Project.Scripts.Gameplay.Talents
         DnaExtraDropChance = 22,
         RadicalDropChance = 23,
         StingerMoleculeChargeReduction = 24,
+        MembraneMoleculeIntegrity = 25,
+        MembraneMoleculeCooldownReduction = 26,
     }
 }

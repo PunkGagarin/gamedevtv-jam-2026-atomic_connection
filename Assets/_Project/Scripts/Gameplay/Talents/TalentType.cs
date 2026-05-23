@@ -23,8 +23,9 @@ namespace _Project.Scripts.Gameplay.Talents
         ConnectionAtomSpeed = 18,
         StingerMoleculeCriticalChance = 19,
         StingerMoleculeCriticalReward = 20,
-        NucleotideFlatKillReward = 21,
-        NucleotideExtraDropChance = 22,
+        DnaFlatKillReward = 21,
+        DnaExtraDropChance = 22,
         RadicalDropChance = 23,
+        StingerMoleculeChargeReduction = 24,
     }
 }

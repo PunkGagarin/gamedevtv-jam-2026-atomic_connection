@@ -13,7 +13,7 @@ namespace _Project.Scripts.Gameplay.Talents
         [field: SerializeField, TextArea] public string Description { get; private set; }
         [field: SerializeField] public Sprite Icon { get; private set; }
         [field: SerializeField, Min(1)] public int MaxLevel { get; private set; } = 1;
-        [field: SerializeField] public CurrencyId CostCurrency { get; private set; } = CurrencyId.Nucleotides;
+        [field: SerializeField] public CurrencyId CostCurrency { get; private set; } = CurrencyId.Dna;
         [field: SerializeField] public List<int> CostsByLevel { get; private set; } = new();
         [field: SerializeField] public List<TalentId> Prerequisites { get; private set; } = new();
         [field: SerializeField, Min(0)] public int MinCompletedLevel { get; private set; }

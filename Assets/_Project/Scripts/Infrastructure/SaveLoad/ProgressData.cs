@@ -74,10 +74,10 @@ namespace _Project.Scripts.Infrastructure.SaveLoad
         {
             Currencies ??= new List<CurrencySlot>();
 
-            if (Gold <= 0 || Currencies.Any(s => s.CurrencyId == (int)CurrencyId.Nucleotides))
+            if (Gold <= 0 || Currencies.Any(s => s.CurrencyId == (int)CurrencyId.Dna))
                 return;
 
-            Currencies.Add(new CurrencySlot { CurrencyId = (int)CurrencyId.Nucleotides, Amount = Gold });
+            Currencies.Add(new CurrencySlot { CurrencyId = (int)CurrencyId.Dna, Amount = Gold });
             Gold = 0;
         }
     }

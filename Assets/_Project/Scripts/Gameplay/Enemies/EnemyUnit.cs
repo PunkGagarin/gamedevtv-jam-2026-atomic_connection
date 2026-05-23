@@ -14,21 +14,18 @@ namespace _Project.Scripts.Gameplay.Enemies
     [RequireComponent(typeof(EnemyCoreCollision))]
     public class EnemyUnit : MonoBehaviour
     {
-
-
         [field: SerializeField] private EnemyIdentity Identity { get; set; }
         [field: SerializeField] private EnemyVitality Vitality { get; set; }
         [field: SerializeField] private EnemyMergeState Merge { get; set; }
         [field: SerializeField] private EnemyRuntimeBehaviors RuntimeBehaviors { get; set; }
         [field: SerializeField] private EnemyLifecycle Lifecycle { get; set; }
         [field: SerializeField] private EnemyMovement Movement { get; set; }
-
         [field: SerializeField] private EnemyCoreCollision CoreCollision { get; set; }
 
         public EnemyId Id => Identity.Id;
         public bool IsAlive => Vitality.IsAlive && !Merge.IsDeathWaveActive;
         public int CoreCollisionDamage => Merge.CoreCollisionDamage;
-        public int NucleotideReward => Identity.NucleotideReward;
+        public int DnaReward => Identity.DnaReward;
         public float KillRewardMultiplier => Vitality.KillRewardMultiplier;
 
         internal EnemyMergeGroup MergeGroup => Merge.Group;

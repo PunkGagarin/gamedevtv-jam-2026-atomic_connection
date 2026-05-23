@@ -47,6 +47,8 @@ TALENT_CORE_HEALTH_LARGE_TITLE,Прочное ядро,Reinforced Core
 TALENT_CORE_HEALTH_LARGE_DESC,Сильно увеличивает здоровье ядра.,Greatly increases core health.
 TALENT_STINGER_MOLECULE_DAMAGE_SMALL_TITLE,Урон I,Damage I
 TALENT_STINGER_MOLECULE_DAMAGE_SMALL_DESC,Увеличивает урон StingerMolecule на 1.,Increases StingerMolecule damage by 1.
+TALENT_STINGER_MOLECULE_CHARGE_REDUCTION_TITLE,Быстрое жало,Quick Sting
+TALENT_STINGER_MOLECULE_CHARGE_REDUCTION_DESC,StingerMolecule требует на 1 атом меньше для полного заряда.,StingerMolecule needs 1 fewer atom to fully charge.
 TALENT_STINGER_MOLECULE_AIM_TITLE,Боевой прицел,Combat Aim
 TALENT_STINGER_MOLECULE_AIM_DESC,Показывает направление выстрела StingerMolecule.,Shows the StingerMolecule shot direction.
 TALENT_STINGER_MOLECULE_PIERCE_TITLE,Пробитие,Pierce

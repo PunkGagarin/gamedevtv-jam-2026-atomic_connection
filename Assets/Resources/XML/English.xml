@@ -48,6 +48,8 @@
   <text key="TALENT_CORE_HEALTH_LARGE_DESC">Greatly increases core health.</text>
   <text key="TALENT_STINGER_MOLECULE_DAMAGE_SMALL_TITLE">Damage I</text>
   <text key="TALENT_STINGER_MOLECULE_DAMAGE_SMALL_DESC">Increases StingerMolecule damage by 1.</text>
+  <text key="TALENT_STINGER_MOLECULE_CHARGE_REDUCTION_TITLE">Quick Sting</text>
+  <text key="TALENT_STINGER_MOLECULE_CHARGE_REDUCTION_DESC">StingerMolecule needs 1 fewer atom to fully charge.</text>
   <text key="TALENT_STINGER_MOLECULE_AIM_TITLE">Combat Aim</text>
   <text key="TALENT_STINGER_MOLECULE_AIM_DESC">Shows the StingerMolecule shot direction.</text>
   <text key="TALENT_STINGER_MOLECULE_PIERCE_TITLE">Pierce</text>

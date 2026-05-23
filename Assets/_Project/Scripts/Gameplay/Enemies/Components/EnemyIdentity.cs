@@ -10,7 +10,7 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
 
         public EnemyId Id => _definition?.Id ?? EnemyId.Standard;
         public int CoreCollisionDamage => _coreCollisionDamage;
-        public int NucleotideReward => _definition?.NucleotideReward ?? 0;
+        public int DnaReward => _definition?.DnaReward ?? 0;
 
         public void Configure(EnemyDefinition definition, int coreCollisionDamage)
         {

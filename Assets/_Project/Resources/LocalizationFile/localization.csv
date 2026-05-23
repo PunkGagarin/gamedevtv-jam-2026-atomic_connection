@@ -27,9 +27,9 @@ SETTINGS_CANCEL,Отмена,Cancel
 SETTINGS_OK,Применить,Apply
 COMMON_RESTART,Повторить,Restart
 COMMON_MAIN_MENU,Главное меню,Main Menu
-CURRENCY_NUCLEOTIDES,Нуклеотиды,Nucleotids
-CURRENCY_NUCLEOTIDES_SHORT,Нуклеотиды,Nucleotids
-CURRENCY_NUCLEOTIDES_BALANCE_SUFFIX, Нуклеотиды, Nucleotids
+CURRENCY_DNA,ДНК,DNA
+CURRENCY_DNA_SHORT,ДНК,DNA
+CURRENCY_DNA_BALANCE_SUFFIX, ДНК, DNA
 CURRENCY_ISOTOPES,изотопы,isotopes
 CURRENCY_ISOTOPES_SHORT,изот.,iso.
 CURRENCY_ISOTOPES_BALANCE_SUFFIX, изотоп, isotope
@@ -81,17 +81,17 @@ TALENT_CONNECTION_ATOM_SPEED_TITLE,Ускоренный поток,Fast Flow
 TALENT_CONNECTION_ATOM_SPEED_DESC,Ускоряет connection-поток атомов от ядра к активной боевой молекуле на 25% за уровень.,Speeds up the atom connection flow from the core to the active battle molecule by 25% per level.
 TALENT_STINGER_MOLECULE_CRITICAL_CHANCE_TITLE,Точный укол,Precise Sting
 TALENT_STINGER_MOLECULE_CRITICAL_CHANCE_DESC,Дает StingerMolecule 10% шанс нанести критический урон за уровень.,Gives StingerMolecule a 10% chance to deal critical damage per level.
-TALENT_STINGER_MOLECULE_CRITICAL_REWARD_TITLE,Нуклеотидный выброс,Nucleotid Burst
+TALENT_STINGER_MOLECULE_CRITICAL_REWARD_TITLE,ДНК-выброс,DNA Burst
 TALENT_STINGER_MOLECULE_CRITICAL_REWARD_DESC,Увеличивает награду за критические убийства StingerMolecule на 50% за уровень.,Increases the reward from enemies killed by a StingerMolecule critical hit by 50% per level.
 DAMAGE_POPUP_CRITICAL,Критический урон!,Critical hit!
 TALENT_SWARM_MOLECULE_SHOT_COUNT_TITLE,Залп роя,Swarm Volley
 TALENT_SWARM_MOLECULE_SHOT_COUNT_DESC,Добавляет снаряды SwarmMolecule и расширяет залп.,Adds more SwarmMolecule projectiles and widens the volley.
 TALENT_SWARM_MOLECULE_ATTACK_RANGE_TITLE,Дальность роя,Swarm Reach
 TALENT_SWARM_MOLECULE_ATTACK_RANGE_DESC,Увеличивает дальность залпа SwarmMolecule.,Increases SwarmMolecule volley range.
-TALENT_NUCLEOTIDE_FLAT_KILL_REWARD_TITLE,Нуклеоидный след,Nucleoid Trace
-TALENT_NUCLEOTIDE_FLAT_KILL_REWARD_DESC,Каждый обычный враг оставляет на 1 нуклеотид больше.,Each non-boss enemy leaves 1 more Nucleotid.
-TALENT_NUCLEOTIDE_EXTRA_DROP_CHANCE_TITLE,Избыточный нуклеоид,Excess Nucleoid
-TALENT_NUCLEOTIDE_EXTRA_DROP_CHANCE_DESC,Даёт 20% шанс получить дополнительный 1 нуклеотид с обычного врага за уровень.,Gives a 20% chance per level to gain 1 extra Nucleotid from a non-boss enemy.
+TALENT_DNA_FLAT_KILL_REWARD_TITLE,ДНК-след,DNA Trace
+TALENT_DNA_FLAT_KILL_REWARD_DESC,Каждый обычный враг оставляет на 1 ДНК больше.,Each non-boss enemy leaves 1 more DNA.
+TALENT_DNA_EXTRA_DROP_CHANCE_TITLE,Избыточная ДНК,Excess DNA
+TALENT_DNA_EXTRA_DROP_CHANCE_DESC,Даёт 20% шанс получить +1 ДНК с обычного врага за уровень.,Gives a 20% chance per level to gain +1 DNA from a non-boss enemy.
 TALENT_RADICAL_DROP_CHANCE_TITLE,Радикальный след,Radical Trace
 TALENT_RADICAL_DROP_CHANCE_DESC,Даёт 20% шанс получить 1 радикал с обычного врага за уровень. Доступно после второго уровня.,Gives a 20% chance per level to gain 1 radical from a non-boss enemy. Available after level two.
 TALENT_RADICAL_DROP_CHANCE_LARGE_TITLE,Радикальный резонанс,Radical Resonance

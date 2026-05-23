@@ -99,7 +99,7 @@ namespace _Project.Scripts.Gameplay.Talents
         private void CreateProgressWithStartingCurrencies()
         {
             _saveLoadService.CreateProgress();
-            _currencyService.SetBalance(CurrencyId.Nucleotides, _currencyConfig.StartingAmount(CurrencyId.Nucleotides).Amount);
+            _currencyService.SetBalance(CurrencyId.Dna, _currencyConfig.StartingAmount(CurrencyId.Dna).Amount);
             _currencyService.SetBalance(CurrencyId.Isotopes, _currencyConfig.StartingAmount(CurrencyId.Isotopes).Amount);
             _currencyService.SetBalance(CurrencyId.Radicals, _currencyConfig.StartingAmount(CurrencyId.Radicals).Amount);
         }

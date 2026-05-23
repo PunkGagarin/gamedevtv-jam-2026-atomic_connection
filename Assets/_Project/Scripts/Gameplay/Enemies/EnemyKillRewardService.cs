@@ -83,7 +83,7 @@ namespace _Project.Scripts.Gameplay.Enemies
         {
             int amount = rule.BaseSource switch
             {
-                EnemyKillRewardBaseSource.EnemyNucleotideReward => enemy.NucleotideReward,
+                EnemyKillRewardBaseSource.EnemyDnaReward => enemy.DnaReward,
                 _ => 0
             };
 

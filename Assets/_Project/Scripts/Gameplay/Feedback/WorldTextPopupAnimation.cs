@@ -54,12 +54,14 @@ namespace _Project.Scripts.Gameplay.Feedback
             float fontSize,
             int sortingOrder,
             float riseDistance,
-            float duration)
+            float duration,
+            FontStyles fontStyle = FontStyles.Normal)
         {
             GameObject popup = new(objectName);
             TextMeshPro label = popup.AddComponent<TextMeshPro>();
             label.alignment = TextAlignmentOptions.Center;
             label.fontSize = fontSize;
+            label.fontStyle = fontStyle;
 
             MeshRenderer renderer = popup.GetComponent<MeshRenderer>();
             renderer.sortingOrder = sortingOrder;

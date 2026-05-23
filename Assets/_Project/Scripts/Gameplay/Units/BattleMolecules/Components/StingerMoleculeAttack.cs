@@ -7,6 +7,10 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
     {
         protected override int BaseShotDamage => Config.StingerMoleculeShotDamage;
         protected override TalentType DamageTalentType => TalentType.StingerMoleculeDamage;
+        protected override bool UsesCriticalHits => true;
+        protected override TalentType CriticalChanceTalentType => TalentType.StingerMoleculeCriticalChance;
+        protected override TalentType CriticalRewardTalentType => TalentType.StingerMoleculeCriticalReward;
+        protected override float CriticalDamageMultiplier => Config.StingerMoleculeCriticalDamageMultiplier;
 
         protected override void ResolveShot(BattleMoleculeShotRequest request)
         {

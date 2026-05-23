@@ -11,6 +11,9 @@ namespace _Project.Scripts.Gameplay.Enemies
         [field: SerializeField, Range(0f, 1f)] public float MergeChance { get; private set; } = 0.3f;
         [field: SerializeField, Min(0f)] public float MergeRadius { get; private set; } = 5f;
         [field: SerializeField, Min(0.01f)] public float MergeCheckIntervalSeconds { get; private set; } = 0.5f;
+        [field: SerializeField, Min(2)] public int MaxMergeGroupSize { get; private set; } = 5;
+        [field: SerializeField, Min(1)] public int MaxMergeLinksPerEnemy { get; private set; } = 2;
+        [field: SerializeField, Min(0f)] public float MergeDeathWaveStepSeconds { get; private set; } = 0.08f;
         [field: SerializeField] public List<EnemyId> MergeExcludedEnemyIds { get; private set; } = new() { EnemyId.Boss };
 
         [field: Header("Link Visual")]

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Common.Physics;
+using _Project.Scripts.Gameplay.Common.Random;
 using _Project.Scripts.Gameplay.Enemies;
 using _Project.Scripts.Gameplay.Talents;
 using _Project.Scripts.Gameplay.Units.BattleMolecules;
@@ -26,6 +27,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         [field: SerializeField] private BattleMoleculeAimLineVisual AimLineVisual { get; set; }
 
         [Inject] private IPhysicsService _physicsService;
+        [Inject] private IRandomService _randomService;
         [Inject] protected BattleMoleculeConfig Config;
         [Inject] protected ITalentService TalentService;
 
@@ -33,6 +35,10 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         protected List<EnemyHit> EnemyHits => _enemyHits;
         protected abstract int BaseShotDamage { get; }
         protected abstract TalentType DamageTalentType { get; }
+        protected virtual bool UsesCriticalHits => false;
+        protected virtual TalentType CriticalChanceTalentType => DamageTalentType;
+        protected virtual TalentType CriticalRewardTalentType => DamageTalentType;
+        protected virtual float CriticalDamageMultiplier => 1f;
 
         protected virtual void Awake()
         {
@@ -94,8 +100,33 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
         protected void Damage(EnemyUnit target, Vector3 origin)
         {
+            bool isCritical = RollCriticalHit();
+            int shotDamage = CurrentShotDamage();
+            int damage = isCritical ? CriticalDamage(shotDamage) : shotDamage;
+            float killRewardMultiplier = isCritical ? CriticalKillRewardMultiplier() : 1f;
+
             Debug.DrawLine(origin, target.transform.position, Color.yellow, 0.5f);
-            target.TakeDamage(CurrentShotDamage());
+            target.TakeDamage(damage, killRewardMultiplier, isCritical);
+        }
+
+        private bool RollCriticalHit()
+        {
+            if (!UsesCriticalHits || TalentService == null || _randomService == null)
+                return false;
+
+            float chance = Mathf.Clamp01(TalentService.BonusOf(CriticalChanceTalentType));
+            return chance >= 1f || chance > 0f && _randomService.Range(0f, 1f) < chance;
+        }
+
+        private int CriticalDamage(int baseDamage)
+        {
+            return Mathf.Max(1, Mathf.RoundToInt(baseDamage * Mathf.Max(1f, CriticalDamageMultiplier)));
+        }
+
+        private float CriticalKillRewardMultiplier()
+        {
+            float rewardBonus = TalentService != null ? TalentService.BonusOf(CriticalRewardTalentType) : 0f;
+            return Mathf.Max(0f, 1f + rewardBonus);
         }
 
         protected int DamageEnemies(

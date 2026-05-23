@@ -23,12 +23,16 @@ namespace _Project.Scripts.Gameplay.Enemies
         [field: SerializeField] private EnemyCoreCollision CoreCollision { get; set; }
 
         public EnemyId Id => Identity.Id;
-        public bool IsAlive => Vitality.IsAlive;
-        public bool IsMergeLinked => Merge.IsLinked;
-        public int MaxHealth => Vitality.MaxHealth;
-        public int CurrentHealth => Vitality.CurrentHealth;
+        public bool IsAlive => Vitality.IsAlive && !Merge.IsDeathWaveActive;
         public int CoreCollisionDamage => Merge.CoreCollisionDamage;
         public int NucleotideReward => Identity.NucleotideReward;
+        public float KillRewardMultiplier => Vitality.KillRewardMultiplier;
+
+        internal EnemyMergeGroup MergeGroup => Merge.Group;
+        internal bool IsMergeLinkEndpointAlive => Vitality.IsAlive;
+        internal int MergeMaxHealthContribution => Merge.MaxHealthContribution;
+        internal int MergeCurrentHealthContribution => Merge.CurrentHealthContribution;
+        internal int MergeCoreCollisionDamageContribution => Merge.CoreCollisionDamageContribution;
 
         public event Action<EnemyUnit> Died
         {
@@ -69,7 +73,7 @@ namespace _Project.Scripts.Gameplay.Enemies
         public void Configure(EnemyDefinition definition, int maxHealth, int coreCollisionDamage)
         {
             Identity.Configure(definition, coreCollisionDamage);
-            Merge.Clear(false);
+            Merge.ClearGroup();
             Vitality.Configure(maxHealth);
         }
 
@@ -117,12 +121,42 @@ namespace _Project.Scripts.Gameplay.Enemies
 
         public void TakeDamage(int amount)
         {
-            Merge.TakeDamage(amount);
+            TakeDamage(amount, 1f, false);
         }
 
-        public void BeginMergeLink(EnemyUnit partner, int mergedMaxHealth, int mergedCurrentHealth)
+        public void TakeDamage(int amount, float killRewardMultiplier, bool isCritical)
         {
-            Merge.BeginLink(partner, mergedMaxHealth, mergedCurrentHealth);
+            Merge.TakeDamage(amount, killRewardMultiplier, isCritical);
+        }
+
+        internal void AssignMergeGroup(EnemyMergeGroup mergeGroup)
+        {
+            Merge.AssignGroup(mergeGroup);
+        }
+
+        internal void ClearMergeGroupReference(EnemyMergeGroup mergeGroup)
+        {
+            Merge.ClearGroupReference(mergeGroup);
+        }
+
+        internal void SyncMergeHealth(int maxHealth, int currentHealth)
+        {
+            Merge.SyncHealth(maxHealth, currentHealth);
+        }
+
+        internal void ApplyMergeDamage(int amount, bool isCritical)
+        {
+            Merge.ApplyDamage(amount, isCritical);
+        }
+
+        internal void DieFromMergeGroupDamage(float killRewardMultiplier)
+        {
+            Vitality.DieFromMergeGroupDamage(killRewardMultiplier);
+        }
+
+        internal void DieFromMergeGroupCore()
+        {
+            Vitality.DieFromMergeGroupCore();
         }
     }
 }

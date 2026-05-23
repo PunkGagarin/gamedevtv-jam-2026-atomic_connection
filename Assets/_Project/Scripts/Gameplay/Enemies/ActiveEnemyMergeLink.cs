@@ -15,6 +15,7 @@ namespace _Project.Scripts.Gameplay.Enemies
         private readonly EnemyMergeLinkVisual _visual;
         private readonly float _tugPhase;
         private readonly float _tugFrequency01;
+        private bool _isDestroyed;
 
         public ActiveEnemyMergeLink(EnemyUnit first, EnemyUnit second, EnemyMergeLinkVisual visual)
         {
@@ -25,21 +26,50 @@ namespace _Project.Scripts.Gameplay.Enemies
             _tugFrequency01 = PairNoise(91.73f);
         }
 
-        public bool IsAlive => _first != null && _second != null && _first.IsMergeLinked && _second.IsMergeLinked && _visual != null;
+        public EnemyUnit First => _first;
+        public EnemyUnit Second => _second;
+        public bool IsAlive => !_isDestroyed && _first != null && _second != null && _first.IsMergeLinkEndpointAlive && _second.IsMergeLinkEndpointAlive && _visual != null;
 
         public bool Contains(EnemyUnit enemy)
         {
-            return _first == enemy || _second == enemy;
+            return !_isDestroyed && (_first == enemy || _second == enemy);
+        }
+
+        public bool Connects(EnemyUnit first, EnemyUnit second)
+        {
+            return !_isDestroyed && ((_first == first && _second == second) || (_first == second && _second == first));
+        }
+
+        public EnemyUnit NeighborOf(EnemyUnit enemy)
+        {
+            if (_isDestroyed)
+                return null;
+
+            if (_first == enemy)
+                return _second;
+
+            if (_second == enemy)
+                return _first;
+
+            return null;
         }
 
         public void Tick(float deltaTime, float elapsedSeconds, EnemyMergeConfig config)
         {
+            if (_isDestroyed)
+                return;
+
             ApplyTetherMotion(deltaTime, elapsedSeconds, config);
             _visual.Tick();
         }
 
         public void DestroyVisual()
         {
+            if (_isDestroyed)
+                return;
+
+            _isDestroyed = true;
+
             if (_visual != null)
                 Object.Destroy(_visual.gameObject);
         }

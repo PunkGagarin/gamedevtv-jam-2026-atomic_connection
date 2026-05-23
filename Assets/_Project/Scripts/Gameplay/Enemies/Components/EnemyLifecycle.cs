@@ -48,7 +48,7 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
 
         private void ClearRuntimeState()
         {
-            Merge.Clear(false);
+            Merge.ClearGroup();
             Movement.Clear();
             CoreCollision.Clear();
             RuntimeBehaviors.Clear();

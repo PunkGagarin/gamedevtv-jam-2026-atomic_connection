@@ -8,6 +8,7 @@ namespace _Project.Scripts.Gameplay.Enemies
     {
         [field: Header("Rules")]
         [field: SerializeField] public bool MergeEnabled { get; private set; } = true;
+        [field: SerializeField, Min(1)] public int StartLevel { get; private set; } = 2;
         [field: SerializeField, Range(0f, 1f)] public float MergeChance { get; private set; } = 0.3f;
         [field: SerializeField, Min(0f)] public float MergeRadius { get; private set; } = 5f;
         [field: SerializeField, Min(0.01f)] public float MergeCheckIntervalSeconds { get; private set; } = 0.5f;

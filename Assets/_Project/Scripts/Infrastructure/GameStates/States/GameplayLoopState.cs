@@ -16,6 +16,8 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
     internal class GameplayLoopState : EndOfFrameExitState
     {
         [Inject] private IEnemyService _enemyService;
+        [Inject] private IMergeEnemyService _mergeEnemyService;
+        [Inject] private IEnemyKillRewardService _enemyKillRewardService;
         [Inject] private IEnemyProjectileService _enemyProjectileService;
         [Inject] private IAtomCoreService _atomCoreService;
         [Inject] private IFreeAtomFactory _freeAtomFactory;
@@ -36,6 +38,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
             _enemyService.BossKilled += OnBossKilled;
             _levelProgressService.Completed += OnLevelCompleted;
             _atomCoreService.Start();
+            _mergeEnemyService.Start();
             _enemyService.Start(_atomCoreService.CurrentCoreTransform);
             _battleMoleculeService.Start();
             _currencyPickupService.Start();
@@ -73,6 +76,8 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
             _currencyPickupService.Cleanup();
             _levelProgressService.Cleanup();
             _enemyProjectileService.Cleanup();
+            _mergeEnemyService.Cleanup();
+            _enemyKillRewardService.Cleanup();
             _enemyService.Cleanup();
             _atomCoreService.Cleanup();
             _battleMoleculeService.Cleanup();

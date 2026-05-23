@@ -95,6 +95,7 @@ namespace _Project.Scripts.Infrastructure
             Container.Bind<IEnemySpawner>().To<EnemySpawner>().AsSingle();
             Container.Bind<IEnemyKillRewardService>().To<EnemyKillRewardService>().AsSingle();
             Container.Bind<IEnemyProjectileService>().To<EnemyProjectileService>().AsSingle();
+            Container.Bind<IMergeEnemyService>().To<MergeEnemyService>().AsSingle();
             Container.Bind<IEnemyService>().To<EnemyService>().AsSingle();
         }
 

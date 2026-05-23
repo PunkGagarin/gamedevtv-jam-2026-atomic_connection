@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: EnemyMergeConfig
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Enemies.EnemyMergeConfig
   <MergeEnabled>k__BackingField: 1
+  <StartLevel>k__BackingField: 2
   <MergeChance>k__BackingField: 0.3
   <MergeRadius>k__BackingField: 5
   <MergeCheckIntervalSeconds>k__BackingField: 0.5

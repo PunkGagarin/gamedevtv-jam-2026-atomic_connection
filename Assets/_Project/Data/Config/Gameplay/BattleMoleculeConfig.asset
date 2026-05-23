@@ -15,12 +15,12 @@ MonoBehaviour:
   <StingerMoleculeSpawnOffset>k__BackingField: {x: 4, y: 0}
   <StingerMoleculeBondAtomsRequired>k__BackingField: 1
   <StingerMoleculeAtomsRequired>k__BackingField: 5
-  <StingerMoleculeShotDamage>k__BackingField: 3
+  <StingerMoleculeShotDamage>k__BackingField: 1
   <StingerMoleculeCriticalDamageMultiplier>k__BackingField: 2
   <AtomsPosCircleRadius>k__BackingField: 1
   <DepositedAtomsOrbitDegreesPerSecond>k__BackingField: 90
-  <CoreOrbitRadius>k__BackingField: 4
-  <CoreOrbitDegreesPerSecond>k__BackingField: 20
+  <CoreOrbitRadius>k__BackingField: 3
+  <CoreOrbitDegreesPerSecond>k__BackingField: 10
   <ConnectionAtomTravelSpeed>k__BackingField: 1
   <ConnectionCoreRimDegreesPerSecond>k__BackingField: 60
   <ConnectionAtomArrivalDistance>k__BackingField: 0.03

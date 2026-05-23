@@ -101,6 +101,7 @@
 | Значение | Default |
 |---|---:|
 | Merge enabled | да |
+| Start level | 2 |
 | Merge chance | 30% |
 | Merge radius | 5.0 |
 | Merge check interval | 0.5 сек |

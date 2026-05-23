@@ -144,7 +144,6 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier:
   <Collider>k__BackingField: {fileID: 5800000}
-  <HitRadius>k__BackingField: 0.35
 --- !u!114 &11400005
 MonoBehaviour:
   m_ObjectHideFlags: 0

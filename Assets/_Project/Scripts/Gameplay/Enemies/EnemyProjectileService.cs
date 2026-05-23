@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
+using _Project.Scripts.Gameplay.Common.Physics;
 using _Project.Scripts.Gameplay.Common.Time;
 using _Project.Scripts.Gameplay.Enemies.Components;
 using _Project.Scripts.Gameplay.Level;
@@ -18,6 +19,7 @@ namespace _Project.Scripts.Gameplay.Enemies
         [Inject] private IGameplayRuntimeHierarchy _runtimeHierarchy;
         [Inject] private IInstantiator _instantiator;
         [Inject] private ITimeService _time;
+        [Inject] private IPhysicsService _physicsService;
 
         public void Shoot(EnemyProjectileShot shot)
         {
@@ -43,8 +45,17 @@ namespace _Project.Scripts.Gameplay.Enemies
 
         public void Update()
         {
-            float deltaTime = _time.DeltaTime;
+            if (_projectiles.Count == 0)
+                return;
 
+            float deltaTime = _time.DeltaTime;
+            TickProjectiles(deltaTime);
+            _physicsService?.SyncTransforms();
+            ApplyProjectileImpacts();
+        }
+
+        private void TickProjectiles(float deltaTime)
+        {
             for (int i = _projectiles.Count - 1; i >= 0; i--)
             {
                 TrackedProjectile trackedProjectile = _projectiles[i];
@@ -67,8 +78,23 @@ namespace _Project.Scripts.Gameplay.Enemies
                     projectile.TickLifetime(deltaTime);
                     projectile.TickMotion(deltaTime);
                 }
+            }
+        }
 
-                if (projectile.TryApplyImpact() || projectile.IsExpired)
+        private void ApplyProjectileImpacts()
+        {
+            for (int i = _projectiles.Count - 1; i >= 0; i--)
+            {
+                TrackedProjectile trackedProjectile = _projectiles[i];
+                EnemyProjectile projectile = trackedProjectile.Projectile;
+
+                if (projectile == null || !projectile.IsActive)
+                {
+                    _projectiles.RemoveAt(i);
+                    continue;
+                }
+
+                if (!projectile.HasLiveTarget || projectile.TryApplyImpact() || projectile.IsExpired)
                     DestroyTrackedProjectile(i);
             }
         }

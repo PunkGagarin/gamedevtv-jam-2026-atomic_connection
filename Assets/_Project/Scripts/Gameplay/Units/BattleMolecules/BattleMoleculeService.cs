@@ -17,7 +17,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         private const float ARRIVAL_DISTANCE = 0.03f;
         private const float MIN_FLOW_RADIUS = 0.1f;
 
-        private readonly List<IBattleMoleculeRuntimeBehavior> _runtimeBehaviors = new();
         private readonly List<FreeAtom> _coreAtoms = new();
         private readonly List<FlowAtomState> _flowAtoms = new();
         private bool _isStarted;
@@ -56,17 +55,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                 molecule.Tick(_time.DeltaTime);
             }
 
-            foreach (IBattleMoleculeRuntimeBehavior runtimeBehavior in _runtimeBehaviors)
-            {
-                if (runtimeBehavior == null)
-                    continue;
-
-                if (runtimeBehavior is Object unityObject && unityObject == null)
-                    continue;
-
-                runtimeBehavior.Tick(_time.DeltaTime);
-            }
-
             TickMoleculeSelection();
             TickActiveAtomFlow(_time.DeltaTime);
         }
@@ -90,7 +78,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
             ReleaseFlowAtomControl();
 
-            _runtimeBehaviors.Clear();
             _coreAtoms.Clear();
             _activeMolecule = null;
             _core = null;
@@ -106,19 +93,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                 CacheCoreReferences();
 
             molecule.ConfigureCoreOrbit(_atomCoreService.CurrentCoreTransform, _config);
-
-            MonoBehaviour[] components = molecule.GetComponents<MonoBehaviour>();
-            BattleMoleculeRuntimeContext context = new(_core, _config, _talentService);
+            molecule.ConfigureCoreInteraction(_core, _config, _talentService);
             molecule.Bonded += OnMoleculeBonded;
-
-            foreach (MonoBehaviour component in components)
-            {
-                if (component is IBattleMoleculeRuntimeBehavior runtimeBehavior)
-                {
-                    runtimeBehavior.Configure(context);
-                    _runtimeBehaviors.Add(runtimeBehavior);
-                }
-            }
 
             if (molecule.IsBonded && !IsValidActiveMolecule(_activeMolecule))
                 SetActiveMolecule(molecule);

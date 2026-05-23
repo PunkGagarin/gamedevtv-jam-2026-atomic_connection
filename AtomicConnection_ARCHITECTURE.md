@@ -127,13 +127,15 @@ resolution.
 atoms into molecules when unlocked. `BattleMolecule` is a facade: setup,
 identity, bond event relays, point hit-tests, core orbit/connection-line
 coordination, connection arrival geometry, atom orbiting, charge consumption,
-atom receiving, shot requests, and attacks are owned by focused components. The
-connection line is a gameplay visual component (`BattleMoleculeConnectionVisual`)
-that observes bond changes directly; gameplay objects do not add MVP-style
-Presenter/Controller/View/ViewModel layers. Attack-capable
-molecule prefabs use focused attack components such as `StingerMoleculeAttack`
-and `SwarmMoleculeAttack` to resolve local shot requests into raycasts, enemy
-damage, and shot-line feedback.
+atom receiving, shot requests, attacks, aim-line feedback, and membrane
+activation are owned by focused components. The facade may pass explicit ticks
+and setup calls to those known components, but molecule behavior is not routed
+through a generic runtime-behavior registry. The connection line is a gameplay
+visual component (`BattleMoleculeConnectionVisual`) that observes bond changes
+directly; gameplay objects do not add MVP-style Presenter, Controller, View, or
+ViewModel layers. Attack-capable molecule prefabs use focused attack components
+such as `StingerMoleculeAttack` and `SwarmMoleculeAttack` to resolve local shot
+requests into raycasts, enemy damage, and shot-line feedback.
 
 `FreeAtom` is also a facade. Ownership, despawn/destroy events, drag behavior,
 connection-flow/drag state, collider enable/disable, spawn/pool reset, initial

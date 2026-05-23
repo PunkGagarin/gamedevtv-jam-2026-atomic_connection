@@ -19,9 +19,9 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
                 Damage = GetComponent<EnemyProjectileDamage>();
         }
 
-        public bool TryApply(Vector3 projectilePosition)
+        public bool TryApply()
         {
-            if (!TargetHit.Contains(projectilePosition))
+            if (!TargetHit.IsOverlappingTarget())
                 return false;
 
             Damage.Apply(TargetHit.Target);

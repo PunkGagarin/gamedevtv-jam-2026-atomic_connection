@@ -8,11 +8,11 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
     [RequireComponent(typeof(OwnedAtoms))]
     [RequireComponent(typeof(OwnedAtomReceiver))]
     [RequireComponent(typeof(OwnedAtomOrbitLayout))]
-    [RequireComponent(typeof(ObjectRadius))]
     [RequireComponent(typeof(PointHitArea))]
     [RequireComponent(typeof(AtomOrbit))]
     [RequireComponent(typeof(AtomProductionProgress))]
     [RequireComponent(typeof(AtomCoreHealth))]
+    [RequireComponent(typeof(AtomCoreDamageHitArea))]
     [RequireComponent(typeof(AtomCoreClickInteraction))]
     public class AtomCore : MonoBehaviour
     {

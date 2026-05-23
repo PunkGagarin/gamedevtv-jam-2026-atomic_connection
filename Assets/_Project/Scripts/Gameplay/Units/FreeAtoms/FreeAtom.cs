@@ -8,7 +8,6 @@ using UnityEngine;
 namespace _Project.Scripts.Gameplay.Units.FreeAtoms
 {
     [RequireComponent(typeof(OrbitMotion))]
-    [RequireComponent(typeof(ObjectRadius))]
     [RequireComponent(typeof(ColliderSet))]
     [RequireComponent(typeof(InitialLocalScale))]
     [RequireComponent(typeof(FreeAtomOwnership))]
@@ -19,7 +18,6 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
     public class FreeAtom : MonoBehaviour
     {
         [field: SerializeField] private OrbitMotion OrbitMotion { get; set; }
-        [field: SerializeField] private ObjectRadius RadiusProvider { get; set; }
         [field: SerializeField] private ColliderSet ColliderSet { get; set; }
         [field: SerializeField] private FreeAtomOwnership Ownership { get; set; }
         [field: SerializeField] private FreeAtomState State { get; set; }
@@ -34,7 +32,6 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
         public bool CanOrbit => State.CanOrbit;
         public bool IsInConnectionFlow => State.IsInConnectionFlow;
         public bool CanArrangeInOrbit => State.CanArrangeInOrbit;
-        public float Radius => RadiusProvider.Radius;
 
         public event Action<FreeAtom> Destroyed
         {
@@ -57,7 +54,6 @@ namespace _Project.Scripts.Gameplay.Units.FreeAtoms
         private void Awake()
         {
             OrbitMotion = GetComponent<OrbitMotion>();
-            RadiusProvider = GetComponent<ObjectRadius>();
             ColliderSet = GetComponent<ColliderSet>();
             Ownership = GetComponent<FreeAtomOwnership>();
             State = GetComponent<FreeAtomState>();

@@ -24,22 +24,6 @@ namespace _Project.Scripts.Gameplay.Common.Movement
             SnapToOrbit();
         }
 
-        public void ConfigureFromCurrentOffset(Transform center)
-        {
-            _center = center;
-
-            if (_center == null)
-            {
-                Clear();
-                return;
-            }
-
-            Vector3 offset = transform.position - _center.position;
-            _radius = new Vector2(offset.x, offset.y).magnitude;
-            _angle = OrbitMath.AngleFromCenter(_center.position, transform.position);
-            SnapToOrbit();
-        }
-
         public void Tick(float angleDelta)
         {
             if (!IsConfigured)

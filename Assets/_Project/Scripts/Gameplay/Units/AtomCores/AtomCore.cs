@@ -43,7 +43,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
         {
             Health.Configure(maxHealth);
             AtomReceiver.Configure(FreeAtomOwnerKind.Core);
-            AtomOrbitLayout.ConfigureOwnerPlusAtomRadiusFromOwnerCollider(FreeAtomOwnerKind.Core);
+            AtomOrbitLayout.ConfigureFixedRadius(FreeAtomOwnerKind.Core, config.FreeAtomOrbitRadius);
             AtomOrbit.Configure(config.FreeAtomOrbitDegreesPerSecond);
             ClickInteraction.Configure(clicksRequired);
         }

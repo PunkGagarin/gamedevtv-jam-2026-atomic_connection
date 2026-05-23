@@ -251,6 +251,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
         private void RetargetFlowAtom(AtomCore core, BattleMolecule target, FlowAtomState flowAtom)
         {
+            ClearConnectionProgress(flowAtom);
             flowAtom.Target = target;
             flowAtom.Phase = IsAtomNearCoreRim(core, flowAtom)
                 ? FlowPhase.OrbitToConnection
@@ -302,10 +303,13 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                     break;
                 case FlowPhase.OrbitToConnection:
                     if (MoveAtomAlongCoreRim(core, target, flowAtom, deltaTime))
+                    {
                         flowAtom.Phase = FlowPhase.Connection;
+                        ClearConnectionProgress(flowAtom);
+                    }
                     break;
                 case FlowPhase.Connection:
-                    if (MoveAtomToMolecule(target, flowAtom, deltaTime))
+                    if (MoveAtomToMolecule(core, target, flowAtom, deltaTime))
                         return DeliverFlowAtom(flowAtom, target);
                     break;
                 case FlowPhase.ReturnToCore:
@@ -336,6 +340,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
         private bool MoveAtomToCoreRim(AtomCore core, FlowAtomState flowAtom, float deltaTime, bool useTalentSpeed)
         {
+            SetFlowAtomParent(flowAtom, core != null ? core.transform : null);
+
             float angle = AngleFromCoreTo(core, flowAtom.Atom.transform.position);
             float speed = useTalentSpeed ? ConnectionAtomTravelSpeed() : _config.ConnectionAtomTravelSpeed;
             return MoveFlowAtomTowards(flowAtom, CoreRimPosition(core, flowAtom, angle),
@@ -344,6 +350,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
         private bool MoveAtomAlongCoreRim(AtomCore core, BattleMolecule target, FlowAtomState flowAtom, float deltaTime)
         {
+            SetFlowAtomParent(flowAtom, core != null ? core.transform : null);
+
             float currentAngle = AngleFromCoreTo(core, flowAtom.Atom.transform.position) * Mathf.Rad2Deg;
             float targetAngle = AngleFromCoreTo(core, target.transform.position) * Mathf.Rad2Deg;
             float angleStep = ConnectionCoreRimDegreesPerSecond() * deltaTime;
@@ -355,16 +363,26 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             return Mathf.Abs(Mathf.DeltaAngle(nextAngle, targetAngle)) <= 0.5f;
         }
 
-        private bool MoveAtomToMolecule(BattleMolecule target, FlowAtomState flowAtom, float deltaTime)
+        private bool MoveAtomToMolecule(AtomCore core, BattleMolecule target, FlowAtomState flowAtom, float deltaTime)
         {
-            float atomRadius = flowAtom.Atom != null ? flowAtom.Atom.Radius : 0f;
-            if (target.IsConnectionArrivalReached(flowAtom.Atom.transform.position, atomRadius, ARRIVAL_DISTANCE))
+            SetFlowAtomParent(flowAtom, core != null ? core.transform : null);
+
+            Vector3 start = ConnectionStartPosition(core, target, flowAtom);
+            Vector3 destination = ConnectionDestinationPosition(core, target, flowAtom);
+            EnsureConnectionProgress(flowAtom, start, destination);
+
+            float distance = Vector2.Distance(start, destination);
+            if (distance <= ARRIVAL_DISTANCE)
                 return true;
 
-            Vector3 destination = target.GetConnectionArrivalPosition(
-                flowAtom.Atom.transform.position,
-                atomRadius);
-            return MoveFlowAtomTowards(flowAtom, destination, ConnectionAtomTravelSpeed() * deltaTime);
+            flowAtom.ConnectionProgress = Mathf.Clamp01(
+                flowAtom.ConnectionProgress + ConnectionAtomTravelSpeed() * deltaTime / distance);
+
+            Vector3 position = Vector3.Lerp(start, destination, flowAtom.ConnectionProgress);
+            position.z = flowAtom.Atom.transform.position.z;
+            flowAtom.Atom.transform.position = position;
+
+            return flowAtom.ConnectionProgress >= 1f;
         }
 
         private float ConnectionAtomSpeedMultiplier()
@@ -458,6 +476,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
         private static void SetFlowAtomReturning(FlowAtomState flowAtom)
         {
+            ClearConnectionProgress(flowAtom);
             flowAtom.Target = null;
             flowAtom.Phase = FlowPhase.ReturnToCore;
         }
@@ -472,10 +491,72 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
         private static void ReleaseFlowAtomControl(FlowAtomState flowAtom)
         {
+            SetFlowAtomParent(flowAtom, flowAtom.Atom != null ? flowAtom.Atom.Owner : null);
             flowAtom.Atom?.EndConnectionFlow();
+            ClearConnectionProgress(flowAtom);
             flowAtom.Target = null;
             flowAtom.Phase = FlowPhase.None;
             flowAtom.Radius = 0f;
+        }
+
+        private static Vector3 ConnectionStartPosition(AtomCore core, BattleMolecule target, FlowAtomState flowAtom)
+        {
+            if (core == null || target == null)
+                return flowAtom.Atom != null ? flowAtom.Atom.transform.position : Vector3.zero;
+
+            float angle = AngleFromCoreTo(core, target.transform.position);
+            return CoreRimPosition(core, flowAtom, angle);
+        }
+
+        private static Vector3 ConnectionDestinationPosition(AtomCore core, BattleMolecule target, FlowAtomState flowAtom)
+        {
+            if (target == null)
+                return flowAtom.Atom != null ? flowAtom.Atom.transform.position : Vector3.zero;
+
+            Vector3 fromPosition = core != null && core.transform != null
+                ? core.transform.position
+                : flowAtom.Atom != null
+                    ? flowAtom.Atom.transform.position
+                    : target.transform.position;
+
+            return target.GetConnectionArrivalPosition(fromPosition);
+        }
+
+        private static void EnsureConnectionProgress(FlowAtomState flowAtom, Vector3 start, Vector3 destination)
+        {
+            if (flowAtom.HasConnectionProgress || flowAtom.Atom == null)
+                return;
+
+            flowAtom.ConnectionProgress = ProjectSegmentProgress(
+                start,
+                destination,
+                flowAtom.Atom.transform.position);
+            flowAtom.HasConnectionProgress = true;
+        }
+
+        private static float ProjectSegmentProgress(Vector3 start, Vector3 destination, Vector3 position)
+        {
+            Vector2 segment = new(destination.x - start.x, destination.y - start.y);
+            float lengthSquared = segment.sqrMagnitude;
+            if (lengthSquared <= Mathf.Epsilon)
+                return 1f;
+
+            Vector2 offset = new(position.x - start.x, position.y - start.y);
+            return Mathf.Clamp01(Vector2.Dot(offset, segment) / lengthSquared);
+        }
+
+        private static void ClearConnectionProgress(FlowAtomState flowAtom)
+        {
+            flowAtom.HasConnectionProgress = false;
+            flowAtom.ConnectionProgress = 0f;
+        }
+
+        private static void SetFlowAtomParent(FlowAtomState flowAtom, Transform parent)
+        {
+            if (flowAtom.Atom == null || parent == null || flowAtom.Atom.transform.parent == parent)
+                return;
+
+            flowAtom.Atom.transform.SetParent(parent, true);
         }
 
         private BattleMolecule ActiveFeedTarget()
@@ -541,6 +622,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             public BattleMolecule Target;
             public FlowPhase Phase;
             public float Radius;
+            public bool HasConnectionProgress;
+            public float ConnectionProgress;
         }
 
         private enum FlowPhase

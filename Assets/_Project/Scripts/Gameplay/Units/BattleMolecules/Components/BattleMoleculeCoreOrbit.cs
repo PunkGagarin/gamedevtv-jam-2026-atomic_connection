@@ -16,10 +16,18 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
                 OrbitMotion = GetComponent<OrbitMotion>();
         }
 
-        public void Configure(Transform center, float degreesPerSecond)
+        public void Configure(Transform center, float radius, float degreesPerSecond)
         {
             _degreesPerSecond = degreesPerSecond;
-            OrbitMotion.ConfigureFromCurrentOffset(center);
+
+            if (center == null)
+            {
+                OrbitMotion.Clear();
+                return;
+            }
+
+            float angle = OrbitMath.AngleFromCenter(center.position, transform.position);
+            OrbitMotion.Configure(center, Mathf.Max(0f, radius), angle);
         }
 
         public void Tick(float deltaTime)

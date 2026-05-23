@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Common.Random;
 using _Project.Scripts.Gameplay.Currencies;
 using _Project.Scripts.Gameplay.CurrencyDrops;
@@ -9,12 +10,48 @@ namespace _Project.Scripts.Gameplay.Enemies
 {
     public class EnemyKillRewardService : IEnemyKillRewardService
     {
+        private readonly List<EnemyUnit> _trackedEnemies = new();
+
         [Inject] private ICurrencyPickupService _currencyPickupService;
         [Inject] private IRandomService _randomService;
         [Inject] private ITalentService _talentService;
         [Inject] private EnemyKillRewardConfig _config;
 
-        public void RewardKill(EnemyUnit enemy)
+        public void RegisterEnemy(EnemyUnit enemy)
+        {
+            if (enemy == null || _trackedEnemies.Contains(enemy))
+                return;
+
+            enemy.Killed += OnEnemyKilled;
+            _trackedEnemies.Add(enemy);
+        }
+
+        public void UnregisterEnemy(EnemyUnit enemy)
+        {
+            if (enemy == null)
+                return;
+
+            enemy.Killed -= OnEnemyKilled;
+            _trackedEnemies.Remove(enemy);
+        }
+
+        public void Cleanup()
+        {
+            foreach (EnemyUnit enemy in _trackedEnemies)
+                enemy.Killed -= OnEnemyKilled;
+
+            _trackedEnemies.Clear();
+        }
+
+        private void OnEnemyKilled(EnemyUnit enemy)
+        {
+            if (enemy == null || enemy.Id == EnemyId.Boss)
+                return;
+
+            RewardKill(enemy);
+        }
+
+        private void RewardKill(EnemyUnit enemy)
         {
             if (enemy == null || _config == null)
                 return;

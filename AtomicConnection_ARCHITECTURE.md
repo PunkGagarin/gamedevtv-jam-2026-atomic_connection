@@ -65,10 +65,14 @@ Spawn tracks are independent:
 
 Runtime ownership:
 - `EnemyService` owns wave timing, active enemy tracking, per-frame enemy
-  ticking, death subscriptions, non-boss kill reward forwarding, and boss-kill
-  notification.
-- `EnemyKillRewardService` owns kill-reward economy rules and converts non-boss
-  enemy kills into configured currency pickup spawn requests.
+  ticking, death subscriptions, and boss-kill notification.
+- `MergeEnemyService` owns enemy merge eligibility, merge-pair checks, active
+  merge links/groups, link tether ticking, death-wave progression, and merge
+  cleanup. `GameplayLoopState` starts and cleans it, while `EnemyService` only
+  registers spawned enemies and forwards merge tick phases so link motion still
+  happens before core collision checks.
+- `EnemyKillRewardService` owns non-boss kill subscriptions, kill-reward economy
+  rules, reward cleanup, and configured currency pickup spawn requests.
 - `EnemySpawner` is only the spawn helper: choose offscreen position, ask
   `EnemyFactory` to create the unit, apply spawn-time object setup, and keep
   multi-enemy wave spawns clustered in one offscreen sector.
@@ -100,8 +104,8 @@ Runtime ownership:
 that core, creates battle molecule prefabs, then enters `GameplayLoopState`.
 
 `GameplayLoopState` inherits `EndOfFrameExitState`. It starts, ticks,
-fixed-ticks, and cleans active gameplay services such as `IEnemyService`, `IAtomCoreService`,
-`IBattleMoleculeService`, `IEnemyProjectileService`, `ICurrencyPickupService`, and
+fixed-ticks, and cleans active gameplay services such as `IEnemyService`, `IMergeEnemyService`,
+`IEnemyKillRewardService`, `IAtomCoreService`, `IBattleMoleculeService`, `IEnemyProjectileService`, `ICurrencyPickupService`, and
 `ILevelProgressService`. It skips gameplay ticks while `PauseService.IsPaused`;
 `ExitOnEndOfFrame()` cleans state-owned runtime services and objects.
 
@@ -128,9 +132,10 @@ resolution.
 owns the registered battle molecule list, molecule subscriptions, active
 molecule ticking, active selection, active feed target provider, and cleanup.
 `AtomCoreService` ticks core runtime behavior. Core-owned AutoLoad atom flow
-belongs to `AtomCoreConnectionAtomFlow`, which moves, returns, and delivers core
-atoms to molecule receivers using the current feed target from
-`IBattleMoleculeFeedTargetProvider`. `BattleMolecule` is a facade: setup,
+is coordinated by `AtomCoreConnectionAtomFlow` using the current feed target
+from `IBattleMoleculeFeedTargetProvider`; `AtomCoreConnectionAtomSource`
+selects startable core-owned atoms, while `AtomCoreConnectionAtomMotion` owns
+flow movement, geometry, speed, and tolerance config. `BattleMolecule` is a facade: setup,
 identity, bond event relays, point hit-tests, core orbit/connection-line
 coordination, connection arrival geometry, atom orbiting, charge consumption,
 atom receiving, shot requests, attacks, aim-line feedback, and membrane
@@ -233,7 +238,7 @@ Talent-adjusted runtime values are applied by the current owner:
 - `AtomCoreService` applies core HP and atom click count
 - `BattleMoleculeFactory` applies atom charge count
 - molecule-local attack components resolve shot damage and Pierce
-- `AtomCoreConnectionAtomFlow` applies AutoLoad movement speed
+- `AtomCoreConnectionAtomMotion` applies AutoLoad movement speed
 
 Talent tree uses `TalentConfig`. `TalentService` owns talent progress and
 buying; `CurrencyService` owns saved meta-currencies. Talent progress and

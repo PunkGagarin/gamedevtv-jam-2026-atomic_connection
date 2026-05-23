@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using Zenject;
 using DG.Tweening;
+using _Project.Scripts.Audio.Domain;
 using _Project.Scripts.Gameplay.Currencies;
 using _Project.Scripts.Gameplay.Windows;
 using _Project.Scripts.GameplayData;
@@ -40,6 +41,7 @@ namespace _Project.Scripts.Gameplay.Talents
         [Inject] private UiThemeConfig _themeConfig;
         [Inject] private LanguageService _languageService;
         [Inject] private LocalizationTool _localizationTool;
+        [Inject] private AudioService _audio;
 
         private readonly Dictionary<TalentId, TalentNodeView> _nodesById = new();
         private readonly Dictionary<TalentId, TalentDefinition> _talentsById = new();
@@ -103,6 +105,9 @@ namespace _Project.Scripts.Gameplay.Talents
                 ? TalentNodePurchaseResult.Purchased
                 : TalentNodePurchaseResult.Failed;
         }
+
+        internal void PlayButtonClickSound() =>
+            _audio.PlaySound(Sounds.buttonClick);
 
         public void ShowTooltip(TalentDefinition talent, RectTransform nodeTransform)
         {
@@ -481,6 +486,7 @@ namespace _Project.Scripts.Gameplay.Talents
 
         private void Close()
         {
+            PlayButtonClickSound();
             _windowService.Close(Id);
         }
 

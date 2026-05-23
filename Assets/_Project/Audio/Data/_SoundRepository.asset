@@ -23,4 +23,48 @@ MonoBehaviour:
     _clips:
     - _volume: 1
       _clip: {fileID: 8300000, guid: a2527baf5efcc41d3958433df96a1b2c, type: 3}
-  <Music>k__BackingField: []
+  - _name: damabProbably
+    _clips:
+    - _volume: 1
+      _clip: {fileID: 8300000, guid: 8664ee5178f68461398fa12a87811e9d, type: 3}
+  - _name: damage
+    _clips:
+    - _volume: 1
+      _clip: {fileID: 8300000, guid: 4f831bc72c66f45e5afc40a5dd5396a0, type: 3}
+  - _name: doublePop
+    _clips:
+    - _volume: 1
+      _clip: {fileID: 8300000, guid: cf4ae0dd4309149edaf81517c1381477, type: 3}
+  - _name: fridge_ambient
+    _clips:
+    - _volume: 1
+      _clip: {fileID: 8300000, guid: c835cea8218324e058fadb047c41dba3, type: 3}
+  - _name: intensiveDamage
+    _clips:
+    - _volume: 1
+      _clip: {fileID: 8300000, guid: 29894d3a162c54012908638d0f3a12dd, type: 3}
+  - _name: "lab\u0424mbience"
+    _clips:
+    - _volume: 1
+      _clip: {fileID: 8300000, guid: 68128f94be8ef4a69aa39530befed9dd, type: 3}
+  - _name: pew
+    _clips:
+    - _volume: 1
+      _clip: {fileID: 8300000, guid: 344d9bce109194926966978d59bfbf71, type: 3}
+  - _name: pop with echo
+    _clips:
+    - _volume: 1
+      _clip: {fileID: 8300000, guid: 5c3efe99f8769499286c55ccd0108398, type: 3}
+  - _name: pulsating
+    _clips:
+    - _volume: 1
+      _clip: {fileID: 8300000, guid: 41476674bd6db45b6b6370ee84786aa1, type: 3}
+  - _name: singlePop
+    _clips:
+    - _volume: 1
+      _clip: {fileID: 8300000, guid: c0faec682a6c848ec9a4e5ddf897ed9c, type: 3}
+  <Music>k__BackingField:
+  - _name: intense_bgm
+    _clips:
+    - _volume: 1
+      _clip: {fileID: 8300000, guid: 9595a9776500841cfaa9122c83de6adf, type: 3}

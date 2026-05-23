@@ -1,3 +1,4 @@
+using _Project.Scripts.Audio.Domain;
 using _Project.Scripts.Gameplay.Currencies;
 using _Project.Scripts.Gameplay.Levels;
 using _Project.Scripts.Infrastructure.GameStates.StateMachine;
@@ -22,6 +23,7 @@ namespace _Project.Scripts.Gameplay.Windows
         [Inject] private PauseService _pauseService;
         [Inject] private ILevelProgressService _levelProgressService;
         [Inject] private LocalizationTool _localizationTool;
+        [Inject] private AudioService _audio;
 
         protected override void OnAwake()
         {
@@ -59,12 +61,14 @@ namespace _Project.Scripts.Gameplay.Windows
 
         private void OpenMainMenu()
         {
+            _audio.PlaySound(Sounds.buttonClick);
             _pauseService.SetPaused(false);
             _stateMachine.Enter<LoadMainMenuState>();
         }
 
         private void RestartGameplay()
         {
+            _audio.PlaySound(Sounds.buttonClick);
             _pauseService.SetPaused(false);
             _stateMachine.Enter<LoadGameplayState>();
         }

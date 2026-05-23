@@ -1,3 +1,4 @@
+using _Project.Scripts.Audio.Domain;
 using _Project.Scripts.Gameplay.Levels;
 using _Project.Scripts.Localization;
 using TMPro;
@@ -19,6 +20,7 @@ namespace _Project.Scripts.MainMenu
         [Inject] private ILevelSelectionService _levelSelectionService;
         [Inject] private LanguageService _languageService;
         [Inject] private LocalizationTool _localizationTool;
+        [Inject] private AudioService _audio;
 
         private void Start()
         {
@@ -50,11 +52,13 @@ namespace _Project.Scripts.MainMenu
 
         private void SelectPrevious()
         {
+            _audio.PlaySound(Sounds.buttonClick);
             _levelSelectionService.SelectPrevious();
         }
 
         private void SelectNext()
         {
+            _audio.PlaySound(Sounds.buttonClick);
             _levelSelectionService.SelectNext();
         }
 

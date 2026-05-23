@@ -90,7 +90,10 @@ namespace _Project.Scripts.Audio.Domain
                 _nextMusicClip = clip;
             }
         }
-
+        
+        public void PlayMusic(Sounds sound, bool instant = false) =>
+            PlayMusic(sound.ToString(), instant);
+        
         public void PlaySfxLoop([CanBeNull] string clipName)
         {
             SoundElement clip = FindClip(clipName, SoundType.Effect);

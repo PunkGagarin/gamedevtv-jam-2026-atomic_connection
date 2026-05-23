@@ -139,6 +139,8 @@ namespace _Project.Scripts.Gameplay.Talents
 
         private void OnClicked()
         {
+            _window.PlayButtonClickSound();
+
             switch (_state)
             {
                 case TalentNodeViewState.Available:

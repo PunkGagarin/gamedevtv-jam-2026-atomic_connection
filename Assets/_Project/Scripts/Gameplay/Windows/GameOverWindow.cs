@@ -1,3 +1,4 @@
+using _Project.Scripts.Audio.Domain;
 using _Project.Scripts.Infrastructure.GameStates.StateMachine;
 using _Project.Scripts.Infrastructure.GameStates.States;
 using _Project.Scripts.Utils.Pause;
@@ -15,6 +16,7 @@ namespace _Project.Scripts.Gameplay.Windows
 
         [Inject] private GameStateMachine _stateMachine;
         [Inject] private PauseService _pauseService;
+        [Inject] private AudioService _audio;
 
         protected override void OnAwake()
         {
@@ -38,12 +40,14 @@ namespace _Project.Scripts.Gameplay.Windows
 
         private void OpenMainMenu()
         {
+            _audio.PlaySound(Sounds.buttonClick);
             _pauseService.SetPaused(false);
             _stateMachine.Enter<LoadMainMenuState>();
         }
 
         private void RestartGameplay()
         {
+            _audio.PlaySound(Sounds.buttonClick);
             _pauseService.SetPaused(false);
             _stateMachine.Enter<LoadGameplayState>();
         }

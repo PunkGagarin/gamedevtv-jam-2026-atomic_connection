@@ -7,7 +7,7 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
     [CustomEditor(typeof(TalentConfig))]
     public class TalentConfigEditor : UnityEditor.Editor
     {
-        private const float PREVIEW_HEIGHT = 280f;
+        private const float PREVIEW_HEIGHT = 560f;
         private const float NODE_RADIUS = 10f;
         private const float GRID_SIZE = 120f;
         private const string ID_FIELD = "<Id>k__BackingField";
@@ -18,6 +18,7 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
         private SerializedProperty _talentsProp;
         private int _selectedIndex = -1;
         private bool _isDragging = false;
+        private bool _didDragNode = false;
         private int _dragIndex = -1;
         private Vector2 _grabOffset;
         private Vector2 _graphCenter;
@@ -299,6 +300,7 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
                 if (_isDragging)
                 {
                     _isDragging = false;
+                    _didDragNode = false;
                     _dragIndex = -1;
                 }
                 if (_isPanning)
@@ -327,8 +329,7 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
                             _dragIndex = i;
                             _grabOffset = mousePos - nodeScreenPos;
                             _isDragging = true;
-                            if (TryGetTalentObject(i, out SerializedObject talentObject))
-                                Undo.RecordObject(talentObject.targetObject, "Move talent node");
+                            _didDragNode = false;
                             e.Use();
                             Repaint();
                             break;
@@ -350,7 +351,22 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
                         break;
 
                     SerializedProperty dragPosProp = talentObject.FindProperty(GRAPH_POSITION_FIELD);
-                    dragPosProp.vector2Value = SnapToGrid(ScreenToGraph(mousePos - _grabOffset));
+                    Vector2 snappedPosition = SnapToGrid(ScreenToGraph(mousePos - _grabOffset));
+
+                    if (dragPosProp.vector2Value == snappedPosition)
+                    {
+                        e.Use();
+                        Repaint();
+                        break;
+                    }
+
+                    if (!_didDragNode)
+                    {
+                        Undo.RecordObject(talentObject.targetObject, "Move talent node");
+                        _didDragNode = true;
+                    }
+
+                    dragPosProp.vector2Value = snappedPosition;
                     talentObject.ApplyModifiedProperties();
                     e.Use();
                     Repaint();
@@ -367,11 +383,20 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
                 }
 
                 case EventType.MouseUp when _isDragging:
+                {
+                    int clickedIndex = _dragIndex;
+                    bool shouldSelectAsset = !_didDragNode;
                     _isDragging = false;
                     _dragIndex = -1;
+                    _didDragNode = false;
+
+                    if (shouldSelectAsset)
+                        SelectTalentAsset(clickedIndex);
+
                     e.Use();
                     Repaint();
                     break;
+                }
 
                 case EventType.MouseUp when _isPanning:
                     _isPanning = false;
@@ -413,16 +438,31 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
             Repaint();
         }
 
-        private bool TryGetTalentObject(int index, out SerializedObject talentObject)
+        private void SelectTalentAsset(int index)
         {
-            talentObject = null;
+            if (!TryGetTalentAsset(index, out UnityEngine.Object talent))
+                return;
+
+            Selection.activeObject = talent;
+            EditorGUIUtility.PingObject(talent);
+        }
+
+        private bool TryGetTalentAsset(int index, out UnityEngine.Object talent)
+        {
+            talent = null;
 
             if (_talentsProp == null || index < 0 || index >= _talentsProp.arraySize)
                 return false;
 
-            UnityEngine.Object talent = _talentsProp.GetArrayElementAtIndex(index).objectReferenceValue;
+            talent = _talentsProp.GetArrayElementAtIndex(index).objectReferenceValue;
+            return talent != null;
+        }
 
-            if (talent == null)
+        private bool TryGetTalentObject(int index, out SerializedObject talentObject)
+        {
+            talentObject = null;
+
+            if (!TryGetTalentAsset(index, out UnityEngine.Object talent))
                 return false;
 
             talentObject = new SerializedObject(talent);

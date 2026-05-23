@@ -1,5 +1,6 @@
 using _Project.Scripts.Gameplay.Units;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
 {
@@ -8,8 +9,14 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
     [RequireComponent(typeof(PointHitArea))]
     public class AtomCoreClickInteraction : MonoBehaviour
     {
-        [field: SerializeField] private AtomProductionProgress ProductionProgress { get; set; }
-        [field: SerializeField] private PointHitArea HitArea { get; set; }
+        [field: SerializeField]
+        private AtomProductionProgress ProductionProgress { get; set; }
+
+        [field: SerializeField]
+        private PointHitArea HitArea { get; set; }
+
+        [SerializeField]
+        private UnityEvent OnClickEvent;
 
         private void Awake()
         {
@@ -32,6 +39,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
 
         public bool RegisterClick()
         {
+            OnClickEvent?.Invoke();
             return ProductionProgress.RegisterClick();
         }
     }

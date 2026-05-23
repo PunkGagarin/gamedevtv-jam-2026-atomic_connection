@@ -20,11 +20,11 @@ GameObject:
   - component: {fileID: 11400007}
   - component: {fileID: 11400008}
   - component: {fileID: 11400009}
-  - component: {fileID: 11400010}
-  - component: {fileID: 11400011}
-  - component: {fileID: 11400012}
-  - component: {fileID: 11400013}
-  - component: {fileID: 11400014}
+  - component: {fileID: 6190877939686151709}
+  - component: {fileID: 8869664954244471802}
+  - component: {fileID: 5492531718721855987}
+  - component: {fileID: 4199615189738945176}
+  - component: {fileID: 4892306979794530531}
   m_Layer: 0
   m_Name: AtomCore
   m_TagString: Untagged
@@ -62,12 +62,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0de8b0430c494e50a395845a4d9fa7a3, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
-  <AtomReceiver>k__BackingField: {fileID: 11400012}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <AtomReceiver>k__BackingField: {fileID: 0}
   <AtomOrbitLayout>k__BackingField: {fileID: 11400007}
-  <AtomOrbit>k__BackingField: {fileID: 11400010}
-  <Health>k__BackingField: {fileID: 11400011}
+  <AtomOrbit>k__BackingField: {fileID: 0}
+  <Health>k__BackingField: {fileID: 0}
   <ClickInteraction>k__BackingField: {fileID: 11400005}
 --- !u!58 &5800000
 CircleCollider2D:
@@ -169,6 +169,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7c9b2d6e0f34b768de4e7deed8c23ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <ProductionProgress>k__BackingField: {fileID: 0}
+  <HitArea>k__BackingField: {fileID: 0}
   OnClickEvent:
     m_PersistentCalls:
       m_Calls:
@@ -222,6 +224,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d89e7e9a4ece467f88017e60105bf3b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Core>k__BackingField: {fileID: 0}
+  <OwnedAtoms>k__BackingField: {fileID: 0}
 --- !u!114 &11400009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,6 +239,74 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Icon>k__BackingField: {fileID: 9100000000000000013}
+--- !u!114 &6190877939686151709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68bccc33562a4ef9a8fadfd312a205ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Units.OwnedAtomReceiver
+  <OwnedAtoms>k__BackingField: {fileID: 0}
+  <OwnerKind>k__BackingField: 0
+--- !u!114 &8869664954244471802
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f4b3d151db44c5dad1e4659bf4bcaea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Units.ObjectRadius
+  <Collider>k__BackingField: {fileID: 0}
+  <IncludeChildRenderers>k__BackingField: 1
+--- !u!114 &5492531718721855987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5d661c8b0d343718ef261950c2ebb07, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Units.PointHitArea
+  <Collider>k__BackingField: {fileID: 0}
+--- !u!114 &4199615189738945176
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0848642b02ce4cc19ca6a43de250662c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Units.AtomOrbit
+  <OwnedAtoms>k__BackingField: {fileID: 0}
+--- !u!114 &4892306979794530531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc994538550c4c18810ec2dcd7c3071d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Units.AtomCores.Components.AtomCoreHealth
+  <Health>k__BackingField: {fileID: 0}
+  <Shield>k__BackingField: {fileID: 0}
 --- !u!1 &7256588296169355026
 GameObject:
   m_ObjectHideFlags: 0
@@ -393,8 +465,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 7, y: 7, z: 5}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 3.7600002, y: 3.7600002, z: 2.6857142}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3977674697257233641}
   m_Father: {fileID: 400000}

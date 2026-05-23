@@ -25,7 +25,7 @@ namespace _Project.Scripts.Gameplay.Enemies
         public EnemyId Id => Identity.Id;
         public bool IsAlive => Vitality.IsAlive && !Merge.IsDeathWaveActive;
         public int CoreCollisionDamage => Merge.CoreCollisionDamage;
-        public int NucleotideReward => Identity.NucleotideReward;
+        public int DnaReward => Identity.DnaReward;
         public float KillRewardMultiplier => Vitality.KillRewardMultiplier;
 
         internal EnemyMergeGroup MergeGroup => Merge.Group;

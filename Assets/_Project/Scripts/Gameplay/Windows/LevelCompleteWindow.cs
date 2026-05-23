@@ -77,7 +77,7 @@ namespace _Project.Scripts.Gameplay.Windows
         {
             string key = currencyId switch
             {
-                CurrencyId.Nucleotides => "CURRENCY_NUCLEOTIDES",
+                CurrencyId.Dna => "CURRENCY_DNA",
                 CurrencyId.Isotopes => "CURRENCY_ISOTOPES",
                 _ => null
             };

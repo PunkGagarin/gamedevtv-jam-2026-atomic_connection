@@ -84,7 +84,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <OrbitMotion>k__BackingField: {fileID: 11400001}
-  <RadiusProvider>k__BackingField: {fileID: 11400002}
   <ColliderSet>k__BackingField: {fileID: 11400003}
   <Ownership>k__BackingField: {fileID: 11400005}
   <State>k__BackingField: {fileID: 11400006}
@@ -113,7 +112,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5492309989423665038}
   - component: {fileID: 7336826758906387770}
-  - component: {fileID: 5749908025656706172}
   m_Layer: 0
   m_Name: Square
   m_TagString: Untagged
@@ -195,20 +193,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!58 &5749908025656706172
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f4b3d151db44c5dad1e4659bf4bcaea, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
-  <Collider>k__BackingField: {fileID: 5800000}
-  <IncludeChildRenderers>k__BackingField: 1
 --- !u!114 &11400003
 MonoBehaviour:
   m_ObjectHideFlags: 0

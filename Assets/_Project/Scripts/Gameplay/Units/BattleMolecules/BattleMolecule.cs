@@ -1,4 +1,6 @@
 using System;
+using _Project.Scripts.Gameplay.Talents;
+using _Project.Scripts.Gameplay.Units.AtomCores;
 using _Project.Scripts.Gameplay.Units.BattleMolecules.Components;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
@@ -32,6 +34,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         [field: SerializeField] private BattleMoleculeConnectionVisual ConnectionVisual { get; set; }
         [field: SerializeField] private BattleMoleculeConnectionArrival ConnectionArrival { get; set; }
         [field: SerializeField] private PointHitArea HitArea { get; set; }
+        [field: SerializeField] private BattleMoleculeAimLineVisual AimLineVisual { get; set; }
+        [field: SerializeField] private MembraneMoleculeActivation MembraneActivation { get; set; }
 
         public bool IsBonded => Bond.IsBonded;
         public bool CanReceiveConnectionAtom => ConnectionAtomReceiver.CanReceiveAtom;
@@ -54,6 +58,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             ConnectionVisual = GetComponent<BattleMoleculeConnectionVisual>();
             ConnectionArrival = GetComponent<BattleMoleculeConnectionArrival>();
             HitArea = GetComponent<PointHitArea>();
+            AimLineVisual = GetComponent<BattleMoleculeAimLineVisual>();
+            MembraneActivation = GetComponent<MembraneMoleculeActivation>();
         }
 
         public void Configure(BattleMoleculeConfig config, int atomsRequired, int bondAtomsRequired)
@@ -66,10 +72,17 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             CoreLink.Configure(coreTransform, config);
         }
 
+        public void ConfigureCoreInteraction(AtomCore core, BattleMoleculeConfig config, ITalentService talentService)
+        {
+            MembraneActivation?.Configure(core, config, talentService);
+        }
+
         public void Tick(float deltaTime)
         {
             AtomOrbit.Tick(deltaTime);
             CoreLink.Tick(deltaTime);
+            AimLineVisual?.Tick(deltaTime);
+            MembraneActivation?.Tick(deltaTime);
         }
 
         public bool TryReceiveConnectionAtom(FreeAtom atom)

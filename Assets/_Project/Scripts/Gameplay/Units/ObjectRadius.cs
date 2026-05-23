@@ -37,19 +37,6 @@ namespace _Project.Scripts.Gameplay.Units
             _isDirty = true;
         }
 
-        public static float RadiusOf(Transform target)
-        {
-            if (target == null)
-                return 0f;
-
-            ObjectRadius radius = target.GetComponent<ObjectRadius>();
-            if (radius != null)
-                return radius.Radius;
-
-            Collider2D col = target.GetComponent<Collider2D>();
-            return col != null ? RadiusFromBounds(target, col.bounds) : 0f;
-        }
-
         private void RefreshIfDirty()
         {
             if (!_isDirty && HasTransformGeometryChanged())

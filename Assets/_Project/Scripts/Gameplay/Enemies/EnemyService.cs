@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using _Project.Scripts.Gameplay.Common.Physics;
 using _Project.Scripts.Gameplay.Common.Random;
 using _Project.Scripts.Gameplay.Common.Time;
 using _Project.Scripts.Gameplay.Enemies.Components;
@@ -38,6 +39,7 @@ namespace _Project.Scripts.Gameplay.Enemies
         [Inject] private ILevelSelectionService _levelSelectionService;
         [Inject] private IRandomService _random;
         [Inject] private ITimeService _time;
+        [Inject] private IPhysicsService _physicsService;
         [Inject] private IEnemyKillRewardService _killRewardService;
 
         public event Action BossKilled;
@@ -460,6 +462,16 @@ namespace _Project.Scripts.Gameplay.Enemies
                 _activeEnemies[i].TickRuntimeBehaviors(deltaTime);
 
             TickMergeLinks(deltaTime);
+
+            TickCoreCollisions();
+        }
+
+        private void TickCoreCollisions()
+        {
+            if (_activeEnemies.Count == 0)
+                return;
+
+            _physicsService?.SyncTransforms();
 
             for (int i = _activeEnemies.Count - 1; i >= 0; i--)
                 _activeEnemies[i].TickCoreCollision();

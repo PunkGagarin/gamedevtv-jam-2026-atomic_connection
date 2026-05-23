@@ -1,5 +1,6 @@
 using UnityEngine;
 using _Project.Scripts.Gameplay.Talents;
+using _Project.Scripts.Gameplay.Units.AtomCores;
 using _Project.Scripts.Gameplay.Units.BattleMolecules;
 using _Project.Scripts.Gameplay.UI;
 using _Project.Scripts.Gameplay.Units.AtomCores.Components;
@@ -8,7 +9,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
     [RequireComponent(typeof(BattleMoleculeCharge))]
     [RequireComponent(typeof(BattleMoleculeChargeConsumption))]
-    public class MembraneMoleculeActivation : MonoBehaviour, IBattleMoleculeRuntimeBehavior
+    public class MembraneMoleculeActivation : MonoBehaviour
     {
         [field: SerializeField] private BattleMoleculeCharge Charge { get; set; }
         [field: SerializeField] private BattleMoleculeChargeConsumption ChargeConsumption { get; set; }
@@ -41,18 +42,18 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
                 Charge.Charged -= ActivateMembrane;
         }
 
-        public void Configure(BattleMoleculeRuntimeContext context)
+        public void Configure(AtomCore core, BattleMoleculeConfig config, ITalentService talentService)
         {
-            _coreMembrane = context.Core != null ? context.Core.GetComponent<AtomCoreShield>() : null;
+            _coreMembrane = core != null ? core.GetComponent<AtomCoreShield>() : null;
 
-            float durationBonus = context.BonusOf(TalentType.MembraneMoleculeDuration);
+            float durationBonus = talentService != null ? talentService.BonusOf(TalentType.MembraneMoleculeDuration) : 0f;
 
-            _duration = context.Config != null
-                ? Mathf.Max(0.01f, context.Config.MembraneDurationSeconds + durationBonus)
+            _duration = config != null
+                ? Mathf.Max(0.01f, config.MembraneDurationSeconds + durationBonus)
                 : 0.01f;
 
-            _secondsLostPerDamage = context.Config != null
-                ? Mathf.Max(0f, context.Config.MembraneSecondsLostPerDamage)
+            _secondsLostPerDamage = config != null
+                ? Mathf.Max(0f, config.MembraneSecondsLostPerDamage)
                 : 0f;
         }
 

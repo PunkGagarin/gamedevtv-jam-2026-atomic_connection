@@ -100,6 +100,7 @@ MonoBehaviour:
   <RuntimeBehaviors>k__BackingField: {fileID: 11400023}
   <Lifecycle>k__BackingField: {fileID: 11400024}
   <Movement>k__BackingField: {fileID: 11400002}
+  <Knockback>k__BackingField: {fileID: 11400025}
   <CoreCollision>k__BackingField: {fileID: 11400004}
 --- !u!114 &11400001
 MonoBehaviour:

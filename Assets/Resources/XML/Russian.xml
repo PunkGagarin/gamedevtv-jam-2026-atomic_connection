@@ -66,6 +66,10 @@
   <text key="TALENT_MEMBRANE_MOLECULE_CHARGE_REDUCTION_DESC">Уменьшает число зарядов для активации мембраны.</text>
   <text key="TALENT_MEMBRANE_MOLECULE_DURATION_TITLE">Долгая мембрана</text>
   <text key="TALENT_MEMBRANE_MOLECULE_DURATION_DESC">Увеличивает длительность мембраны.</text>
+  <text key="TALENT_MEMBRANE_MOLECULE_INTEGRITY_TITLE">Плотная мембрана</text>
+  <text key="TALENT_MEMBRANE_MOLECULE_INTEGRITY_DESC">Увеличивает прочность мембраны на 1 за уровень.</text>
+  <text key="TALENT_MEMBRANE_MOLECULE_COOLDOWN_REDUCTION_TITLE">Быстрая рекристаллизация</text>
+  <text key="TALENT_MEMBRANE_MOLECULE_COOLDOWN_REDUCTION_DESC">Уменьшает перезарядку мембраны на 20% за уровень.</text>
   <text key="TALENT_MEMBRANE_MOLECULE_AUTO_LOAD_TITLE">Заряд мембраны</text>
   <text key="TALENT_MEMBRANE_MOLECULE_AUTO_LOAD_DESC">Мембрана автоматически получает бесплатные заряды.</text>
   <text key="TALENT_SWARM_MOLECULE_TITLE">Роевая молекула</text>

@@ -11,6 +11,7 @@ namespace _Project.Scripts.Gameplay.Enemies
     [RequireComponent(typeof(EnemyRuntimeBehaviors))]
     [RequireComponent(typeof(EnemyLifecycle))]
     [RequireComponent(typeof(EnemyMovement))]
+    [RequireComponent(typeof(EnemyKnockback))]
     [RequireComponent(typeof(EnemyCoreCollision))]
     public class EnemyUnit : MonoBehaviour
     {
@@ -20,6 +21,7 @@ namespace _Project.Scripts.Gameplay.Enemies
         [field: SerializeField] private EnemyRuntimeBehaviors RuntimeBehaviors { get; set; }
         [field: SerializeField] private EnemyLifecycle Lifecycle { get; set; }
         [field: SerializeField] private EnemyMovement Movement { get; set; }
+        [field: SerializeField] private EnemyKnockback Knockback { get; set; }
         [field: SerializeField] private EnemyCoreCollision CoreCollision { get; set; }
 
         public EnemyId Id => Identity.Id;
@@ -66,6 +68,9 @@ namespace _Project.Scripts.Gameplay.Enemies
             if (Movement == null)
                 Movement = GetComponent<EnemyMovement>();
 
+            if (Knockback == null)
+                Knockback = GetComponent<EnemyKnockback>();
+
             if (CoreCollision == null)
                 CoreCollision = GetComponent<EnemyCoreCollision>();
         }
@@ -104,6 +109,11 @@ namespace _Project.Scripts.Gameplay.Enemies
             Movement?.Tick(deltaTime);
         }
 
+        public void TickKnockback(float deltaTime)
+        {
+            Knockback?.Tick(deltaTime);
+        }
+
         public void TickRuntimeBehaviors(float deltaTime)
         {
             RuntimeBehaviors.Tick(deltaTime);
@@ -127,6 +137,11 @@ namespace _Project.Scripts.Gameplay.Enemies
         public void TakeDamage(int amount, float killRewardMultiplier, bool isCritical)
         {
             Merge.TakeDamage(amount, killRewardMultiplier, isCritical);
+        }
+
+        public void PushFrom(Vector3 origin, float distance, float duration)
+        {
+            Knockback?.PushFrom(origin, distance, duration);
         }
 
         internal void AssignMergeGroup(EnemyMergeGroup mergeGroup)

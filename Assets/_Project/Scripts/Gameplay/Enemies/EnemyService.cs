@@ -63,6 +63,29 @@ namespace _Project.Scripts.Gameplay.Enemies
             _mergeEnemyService.TickMerge(deltaTime);
         }
 
+        public int PushEnemiesFrom(Vector3 origin, float radius, float distance, float duration)
+        {
+            if (radius <= 0f || distance <= 0f)
+                return 0;
+
+            float radiusSqr = radius * radius;
+            int pushedCount = 0;
+
+            foreach (EnemyUnit enemy in _activeEnemies)
+            {
+                if (enemy == null || !enemy.IsAlive || enemy.Id == EnemyId.Boss)
+                    continue;
+
+                if ((enemy.transform.position - origin).sqrMagnitude > radiusSqr)
+                    continue;
+
+                enemy.PushFrom(origin, distance, duration);
+                pushedCount++;
+            }
+
+            return pushedCount;
+        }
+
         public void Cleanup()
         {
             UnsubscribeFromActiveEnemies();
@@ -154,6 +177,9 @@ namespace _Project.Scripts.Gameplay.Enemies
         {
             for (int i = _activeEnemies.Count - 1; i >= 0; i--)
                 _activeEnemies[i].TickMovement(deltaTime);
+
+            for (int i = _activeEnemies.Count - 1; i >= 0; i--)
+                _activeEnemies[i].TickKnockback(deltaTime);
 
             for (int i = _activeEnemies.Count - 1; i >= 0; i--)
                 _activeEnemies[i].TickRuntimeBehaviors(deltaTime);

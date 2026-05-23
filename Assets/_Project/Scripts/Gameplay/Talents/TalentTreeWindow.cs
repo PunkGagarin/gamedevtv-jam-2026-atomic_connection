@@ -8,6 +8,7 @@ using Zenject;
 using DG.Tweening;
 using _Project.Scripts.Audio.Domain;
 using _Project.Scripts.Gameplay.Currencies;
+using _Project.Scripts.Gameplay.CurrencyDrops;
 using _Project.Scripts.Gameplay.Windows;
 using _Project.Scripts.GameplayData;
 using _Project.Scripts.Localization;
@@ -36,6 +37,7 @@ namespace _Project.Scripts.Gameplay.Talents
 
         [Inject] private ITalentService _talentService;
         [Inject] private ICurrencyService _currencyService;
+        [Inject] private CurrencyPickupConfig _currencyPickupConfig;
         [Inject] private IWindowService _windowService;
         [Inject] private TalentTreeAnimationConfig _animationConfig;
         [Inject] private UiThemeConfig _themeConfig;
@@ -279,13 +281,18 @@ namespace _Project.Scripts.Gameplay.Talents
             bool wasVisible = _visibleNodes.Contains(talent.Id);
 
             SetTalentVisibility(talent.Id, shouldBeVisible);
+            CurrencyAmount price = talent.PriceForLevel(level);
+            Sprite priceIcon = _currencyPickupConfig != null
+                ? _currencyPickupConfig.IconFor(price.CurrencyId)
+                : null;
 
             _nodesById[talent.Id].Refresh(
                 talent,
                 level,
                 viewState,
                 Localize(talent.Title),
-                _currencyService.Format(talent.PriceForLevel(level)));
+                price,
+                priceIcon);
 
             if (ShouldAnimateReveal(talent.Id, shouldBeVisible, wasVisible, animateNewVisibleNodes))
             {

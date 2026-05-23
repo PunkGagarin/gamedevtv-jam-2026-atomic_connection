@@ -7,6 +7,7 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
     [RequireComponent(typeof(EnemyRuntimeBehaviors))]
     [RequireComponent(typeof(EnemyVitality))]
     [RequireComponent(typeof(EnemyMergeState))]
+    [RequireComponent(typeof(EnemyKnockback))]
     public class EnemyLifecycle : MonoBehaviour
     {
         [field: SerializeField] private EnemyMovement Movement { get; set; }
@@ -14,6 +15,7 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
         [field: SerializeField] private EnemyRuntimeBehaviors RuntimeBehaviors { get; set; }
         [field: SerializeField] private EnemyVitality Vitality { get; set; }
         [field: SerializeField] private EnemyMergeState Merge { get; set; }
+        [field: SerializeField] private EnemyKnockback Knockback { get; set; }
 
         private void Awake()
         {
@@ -31,6 +33,9 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
 
             if (Merge == null)
                 Merge = GetComponent<EnemyMergeState>();
+
+            if (Knockback == null)
+                Knockback = GetComponent<EnemyKnockback>();
         }
 
         public void PrepareForSpawn()
@@ -50,6 +55,7 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
         {
             Merge.ClearGroup();
             Movement.Clear();
+            Knockback.Clear();
             CoreCollision.Clear();
             RuntimeBehaviors.Clear();
         }

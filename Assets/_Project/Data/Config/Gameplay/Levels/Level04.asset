@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe7035acdd4548e180a3a83a80dd6889, type: 3}
   m_Name: Level04
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Levels.LevelDefinition
-  <LevelNumber>k__BackingField: 3
+  <LevelNumber>k__BackingField: 4
   <DurationSeconds>k__BackingField: 40
   <OffscreenSpawnPadding>k__BackingField: 1
   <RewardCurrency>k__BackingField: 1

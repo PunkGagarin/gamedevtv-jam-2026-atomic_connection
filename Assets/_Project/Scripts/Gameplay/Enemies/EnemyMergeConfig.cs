@@ -13,11 +13,11 @@ namespace _Project.Scripts.Gameplay.Enemies
         [field: SerializeField, Min(0.01f)] public float MergeCheckIntervalSeconds { get; private set; } = 0.5f;
         [field: SerializeField] public List<EnemyId> MergeExcludedEnemyIds { get; private set; } = new() { EnemyId.Boss };
 
-        [field: Header("Link View")]
+        [field: Header("Link Visual")]
         [field: SerializeField, Min(0f)] public float MergeLinkWidth { get; private set; } = 0.12f;
         [field: SerializeField] public float MergeLinkZOffset { get; private set; } = 0.05f;
         [field: SerializeField, Min(0)] public int MergeLinkIntermediatePointCount { get; private set; } = 5;
-        [field: SerializeField] public string MergeLinkViewResourcePath { get; private set; } = "Gameplay/Enemies/EnemyMergeLinkView";
+        [field: SerializeField] public string MergeLinkVisualResourcePath { get; private set; } = "Gameplay/Enemies/EnemyMergeLinkVisual";
 
         [field: Header("Tether Motion")]
         [field: SerializeField, Min(0f)] public float MergeTetherMinimumDistance { get; private set; } = 2.32f;

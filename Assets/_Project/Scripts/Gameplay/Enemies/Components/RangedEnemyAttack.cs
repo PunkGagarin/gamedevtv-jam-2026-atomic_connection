@@ -1,17 +1,13 @@
-using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
-using _Project.Scripts.Gameplay.Level;
+using _Project.Scripts.Gameplay.Enemies;
 using _Project.Scripts.Gameplay.Units.AtomCores;
-using _Project.Scripts.Infrastructure.AssetManagement;
 
 namespace _Project.Scripts.Gameplay.Enemies.Components
 {
     [RequireComponent(typeof(RangedEnemyStopMovement))]
     public class RangedEnemyAttack : MonoBehaviour, IEnemyRuntimeBehavior
     {
-        private const string PROJECTILE_CONTAINER_NAME = "EnemyProjectiles";
-
         [field: SerializeField] private Transform TelegraphVisualRoot { get; set; }
         [field: SerializeField] private string ProjectilePrefabResourcePath { get; set; } = "Gameplay/Enemies/EnemyProjectile";
         [field: SerializeField, Min(0.01f)] private float AttackInterval { get; set; } = 2.2f;
@@ -22,8 +18,6 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
         [field: SerializeField, Min(0)] private int ProjectileDamage { get; set; } = 1;
         [field: SerializeField, Min(0f)] private float ProjectileLifetime { get; set; } = 4f;
 
-        private readonly List<EnemyProjectile> _projectiles = new();
-
         private AtomCore _target;
         private Vector3 _baseTelegraphScale;
         private float _timeToAttack;
@@ -31,9 +25,7 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
         private bool _isTelegraphing;
         private RangedEnemyStopMovement _stopMovement;
 
-        [Inject] private IAssetProvider _assetProvider;
-        [Inject] private IGameplayRuntimeHierarchy _runtimeHierarchy;
-        [Inject] private IInstantiator _instantiator;
+        [Inject] private IEnemyProjectileService _projectileService;
 
         private void Awake()
         {
@@ -46,13 +38,13 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
 
         private void OnDisable()
         {
-            CleanupProjectiles();
+            _projectileService?.CleanupOwner(this);
             ResetTelegraph();
         }
 
         private void OnDestroy()
         {
-            CleanupProjectiles();
+            _projectileService?.CleanupOwner(this);
         }
 
         public void Configure(Transform target)
@@ -64,8 +56,6 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
 
         public void Tick(float deltaTime)
         {
-            TickProjectiles(deltaTime);
-
             if (_target == null || !_target.IsAlive || deltaTime <= 0f)
                 return;
 
@@ -87,7 +77,7 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
         {
             _target = null;
             ResetAttackTimer(0f);
-            CleanupProjectiles();
+            _projectileService?.CleanupOwner(this);
             ResetTelegraph();
         }
 
@@ -127,47 +117,15 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
             if (direction.sqrMagnitude <= Mathf.Epsilon)
                 return;
 
-            EnemyProjectile prefab = _assetProvider.LoadAsset<EnemyProjectile>(ProjectilePrefabResourcePath);
-            if (prefab == null)
-            {
-                Debug.LogError($"Enemy projectile prefab is missing at Resources path '{ProjectilePrefabResourcePath}'.");
-                return;
-            }
-
-            EnemyProjectile projectile = _instantiator.InstantiatePrefabForComponent<EnemyProjectile>(
-                prefab,
+            _projectileService?.Shoot(new EnemyProjectileShot(
+                this,
+                ProjectilePrefabResourcePath,
                 transform.position,
-                Quaternion.identity,
-                _runtimeHierarchy.GetOrCreateContainer(PROJECTILE_CONTAINER_NAME));
-
-            if (projectile.Launch(_target, direction, ProjectileSpeed, ProjectileDamage, ProjectileLifetime))
-                _projectiles.Add(projectile);
-        }
-
-        private void TickProjectiles(float deltaTime)
-        {
-            for (int i = _projectiles.Count - 1; i >= 0; i--)
-            {
-                EnemyProjectile projectile = _projectiles[i];
-                if (projectile == null || !projectile.IsActive)
-                {
-                    _projectiles.RemoveAt(i);
-                    continue;
-                }
-
-                projectile.Tick(deltaTime);
-            }
-        }
-
-        private void CleanupProjectiles()
-        {
-            foreach (EnemyProjectile projectile in _projectiles)
-            {
-                if (projectile != null)
-                    projectile.DestroySelf();
-            }
-
-            _projectiles.Clear();
+                _target,
+                direction,
+                ProjectileSpeed,
+                ProjectileDamage,
+                ProjectileLifetime));
         }
 
         private void UpdateTelegraphScale()

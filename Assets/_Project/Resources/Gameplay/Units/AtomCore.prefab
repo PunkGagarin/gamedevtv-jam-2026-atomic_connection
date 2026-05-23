@@ -20,6 +20,11 @@ GameObject:
   - component: {fileID: 11400007}
   - component: {fileID: 11400008}
   - component: {fileID: 11400009}
+  - component: {fileID: 11400010}
+  - component: {fileID: 11400011}
+  - component: {fileID: 11400012}
+  - component: {fileID: 11400013}
+  - component: {fileID: 11400014}
   m_Layer: 0
   m_Name: AtomCore
   m_TagString: Untagged
@@ -59,12 +64,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0de8b0430c494e50a395845a4d9fa7a3, type: 3}
   m_Name:
   m_EditorClassIdentifier:
-  <OwnedAtoms>k__BackingField: {fileID: 11400001}
+  <AtomReceiver>k__BackingField: {fileID: 11400012}
   <AtomOrbitLayout>k__BackingField: {fileID: 11400007}
-  <ProductionProgress>k__BackingField: {fileID: 11400002}
-  <Health>k__BackingField: {fileID: 11400003}
+  <AtomOrbit>k__BackingField: {fileID: 11400010}
+  <Health>k__BackingField: {fileID: 11400011}
   <ClickInteraction>k__BackingField: {fileID: 11400005}
-  <Shield>k__BackingField: {fileID: 11400009}
 --- !u!58 &5800000
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -165,6 +169,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7c9b2d6e0f34b768de4e7deed8c23ad, type: 3}
   m_Name:
   m_EditorClassIdentifier:
+  <ProductionProgress>k__BackingField: {fileID: 11400002}
+  <HitArea>k__BackingField: {fileID: 11400014}
 --- !u!114 &11400008
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -203,6 +209,74 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier:
   <Icon>k__BackingField: {fileID: 9100000000000000013}
+--- !u!114 &11400010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0848642b02ce4cc19ca6a43de250662c, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  <OwnedAtoms>k__BackingField: {fileID: 11400001}
+--- !u!114 &11400011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc994538550c4c18810ec2dcd7c3071d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  <Health>k__BackingField: {fileID: 11400003}
+  <Shield>k__BackingField: {fileID: 11400009}
+--- !u!114 &11400012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68bccc33562a4ef9a8fadfd312a205ce, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  <OwnedAtoms>k__BackingField: {fileID: 11400001}
+  <OwnerKind>k__BackingField: 1
+--- !u!114 &11400013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f4b3d151db44c5dad1e4659bf4bcaea, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  <Collider>k__BackingField: {fileID: 5800000}
+  <IncludeChildRenderers>k__BackingField: 0
+--- !u!114 &11400014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5d661c8b0d343718ef261950c2ebb07, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  <Collider>k__BackingField: {fileID: 5800000}
 --- !u!1 &9100000000000000011
 GameObject:
   m_ObjectHideFlags: 0

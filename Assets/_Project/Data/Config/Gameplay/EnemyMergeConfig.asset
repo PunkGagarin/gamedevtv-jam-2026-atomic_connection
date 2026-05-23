@@ -20,7 +20,7 @@ MonoBehaviour:
   <MergeLinkWidth>k__BackingField: 0.12
   <MergeLinkZOffset>k__BackingField: 0.05
   <MergeLinkIntermediatePointCount>k__BackingField: 5
-  <MergeLinkViewResourcePath>k__BackingField: Gameplay/Enemies/EnemyMergeLinkView
+  <MergeLinkVisualResourcePath>k__BackingField: Gameplay/Enemies/EnemyMergeLinkVisual
   <MergeTetherMinimumDistance>k__BackingField: 2.32
   <MergeTetherPreferredDistance>k__BackingField: 2.8
   <MergeTetherPullStrength>k__BackingField: 5.5

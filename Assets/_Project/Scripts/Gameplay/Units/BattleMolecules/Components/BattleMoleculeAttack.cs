@@ -9,19 +9,28 @@ using Zenject;
 namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
     [RequireComponent(typeof(BattleMoleculeShotQueue))]
-    [RequireComponent(typeof(BattleMoleculeAimLineView))]
+    [RequireComponent(typeof(BattleMoleculeAimLineVisual))]
     public abstract class BattleMoleculeAttack : MonoBehaviour
     {
         private static readonly RaycastHit2D[] ShotHits = new RaycastHit2D[64];
 
+        private readonly List<EnemyHit> _enemyHits = new();
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStaticState()
+        {
+            System.Array.Clear(ShotHits, 0, ShotHits.Length);
+        }
+
         [field: SerializeField] private BattleMoleculeShotQueue ShotQueue { get; set; }
-        [field: SerializeField] private BattleMoleculeAimLineView AimLine { get; set; }
+        [field: SerializeField] private BattleMoleculeAimLineVisual AimLineVisual { get; set; }
 
         [Inject] private IPhysicsService _physicsService;
         [Inject] protected BattleMoleculeConfig Config;
         [Inject] protected ITalentService TalentService;
 
-        protected BattleMoleculeAimLineView AimLineView => AimLine;
+        protected BattleMoleculeAimLineVisual AimLine => AimLineVisual;
+        protected List<EnemyHit> EnemyHits => _enemyHits;
         protected abstract int BaseShotDamage { get; }
         protected abstract TalentType DamageTalentType { get; }
 
@@ -30,8 +39,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             if (ShotQueue == null)
                 ShotQueue = GetComponent<BattleMoleculeShotQueue>();
 
-            if (AimLine == null)
-                AimLine = GetComponent<BattleMoleculeAimLineView>();
+            if (AimLineVisual == null)
+                AimLineVisual = GetComponent<BattleMoleculeAimLineVisual>();
         }
 
         protected virtual void OnEnable()
@@ -44,6 +53,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         {
             if (ShotQueue != null)
                 ShotQueue.ShotRequested -= ResolveShot;
+
+            _enemyHits.Clear();
         }
 
         protected abstract void ResolveShot(BattleMoleculeShotRequest request);
@@ -85,6 +96,36 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         {
             Debug.DrawLine(origin, target.transform.position, Color.yellow, 0.5f);
             target.TakeDamage(CurrentShotDamage());
+        }
+
+        protected int DamageEnemies(
+            Vector3 origin,
+            int maxTargets,
+            HashSet<EnemyUnit> ignoredTargets,
+            out Vector3? lastDamagedHitPoint)
+        {
+            int damagedTargets = 0;
+            lastDamagedHitPoint = null;
+
+            if (maxTargets <= 0)
+                return damagedTargets;
+
+            foreach (EnemyHit hit in _enemyHits)
+            {
+                EnemyUnit target = hit.Enemy;
+                if (target == null || (ignoredTargets != null && ignoredTargets.Contains(target)))
+                    continue;
+
+                lastDamagedHitPoint = hit.Point;
+                Damage(target, origin);
+                ignoredTargets?.Add(target);
+                damagedTargets++;
+
+                if (damagedTargets >= maxTargets)
+                    return damagedTargets;
+            }
+
+            return damagedTargets;
         }
 
         private static bool ContainsEnemy(List<EnemyHit> enemyHits, EnemyUnit enemy)

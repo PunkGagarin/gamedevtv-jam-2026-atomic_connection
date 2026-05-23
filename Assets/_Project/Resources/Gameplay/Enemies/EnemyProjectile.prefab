@@ -11,6 +11,13 @@ GameObject:
   - component: {fileID: 400000}
   - component: {fileID: 5800000}
   - component: {fileID: 11400000}
+  - component: {fileID: 11400001}
+  - component: {fileID: 11400002}
+  - component: {fileID: 11400003}
+  - component: {fileID: 11400004}
+  - component: {fileID: 11400005}
+  - component: {fileID: 11400006}
+  - component: {fileID: 11400007}
   m_Layer: 0
   m_Name: EnemyProjectile
   m_TagString: Untagged
@@ -80,10 +87,107 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2ed9d1f5ec2d47d7bdca114f0f45ead1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_Name:
+  m_EditorClassIdentifier:
+  <Runtime>k__BackingField: {fileID: 11400001}
+  <Launcher>k__BackingField: {fileID: 11400006}
+  <Motion>k__BackingField: {fileID: 11400002}
+  <Lifetime>k__BackingField: {fileID: 11400003}
+  <TargetHit>k__BackingField: {fileID: 11400004}
+  <Impact>k__BackingField: {fileID: 11400007}
+--- !u!114 &11400001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c18c69cf65d744e48993fe7107bf531d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+--- !u!114 &11400002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a31927293b3f4d31b75dcb8e654499ef, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+--- !u!114 &11400003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e36cd419321b4be58b88da8ddc928deb, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+--- !u!114 &11400004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ea2919c49844f6bb6ff909f579a4ccd, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
   <Collider>k__BackingField: {fileID: 5800000}
   <HitRadius>k__BackingField: 0.35
+--- !u!114 &11400005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49b8f2e2962749199110ec461f6e3ac3, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+--- !u!114 &11400006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3a518c3f78d4c52ac97eb6f69961b31, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  <Runtime>k__BackingField: {fileID: 11400001}
+  <Motion>k__BackingField: {fileID: 11400002}
+  <Lifetime>k__BackingField: {fileID: 11400003}
+  <TargetHit>k__BackingField: {fileID: 11400004}
+  <Damage>k__BackingField: {fileID: 11400005}
+--- !u!114 &11400007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d5a68f9b2da49a7bc57552f46862f56, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  <TargetHit>k__BackingField: {fileID: 11400004}
+  <Damage>k__BackingField: {fileID: 11400005}
 --- !u!1 &100001
 GameObject:
   m_ObjectHideFlags: 0

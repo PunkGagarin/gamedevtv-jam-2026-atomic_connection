@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Units.BattleMolecules.Components;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
@@ -8,225 +7,95 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 {
     [RequireComponent(typeof(OwnedAtoms))]
     [RequireComponent(typeof(OwnedAtomOrbitLayout))]
+    [RequireComponent(typeof(ObjectRadius))]
+    [RequireComponent(typeof(PointHitArea))]
+    [RequireComponent(typeof(BattleMoleculeSetup))]
     [RequireComponent(typeof(BattleMoleculeCharge))]
+    [RequireComponent(typeof(BattleMoleculeChargeConsumption))]
     [RequireComponent(typeof(BattleMoleculeBond))]
+    [RequireComponent(typeof(BattleMoleculeBondEventRelay))]
+    [RequireComponent(typeof(BattleMoleculeConnectionAtomReceiver))]
     [RequireComponent(typeof(BattleMoleculeAtomReceiver))]
-    [RequireComponent(typeof(BattleMoleculeAtomOrbit))]
+    [RequireComponent(typeof(AtomOrbit))]
     [RequireComponent(typeof(BattleMoleculeCoreOrbit))]
-    [RequireComponent(typeof(BattleMoleculeConnectionView))]
+    [RequireComponent(typeof(BattleMoleculeCoreLink))]
+    [RequireComponent(typeof(BattleMoleculeConnectionVisual))]
+    [RequireComponent(typeof(BattleMoleculeConnectionArrival))]
     [RequireComponent(typeof(BattleMoleculeShotQueue))]
     public class BattleMolecule : MonoBehaviour
     {
-        private readonly List<SpriteRenderer> _spriteRenderers = new();
-
-        [field: SerializeField] private OwnedAtoms OwnedAtoms { get; set; }
-        [field: SerializeField] private OwnedAtomOrbitLayout AtomOrbitLayout { get; set; }
-        [field: SerializeField] private BattleMoleculeCharge Charge { get; set; }
+        [field: SerializeField] private BattleMoleculeSetup Setup { get; set; }
         [field: SerializeField] private BattleMoleculeBond Bond { get; set; }
-        [field: SerializeField] private BattleMoleculeAtomReceiver AtomReceiver { get; set; }
-        [field: SerializeField] private BattleMoleculeAtomOrbit AtomOrbit { get; set; }
-        [field: SerializeField] private BattleMoleculeCoreOrbit CoreOrbit { get; set; }
-        [field: SerializeField] private BattleMoleculeConnectionView ConnectionView { get; set; }
-        [field: SerializeField] private BattleMoleculeShotQueue ShotQueue { get; set; }
-        [field: SerializeField] public Collider2D CollisionCollider { get; private set; }
+        [field: SerializeField] private BattleMoleculeBondEventRelay BondEvents { get; set; }
+        [field: SerializeField] private BattleMoleculeConnectionAtomReceiver ConnectionAtomReceiver { get; set; }
+        [field: SerializeField] private AtomOrbit AtomOrbit { get; set; }
+        [field: SerializeField] private BattleMoleculeCoreLink CoreLink { get; set; }
+        [field: SerializeField] private BattleMoleculeConnectionVisual ConnectionVisual { get; set; }
+        [field: SerializeField] private BattleMoleculeConnectionArrival ConnectionArrival { get; set; }
+        [field: SerializeField] private PointHitArea HitArea { get; set; }
 
-        private float _atomOrbitArrivalRadius;
+        public bool IsBonded => Bond.IsBonded;
+        public bool CanReceiveConnectionAtom => ConnectionAtomReceiver.CanReceiveAtom;
+        public int ConnectionAtomsRemaining => ConnectionAtomReceiver.RemainingAtoms;
 
-        public BattleMoleculeKind Kind { get; private set; } = BattleMoleculeKind.Stinger;
-        public bool IsBonded => Bond != null && Bond.IsBonded;
-        public bool CanReceiveBondAtom => Bond != null && Bond.CanReceiveAtom;
-        public bool CanReceiveConnectionAtom => IsBonded
-                                                && AtomReceiver != null
-                                                && AtomReceiver.CanReceiveConnectionAtom;
-        public int ConnectionAtomsRemaining => IsBonded && AtomReceiver != null
-            ? AtomReceiver.ConnectionAtomsRemaining
-            : 0;
-
-        public event Action<BattleMolecule> Bonded;
+        public event Action<BattleMolecule> Bonded
+        {
+            add => BondEvents.Bonded += value;
+            remove => BondEvents.Bonded -= value;
+        }
 
         private void Awake()
         {
-            if (OwnedAtoms == null)
-                OwnedAtoms = GetComponent<OwnedAtoms>();
-
-            if (AtomOrbitLayout == null)
-                AtomOrbitLayout = GetComponent<OwnedAtomOrbitLayout>();
-
-            if (Charge == null)
-                Charge = GetComponent<BattleMoleculeCharge>();
-
-            if (Bond == null)
-                Bond = GetComponent<BattleMoleculeBond>();
-
-            if (Bond == null)
-                Bond = gameObject.AddComponent<BattleMoleculeBond>();
-
-            if (AtomReceiver == null)
-                AtomReceiver = GetComponent<BattleMoleculeAtomReceiver>();
-
-            if (AtomOrbit == null)
-                AtomOrbit = GetComponent<BattleMoleculeAtomOrbit>();
-
-            if (CoreOrbit == null)
-                CoreOrbit = GetComponent<BattleMoleculeCoreOrbit>();
-
-            if (ConnectionView == null)
-                ConnectionView = GetComponent<BattleMoleculeConnectionView>();
-
-            if (ConnectionView == null)
-                ConnectionView = gameObject.AddComponent<BattleMoleculeConnectionView>();
-
-            if (ShotQueue == null)
-                ShotQueue = GetComponent<BattleMoleculeShotQueue>();
-
-            if (CollisionCollider == null)
-                CollisionCollider = GetComponent<Collider2D>();
-
-            GetComponentsInChildren(true, _spriteRenderers);
+            Setup = GetComponent<BattleMoleculeSetup>();
+            Bond = GetComponent<BattleMoleculeBond>();
+            BondEvents = GetComponent<BattleMoleculeBondEventRelay>();
+            ConnectionAtomReceiver = GetComponent<BattleMoleculeConnectionAtomReceiver>();
+            AtomOrbit = GetComponent<AtomOrbit>();
+            CoreLink = GetComponent<BattleMoleculeCoreLink>();
+            ConnectionVisual = GetComponent<BattleMoleculeConnectionVisual>();
+            ConnectionArrival = GetComponent<BattleMoleculeConnectionArrival>();
+            HitArea = GetComponent<PointHitArea>();
         }
 
-        private void OnEnable()
+        public void Configure(BattleMoleculeConfig config, int atomsRequired, int bondAtomsRequired)
         {
-            if (Bond != null)
-                Bond.Bonded += OnBonded;
-        }
-
-        private void OnDisable()
-        {
-            if (Bond != null)
-                Bond.Bonded -= OnBonded;
-        }
-
-        public void Configure(BattleMoleculeConfig config, int atomsRequired, int bondAtomsRequired, BattleMoleculeKind kind)
-        {
-            if (config == null)
-                return;
-
-            Kind = kind;
-            Bond.Configure(bondAtomsRequired);
-            Charge.Configure(atomsRequired);
-            _atomOrbitArrivalRadius = Mathf.Max(0f, config.AtomsPosCircleRadius);
-            AtomOrbitLayout?.ConfigureFixedRadius(FreeAtomOwnerKind.BattleMolecule, config.AtomsPosCircleRadius);
-            AtomOrbit.Configure(config.DepositedAtomsOrbitDegreesPerSecond);
-            ShotQueue?.Configure(config);
-            RefreshConnectionVisibility();
+            Setup.Configure(config, atomsRequired, bondAtomsRequired);
         }
 
         public void ConfigureCoreOrbit(Transform coreTransform, BattleMoleculeConfig config)
         {
-            if (config == null)
-                return;
-
-            CoreOrbit.Configure(coreTransform, config.CoreOrbitDegreesPerSecond);
-            ConnectionView.Configure(coreTransform, config);
-            RefreshConnectionVisibility();
+            CoreLink.Configure(coreTransform, config);
         }
 
         public void Tick(float deltaTime)
         {
             AtomOrbit.Tick(deltaTime);
-            CoreOrbit.Tick(deltaTime);
-            RefreshConnectionVisibility();
-            ConnectionView.Tick();
-        }
-
-        public bool TryAcceptBondAtom(FreeAtom atom)
-        {
-            return AtomReceiver != null && AtomReceiver.TryAcceptBondAtom(atom);
+            CoreLink.Tick(deltaTime);
         }
 
         public bool TryReceiveConnectionAtom(FreeAtom atom)
         {
-            return IsBonded && AtomReceiver != null && AtomReceiver.TryReceiveConnectionAtom(atom);
+            return ConnectionAtomReceiver.TryReceive(atom);
         }
 
         public bool ContainsPoint(Vector2 worldPosition)
         {
-            return CollisionCollider != null && CollisionCollider.OverlapPoint(worldPosition);
+            return HitArea.Contains(worldPosition);
         }
 
         public Vector3 GetConnectionArrivalPosition(Vector3 fromPosition, float incomingAtomRadius)
         {
-            float arrivalRadius = ConnectionArrivalRadius(incomingAtomRadius);
-
-            if (arrivalRadius <= 0f)
-                return transform.position;
-
-            Vector3 offset = fromPosition - transform.position;
-            offset.z = 0f;
-            if (offset.sqrMagnitude <= Mathf.Epsilon)
-                return transform.position;
-
-            return transform.position + offset.normalized * arrivalRadius;
+            return ConnectionArrival.PositionFrom(fromPosition, incomingAtomRadius);
         }
 
         public bool IsConnectionArrivalReached(Vector3 fromPosition, float incomingAtomRadius, float tolerance)
         {
-            float arrivalRadius = ConnectionArrivalRadius(incomingAtomRadius) + Mathf.Max(0f, tolerance);
-            if (arrivalRadius <= 0f)
-                return false;
-
-            Vector3 offset = fromPosition - transform.position;
-            offset.z = 0f;
-            return offset.sqrMagnitude <= arrivalRadius * arrivalRadius;
+            return ConnectionArrival.IsReached(fromPosition, incomingAtomRadius, tolerance);
         }
 
         public void SetActiveFeedVisual(bool isActive)
         {
-            if (ConnectionView == null)
-                return;
-
-            ConnectionView.SetActiveConnection(isActive);
-        }
-
-        private void OnBonded()
-        {
-            RefreshConnectionVisibility();
-            Bonded?.Invoke(this);
-        }
-
-        private void RefreshConnectionVisibility()
-        {
-            if (ConnectionView == null)
-                return;
-
-            ConnectionView.SetVisible(IsBonded);
-        }
-
-        private float ConnectionArrivalRadius(float incomingAtomRadius)
-        {
-            float visualArrivalRadius = VisualRadius() + Mathf.Max(0f, incomingAtomRadius);
-            return Mathf.Max(_atomOrbitArrivalRadius, visualArrivalRadius);
-        }
-
-        private float VisualRadius()
-        {
-            float radius = CollisionCollider != null
-                ? RadiusFromBounds(CollisionCollider.bounds)
-                : 0f;
-
-            foreach (SpriteRenderer spriteRenderer in _spriteRenderers)
-            {
-                if (spriteRenderer == null)
-                    continue;
-
-                radius = Mathf.Max(radius, RadiusFromBounds(spriteRenderer.bounds));
-            }
-
-            return radius;
-        }
-
-        private Vector3 CenterOffset(Bounds bounds)
-        {
-            Vector3 offset = bounds.center - transform.position;
-            offset.z = 0f;
-            return offset;
-        }
-
-        private float RadiusFromBounds(Bounds bounds)
-        {
-            Vector3 extents = bounds.extents;
-            return CenterOffset(bounds).magnitude + Mathf.Max(extents.x, extents.y);
+            ConnectionVisual.SetActiveConnection(isActive);
         }
     }
 }

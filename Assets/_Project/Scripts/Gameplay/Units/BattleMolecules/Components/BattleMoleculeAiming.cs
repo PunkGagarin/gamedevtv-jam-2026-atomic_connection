@@ -4,18 +4,17 @@ using UnityEngine;
 namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
     [RequireComponent(typeof(BattleMoleculeCharge))]
-    [RequireComponent(typeof(BattleMoleculeAimLineView))]
+    [RequireComponent(typeof(BattleMoleculeAimLineVisual))]
     [RequireComponent(typeof(BattleMoleculeShotQueue))]
     public class BattleMoleculeAiming : MonoBehaviour, IDraggable, IDragReleaseHandler
     {
         [field: SerializeField] protected BattleMoleculeCharge Charge { get; private set; }
-        [field: SerializeField] protected BattleMoleculeAimLineView AimLine { get; private set; }
+        [field: SerializeField] protected BattleMoleculeAimLineVisual AimLineVisual { get; private set; }
         [field: SerializeField] protected BattleMoleculeShotQueue ShotQueue { get; private set; }
 
         private bool _isAiming;
 
         protected bool IsAiming => _isAiming;
-        protected BattleMoleculeAimLineView AimLineView => AimLine;
         public bool CanStartDrag => Charge != null && Charge.IsCharged;
         public Transform Transform => transform;
 
@@ -24,8 +23,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             if (Charge == null)
                 Charge = GetComponent<BattleMoleculeCharge>();
 
-            if (AimLine == null)
-                AimLine = GetComponent<BattleMoleculeAimLineView>();
+            if (AimLineVisual == null)
+                AimLineVisual = GetComponent<BattleMoleculeAimLineVisual>();
 
             if (ShotQueue == null)
                 ShotQueue = GetComponent<BattleMoleculeShotQueue>();
@@ -34,7 +33,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         public virtual void OnDragStart()
         {
             _isAiming = true;
-            AimLine?.Show(CurrentAimOrigin());
+            AimLineVisual?.Show(CurrentAimOrigin());
             OnAimingStarted();
         }
 
@@ -46,7 +45,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             Vector3 origin = CurrentAimOrigin();
             Vector3 dragEnd = GetDragEnd(worldPosition);
 
-            AimLine?.SetSegment(origin, dragEnd);
+            AimLineVisual?.SetSegment(origin, dragEnd);
             OnAimingMoved(origin, dragEnd, GetShotDirection(worldPosition));
         }
 
@@ -75,7 +74,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         protected virtual void StopAiming()
         {
             _isAiming = false;
-            AimLine?.Hide();
+            AimLineVisual?.Hide();
             OnAimingStopped();
         }
 

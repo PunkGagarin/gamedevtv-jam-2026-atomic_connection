@@ -1,6 +1,11 @@
 using System;
+using _Project.Scripts.Gameplay.Cameras.Provider;
+using _Project.Scripts.Gameplay.Common.Random;
 using _Project.Scripts.Gameplay.Common.Time;
+using _Project.Scripts.Gameplay.Drag;
+using _Project.Scripts.Gameplay.Input.Service;
 using _Project.Scripts.Gameplay.Talents;
+using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
 using Zenject;
 
@@ -10,11 +15,17 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
     {
         private AtomCore _core;
         private bool _isStarted;
+        private bool _clickWasStartedOnCore;
 
+        [Inject] private ICameraProvider _cameraProvider;
+        [Inject] private IInputService _inputService;
+        [Inject] private IDragService _dragService;
+        [Inject] private IRandomService _random;
         [Inject] private ITimeService _time;
         [Inject] private AtomCoreConfig _config;
         [Inject] private ITalentService _talentService;
         [Inject] private IAtomCoreFactory _atomCoreFactory;
+        [Inject] private IFreeAtomFactory _freeAtomFactory;
 
         public Transform CurrentCoreTransform => _core != null ? _core.transform : null;
         public event Action CoreDied;
@@ -45,6 +56,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
             if (_core == null)
                 return;
 
+            TickCoreClickInput();
             _core.Tick(_time.DeltaTime);
         }
 
@@ -60,6 +72,45 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
             _isStarted = false;
             _atomCoreFactory.Cleanup();
             _core = null;
+        }
+
+        private void TickCoreClickInput()
+        {
+            if (_inputService.GetLeftMouseButtonDown())
+                TryStartPendingClick();
+
+            if (!_clickWasStartedOnCore || !_inputService.GetLeftMouseButtonUpRaw())
+                return;
+
+            bool shouldRegisterClick = _inputService.GetLeftMouseButtonUp() &&
+                                       (_dragService == null || !_dragService.DragWasStartedThisPress);
+
+            _clickWasStartedOnCore = false;
+
+            if (!shouldRegisterClick || !_core.RegisterAtomClick())
+                return;
+
+            CreateAtomForCore();
+        }
+
+        private void TryStartPendingClick()
+        {
+            _clickWasStartedOnCore = false;
+
+            Camera camera = _cameraProvider.MainCamera;
+            if (camera == null)
+                return;
+
+            if (_core.ContainsPoint(_inputService.GetWorldMousePosition()))
+                _clickWasStartedOnCore = true;
+        }
+
+        private void CreateAtomForCore()
+        {
+            Vector2 offset = RandomGeometry.PointInCircle(_random, _config.SpawnRadiusOffset);
+            Vector3 spawnPosition = _core.transform.position + new Vector3(offset.x, offset.y, 0f);
+            FreeAtom freeAtom = _freeAtomFactory.Create(spawnPosition, _core.transform);
+            _core.TakeGeneratedAtom(freeAtom);
         }
 
         private void OnTalentChanged()

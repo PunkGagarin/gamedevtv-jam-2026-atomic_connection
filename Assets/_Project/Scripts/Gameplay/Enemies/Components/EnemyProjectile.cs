@@ -1,84 +1,71 @@
-using UnityEngine;
 using _Project.Scripts.Gameplay.Units.AtomCores;
+using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Enemies.Components
 {
-    [RequireComponent(typeof(Collider2D))]
+    [RequireComponent(typeof(EnemyProjectileRuntime))]
+    [RequireComponent(typeof(EnemyProjectileLaunch))]
+    [RequireComponent(typeof(EnemyProjectileMotion))]
+    [RequireComponent(typeof(EnemyProjectileLifetime))]
+    [RequireComponent(typeof(EnemyProjectileTargetHit))]
+    [RequireComponent(typeof(EnemyProjectileImpact))]
     public class EnemyProjectile : MonoBehaviour
     {
-        [field: SerializeField] private Collider2D Collider { get; set; }
-        [field: SerializeField, Min(0f)] private float HitRadius { get; set; } = 0.35f;
+        [field: SerializeField] private EnemyProjectileRuntime Runtime { get; set; }
+        [field: SerializeField] private EnemyProjectileLaunch Launcher { get; set; }
+        [field: SerializeField] private EnemyProjectileMotion Motion { get; set; }
+        [field: SerializeField] private EnemyProjectileLifetime Lifetime { get; set; }
+        [field: SerializeField] private EnemyProjectileTargetHit TargetHit { get; set; }
+        [field: SerializeField] private EnemyProjectileImpact Impact { get; set; }
 
-        private AtomCore _target;
-        private Vector3 _direction;
-        private float _speed;
-        private float _lifetime;
-        private int _damage;
-
-        public bool IsActive { get; private set; }
+        public bool IsActive => Runtime.IsActive;
+        public bool HasLiveTarget => TargetHit.HasLiveTarget;
+        public bool IsExpired => Lifetime.IsExpired;
 
         private void Awake()
         {
-            if (Collider == null)
-                Collider = GetComponent<Collider2D>();
+            if (Runtime == null)
+                Runtime = GetComponent<EnemyProjectileRuntime>();
+
+            if (Launcher == null)
+                Launcher = GetComponent<EnemyProjectileLaunch>();
+
+            if (Motion == null)
+                Motion = GetComponent<EnemyProjectileMotion>();
+
+            if (Lifetime == null)
+                Lifetime = GetComponent<EnemyProjectileLifetime>();
+
+            if (TargetHit == null)
+                TargetHit = GetComponent<EnemyProjectileTargetHit>();
+
+            if (Impact == null)
+                Impact = GetComponent<EnemyProjectileImpact>();
         }
 
         public bool Launch(AtomCore target, Vector3 direction, float speed, int damage, float lifetime)
         {
-            _target = target;
-            _direction = direction.sqrMagnitude > Mathf.Epsilon ? direction.normalized : Vector3.zero;
-            _speed = Mathf.Max(0f, speed);
-            _damage = Mathf.Max(0, damage);
-            _lifetime = Mathf.Max(0f, lifetime);
-            IsActive = _target != null && _direction != Vector3.zero && _speed > 0f && _lifetime > 0f;
-
-            if (!IsActive)
-            {
-                DestroySelf();
-                return false;
-            }
-
-            if (Collider != null)
-                Collider.enabled = true;
-
-            return true;
+            return Launcher.Launch(target, direction, speed, damage, lifetime);
         }
 
-        public void Tick(float deltaTime)
+        public void TickLifetime(float deltaTime)
         {
-            if (!IsActive)
-                return;
+            Lifetime.Tick(deltaTime);
+        }
 
-            if (deltaTime <= 0f)
-                return;
+        public void TickMotion(float deltaTime)
+        {
+            Motion.Tick(deltaTime);
+        }
 
-            if (_target == null || !_target.IsAlive)
-            {
-                DestroySelf();
-                return;
-            }
-
-            _lifetime -= deltaTime;
-            transform.position += _direction * (_speed * deltaTime);
-
-            if (HasHitTarget())
-            {
-                _target.TakeDamage(_damage);
-                DestroySelf();
-                return;
-            }
-
-            if (_lifetime <= 0f)
-                DestroySelf();
+        public bool TryApplyImpact()
+        {
+            return Impact.TryApply(transform.position);
         }
 
         public void DestroySelf()
         {
-            IsActive = false;
-            Destroy(gameObject);
+            Runtime.DestroySelf();
         }
-
-        private bool HasHitTarget() =>
-            Vector2.Distance(transform.position, _target.transform.position) <= HitRadius;
     }
 }

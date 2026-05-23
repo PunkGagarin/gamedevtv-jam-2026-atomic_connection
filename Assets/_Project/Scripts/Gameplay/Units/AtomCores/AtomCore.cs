@@ -1,5 +1,4 @@
 using System;
-using _Project.Scripts.Gameplay.Common.Health;
 using _Project.Scripts.Gameplay.Units.AtomCores.Components;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
@@ -7,127 +6,82 @@ using UnityEngine;
 namespace _Project.Scripts.Gameplay.Units.AtomCores
 {
     [RequireComponent(typeof(OwnedAtoms))]
+    [RequireComponent(typeof(OwnedAtomReceiver))]
     [RequireComponent(typeof(OwnedAtomOrbitLayout))]
+    [RequireComponent(typeof(ObjectRadius))]
+    [RequireComponent(typeof(PointHitArea))]
+    [RequireComponent(typeof(AtomOrbit))]
     [RequireComponent(typeof(AtomProductionProgress))]
-    [RequireComponent(typeof(Health))]
+    [RequireComponent(typeof(AtomCoreHealth))]
     [RequireComponent(typeof(AtomCoreClickInteraction))]
     public class AtomCore : MonoBehaviour
     {
-        [field: SerializeField] public OwnedAtoms OwnedAtoms { get; private set; }
+        [field: SerializeField] private OwnedAtomReceiver AtomReceiver { get; set; }
         [field: SerializeField] private OwnedAtomOrbitLayout AtomOrbitLayout { get; set; }
-        [field: SerializeField] private AtomProductionProgress ProductionProgress { get; set; }
-        [field: SerializeField] private Health Health { get; set; }
+        [field: SerializeField] private AtomOrbit AtomOrbit { get; set; }
+        [field: SerializeField] private AtomCoreHealth Health { get; set; }
         [field: SerializeField] private AtomCoreClickInteraction ClickInteraction { get; set; }
-        [field: SerializeField] private AtomCoreShield Shield { get; set; }
 
-        private float _spawnRadiusOffset;
-        private float _atomOrbitDegreesPerSecond;
-        private float _orbitRadius;
-
-        public bool IsAlive => Health == null || Health.IsAlive;
+        public bool IsAlive => Health.IsAlive;
 
         public event Action Died
         {
-            add
-            {
-                if (Health != null)
-                    Health.Died += value;
-            }
-            remove
-            {
-                if (Health != null)
-                    Health.Died -= value;
-            }
+            add => Health.Died += value;
+            remove => Health.Died -= value;
         }
 
         private void Awake()
         {
-            if (OwnedAtoms == null)
-                OwnedAtoms = GetComponent<OwnedAtoms>();
-
-            if (AtomOrbitLayout == null)
-                AtomOrbitLayout = GetComponent<OwnedAtomOrbitLayout>();
-
-            if (ProductionProgress == null)
-                ProductionProgress = GetComponent<AtomProductionProgress>();
-
-            if (Health == null)
-                Health = GetComponent<Health>();
-
-            if (ClickInteraction == null)
-                ClickInteraction = GetComponent<AtomCoreClickInteraction>();
-
-            if (Shield == null)
-                Shield = GetComponent<AtomCoreShield>();
+            AtomReceiver = GetComponent<OwnedAtomReceiver>();
+            AtomOrbitLayout = GetComponent<OwnedAtomOrbitLayout>();
+            AtomOrbit = GetComponent<AtomOrbit>();
+            Health = GetComponent<AtomCoreHealth>();
+            ClickInteraction = GetComponent<AtomCoreClickInteraction>();
         }
 
         public void Configure(AtomCoreConfig config, int clicksRequired, int maxHealth)
         {
-            _spawnRadiusOffset = config.SpawnRadiusOffset;
-            _atomOrbitDegreesPerSecond = config.FreeAtomOrbitDegreesPerSecond;
-            _orbitRadius = GetColliderRadius(transform);
-
-            Health?.Configure(maxHealth);
-            ProductionProgress.Configure(clicksRequired);
-            AtomOrbitLayout?.ConfigureOwnerPlusAtomRadius(FreeAtomOwnerKind.Core, _orbitRadius);
-        }
-
-        public bool RegisterAtomClick()
-        {
-            return ProductionProgress.RegisterClick();
-        }
-
-        public Vector3 GetAtomSpawnPosition(float angle, float radius01)
-        {
-            Vector3 offset = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0) * (radius01 * _spawnRadiusOffset);
-            return transform.position + offset;
+            Health.Configure(maxHealth);
+            AtomReceiver.Configure(FreeAtomOwnerKind.Core);
+            AtomOrbitLayout.ConfigureOwnerPlusAtomRadiusFromOwnerCollider(FreeAtomOwnerKind.Core);
+            AtomOrbit.Configure(config.FreeAtomOrbitDegreesPerSecond);
+            ClickInteraction.Configure(clicksRequired);
         }
 
         public void TakeGeneratedAtom(FreeAtom freeAtom)
         {
-            if (freeAtom == null || freeAtom.OrbitMotion == null)
-                return;
-
-            OwnedAtoms.TakeOwnership(freeAtom, FreeAtomOwnerKind.Core);
+            AtomReceiver.TryTake(freeAtom);
         }
 
         public void Tick(float deltaTime)
         {
-            ClickInteraction?.Tick(deltaTime);
-            Shield?.Tick(deltaTime);
+            Health.Tick(deltaTime);
+            AtomOrbit.Tick(deltaTime);
+        }
 
-            float angleDelta = _atomOrbitDegreesPerSecond * Mathf.Deg2Rad * deltaTime;
-            OwnedAtoms.TickOrbit(angleDelta);
+        public bool ContainsPoint(Vector2 worldPosition)
+        {
+            return ClickInteraction.Contains(worldPosition);
+        }
+
+        public bool RegisterAtomClick()
+        {
+            return ClickInteraction.RegisterClick();
         }
 
         public void TakeDamage(int amount)
         {
-            if (Shield != null && Shield.TryAbsorbDamage(amount))
-                return;
-
-            Health?.TakeDamage(amount);
-            AtomCoreEventBus.RiseOnDamageEvent(amount);
+            Health.TakeDamage(amount);
         }
 
         public void Kill()
         {
-            Health?.Kill();
+            Health.Kill();
         }
 
         public void CleanupAtoms()
         {
-            OwnedAtoms.ReleaseAll();
-        }
-
-        private float GetColliderRadius(Transform target)
-        {
-            Collider2D col = target.GetComponent<Collider2D>();
-
-            if (col == null)
-                return 0;
-
-            Vector3 extents = col.bounds.extents;
-            return Mathf.Max(extents.x, extents.y);
+            AtomReceiver.ReleaseAll();
         }
     }
 }

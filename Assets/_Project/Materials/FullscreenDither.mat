@@ -24,7 +24,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _Pattern:
-        m_Texture: {fileID: 2800000, guid: 0421abd96b12d584bbf40382c3b65e36, type: 3}
+        m_Texture: {fileID: 2800000, guid: c0ddce2277d45444e8b87214dcaa6302, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Texture2D:
@@ -47,10 +47,10 @@ Material:
     m_Floats:
     - _Pattern: 4.7
     - _Pixelsize: 771.33
-    - _Scale: 119.02
-    - _Threshold: 0.4
+    - _Scale: 126.98
+    - _Threshold: 0
     m_Colors:
     - _Color: {r: 0, g: 0, b: 0, a: 1}
-    - _DitherColor: {r: 0.7075472, g: 0.7075472, b: 0.7075472, a: 1}
+    - _DitherColor: {r: 0.7905838, g: 0.8858403, b: 0.8867924, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

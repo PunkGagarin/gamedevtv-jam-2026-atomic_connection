@@ -63,6 +63,10 @@ MonoBehaviour:
     _clips:
     - _volume: 1
       _clip: {fileID: 8300000, guid: c0faec682a6c848ec9a4e5ddf897ed9c, type: 3}
+  - _name: BubbleClick
+    _clips:
+    - _volume: 1
+      _clip: {fileID: 8300000, guid: 3a0c4c1afad3d7f4385d120a0b31a838, type: 3}
   <Music>k__BackingField:
   - _name: intense_bgm
     _clips:

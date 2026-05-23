@@ -56,7 +56,8 @@ Transform:
   m_Children:
   - {fileID: 400001}
   - {fileID: 400002}
-  - {fileID: 9100000000000000032}
+  - {fileID: 9100000000021875743}
+  - {fileID: 5437990380064028592}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &11400000
@@ -195,12 +196,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <AimLineWidth>k__BackingField: 0.08
+  <AimPreviewLineWidth>k__BackingField: 0.06
+  <AimPreviewLineLength>k__BackingField: 20
   <ShotLineWidth>k__BackingField: 0.12
   <ShotLineLength>k__BackingField: 20
   <ShotLineSeconds>k__BackingField: 0.12
   <AimLineSortingOrder>k__BackingField: 10
+  <AimPreviewLineSortingOrder>k__BackingField: 12
   <ShotLineSortingOrder>k__BackingField: 11
   <AimLineColor>k__BackingField: {r: 1, g: 0.9215686, b: 0.01568628, a: 1}
+  <AimPreviewLineColor>k__BackingField: {r: 0, g: 1, b: 0, a: 1}
   <ShotLineColor>k__BackingField: {r: 0, g: 1, b: 1, a: 1}
 --- !u!114 &11400007
 MonoBehaviour:
@@ -258,6 +263,32 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <OrbitMotion>k__BackingField: {fileID: 11400027}
+--- !u!114 &11400013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46c8dc5fa7c840aeb2e67dedd73e3495, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &11400014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78b7f7a79fa04639ab3566560df79e78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Bond>k__BackingField: {fileID: 11400013}
+  <LineVisualPrefab>k__BackingField: {fileID: 11400000, guid: 1918e1a54c9245de8ce27944c5efeec9, type: 3}
 --- !u!114 &11400011
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -272,33 +303,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Charge>k__BackingField: {fileID: 11400002}
   <ChargeConsumption>k__BackingField: {fileID: 11400024}
-  <ProgressBar>k__BackingField: {fileID: 9100000000000000033}
---- !u!114 &11400013
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 46c8dc5fa7c840aeb2e67dedd73e3495, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
---- !u!114 &11400014
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 78b7f7a79fa04639ab3566560df79e78, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
-  <Bond>k__BackingField: {fileID: 11400013}
-  <LineVisualPrefab>k__BackingField: {fileID: 11400000, guid: 1918e1a54c9245de8ce27944c5efeec9, type: 3}
+  <ProgressBar>k__BackingField: {fileID: 9100000000009827164}
 --- !u!114 &11400015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -309,8 +314,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7f4b3d151db44c5dad1e4659bf4bcaea, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   <Collider>k__BackingField: {fileID: 5800000}
   <IncludeChildRenderers>k__BackingField: 1
 --- !u!114 &11400016
@@ -323,8 +328,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a5d661c8b0d343718ef261950c2ebb07, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   <Collider>k__BackingField: {fileID: 5800000}
 --- !u!114 &11400018
 MonoBehaviour:
@@ -336,8 +341,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 06d4872009f6452abdc0c185bdc71368, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   <AtomReceiver>k__BackingField: {fileID: 11400023}
   <Bond>k__BackingField: {fileID: 11400013}
   <Charge>k__BackingField: {fileID: 11400002}
@@ -356,8 +361,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c6a44a317c8b46bcbb5fcab1494658b6, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   <CoreOrbit>k__BackingField: {fileID: 11400010}
   <ConnectionVisual>k__BackingField: {fileID: 11400014}
 --- !u!114 &11400021
@@ -370,9 +375,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8313b097e71344b0b7c2493946ac3792, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
-  <Radius>k__BackingField: {fileID: 11400015}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11400022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -383,8 +387,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 914ada4766aa4da382eeb0737a3c16a8, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   <Molecule>k__BackingField: {fileID: 11400000}
   <Bond>k__BackingField: {fileID: 11400013}
 --- !u!114 &11400023
@@ -397,8 +401,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 68bccc33562a4ef9a8fadfd312a205ce, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   <OwnedAtoms>k__BackingField: {fileID: 11400001}
   <OwnerKind>k__BackingField: 2
 --- !u!114 &11400024
@@ -411,8 +415,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2d3ee16e4a8440f3911ee6c6817d2740, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   <OwnedAtoms>k__BackingField: {fileID: 11400001}
   <Charge>k__BackingField: {fileID: 11400002}
 --- !u!114 &11400026
@@ -425,8 +429,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5f9343be46b44222963d1cfd752bb80a, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   <OwnedAtoms>k__BackingField: {fileID: 11400001}
   <AtomReceiver>k__BackingField: {fileID: 11400023}
   <Charge>k__BackingField: {fileID: 11400002}
@@ -441,8 +445,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 81491604d20545d586e66a02e8c7c128, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &100001
 GameObject:
   m_ObjectHideFlags: 0
@@ -476,18 +480,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 400000}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &11400028
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100001}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 473cccd626784dc88668dfbc5c52b77c, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
 --- !u!212 &21200000
 SpriteRenderer:
   serializedVersion: 2
@@ -547,6 +539,18 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &11400028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 473cccd626784dc88668dfbc5c52b77c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &100002
 GameObject:
   m_ObjectHideFlags: 0
@@ -626,9 +630,93 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9b28d81c8a0246778c32c0fc5c3f0d12, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   <Receiver>k__BackingField: {fileID: 11400003}
+--- !u!1 &422249479427391901
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5437990380064028592}
+  - component: {fileID: 4251570249585566601}
+  m_Layer: 0
+  m_Name: Spot Light 2D
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5437990380064028592
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 422249479427391901}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 400000}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4251570249585566601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 422249479427391901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.RenderPipelines.Universal.2D.Runtime::UnityEngine.Rendering.Universal.Light2D
+  m_ComponentVersion: 2
+  m_LightType: 3
+  m_BlendStyleIndex: 0
+  m_FalloffIntensity: 0.5
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 3
+  m_LightVolumeIntensity: 1
+  m_LightVolumeEnabled: 0
+  m_ApplyToSortingLayers: 00000000fbf7f88921b9a50c
+  m_LightCookieSprite: {fileID: 0}
+  m_DeprecatedPointLightCookieSprite: {fileID: 0}
+  m_LightOrder: 0
+  m_AlphaBlendOnOverlap: 0
+  m_OverlapOperation: 0
+  m_NormalMapDistance: 3
+  m_NormalMapQuality: 2
+  m_UseNormalMap: 0
+  m_ShadowsEnabled: 1
+  m_ShadowIntensity: 0.75
+  m_ShadowSoftness: 0.3
+  m_ShadowSoftnessFalloffIntensity: 0.5
+  m_ShadowVolumeIntensityEnabled: 0
+  m_ShadowVolumeIntensity: 0.75
+  m_LocalBounds:
+    m_Center: {x: 0, y: -0.00000011920929, z: 0}
+    m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
+  m_PointLightInnerAngle: 360
+  m_PointLightOuterAngle: 360
+  m_PointLightInnerRadius: 0
+  m_PointLightOuterRadius: 1
+  m_ShapeLightParametricSides: 5
+  m_ShapeLightParametricAngleOffset: 0
+  m_ShapeLightParametricRadius: 1
+  m_ShapeLightFalloffSize: 0.5
+  m_ShapeLightFalloffOffset: {x: 0, y: 0}
+  m_ShapePath:
+  - {x: -0.5, y: -0.5, z: 0}
+  - {x: 0.5, y: -0.5, z: 0}
+  - {x: 0.5, y: 0.5, z: 0}
+  - {x: -0.5, y: 0.5, z: 0}
 --- !u!1001 &9100000000000000031
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -726,12 +814,7 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
---- !u!224 &9100000000000000032 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 22400000, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
-  m_PrefabInstance: {fileID: 9100000000000000031}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &9100000000000000033 stripped
+--- !u!114 &9100000000009827164 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 11400003, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
   m_PrefabInstance: {fileID: 9100000000000000031}
@@ -740,5 +823,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ad6f804328db48d8b3104fa377f98d47, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!224 &9100000000021875743 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 22400000, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
+  m_PrefabInstance: {fileID: 9100000000000000031}
+  m_PrefabAsset: {fileID: 0}

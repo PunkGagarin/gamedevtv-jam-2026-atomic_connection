@@ -90,8 +90,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f61aabb6da2d4ae790d93e393090b9cb, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   <Identity>k__BackingField: {fileID: 11400020}
   <Vitality>k__BackingField: {fileID: 11400021}
   <Merge>k__BackingField: {fileID: 11400022}
@@ -99,75 +99,6 @@ MonoBehaviour:
   <Lifecycle>k__BackingField: {fileID: 11400024}
   <Movement>k__BackingField: {fileID: 11400002}
   <CoreCollision>k__BackingField: {fileID: 11400003}
---- !u!114 &11400020
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7ad6f0d09dd34d258cfab17849eddcdf, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
---- !u!114 &11400021
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c21685b9b854258bea086b11c48a343, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
-  <Enemy>k__BackingField: {fileID: 11400000}
-  <Health>k__BackingField: {fileID: 11400001}
---- !u!114 &11400022
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f9b7d4048e7140dc9720f146fefde062, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
-  <Identity>k__BackingField: {fileID: 11400020}
-  <Vitality>k__BackingField: {fileID: 11400021}
---- !u!114 &11400023
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 56a636d8938f4c78aeaa63754fc62a01, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
---- !u!114 &11400024
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9946626e6bfb4c2bb0e95c457702d8c3, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
-  <Movement>k__BackingField: {fileID: 11400002}
-  <CoreCollision>k__BackingField: {fileID: 11400003}
-  <RuntimeBehaviors>k__BackingField: {fileID: 11400023}
-  <Vitality>k__BackingField: {fileID: 11400021}
-  <Merge>k__BackingField: {fileID: 11400022}
 --- !u!114 &11400001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -178,8 +109,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ff2c2ddace054125831907a5a47a9f7b, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11400002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -190,8 +121,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1c3c037fe263404e957510041e89b91e, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   <StopDistance>k__BackingField: 3
   <StopDistanceJitter>k__BackingField: 1.1
 --- !u!114 &11400003
@@ -204,8 +135,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0b64005da21d47f1b390447e18046577, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   <Collider>k__BackingField: {fileID: 5800000}
 --- !u!114 &11400004
 MonoBehaviour:
@@ -217,8 +148,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 32dfe34dd92f4516b98210fc257aab5a, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   <Health>k__BackingField: {fileID: 11400001}
 --- !u!114 &11400005
 MonoBehaviour:
@@ -230,8 +161,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 94fa212db6aa46adb25f3af1f425261e, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
+  m_Name: 
+  m_EditorClassIdentifier: 
   <TelegraphVisualRoot>k__BackingField: {fileID: 400001}
   <ProjectilePrefabResourcePath>k__BackingField: Gameplay/Enemies/EnemyProjectile
   <AttackInterval>k__BackingField: 2.2
@@ -241,6 +172,76 @@ MonoBehaviour:
   <ProjectileSpeed>k__BackingField: 4
   <ProjectileDamage>k__BackingField: 1
   <ProjectileLifetime>k__BackingField: 4
+--- !u!114 &11400020
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ad6f0d09dd34d258cfab17849eddcdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &11400021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c21685b9b854258bea086b11c48a343, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Enemy>k__BackingField: {fileID: 11400000}
+  <Health>k__BackingField: {fileID: 11400001}
+--- !u!114 &11400022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9b7d4048e7140dc9720f146fefde062, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Enemy>k__BackingField: {fileID: 0}
+  <Identity>k__BackingField: {fileID: 11400020}
+  <Vitality>k__BackingField: {fileID: 11400021}
+--- !u!114 &11400023
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56a636d8938f4c78aeaa63754fc62a01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &11400024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9946626e6bfb4c2bb0e95c457702d8c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Movement>k__BackingField: {fileID: 11400002}
+  <CoreCollision>k__BackingField: {fileID: 11400003}
+  <RuntimeBehaviors>k__BackingField: {fileID: 11400023}
+  <Vitality>k__BackingField: {fileID: 11400021}
+  <Merge>k__BackingField: {fileID: 11400022}
 --- !u!1 &100001
 GameObject:
   m_ObjectHideFlags: 0
@@ -299,7 +300,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

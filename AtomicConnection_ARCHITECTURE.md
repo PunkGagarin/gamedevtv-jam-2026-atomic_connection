@@ -96,8 +96,8 @@ Runtime ownership:
 
 ## Active Gameplay Loop
 
-`GameplayEnterState` creates the core and battle molecule, then enters
-`GameplayLoopState`.
+`GameplayEnterState` creates the core, configures `IBattleMoleculeService` with
+that core, creates battle molecule prefabs, then enters `GameplayLoopState`.
 
 `GameplayLoopState` inherits `EndOfFrameExitState`. It starts, ticks,
 fixed-ticks, and cleans active gameplay services such as `IEnemyService`, `IAtomCoreService`,
@@ -112,7 +112,8 @@ active-loop-facing `IAtomCoreService`. It creates/destroys the core, polls core
 click input during the active gameplay loop, creates generated free atoms
 through `FreeAtomFactory`, applies core HP and atom click count, exposes current
 core transform for active targeting services, subscribes to core death during
-`Start()`, and ticks current `AtomCore`.
+`Start()`, and ticks current `AtomCore` plus core-owned connection atom flow
+using the feed target exposed by `IBattleMoleculeFeedTargetProvider`.
 
 `AtomCore` is the root facade: it exposes core-facing methods/properties and
 passes ticks to focused components, but does not own behavior logic.
@@ -123,17 +124,24 @@ belongs to `OwnedAtomReceiver`.
 molecules, while `AtomCoreHealth` owns HP, death, and shield-gated damage
 resolution.
 
-`IBattleMoleculeService` ticks created battle molecules and auto-loads core
-atoms into molecules when unlocked. `BattleMolecule` is a facade: setup,
+`BattleMoleculeFactory` only creates molecule prefabs. `IBattleMoleculeService`
+owns the registered battle molecule list, molecule subscriptions, active
+molecule ticking, active selection, active feed target provider, and cleanup.
+`AtomCoreService` ticks core runtime behavior. Core-owned AutoLoad atom flow
+belongs to `AtomCoreConnectionAtomFlow`, which moves, returns, and delivers core
+atoms to molecule receivers using the current feed target from
+`IBattleMoleculeFeedTargetProvider`. `BattleMolecule` is a facade: setup,
 identity, bond event relays, point hit-tests, core orbit/connection-line
 coordination, connection arrival geometry, atom orbiting, charge consumption,
-atom receiving, shot requests, and attacks are owned by focused components. The
-connection line is a gameplay visual component (`BattleMoleculeConnectionVisual`)
-that observes bond changes directly; gameplay objects do not add MVP-style
-Presenter/Controller/View/ViewModel layers. Attack-capable
-molecule prefabs use focused attack components such as `StingerMoleculeAttack`
-and `SwarmMoleculeAttack` to resolve local shot requests into raycasts, enemy
-damage, and shot-line feedback.
+atom receiving, shot requests, attacks, aim-line feedback, and membrane
+activation are owned by focused components. The facade may pass explicit ticks
+and setup calls to those known components, but molecule behavior is not routed
+through a generic runtime-behavior registry. The connection line is a gameplay
+visual component (`BattleMoleculeConnectionVisual`) that observes bond changes
+directly; gameplay objects do not add MVP-style Presenter, Controller, View, or
+ViewModel layers. Attack-capable molecule prefabs use focused attack components
+such as `StingerMoleculeAttack` and `SwarmMoleculeAttack` to resolve local shot
+requests into raycasts, enemy damage, and shot-line feedback.
 
 `FreeAtom` is also a facade. Ownership, despawn/destroy events, drag behavior,
 connection-flow/drag state, collider enable/disable, spawn/pool reset, initial
@@ -225,7 +233,7 @@ Talent-adjusted runtime values are applied by the current owner:
 - `AtomCoreService` applies core HP and atom click count
 - `BattleMoleculeFactory` applies atom charge count
 - molecule-local attack components resolve shot damage and Pierce
-- `BattleMoleculeService` applies AutoLoad
+- `AtomCoreConnectionAtomFlow` applies AutoLoad movement speed
 
 Talent tree uses `TalentConfig`. `TalentService` owns talent progress and
 buying; `CurrencyService` owns saved meta-currencies. Talent progress and

@@ -5,6 +5,7 @@ using _Project.Scripts.Gameplay.Common.Time;
 using _Project.Scripts.Gameplay.Drag;
 using _Project.Scripts.Gameplay.Input.Service;
 using _Project.Scripts.Gameplay.Talents;
+using _Project.Scripts.Gameplay.Units.BattleMolecules;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
 using Zenject;
@@ -27,11 +28,12 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
         [Inject] private ITalentService _talentService;
         [Inject] private IAtomCoreFactory _atomCoreFactory;
         [Inject] private IFreeAtomFactory _freeAtomFactory;
+        [Inject] private IBattleMoleculeFeedTargetProvider _battleMoleculeFeedTargetProvider;
 
         public Transform CurrentCoreTransform => _core != null ? _core.transform : null;
         public event Action CoreDied;
 
-        public void Create(Vector3 at)
+        public AtomCore Create(Vector3 at)
         {
             if (_core != null)
                 Cleanup();
@@ -40,6 +42,8 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
 
             if (_core != null)
                 ApplyTalentBonuses();
+
+            return _core;
         }
 
         public void Start()
@@ -58,9 +62,11 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
             if (_core == null)
                 return;
 
+            float deltaTime = _time.DeltaTime;
             TickAutoClick();
             TickCoreClickInput();
-            _core.Tick(_time.DeltaTime);
+            _core.Tick(deltaTime);
+            _core.TickConnectionAtomFlow(_battleMoleculeFeedTargetProvider.ActiveFeedTarget, deltaTime);
         }
 
         public void Cleanup()

@@ -1,5 +1,6 @@
 using System;
 using _Project.Scripts.Gameplay.Units.AtomCores.Components;
+using _Project.Scripts.Gameplay.Units.BattleMolecules;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
 
@@ -8,12 +9,13 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
     [RequireComponent(typeof(OwnedAtoms))]
     [RequireComponent(typeof(OwnedAtomReceiver))]
     [RequireComponent(typeof(OwnedAtomOrbitLayout))]
-    [RequireComponent(typeof(ObjectRadius))]
     [RequireComponent(typeof(PointHitArea))]
     [RequireComponent(typeof(AtomOrbit))]
     [RequireComponent(typeof(AtomProductionProgress))]
     [RequireComponent(typeof(AtomCoreHealth))]
+    [RequireComponent(typeof(AtomCoreDamageHitArea))]
     [RequireComponent(typeof(AtomCoreClickInteraction))]
+    [RequireComponent(typeof(AtomCoreConnectionAtomFlow))]
     public class AtomCore : MonoBehaviour
     {
         [field: SerializeField] private OwnedAtomReceiver AtomReceiver { get; set; }
@@ -21,6 +23,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
         [field: SerializeField] private AtomOrbit AtomOrbit { get; set; }
         [field: SerializeField] private AtomCoreHealth Health { get; set; }
         [field: SerializeField] private AtomCoreClickInteraction ClickInteraction { get; set; }
+        [field: SerializeField] private AtomCoreConnectionAtomFlow ConnectionAtomFlow { get; set; }
 
         public bool IsAlive => Health.IsAlive;
 
@@ -37,6 +40,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
             AtomOrbit = GetComponent<AtomOrbit>();
             Health = GetComponent<AtomCoreHealth>();
             ClickInteraction = GetComponent<AtomCoreClickInteraction>();
+            ConnectionAtomFlow = GetComponent<AtomCoreConnectionAtomFlow>();
         }
 
         public void Configure(AtomCoreConfig config, int clicksRequired, int maxHealth)
@@ -57,6 +61,16 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
         {
             Health.Tick(deltaTime);
             AtomOrbit.Tick(deltaTime);
+        }
+
+        public void TickConnectionAtomFlow(BattleMolecule target, float deltaTime)
+        {
+            ConnectionAtomFlow?.Tick(target, deltaTime);
+        }
+
+        public void ReleaseConnectionAtomFlow()
+        {
+            ConnectionAtomFlow?.ReleaseControl();
         }
 
         public bool ContainsPoint(Vector2 worldPosition)
@@ -81,6 +95,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
 
         public void CleanupAtoms()
         {
+            ReleaseConnectionAtomFlow();
             AtomReceiver.ReleaseAll();
         }
     }

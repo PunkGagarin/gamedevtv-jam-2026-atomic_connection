@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
-    public class BattleMoleculeAimLineVisual : MonoBehaviour, IBattleMoleculeRuntimeBehavior
+    public class BattleMoleculeAimLineVisual : MonoBehaviour
     {
         private const string AIM_PREVIEW_LINE_OBJECT_NAME = "AimPreviewLine";
         private const string SHOT_LINE_OBJECT_NAME = "ShotLine";
@@ -51,10 +51,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             }
 
             HideAimPreview();
-        }
-
-        public void Configure(BattleMoleculeRuntimeContext context)
-        {
         }
 
         public void Tick(float deltaTime)

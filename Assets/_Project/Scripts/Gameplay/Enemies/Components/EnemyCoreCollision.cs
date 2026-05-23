@@ -1,5 +1,5 @@
-using _Project.Scripts.Gameplay.Units;
 using _Project.Scripts.Gameplay.Units.AtomCores;
+using _Project.Scripts.Gameplay.Units.AtomCores.Components;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Enemies.Components
@@ -11,8 +11,7 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
 
         private EnemyUnit _enemy;
         private AtomCore _core;
-        private float _radius;
-        private float _coreRadius;
+        private AtomCoreDamageHitArea _coreHitArea;
 
         protected EnemyUnit Enemy => _enemy;
         protected AtomCore Core => _core;
@@ -28,13 +27,12 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
         public void Configure(AtomCore core)
         {
             _core = core;
-            _radius = ObjectRadius.RadiusOf(transform);
-            _coreRadius = core != null ? ObjectRadius.RadiusOf(core.transform) : 0f;
+            _coreHitArea = core != null ? core.GetComponent<AtomCoreDamageHitArea>() : null;
         }
 
         public void Tick()
         {
-            if (_enemy == null || !_enemy.IsAlive || _core == null || Collider == null)
+            if (_enemy == null || !_enemy.IsAlive || _core == null || Collider == null || _coreHitArea == null)
                 return;
 
             if (!IsOverlappingCore())
@@ -47,7 +45,7 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
         public void Clear()
         {
             _core = null;
-            _coreRadius = 0f;
+            _coreHitArea = null;
         }
 
         protected virtual void ApplyCoreCollision()
@@ -57,12 +55,7 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
 
         private bool IsOverlappingCore()
         {
-            float distance = _radius + _coreRadius;
-            if (distance <= 0f)
-                return false;
-
-            Vector2 offset = transform.position - _core.transform.position;
-            return offset.sqrMagnitude <= distance * distance;
+            return _coreHitArea.IsOverlapping(Collider);
         }
     }
 }

@@ -60,7 +60,7 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
 
         public bool TryApplyImpact()
         {
-            return Impact.TryApply(transform.position);
+            return Impact.TryApply();
         }
 
         public void DestroySelf()

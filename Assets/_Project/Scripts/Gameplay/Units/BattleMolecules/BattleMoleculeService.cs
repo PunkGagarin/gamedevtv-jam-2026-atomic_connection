@@ -1,37 +1,51 @@
 using System.Collections.Generic;
-using _Project.Scripts.Gameplay.Common.Movement;
 using _Project.Scripts.Gameplay.Common.Time;
 using _Project.Scripts.Gameplay.Drag;
 using _Project.Scripts.Gameplay.Input.Service;
 using _Project.Scripts.Gameplay.Talents;
-using _Project.Scripts.Gameplay.Units;
 using _Project.Scripts.Gameplay.Units.AtomCores;
-using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
 using Zenject;
 
 namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 {
-    public class BattleMoleculeService : IBattleMoleculeService
+    public class BattleMoleculeService : IBattleMoleculeService, IBattleMoleculeFeedTargetProvider
     {
-        private const float ARRIVAL_DISTANCE = 0.03f;
-        private const float MIN_FLOW_RADIUS = 0.1f;
-
-        private readonly List<IBattleMoleculeRuntimeBehavior> _runtimeBehaviors = new();
-        private readonly List<FreeAtom> _coreAtoms = new();
-        private readonly List<FlowAtomState> _flowAtoms = new();
+        private readonly List<BattleMolecule> _molecules = new();
         private bool _isStarted;
         private BattleMolecule _activeMolecule;
         private AtomCore _core;
-        private OwnedAtoms _coreOwnedAtoms;
 
-        [Inject] private IBattleMoleculeFactory _battleMoleculeFactory;
         [Inject] private ITimeService _time;
-        [Inject] private IAtomCoreService _atomCoreService;
         [Inject] private BattleMoleculeConfig _config;
         [Inject] private ITalentService _talentService;
         [Inject] private IDragService _dragService;
         [Inject] private IInputService _inputService;
+
+        public BattleMolecule ActiveFeedTarget => IsValidActiveMolecule(_activeMolecule) && _activeMolecule.CanReceiveConnectionAtom
+            ? _activeMolecule
+            : null;
+
+        public void ConfigureCore(AtomCore core)
+        {
+            _core = core;
+
+            foreach (BattleMolecule molecule in _molecules)
+                ConfigureMoleculeCore(molecule);
+        }
+
+        public void Register(BattleMolecule molecule)
+        {
+            if (molecule == null || _molecules.Contains(molecule))
+                return;
+
+            ConfigureMoleculeCore(molecule);
+            molecule.Bonded += OnMoleculeBonded;
+            _molecules.Add(molecule);
+
+            if (molecule.IsBonded && !IsValidActiveMolecule(_activeMolecule))
+                SetActiveMolecule(molecule);
+        }
 
         public void Start()
         {
@@ -39,16 +53,11 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                 return;
 
             _isStarted = true;
-            _battleMoleculeFactory.MoleculeCreated += TrackMolecule;
-            CacheCoreReferences();
-
-            foreach (BattleMolecule molecule in _battleMoleculeFactory.CreatedMolecules)
-                TrackMolecule(molecule);
         }
 
         public void Update()
         {
-            foreach (BattleMolecule molecule in _battleMoleculeFactory.CreatedMolecules)
+            foreach (BattleMolecule molecule in _molecules)
             {
                 if (molecule == null)
                     continue;
@@ -56,30 +65,17 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                 molecule.Tick(_time.DeltaTime);
             }
 
-            foreach (IBattleMoleculeRuntimeBehavior runtimeBehavior in _runtimeBehaviors)
-            {
-                if (runtimeBehavior == null)
-                    continue;
-
-                if (runtimeBehavior is Object unityObject && unityObject == null)
-                    continue;
-
-                runtimeBehavior.Tick(_time.DeltaTime);
-            }
-
             TickMoleculeSelection();
-            TickActiveAtomFlow(_time.DeltaTime);
         }
 
         public void Cleanup()
         {
-            if (!_isStarted)
+            if (!_isStarted && _molecules.Count == 0)
                 return;
 
             _isStarted = false;
-            _battleMoleculeFactory.MoleculeCreated -= TrackMolecule;
 
-            foreach (BattleMolecule molecule in _battleMoleculeFactory.CreatedMolecules)
+            foreach (BattleMolecule molecule in _molecules)
             {
                 if (molecule == null)
                     continue;
@@ -88,40 +84,15 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                 molecule.SetActiveFeedVisual(false);
             }
 
-            ReleaseFlowAtomControl();
-
-            _runtimeBehaviors.Clear();
-            _coreAtoms.Clear();
-            _activeMolecule = null;
-            _core = null;
-            _coreOwnedAtoms = null;
-        }
-
-        private void TrackMolecule(BattleMolecule molecule)
-        {
-            if (molecule == null)
-                return;
-
-            if (_core == null || _coreOwnedAtoms == null)
-                CacheCoreReferences();
-
-            molecule.ConfigureCoreOrbit(_atomCoreService.CurrentCoreTransform, _config);
-
-            MonoBehaviour[] components = molecule.GetComponents<MonoBehaviour>();
-            BattleMoleculeRuntimeContext context = new(_core, _config, _talentService);
-            molecule.Bonded += OnMoleculeBonded;
-
-            foreach (MonoBehaviour component in components)
+            foreach (BattleMolecule molecule in _molecules)
             {
-                if (component is IBattleMoleculeRuntimeBehavior runtimeBehavior)
-                {
-                    runtimeBehavior.Configure(context);
-                    _runtimeBehaviors.Add(runtimeBehavior);
-                }
+                if (molecule != null)
+                    Object.Destroy(molecule.gameObject);
             }
 
-            if (molecule.IsBonded && !IsValidActiveMolecule(_activeMolecule))
-                SetActiveMolecule(molecule);
+            _molecules.Clear();
+            _activeMolecule = null;
+            _core = null;
         }
 
         private void OnMoleculeBonded(BattleMolecule molecule)
@@ -142,428 +113,15 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                 return;
 
             Vector2 worldPosition = _inputService.GetWorldMousePosition();
-            IReadOnlyList<BattleMolecule> molecules = _battleMoleculeFactory.CreatedMolecules;
-
-            for (int i = molecules.Count - 1; i >= 0; i--)
+            for (int i = _molecules.Count - 1; i >= 0; i--)
             {
-                BattleMolecule molecule = molecules[i];
+                BattleMolecule molecule = _molecules[i];
                 if (!IsValidActiveMolecule(molecule) || !molecule.ContainsPoint(worldPosition))
                     continue;
 
                 SetActiveMolecule(molecule);
                 return;
             }
-        }
-
-        private void TickActiveAtomFlow(float deltaTime)
-        {
-            if (_core == null || _coreOwnedAtoms == null)
-                CacheCoreReferences();
-
-            if (_core == null || _coreOwnedAtoms == null || deltaTime <= 0f)
-                return;
-
-            BattleMolecule target = ActiveFeedTarget();
-
-            if (target == null)
-            {
-                SetAllFlowAtomsReturning();
-                TickFlowAtoms(_core, deltaTime);
-                return;
-            }
-
-            AssignFlowTargets(_core, target);
-
-            if (_dragService == null || !_dragService.IsDragActive)
-                TryStartFlowAtoms(_core, _coreOwnedAtoms, target);
-
-            TickFlowAtoms(_core, deltaTime);
-        }
-
-        private void TryStartFlowAtoms(AtomCore core, OwnedAtoms coreAtoms, BattleMolecule target)
-        {
-            if (core == null || coreAtoms == null || target == null || !target.CanReceiveConnectionAtom)
-                return;
-
-            int atomsToStart = FlowAtomStartCount(target);
-
-            if (atomsToStart <= 0)
-                return;
-
-            coreAtoms.GetOwned(FreeAtomOwnerKind.Core, _coreAtoms);
-
-            foreach (FreeAtom candidate in _coreAtoms)
-            {
-                if (atomsToStart <= 0)
-                    return;
-
-                if (!CanStartFlowAtom(candidate))
-                    continue;
-
-                StartFlowAtom(core, target, candidate);
-                atomsToStart--;
-            }
-        }
-
-        private void StartFlowAtom(AtomCore core, BattleMolecule target, FreeAtom atom)
-        {
-            FlowAtomState flowAtom = new()
-            {
-                Atom = atom,
-                Target = target,
-                Phase = FlowPhase.OrbitToConnection,
-                Radius = Mathf.Max(MIN_FLOW_RADIUS, Vector2.Distance(atom.transform.position, core.transform.position))
-            };
-
-            atom.BeginConnectionFlow();
-            _flowAtoms.Add(flowAtom);
-        }
-
-        private void AssignFlowTargets(AtomCore core, BattleMolecule target)
-        {
-            int atomsAllowed = target != null ? target.ConnectionAtomsRemaining : 0;
-            int assignedAtoms = 0;
-
-            foreach (FlowAtomState flowAtom in _flowAtoms)
-            {
-                if (flowAtom.Atom == null)
-                    continue;
-
-                if (flowAtom.Target == target && assignedAtoms < atomsAllowed)
-                {
-                    if (flowAtom.Phase == FlowPhase.ReturnToCore)
-                        RetargetFlowAtom(core, target, flowAtom);
-
-                    assignedAtoms++;
-                    continue;
-                }
-
-                if (assignedAtoms >= atomsAllowed)
-                {
-                    SetFlowAtomReturning(flowAtom);
-                    continue;
-                }
-
-                RetargetFlowAtom(core, target, flowAtom);
-                assignedAtoms++;
-            }
-        }
-
-        private void RetargetFlowAtom(AtomCore core, BattleMolecule target, FlowAtomState flowAtom)
-        {
-            ClearConnectionProgress(flowAtom);
-            flowAtom.Target = target;
-            flowAtom.Phase = IsAtomNearCoreRim(core, flowAtom)
-                ? FlowPhase.OrbitToConnection
-                : FlowPhase.MoveToRim;
-        }
-
-        private void TickFlowAtoms(AtomCore core, float deltaTime)
-        {
-            for (int i = _flowAtoms.Count - 1; i >= 0; i--)
-            {
-                FlowAtomState flowAtom = _flowAtoms[i];
-
-                if (flowAtom.Atom == null)
-                {
-                    _flowAtoms.RemoveAt(i);
-                    continue;
-                }
-
-                if (_dragService != null && _dragService.IsDragging(flowAtom.Atom.Draggable))
-                {
-                    ReleaseFlowAtomControl(flowAtom);
-                    _flowAtoms.RemoveAt(i);
-                    continue;
-                }
-
-                if (TickFlowAtom(core, flowAtom, deltaTime))
-                    _flowAtoms.RemoveAt(i);
-            }
-        }
-
-        private bool TickFlowAtom(AtomCore core, FlowAtomState flowAtom, float deltaTime)
-        {
-            if (flowAtom.Atom == null)
-                return true;
-
-            BattleMolecule target = flowAtom.Target;
-
-            if (target == null || !target.CanReceiveConnectionAtom)
-            {
-                SetFlowAtomReturning(flowAtom);
-                return TickReturnToCore(core, flowAtom, deltaTime);
-            }
-
-            switch (flowAtom.Phase)
-            {
-                case FlowPhase.MoveToRim:
-                    if (MoveAtomToCoreRim(core, flowAtom, deltaTime, true))
-                        flowAtom.Phase = FlowPhase.OrbitToConnection;
-                    break;
-                case FlowPhase.OrbitToConnection:
-                    if (MoveAtomAlongCoreRim(core, target, flowAtom, deltaTime))
-                    {
-                        flowAtom.Phase = FlowPhase.Connection;
-                        ClearConnectionProgress(flowAtom);
-                    }
-                    break;
-                case FlowPhase.Connection:
-                    if (MoveAtomToMolecule(core, target, flowAtom, deltaTime))
-                        return DeliverFlowAtom(flowAtom, target);
-                    break;
-                case FlowPhase.ReturnToCore:
-                    return TickReturnToCore(core, flowAtom, deltaTime);
-                case FlowPhase.None:
-                    flowAtom.Phase = FlowPhase.MoveToRim;
-                    break;
-                default:
-                    flowAtom.Phase = FlowPhase.MoveToRim;
-                    break;
-            }
-
-            return false;
-        }
-
-        private bool TickReturnToCore(AtomCore core, FlowAtomState flowAtom, float deltaTime)
-        {
-            if (flowAtom.Atom == null)
-                return true;
-
-            if (!MoveAtomToCoreRim(core, flowAtom, deltaTime, false))
-                return false;
-
-            flowAtom.Atom.EndConnectionFlow();
-            core.TakeGeneratedAtom(flowAtom.Atom);
-            return true;
-        }
-
-        private bool MoveAtomToCoreRim(AtomCore core, FlowAtomState flowAtom, float deltaTime, bool useTalentSpeed)
-        {
-            SetFlowAtomParent(flowAtom, core != null ? core.transform : null);
-
-            float angle = AngleFromCoreTo(core, flowAtom.Atom.transform.position);
-            float speed = useTalentSpeed ? ConnectionAtomTravelSpeed() : _config.ConnectionAtomTravelSpeed;
-            return MoveFlowAtomTowards(flowAtom, CoreRimPosition(core, flowAtom, angle),
-                speed * deltaTime);
-        }
-
-        private bool MoveAtomAlongCoreRim(AtomCore core, BattleMolecule target, FlowAtomState flowAtom, float deltaTime)
-        {
-            SetFlowAtomParent(flowAtom, core != null ? core.transform : null);
-
-            float currentAngle = AngleFromCoreTo(core, flowAtom.Atom.transform.position) * Mathf.Rad2Deg;
-            float targetAngle = AngleFromCoreTo(core, target.transform.position) * Mathf.Rad2Deg;
-            float angleStep = ConnectionCoreRimDegreesPerSecond() * deltaTime;
-            float nextAngle = angleStep > 0f
-                ? Mathf.MoveTowardsAngle(currentAngle, targetAngle, angleStep)
-                : targetAngle;
-
-            flowAtom.Atom.transform.position = CoreRimPosition(core, flowAtom, nextAngle * Mathf.Deg2Rad);
-            return Mathf.Abs(Mathf.DeltaAngle(nextAngle, targetAngle)) <= 0.5f;
-        }
-
-        private bool MoveAtomToMolecule(AtomCore core, BattleMolecule target, FlowAtomState flowAtom, float deltaTime)
-        {
-            SetFlowAtomParent(flowAtom, core != null ? core.transform : null);
-
-            Vector3 start = ConnectionStartPosition(core, target, flowAtom);
-            Vector3 destination = ConnectionDestinationPosition(core, target, flowAtom);
-            EnsureConnectionProgress(flowAtom, start, destination);
-
-            float distance = Vector2.Distance(start, destination);
-            if (distance <= ARRIVAL_DISTANCE)
-                return true;
-
-            flowAtom.ConnectionProgress = Mathf.Clamp01(
-                flowAtom.ConnectionProgress + ConnectionAtomTravelSpeed() * deltaTime / distance);
-
-            Vector3 position = Vector3.Lerp(start, destination, flowAtom.ConnectionProgress);
-            position.z = flowAtom.Atom.transform.position.z;
-            flowAtom.Atom.transform.position = position;
-
-            return flowAtom.ConnectionProgress >= 1f;
-        }
-
-        private float ConnectionAtomSpeedMultiplier()
-        {
-            float bonus = _talentService != null ? _talentService.BonusOf(TalentType.ConnectionAtomSpeed) : 0f;
-            return Mathf.Max(0f, 1f + bonus);
-        }
-
-        private float ConnectionAtomTravelSpeed()
-        {
-            return _config.ConnectionAtomTravelSpeed * ConnectionAtomSpeedMultiplier();
-        }
-
-        private float ConnectionCoreRimDegreesPerSecond()
-        {
-            return _config.ConnectionCoreRimDegreesPerSecond * ConnectionAtomSpeedMultiplier();
-        }
-
-        private bool MoveFlowAtomTowards(FlowAtomState flowAtom, Vector3 destination, float maxDistance)
-        {
-            if (flowAtom.Atom == null)
-                return false;
-
-            destination.z = flowAtom.Atom.transform.position.z;
-            flowAtom.Atom.transform.position = Vector3.MoveTowards(flowAtom.Atom.transform.position, destination, maxDistance);
-            return (flowAtom.Atom.transform.position - destination).sqrMagnitude <= ARRIVAL_DISTANCE * ARRIVAL_DISTANCE;
-        }
-
-        private bool DeliverFlowAtom(FlowAtomState flowAtom, BattleMolecule target)
-        {
-            if (flowAtom.Atom == null)
-                return true;
-
-            if (target != null && target.TryReceiveConnectionAtom(flowAtom.Atom))
-                return true;
-
-            SetFlowAtomReturning(flowAtom);
-            return false;
-        }
-
-        private int FlowAtomStartCount(BattleMolecule target)
-        {
-            int atomsRemaining = target.ConnectionAtomsRemaining - CountFlowAtomsTargeting(target);
-
-            if (atomsRemaining <= 0)
-                return 0;
-
-            return atomsRemaining;
-        }
-
-        private int CountFlowAtomsTargeting(BattleMolecule target)
-        {
-            int count = 0;
-
-            foreach (FlowAtomState flowAtom in _flowAtoms)
-            {
-                if (flowAtom.Atom != null && flowAtom.Target == target && flowAtom.Phase != FlowPhase.ReturnToCore)
-                    count++;
-            }
-
-            return count;
-        }
-
-        private bool CanStartFlowAtom(FreeAtom atom)
-        {
-            if (atom == null || atom.IsInConnectionFlow)
-                return false;
-
-            if (IsFlowAtom(atom))
-                return false;
-
-            return atom.Draggable == null || _dragService == null || !_dragService.IsReserved(atom.Draggable);
-        }
-
-        private bool IsFlowAtom(FreeAtom atom)
-        {
-            foreach (FlowAtomState flowAtom in _flowAtoms)
-            {
-                if (flowAtom.Atom == atom)
-                    return true;
-            }
-
-            return false;
-        }
-
-        private void SetAllFlowAtomsReturning()
-        {
-            foreach (FlowAtomState flowAtom in _flowAtoms)
-                SetFlowAtomReturning(flowAtom);
-        }
-
-        private static void SetFlowAtomReturning(FlowAtomState flowAtom)
-        {
-            ClearConnectionProgress(flowAtom);
-            flowAtom.Target = null;
-            flowAtom.Phase = FlowPhase.ReturnToCore;
-        }
-
-        private void ReleaseFlowAtomControl()
-        {
-            foreach (FlowAtomState flowAtom in _flowAtoms)
-                ReleaseFlowAtomControl(flowAtom);
-
-            _flowAtoms.Clear();
-        }
-
-        private static void ReleaseFlowAtomControl(FlowAtomState flowAtom)
-        {
-            SetFlowAtomParent(flowAtom, flowAtom.Atom != null ? flowAtom.Atom.Owner : null);
-            flowAtom.Atom?.EndConnectionFlow();
-            ClearConnectionProgress(flowAtom);
-            flowAtom.Target = null;
-            flowAtom.Phase = FlowPhase.None;
-            flowAtom.Radius = 0f;
-        }
-
-        private static Vector3 ConnectionStartPosition(AtomCore core, BattleMolecule target, FlowAtomState flowAtom)
-        {
-            if (core == null || target == null)
-                return flowAtom.Atom != null ? flowAtom.Atom.transform.position : Vector3.zero;
-
-            float angle = AngleFromCoreTo(core, target.transform.position);
-            return CoreRimPosition(core, flowAtom, angle);
-        }
-
-        private static Vector3 ConnectionDestinationPosition(AtomCore core, BattleMolecule target, FlowAtomState flowAtom)
-        {
-            if (target == null)
-                return flowAtom.Atom != null ? flowAtom.Atom.transform.position : Vector3.zero;
-
-            Vector3 fromPosition = core != null && core.transform != null
-                ? core.transform.position
-                : flowAtom.Atom != null
-                    ? flowAtom.Atom.transform.position
-                    : target.transform.position;
-
-            return target.GetConnectionArrivalPosition(fromPosition);
-        }
-
-        private static void EnsureConnectionProgress(FlowAtomState flowAtom, Vector3 start, Vector3 destination)
-        {
-            if (flowAtom.HasConnectionProgress || flowAtom.Atom == null)
-                return;
-
-            flowAtom.ConnectionProgress = ProjectSegmentProgress(
-                start,
-                destination,
-                flowAtom.Atom.transform.position);
-            flowAtom.HasConnectionProgress = true;
-        }
-
-        private static float ProjectSegmentProgress(Vector3 start, Vector3 destination, Vector3 position)
-        {
-            Vector2 segment = new(destination.x - start.x, destination.y - start.y);
-            float lengthSquared = segment.sqrMagnitude;
-            if (lengthSquared <= Mathf.Epsilon)
-                return 1f;
-
-            Vector2 offset = new(position.x - start.x, position.y - start.y);
-            return Mathf.Clamp01(Vector2.Dot(offset, segment) / lengthSquared);
-        }
-
-        private static void ClearConnectionProgress(FlowAtomState flowAtom)
-        {
-            flowAtom.HasConnectionProgress = false;
-            flowAtom.ConnectionProgress = 0f;
-        }
-
-        private static void SetFlowAtomParent(FlowAtomState flowAtom, Transform parent)
-        {
-            if (flowAtom.Atom == null || parent == null || flowAtom.Atom.transform.parent == parent)
-                return;
-
-            flowAtom.Atom.transform.SetParent(parent, true);
-        }
-
-        private BattleMolecule ActiveFeedTarget()
-        {
-            return IsValidActiveMolecule(_activeMolecule) && _activeMolecule.CanReceiveConnectionAtom
-                ? _activeMolecule
-                : null;
         }
 
         private bool IsValidActiveMolecule(BattleMolecule molecule)
@@ -578,7 +136,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
             _activeMolecule = molecule;
 
-            foreach (BattleMolecule createdMolecule in _battleMoleculeFactory.CreatedMolecules)
+            foreach (BattleMolecule createdMolecule in _molecules)
             {
                 if (createdMolecule == null)
                     continue;
@@ -587,52 +145,13 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             }
         }
 
-        private bool IsAtomNearCoreRim(AtomCore core, FlowAtomState flowAtom)
+        private void ConfigureMoleculeCore(BattleMolecule molecule)
         {
-            if (flowAtom.Atom == null || core == null)
-                return false;
+            if (molecule == null)
+                return;
 
-            float distance = Vector2.Distance(flowAtom.Atom.transform.position, core.transform.position);
-            return Mathf.Abs(distance - flowAtom.Radius) <= ARRIVAL_DISTANCE * 2f;
-        }
-
-        private static Vector3 CoreRimPosition(AtomCore core, FlowAtomState flowAtom, float angle)
-        {
-            float z = flowAtom.Atom != null ? flowAtom.Atom.transform.position.z : core.transform.position.z;
-            return OrbitMath.PositionOnCircle(core.transform.position, flowAtom.Radius, angle, z);
-        }
-
-        private static float AngleFromCoreTo(AtomCore core, Vector3 position)
-        {
-            return OrbitMath.AngleFromCenter(core.transform.position, position);
-        }
-
-        private void CacheCoreReferences()
-        {
-            _core = _atomCoreService.CurrentCoreTransform != null
-                ? _atomCoreService.CurrentCoreTransform.GetComponent<AtomCore>()
-                : null;
-
-            _coreOwnedAtoms = _core != null ? _core.GetComponent<OwnedAtoms>() : null;
-        }
-
-        private sealed class FlowAtomState
-        {
-            public FreeAtom Atom;
-            public BattleMolecule Target;
-            public FlowPhase Phase;
-            public float Radius;
-            public bool HasConnectionProgress;
-            public float ConnectionProgress;
-        }
-
-        private enum FlowPhase
-        {
-            None,
-            MoveToRim,
-            OrbitToConnection,
-            Connection,
-            ReturnToCore
+            molecule.ConfigureCoreOrbit(_core != null ? _core.transform : null, _config);
+            molecule.ConfigureCoreInteraction(_core, _config, _talentService);
         }
     }
 }

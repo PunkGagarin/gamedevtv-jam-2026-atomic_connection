@@ -125,7 +125,7 @@ namespace _Project.Scripts.Infrastructure
         private void BindGameplayBattleMolecule()
         {
             Container.Bind<IBattleMoleculeFactory>().To<BattleMoleculeFactory>().AsSingle();
-            Container.Bind<IBattleMoleculeService>().To<BattleMoleculeService>().AsSingle();
+            Container.BindInterfacesTo<BattleMoleculeService>().AsSingle();
         }
 
         private void BindPauseService()

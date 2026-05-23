@@ -1,7 +1,8 @@
+using _Project.Scripts.Gameplay.Common.Movement;
 using _Project.Scripts.Gameplay.Level;
 using _Project.Scripts.Gameplay.Talents;
-using _Project.Scripts.Gameplay.Units.BattleMolecules;
 using _Project.Scripts.Gameplay.Units.AtomCores;
+using _Project.Scripts.Gameplay.Units.BattleMolecules;
 using _Project.Scripts.Infrastructure.GameStates.StateInfrastructure;
 using _Project.Scripts.Infrastructure.GameStates.StateMachine;
 using UnityEngine;
@@ -34,8 +35,9 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
 
         private void CreateStingerMolecule()
         {
-            Vector3 offset = _battleMoleculeConfig.StingerMoleculeSpawnOffset;
-            _battleMoleculeFactory.CreateStinger(_levelStartPointProvider.StartPoint + offset, _battleMoleculeConfig);
+            _battleMoleculeFactory.CreateStinger(
+                MoleculeSpawnPosition(_battleMoleculeConfig.StingerMoleculeSpawnOffset),
+                _battleMoleculeConfig);
         }
 
         private void CreateSwarmMoleculeIfUnlocked()
@@ -43,8 +45,9 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
             if (!_talentService.IsUnlocked(TalentType.SwarmMolecule))
                 return;
 
-            Vector3 offset = _battleMoleculeConfig.SwarmMoleculeSpawnOffset;
-            _battleMoleculeFactory.CreateSwarm(_levelStartPointProvider.StartPoint + offset, _battleMoleculeConfig);
+            _battleMoleculeFactory.CreateSwarm(
+                MoleculeSpawnPosition(_battleMoleculeConfig.SwarmMoleculeSpawnOffset),
+                _battleMoleculeConfig);
         }
 
         private void CreateMembraneMoleculeIfUnlocked()
@@ -52,8 +55,19 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
             if (!_talentService.IsUnlocked(TalentType.MembraneMolecule))
                 return;
 
-            Vector3 offset = _battleMoleculeConfig.MembraneMoleculeSpawnOffset;
-            _battleMoleculeFactory.CreateMembrane(_levelStartPointProvider.StartPoint + offset, _battleMoleculeConfig);
+            _battleMoleculeFactory.CreateMembrane(
+                MoleculeSpawnPosition(_battleMoleculeConfig.MembraneMoleculeSpawnOffset),
+                _battleMoleculeConfig);
+        }
+
+        private Vector3 MoleculeSpawnPosition(Vector2 direction)
+        {
+            Vector3 startPoint = _levelStartPointProvider.StartPoint;
+            float angle = direction.sqrMagnitude > Mathf.Epsilon
+                ? Mathf.Atan2(direction.y, direction.x)
+                : 0f;
+
+            return OrbitMath.PositionOnCircle(startPoint, _battleMoleculeConfig.CoreOrbitRadius, angle, startPoint.z);
         }
 
         public void Exit()

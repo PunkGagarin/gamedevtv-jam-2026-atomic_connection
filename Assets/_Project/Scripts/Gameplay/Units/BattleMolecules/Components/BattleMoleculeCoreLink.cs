@@ -25,7 +25,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             if (config == null)
                 return;
 
-            CoreOrbit?.Configure(coreTransform, config.CoreOrbitDegreesPerSecond);
+            CoreOrbit?.Configure(coreTransform, config.CoreOrbitRadius, config.CoreOrbitDegreesPerSecond);
             ConnectionVisual?.Configure(coreTransform, config);
         }
 

@@ -16,6 +16,7 @@ namespace _Project.Scripts.Gameplay.Units
         [field: SerializeField, Min(0f)] public float SpawnRadiusOffset { get; private set; } = 0.6f;
 
         [field: Header("Free Atom Orbit")]
+        [field: SerializeField, Min(0f)] public float FreeAtomOrbitRadius { get; private set; } = 1.1f;
         [field: SerializeField, Min(0f)] public float FreeAtomOrbitDegreesPerSecond { get; private set; } = 60f;
     }
 }

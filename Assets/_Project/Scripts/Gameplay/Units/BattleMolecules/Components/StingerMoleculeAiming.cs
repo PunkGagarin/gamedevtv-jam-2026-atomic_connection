@@ -10,23 +10,23 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
         protected override void OnAimingStarted()
         {
-            AimLineView?.HideAimPreview();
+            AimLineVisual?.HideAimPreview();
         }
 
         protected override void OnAimingMoved(Vector3 origin, Vector3 dragEnd, Vector3 shotDirection)
         {
             if (!CanShowAimPreview(shotDirection))
             {
-                AimLineView?.HideAimPreview();
+                AimLineVisual?.HideAimPreview();
                 return;
             }
 
-            AimLineView?.ShowAimPreview(origin, shotDirection);
+            AimLineVisual?.ShowAimPreview(origin, shotDirection);
         }
 
         protected override void OnAimingStopped()
         {
-            AimLineView?.HideAimPreview();
+            AimLineVisual?.HideAimPreview();
         }
 
         private bool CanShowAimPreview(Vector3 shotDirection)
@@ -34,7 +34,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             return IsAiming
                    && Charge != null
                    && Charge.IsCharged
-                   && AimLineView != null
+                   && AimLineVisual != null
                    && shotDirection.sqrMagnitude > Mathf.Epsilon
                    && _talentService != null
                    && _talentService.IsUnlocked(TalentType.StingerMoleculeAim);

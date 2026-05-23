@@ -16,6 +16,12 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
         [Inject] private ITalentService _talentService;
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStaticState()
+        {
+            _nextShotSequenceId = 1;
+        }
+
         public override void Configure(BattleMoleculeConfig config)
         {
             if (config == null)
@@ -28,16 +34,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
         public override bool TryRequestShot(Vector3 direction)
         {
-            if (!CanRequestShot(direction))
-                return false;
-
-            Vector3 origin = transform.position;
-            Vector3 shotDirection = NormalizeShotDirection(direction);
-
-            SpendCharge();
-            RequestShotgun(origin, shotDirection);
-
-            return true;
+            return TryRequestShot(direction, RequestShotgun);
         }
 
         private void RequestShotgun(Vector3 origin, Vector3 centerDirection)

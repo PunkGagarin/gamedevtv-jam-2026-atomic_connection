@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Drag;
+using _Project.Scripts.Gameplay.Units;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
 
@@ -7,25 +8,28 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
 {
     [DisallowMultipleComponent]
     [RequireComponent(typeof(AtomCore))]
+    [RequireComponent(typeof(OwnedAtoms))]
     public class AtomCoreAtomDragSource : MonoBehaviour, IDragSource
     {
         private readonly List<FreeAtom> _atomsBuffer = new();
-        private AtomCore _core;
+        [field: SerializeField] private AtomCore Core { get; set; }
+        [field: SerializeField] private OwnedAtoms OwnedAtoms { get; set; }
 
         private void Awake()
         {
-            _core = GetComponent<AtomCore>();
+            if (Core == null)
+                Core = GetComponent<AtomCore>();
+
+            if (OwnedAtoms == null)
+                OwnedAtoms = GetComponent<OwnedAtoms>();
         }
 
         public IDraggable GetDraggable()
         {
-            if (_core == null)
-                _core = GetComponent<AtomCore>();
-
-            if (_core == null || !_core.IsAlive || _core.OwnedAtoms == null)
+            if (Core == null || !Core.IsAlive || OwnedAtoms == null)
                 return null;
 
-            _core.OwnedAtoms.GetOwned(FreeAtomOwnerKind.Core, _atomsBuffer);
+            OwnedAtoms.GetOwned(FreeAtomOwnerKind.Core, _atomsBuffer);
             FreeAtom fallback = null;
 
             foreach (FreeAtom atom in _atomsBuffer)
@@ -36,10 +40,10 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
                 fallback ??= atom;
 
                 if (!atom.IsInConnectionFlow)
-                    return atom;
+                    return atom.Draggable;
             }
 
-            return fallback;
+            return fallback != null ? fallback.Draggable : null;
         }
     }
 }

@@ -15,6 +15,7 @@ MonoBehaviour:
   <ClearSavedProgressOnStartup>k__BackingField: 0
   <Talents>k__BackingField:
   - {fileID: 11400000, guid: dba7fdf4bb0d1c71ff0c67f18f045578, type: 2}
+  - {fileID: 11400000, guid: 0291001701f8c6fd18aadfd636bd33df, type: 2}
   - {fileID: 11400000, guid: 91da2b7eb0204a7cd85d04d1a572c993, type: 2}
   - {fileID: 11400000, guid: 36ffd0c608ae1946c04d52814ce65618, type: 2}
   - {fileID: 11400000, guid: 8b1e281d076de1999b9124c9dc8f9a81, type: 2}
@@ -31,3 +32,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 3ffc02616ad79f36ebb7739abe8a875a, type: 2}
   - {fileID: 11400000, guid: 4762e90be7c1d8433c5cc047590d23c7, type: 2}
   - {fileID: 11400000, guid: 85e4401606c58ae071e184e3ec475849, type: 2}
+  - {fileID: 11400000, guid: ef3b99210cd742fa8c70f62a5928425d, type: 2}
+  - {fileID: 11400000, guid: 56cd27441a134bdeaa36c9ed7fd847c5, type: 2}
+  - {fileID: 11400000, guid: d475dba0c7c84ca7b51c83d6a165ffae, type: 2}

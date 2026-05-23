@@ -1,4 +1,6 @@
+using _Project.Scripts.Gameplay.Common.Random;
 using UnityEngine;
+using Zenject;
 
 namespace _Project.Scripts.Gameplay.Enemies.Components
 {
@@ -9,12 +11,14 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
 
         private float _currentStopDistance;
 
+        [Inject] private IRandomService _random;
+
         public bool IsStopped { get; private set; }
 
         public override void Configure(Transform target, float speed)
         {
             base.Configure(target, speed);
-            _currentStopDistance = Random.Range(
+            _currentStopDistance = _random.Range(
                 Mathf.Max(0f, StopDistance - StopDistanceJitter),
                 StopDistance + StopDistanceJitter);
             IsStopped = false;

@@ -18,6 +18,8 @@ MonoBehaviour:
   <DamagePopupWorldOffset>k__BackingField: {x: 0, y: 0.75, z: 0}
   <DamagePopupTextColor>k__BackingField: {r: 1, g: 0.25, b: 0.2, a: 1}
   <DamagePopupFontSize>k__BackingField: 4
+  <CriticalDamagePopupTextColor>k__BackingField: {r: 1, g: 0.9, b: 0.1, a: 1}
+  <CriticalDamagePopupFontSizeMultiplier>k__BackingField: 1.35
   <DamagePopupRiseDistance>k__BackingField: 0.65
   <DamagePopupDuration>k__BackingField: 0.55
   <DamagePopupSortingOrder>k__BackingField: 50

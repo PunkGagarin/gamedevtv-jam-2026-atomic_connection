@@ -1,18 +1,17 @@
 using UnityEngine;
 using _Project.Scripts.Gameplay.Talents;
-using _Project.Scripts.Gameplay.Units;
 using _Project.Scripts.Gameplay.Units.BattleMolecules;
 using _Project.Scripts.Gameplay.UI;
 using _Project.Scripts.Gameplay.Units.AtomCores.Components;
 
 namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
-    [RequireComponent(typeof(OwnedAtoms))]
     [RequireComponent(typeof(BattleMoleculeCharge))]
+    [RequireComponent(typeof(BattleMoleculeChargeConsumption))]
     public class MembraneMoleculeActivation : MonoBehaviour, IBattleMoleculeRuntimeBehavior
     {
-        [field: SerializeField] private OwnedAtoms OwnedAtoms { get; set; }
         [field: SerializeField] private BattleMoleculeCharge Charge { get; set; }
+        [field: SerializeField] private BattleMoleculeChargeConsumption ChargeConsumption { get; set; }
         [field: SerializeField] private ProgressBar ProgressBar { get; set; }
 
         private AtomCoreShield _coreMembrane;
@@ -21,11 +20,11 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
         private void Awake()
         {
-            if (OwnedAtoms == null)
-                OwnedAtoms = GetComponent<OwnedAtoms>();
-
             if (Charge == null)
                 Charge = GetComponent<BattleMoleculeCharge>();
+
+            if (ChargeConsumption == null)
+                ChargeConsumption = GetComponent<BattleMoleculeChargeConsumption>();
 
             HideProgress();
         }
@@ -73,9 +72,10 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             if (_coreMembrane == null)
                 return;
 
+            if (ChargeConsumption == null || !ChargeConsumption.TryConsume())
+                return;
+
             _coreMembrane.Activate(_duration, _secondsLostPerDamage);
-            Charge.Spend();
-            OwnedAtoms.ReleaseAll();
             ShowProgress(1f);
         }
 

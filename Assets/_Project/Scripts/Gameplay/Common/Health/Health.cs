@@ -11,7 +11,7 @@ namespace _Project.Scripts.Gameplay.Common.Health
         public bool IsAlive { get; private set; } = true;
 
         public event Action Changed;
-        public event Action<int> Damaged;
+        public event Action<int, bool> Damaged;
         public event Action Died;
 
         private void Awake()
@@ -35,6 +35,11 @@ namespace _Project.Scripts.Gameplay.Common.Health
 
         public void TakeDamage(int amount)
         {
+            TakeDamage(amount, false);
+        }
+
+        public void TakeDamage(int amount, bool isCritical)
+        {
             if (!IsAlive || amount <= 0)
                 return;
 
@@ -43,7 +48,7 @@ namespace _Project.Scripts.Gameplay.Common.Health
             int actualDamage = previousHealth - CurrentHealth;
 
             if (actualDamage > 0)
-                Damaged?.Invoke(actualDamage);
+                Damaged?.Invoke(actualDamage, isCritical);
 
             if (CurrentHealth == 0)
                 Kill();

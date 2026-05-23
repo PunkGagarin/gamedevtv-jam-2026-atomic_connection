@@ -1,4 +1,5 @@
 using System;
+using _Project.Scripts.Gameplay.Common.Progress;
 using UnityEngine;
 
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
@@ -7,22 +8,18 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
     public class BattleMoleculeBond : MonoBehaviour
     {
-        private int _atomsRequired;
-        private int _atomsReceived;
+        private readonly CompletionThreshold _atoms = new();
 
         public bool IsBonded { get; private set; }
-        public int AtomsRequired => _atomsRequired;
-        public int AtomsReceived => _atomsReceived;
-        public bool CanReceiveAtom => !IsBonded && _atomsReceived < _atomsRequired;
+        public bool CanReceiveAtom => !IsBonded && _atoms.Current < _atoms.Required;
 
         public event Action Bonded;
         public event Action Changed;
 
         public void Configure(int atomsRequired)
         {
-            _atomsRequired = Mathf.Max(0, atomsRequired);
-            _atomsReceived = 0;
-            IsBonded = _atomsRequired <= 0;
+            _atoms.Configure(atomsRequired);
+            IsBonded = _atoms.IsComplete;
             Changed?.Invoke();
         }
 
@@ -31,10 +28,10 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             if (atom == null || !CanReceiveAtom)
                 return false;
 
-            _atomsReceived++;
+            bool isComplete = _atoms.Advance();
             atom.RequestDespawn();
 
-            if (_atomsReceived >= _atomsRequired)
+            if (isComplete)
             {
                 IsBonded = true;
                 Bonded?.Invoke();

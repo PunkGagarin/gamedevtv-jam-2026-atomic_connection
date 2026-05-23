@@ -17,8 +17,8 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
         private const string PICKUP_CONTAINER_NAME = "CurrencyPickups";
         private const string PICKUP_AREA_OBJECT_NAME = "CurrencyPickupArea";
 
-        private readonly List<CurrencyPickupView> _pickups = new();
-        private CurrencyPickupAreaView _pickupAreaView;
+        private readonly List<CurrencyPickup> _pickups = new();
+        private CurrencyPickupAreaIndicator _pickupAreaIndicator;
 
         [Inject] private IAssetProvider _assetProvider;
         [Inject] private ICameraProvider _cameraProvider;
@@ -41,7 +41,7 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
             if (amount.Amount <= 0)
                 return;
 
-            CurrencyPickupView prefab = _assetProvider.LoadAsset<CurrencyPickupView>(_config.PickupPrefabResourcePath);
+            CurrencyPickup prefab = _assetProvider.LoadAsset<CurrencyPickup>(_config.PickupPrefabResourcePath);
 
             if (prefab == null)
             {
@@ -60,9 +60,9 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
             SpawnPickup(prefab, amount, worldPosition);
         }
 
-        private void SpawnPickup(CurrencyPickupView prefab, CurrencyAmount amount, Vector3 worldPosition)
+        private void SpawnPickup(CurrencyPickup prefab, CurrencyAmount amount, Vector3 worldPosition)
         {
-            CurrencyPickupView pickup = _instantiator.InstantiatePrefabForComponent<CurrencyPickupView>(
+            CurrencyPickup pickup = _instantiator.InstantiatePrefabForComponent<CurrencyPickup>(
                 prefab,
                 SpawnPositionNear(worldPosition),
                 Quaternion.identity,
@@ -93,7 +93,7 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
 
             for (int i = _pickups.Count - 1; i >= 0; i--)
             {
-                CurrencyPickupView pickup = _pickups[i];
+                CurrencyPickup pickup = _pickups[i];
                 if (pickup == null)
                 {
                     _pickups.RemoveAt(i);
@@ -109,7 +109,7 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
 
         public void Cleanup()
         {
-            foreach (CurrencyPickupView pickup in _pickups)
+            foreach (CurrencyPickup pickup in _pickups)
             {
                 if (pickup != null)
                     Object.Destroy(pickup.gameObject);
@@ -125,13 +125,11 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
             if (Mathf.Approximately(jitterRadius, 0f))
                 return worldPosition;
 
-            float angle = _random.Range(0f, Mathf.PI * 2f);
-            float distance = Mathf.Sqrt(_random.Range(0f, 1f)) * jitterRadius;
-            Vector2 offset = new(Mathf.Cos(angle) * distance, Mathf.Sin(angle) * distance);
+            Vector2 offset = RandomGeometry.PointInCircle(_random, jitterRadius);
             return worldPosition + new Vector3(offset.x, offset.y, 0f);
         }
 
-        private void CollectAt(int index, CurrencyPickupView pickup)
+        private void CollectAt(int index, CurrencyPickup pickup)
         {
             _pickups.RemoveAt(index);
             PlayCollectSound();
@@ -162,36 +160,36 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
             }
 
             EnsurePickupArea();
-            _pickupAreaView.Configure(
+            _pickupAreaIndicator.Configure(
                 _config.PickupAreaLineWidth,
                 _config.PickupAreaSortingOrder,
                 _config.PickupAreaColor);
-            _pickupAreaView.Show(center, halfSize);
+            _pickupAreaIndicator.Show(center, halfSize);
         }
 
         private void HidePickupArea()
         {
-            if (_pickupAreaView != null)
-                _pickupAreaView.Hide();
+            if (_pickupAreaIndicator != null)
+                _pickupAreaIndicator.Hide();
         }
 
         private void EnsurePickupArea()
         {
-            if (_pickupAreaView != null)
+            if (_pickupAreaIndicator != null)
                 return;
 
             GameObject areaObject = new(PICKUP_AREA_OBJECT_NAME);
             areaObject.transform.SetParent(_runtimeHierarchy.GetOrCreateContainer(PICKUP_CONTAINER_NAME), false);
-            _pickupAreaView = areaObject.AddComponent<CurrencyPickupAreaView>();
+            _pickupAreaIndicator = areaObject.AddComponent<CurrencyPickupAreaIndicator>();
         }
 
         private void DestroyPickupArea()
         {
-            if (_pickupAreaView == null)
+            if (_pickupAreaIndicator == null)
                 return;
 
-            Object.Destroy(_pickupAreaView.gameObject);
-            _pickupAreaView = null;
+            Object.Destroy(_pickupAreaIndicator.gameObject);
+            _pickupAreaIndicator = null;
         }
 
         private float CurrentPickupAreaHalfSize()

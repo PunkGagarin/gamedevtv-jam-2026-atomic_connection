@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using _Project.Scripts.Gameplay.Common.Movement;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
 
@@ -54,6 +55,11 @@ namespace _Project.Scripts.Gameplay.Units
             Arrange();
         }
 
+        public void ConfigureOwnerPlusAtomRadiusFromOwnerCollider(FreeAtomOwnerKind ownerKind)
+        {
+            ConfigureOwnerPlusAtomRadius(ownerKind, ObjectRadius.RadiusOf(transform));
+        }
+
         private void Arrange()
         {
             if (OwnedAtoms == null)
@@ -80,16 +86,16 @@ namespace _Project.Scripts.Gameplay.Units
 
         private void ArrangeAtom(FreeAtom atom, float angle)
         {
-            if (atom == null || atom.OrbitMotion == null)
+            if (atom == null)
                 return;
 
-            atom.OrbitMotion.Configure(transform, RadiusFor(atom), angle);
+            atom.ConfigureOrbit(transform, RadiusFor(atom), angle);
         }
 
         private float RadiusFor(FreeAtom atom)
         {
             return _radiusMode == RadiusMode.OwnerPlusAtom
-                ? _ownerRadius + GetColliderRadius(atom.transform)
+                ? _ownerRadius + ObjectRadius.RadiusOf(atom.transform)
                 : _fixedRadius;
         }
 
@@ -98,21 +104,8 @@ namespace _Project.Scripts.Gameplay.Units
             if (atom == null)
                 return 0;
 
-            Vector3 offset = atom.transform.position - transform.position;
-            return offset.sqrMagnitude > 0.001f
-                ? Mathf.Atan2(offset.y, offset.x)
-                : 0;
+            return OrbitMath.AngleFromCenter(transform.position, atom.transform.position);
         }
 
-        private static float GetColliderRadius(Transform target)
-        {
-            Collider2D col = target.GetComponent<Collider2D>();
-
-            if (col == null)
-                return 0;
-
-            Vector3 extents = col.bounds.extents;
-            return Mathf.Max(extents.x, extents.y);
-        }
     }
 }

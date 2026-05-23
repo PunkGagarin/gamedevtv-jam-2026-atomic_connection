@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Cameras.Provider;
 using _Project.Scripts.Gameplay.Common.Physics;
 using _Project.Scripts.Gameplay.Input.Service;
@@ -14,6 +15,8 @@ namespace _Project.Scripts.Gameplay.Drag
 
         private DragStartCandidate _pendingCandidate;
         private IDraggable _currentDraggable;
+        private readonly List<Collider2D> _hiddenDragColliders = new();
+        private readonly List<bool> _hiddenDragColliderStates = new();
         private Vector2 _pendingScreenPosition;
         private bool _dragWasStartedThisPress;
 
@@ -25,6 +28,12 @@ namespace _Project.Scripts.Gameplay.Drag
         private bool HasPendingDrag => _pendingCandidate.Draggable != null;
         public bool DragWasStartedThisPress => _dragWasStartedThisPress;
         public bool IsDragActive => HasCurrentDrag || HasPendingDrag;
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStaticState()
+        {
+            System.Array.Clear(OverlapHits, 0, OverlapHits.Length);
+        }
 
         public bool IsReserved(IDraggable draggable)
         {
@@ -171,7 +180,15 @@ namespace _Project.Scripts.Gameplay.Drag
         private IDropTarget GetDropTargetAt(Vector3 worldPosition)
         {
             Collider2D col = _currentDraggable.Transform.GetComponent<Collider2D>();
-            if (col != null)
+            ColliderSet colliderSet = _currentDraggable.Transform.GetComponent<ColliderSet>();
+            bool colliderWasEnabled = col != null && col.enabled;
+
+            if (colliderSet != null)
+            {
+                colliderSet.CaptureEnabledStates(_hiddenDragColliders, _hiddenDragColliderStates);
+                colliderSet.SetEnabled(false);
+            }
+            else if (col != null)
                 col.enabled = false;
 
             IDropTarget target = null;
@@ -197,8 +214,10 @@ namespace _Project.Scripts.Gameplay.Drag
                 }
             }
 
-            if (col != null)
-                col.enabled = true;
+            if (colliderSet != null)
+                colliderSet.RestoreEnabledStates(_hiddenDragColliders, _hiddenDragColliderStates);
+            else if (col != null)
+                col.enabled = colliderWasEnabled;
 
             return target;
         }

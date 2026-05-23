@@ -1,26 +1,20 @@
 using System;
-using _Project.Scripts.Gameplay.Units;
 using _Project.Scripts.Gameplay.Units.BattleMolecules;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
-    [RequireComponent(typeof(OwnedAtoms))]
-    [RequireComponent(typeof(BattleMoleculeCharge))]
+    [RequireComponent(typeof(BattleMoleculeChargeConsumption))]
     public class BattleMoleculeShotQueue : MonoBehaviour
     {
-        [field: SerializeField] private OwnedAtoms OwnedAtoms { get; set; }
-        [field: SerializeField] private BattleMoleculeCharge Charge { get; set; }
+        [field: SerializeField] private BattleMoleculeChargeConsumption ChargeConsumption { get; set; }
 
         public event Action<BattleMoleculeShotRequest> ShotRequested;
 
         private void Awake()
         {
-            if (OwnedAtoms == null)
-                OwnedAtoms = GetComponent<OwnedAtoms>();
-
-            if (Charge == null)
-                Charge = GetComponent<BattleMoleculeCharge>();
+            if (ChargeConsumption == null)
+                ChargeConsumption = GetComponent<BattleMoleculeChargeConsumption>();
         }
 
         public virtual void Configure(BattleMoleculeConfig config)
@@ -29,6 +23,11 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
         public virtual bool TryRequestShot(Vector3 direction)
         {
+            return TryRequestShot(direction, RequestStingerShot);
+        }
+
+        protected bool TryRequestShot(Vector3 direction, Action<Vector3, Vector3> requestShots)
+        {
             if (!CanRequestShot(direction))
                 return false;
 
@@ -36,23 +35,21 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             Vector3 shotDirection = NormalizeShotDirection(direction);
 
             SpendCharge();
-            RequestShot(origin, shotDirection, BattleMoleculeShotKind.Stinger);
+            requestShots?.Invoke(origin, shotDirection);
 
             return true;
         }
 
         protected bool CanRequestShot(Vector3 direction)
         {
-            return Charge != null
-                   && OwnedAtoms != null
-                   && Charge.IsCharged
+            return ChargeConsumption != null
+                   && ChargeConsumption.CanConsume
                    && direction.sqrMagnitude > Mathf.Epsilon;
         }
 
         protected void SpendCharge()
         {
-            Charge.Spend();
-            OwnedAtoms.ReleaseAll();
+            ChargeConsumption?.TryConsume();
         }
 
         protected void RequestShot(Vector3 origin, Vector3 direction, BattleMoleculeShotKind kind, int shotSequenceId = 0)
@@ -63,6 +60,11 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         protected static Vector3 NormalizeShotDirection(Vector3 direction)
         {
             return direction.normalized;
+        }
+
+        private void RequestStingerShot(Vector3 origin, Vector3 direction)
+        {
+            RequestShot(origin, direction, BattleMoleculeShotKind.Stinger);
         }
     }
 }

@@ -1,3 +1,4 @@
+using _Project.Scripts.Gameplay.Common.Physics;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Enemies.Components
@@ -9,6 +10,11 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
 
         protected Transform Target => _target;
         protected float Speed => _speed;
+
+        protected virtual void Awake()
+        {
+            Rigidbody2DUtility.EnsureKinematicForMovingCollider(gameObject);
+        }
 
         public virtual void Configure(Transform target, float speed)
         {

@@ -1,90 +1,57 @@
 using _Project.Scripts.Gameplay.Drag;
-using _Project.Scripts.Gameplay.Units;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
+using _Project.Scripts.Gameplay.Units.FreeAtoms.Components;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
-    [RequireComponent(typeof(OwnedAtoms))]
-    [RequireComponent(typeof(BattleMoleculeCharge))]
     [RequireComponent(typeof(BattleMoleculeBond))]
+    [RequireComponent(typeof(BattleMoleculeConnectionAtomReceiver))]
     public class BattleMoleculeAtomReceiver : MonoBehaviour
     {
-        [field: SerializeField] private OwnedAtoms OwnedAtoms { get; set; }
-        [field: SerializeField] private BattleMoleculeCharge Charge { get; set; }
         [field: SerializeField] private BattleMoleculeBond Bond { get; set; }
-
-        public bool CanReceiveConnectionAtom => Bond != null
-                                                && Bond.IsBonded
-                                                && Charge != null
-                                                && OwnedAtoms != null
-                                                && Charge.CanReceiveAtom(OwnedAtoms.Count);
-
-        public int ConnectionAtomsRemaining => Bond != null && Bond.IsBonded && Charge != null && OwnedAtoms != null
-            ? Charge.RemainingAtoms(OwnedAtoms.Count)
-            : 0;
+        [field: SerializeField] private BattleMoleculeConnectionAtomReceiver ConnectionReceiver { get; set; }
 
         private void Awake()
         {
-            if (OwnedAtoms == null)
-                OwnedAtoms = GetComponent<OwnedAtoms>();
-
-            if (Charge == null)
-                Charge = GetComponent<BattleMoleculeCharge>();
-
             if (Bond == null)
                 Bond = GetComponent<BattleMoleculeBond>();
+
+            if (ConnectionReceiver == null)
+                ConnectionReceiver = GetComponent<BattleMoleculeConnectionAtomReceiver>();
         }
 
-        public bool CanAcceptDrop(IDraggable draggable)
+        internal bool CanAcceptDrop(IDraggable draggable)
         {
-            if (draggable is not FreeAtom)
+            if (!TryGetFreeAtom(draggable, out _))
                 return false;
 
-            return Bond != null && Bond.CanReceiveAtom || CanReceiveConnectionAtom;
+            return Bond.CanReceiveAtom || ConnectionReceiver.CanReceiveAtom;
         }
 
-        public void AcceptDrop(IDraggable draggable)
+        internal void AcceptDrop(IDraggable draggable)
         {
-            if (draggable is not FreeAtom freeAtom)
+            if (!TryGetFreeAtom(draggable, out FreeAtom freeAtom))
                 return;
 
-            if (Bond != null && Bond.CanReceiveAtom)
+            if (Bond.CanReceiveAtom)
             {
-                TryAcceptBondAtom(freeAtom);
+                Bond.TryAcceptAtom(freeAtom);
                 return;
             }
 
-            TryReceiveConnectionAtom(freeAtom);
+            ConnectionReceiver.TryReceive(freeAtom);
         }
 
-        public bool TryAcceptBondAtom(FreeAtom freeAtom)
+        private static bool TryGetFreeAtom(IDraggable draggable, out FreeAtom freeAtom)
         {
-            if (freeAtom == null || Bond == null)
-                return false;
+            freeAtom = draggable switch
+            {
+                FreeAtomDrag drag => drag.Atom,
+                _ => null
+            };
 
-            return Bond.TryAcceptAtom(freeAtom);
-        }
-
-        public bool TryReceiveConnectionAtom(FreeAtom freeAtom)
-        {
-            if (freeAtom == null || !CanReceiveConnectionAtom)
-                return false;
-
-            freeAtom.EndConnectionFlow();
-            DisableCollider(freeAtom);
-
-            OwnedAtoms.TakeOwnership(freeAtom, FreeAtomOwnerKind.BattleMolecule);
-            Charge.RegisterAtomCount(OwnedAtoms.Count);
-
-            return true;
-        }
-
-        private static void DisableCollider(FreeAtom freeAtom)
-        {
-            Collider2D col = freeAtom.GetComponent<Collider2D>();
-            if (col != null)
-                col.enabled = false;
+            return freeAtom != null;
         }
     }
 }

@@ -3,7 +3,7 @@ namespace _Project.Scripts.Gameplay.Talents
     public enum TalentId
     {
         CoreHealthSmall = 0,
-        LegacyAutoClick = 1,
+        AutoClick = 1,
         CoreClickReduction = 2,
         CoreHealthLarge = 3,
         StingerMoleculeDamageSmall = 4,
@@ -23,5 +23,8 @@ namespace _Project.Scripts.Gameplay.Talents
         CurrencyPickupArea = 18,
         SwarmMoleculeShotCount = 19,
         SwarmMoleculeAttackRange = 20,
+        ConnectionAtomSpeed = 21,
+        StingerMoleculeCriticalChance = 22,
+        StingerMoleculeCriticalReward = 23,
     }
 }

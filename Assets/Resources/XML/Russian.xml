@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language LANG="Russian" ID="0">
   <text key="MAIN_MENU_START_GAME">Начать игру</text>
   <text key="MAIN_MENU_SETTINGS">Настройки</text>
@@ -30,15 +30,15 @@
   <text key="COMMON_MAIN_MENU">Главное меню</text>
   <text key="CURRENCY_NUCLEOTIDES">ДНК</text>
   <text key="CURRENCY_NUCLEOTIDES_SHORT">ДНК</text>
-  <text key="CURRENCY_NUCLEOTIDES_BALANCE_SUFFIX"> ДНК</text>
+  <text key="CURRENCY_NUCLEOTIDES_BALANCE_SUFFIX">ДНК</text>
   <text key="CURRENCY_ISOTOPES">изотопы</text>
   <text key="CURRENCY_ISOTOPES_SHORT">изот.</text>
-  <text key="CURRENCY_ISOTOPES_BALANCE_SUFFIX"> изотоп</text>
+  <text key="CURRENCY_ISOTOPES_BALANCE_SUFFIX">изотоп</text>
   <text key="TALENT_NODE_MAX">МАКС</text>
   <text key="TALENT_CORE_HEALTH_SMALL_TITLE">Крепкое ядро</text>
   <text key="TALENT_CORE_HEALTH_SMALL_DESC">Увеличивает здоровье ядра на 1.</text>
   <text key="TALENT_AUTO_CLICK_TITLE">Автогенерация</text>
-  <text key="TALENT_AUTO_CLICK_DESC">Ядро автоматически создаёт заряд без клика.</text>
+  <text key="TALENT_AUTO_CLICK_DESC">Ядро автоматически создаёт заряд без клика при наведении курсора на ядро.</text>
   <text key="TALENT_CORE_CLICK_REDUCTION_TITLE">Быстрая сборка</text>
   <text key="TALENT_CORE_CLICK_REDUCTION_DESC">Уменьшает время восстановления клика ядра.</text>
   <text key="TALENT_CORE_HEALTH_LARGE_TITLE">Прочное ядро</text>
@@ -73,6 +73,13 @@
   <text key="TALENT_SWARM_MOLECULE_DAMAGE_LARGE_DESC">Увеличивает урон SwarmMolecule на 2.</text>
   <text key="TALENT_CURRENCY_PICKUP_AREA_TITLE">Широкий сбор</text>
   <text key="TALENT_CURRENCY_PICKUP_AREA_DESC">Увеличивает радиус подбора валюты.</text>
+  <text key="TALENT_CONNECTION_ATOM_SPEED_TITLE">Ускоренный поток</text>
+  <text key="TALENT_CONNECTION_ATOM_SPEED_DESC">Ускоряет connection-поток атомов от ядра к активной боевой молекуле на 25% за уровень.</text>
+  <text key="TALENT_STINGER_MOLECULE_CRITICAL_CHANCE_TITLE">Точный укол</text>
+  <text key="TALENT_STINGER_MOLECULE_CRITICAL_CHANCE_DESC">Дает StingerMolecule 10% шанс нанести критический урон за уровень.</text>
+  <text key="TALENT_STINGER_MOLECULE_CRITICAL_REWARD_TITLE">ДНК-выброс</text>
+  <text key="TALENT_STINGER_MOLECULE_CRITICAL_REWARD_DESC">Увеличивает награду за критические убийства StingerMolecule на 50% за уровень.</text>
+  <text key="DAMAGE_POPUP_CRITICAL">Критический урон!</text>
   <text key="TALENT_SWARM_MOLECULE_SHOT_COUNT_TITLE">Залп роя</text>
   <text key="TALENT_SWARM_MOLECULE_SHOT_COUNT_DESC">Добавляет снаряды SwarmMolecule и расширяет залп.</text>
   <text key="TALENT_SWARM_MOLECULE_ATTACK_RANGE_TITLE">Дальность роя</text>

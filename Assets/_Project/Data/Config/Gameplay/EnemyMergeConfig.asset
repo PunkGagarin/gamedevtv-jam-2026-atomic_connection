@@ -16,11 +16,14 @@ MonoBehaviour:
   <MergeChance>k__BackingField: 0.3
   <MergeRadius>k__BackingField: 5
   <MergeCheckIntervalSeconds>k__BackingField: 0.5
+  <MaxMergeGroupSize>k__BackingField: 5
+  <MaxMergeLinksPerEnemy>k__BackingField: 2
+  <MergeDeathWaveStepSeconds>k__BackingField: 0.08
   <MergeExcludedEnemyIds>k__BackingField: 0300000001000000
   <MergeLinkWidth>k__BackingField: 0.12
   <MergeLinkZOffset>k__BackingField: 0.05
   <MergeLinkIntermediatePointCount>k__BackingField: 5
-  <MergeLinkViewResourcePath>k__BackingField: Gameplay/Enemies/EnemyMergeLinkView
+  <MergeLinkVisualResourcePath>k__BackingField: Gameplay/Enemies/EnemyMergeLinkVisual
   <MergeTetherMinimumDistance>k__BackingField: 2.32
   <MergeTetherPreferredDistance>k__BackingField: 2.8
   <MergeTetherPullStrength>k__BackingField: 5.5

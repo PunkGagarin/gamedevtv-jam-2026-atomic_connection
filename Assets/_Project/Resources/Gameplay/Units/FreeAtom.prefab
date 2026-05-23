@@ -84,7 +84,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <OrbitMotion>k__BackingField: {fileID: 11400001}
-  <HoverBehaviour>k__BackingField: {fileID: 0}
+  <RadiusProvider>k__BackingField: {fileID: 11400002}
+  <ColliderSet>k__BackingField: {fileID: 11400003}
+  <Ownership>k__BackingField: {fileID: 11400005}
+  <State>k__BackingField: {fileID: 11400006}
+  <Drag>k__BackingField: {fileID: 11400007}
+  <Lifetime>k__BackingField: {fileID: 11400008}
+  <Lifecycle>k__BackingField: {fileID: 11400009}
 --- !u!114 &11400001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -195,33 +201,106 @@ CircleCollider2D:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5015733676031192469}
+  m_GameObject: {fileID: 100000}
   m_Enabled: 1
-  serializedVersion: 3
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_CompositeOperation: 0
-  m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 0.3589444
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f4b3d151db44c5dad1e4659bf4bcaea, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  <Collider>k__BackingField: {fileID: 5800000}
+  <IncludeChildRenderers>k__BackingField: 1
+--- !u!114 &11400003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cf7401d29fd48f38801387adb1927e6, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+--- !u!114 &11400004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 473cccd626784dc88668dfbc5c52b77c, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+--- !u!114 &11400005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d12d33c834e34946b73d22655af953fc, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  <Atom>k__BackingField: {fileID: 11400000}
+  <OrbitMotion>k__BackingField: {fileID: 11400001}
+--- !u!114 &11400006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81d98f1a4f134439a54704ae5d697ad0, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+--- !u!114 &11400007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 570482d9114f4eb5818a17ec4091b4c8, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  <Atom>k__BackingField: {fileID: 11400000}
+  <State>k__BackingField: {fileID: 11400006}
+  <OrbitMotion>k__BackingField: {fileID: 11400001}
+--- !u!114 &11400008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b102da3bff39426687467802ad0ba68d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  <Atom>k__BackingField: {fileID: 11400000}
+--- !u!114 &11400009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7baa0e1f3c7b498098cc32222bd6666e, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+  <ColliderSet>k__BackingField: {fileID: 11400003}
+  <InitialLocalScale>k__BackingField: {fileID: 11400004}
+  <Ownership>k__BackingField: {fileID: 11400005}
+  <State>k__BackingField: {fileID: 11400006}
+  <HoverBehaviour>k__BackingField: {fileID: 8480504063172188488}

@@ -12,45 +12,69 @@ namespace _Project.Scripts.Gameplay.Enemies
 
         private readonly EnemyUnit _first;
         private readonly EnemyUnit _second;
-        private readonly EnemyMergeLinkView _view;
+        private readonly EnemyMergeLinkVisual _visual;
         private readonly float _tugPhase;
         private readonly float _tugFrequency01;
+        private bool _isDestroyed;
 
-        public ActiveEnemyMergeLink(EnemyUnit first, EnemyUnit second, EnemyMergeLinkView view)
+        public ActiveEnemyMergeLink(EnemyUnit first, EnemyUnit second, EnemyMergeLinkVisual visual)
         {
             _first = first;
             _second = second;
-            _view = view;
+            _visual = visual;
             _tugPhase = PairNoise(13.37f) * Mathf.PI * 2f;
             _tugFrequency01 = PairNoise(91.73f);
         }
 
-        public bool IsAlive => _first != null && _second != null && _first.IsMergeLinked && _second.IsMergeLinked && _view != null;
+        public EnemyUnit First => _first;
+        public EnemyUnit Second => _second;
+        public bool IsAlive => !_isDestroyed && _first != null && _second != null && _first.IsMergeLinkEndpointAlive && _second.IsMergeLinkEndpointAlive && _visual != null;
 
         public bool Contains(EnemyUnit enemy)
         {
-            return _first == enemy || _second == enemy;
+            return !_isDestroyed && (_first == enemy || _second == enemy);
         }
 
-        public void Tick(float deltaTime, EnemyMergeConfig config)
+        public bool Connects(EnemyUnit first, EnemyUnit second)
         {
-            ApplyTetherMotion(deltaTime, config);
-            _view.Tick();
+            return !_isDestroyed && ((_first == first && _second == second) || (_first == second && _second == first));
         }
 
-        public void ClearEnemyReferences()
+        public EnemyUnit NeighborOf(EnemyUnit enemy)
         {
-            _first?.ClearMergeLinkView();
-            _second?.ClearMergeLinkView();
+            if (_isDestroyed)
+                return null;
+
+            if (_first == enemy)
+                return _second;
+
+            if (_second == enemy)
+                return _first;
+
+            return null;
         }
 
-        public void DestroyView()
+        public void Tick(float deltaTime, float elapsedSeconds, EnemyMergeConfig config)
         {
-            if (_view != null)
-                Object.Destroy(_view.gameObject);
+            if (_isDestroyed)
+                return;
+
+            ApplyTetherMotion(deltaTime, elapsedSeconds, config);
+            _visual.Tick();
         }
 
-        private void ApplyTetherMotion(float deltaTime, EnemyMergeConfig config)
+        public void DestroyVisual()
+        {
+            if (_isDestroyed)
+                return;
+
+            _isDestroyed = true;
+
+            if (_visual != null)
+                Object.Destroy(_visual.gameObject);
+        }
+
+        private void ApplyTetherMotion(float deltaTime, float elapsedSeconds, EnemyMergeConfig config)
         {
             if (deltaTime <= 0f || config == null)
                 return;
@@ -62,20 +86,20 @@ namespace _Project.Scripts.Gameplay.Enemies
                 return;
 
             Vector3 direction = delta / distance;
-            float tugSignal = CalculateTugSignal(config);
+            float tugSignal = CalculateTugSignal(config, elapsedSeconds);
             float targetDistance = CalculateTargetDistance(distance, tugSignal, config);
             ApplyDistanceCorrection(direction, distance, targetDistance, deltaTime, config);
             ApplyContestTug(direction, tugSignal, deltaTime, config);
         }
 
-        private float CalculateTugSignal(EnemyMergeConfig config)
+        private float CalculateTugSignal(EnemyMergeConfig config, float elapsedSeconds)
         {
             float tugFrequency = Mathf.Lerp(
                 config.MergeTetherTugMinFrequency,
                 Mathf.Max(config.MergeTetherTugMinFrequency, config.MergeTetherTugMaxFrequency),
                 _tugFrequency01);
 
-            return Mathf.Sin(Time.time * tugFrequency + _tugPhase);
+            return Mathf.Sin(elapsedSeconds * tugFrequency + _tugPhase);
         }
 
         private float CalculateTargetDistance(float distance, float tugSignal, EnemyMergeConfig config)

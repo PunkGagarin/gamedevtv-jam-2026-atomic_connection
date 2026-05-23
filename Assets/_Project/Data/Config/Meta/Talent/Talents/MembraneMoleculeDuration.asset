@@ -16,6 +16,7 @@ MonoBehaviour:
   <Type>k__BackingField: 10
   <Title>k__BackingField: TALENT_MEMBRANE_MOLECULE_DURATION_TITLE
   <Description>k__BackingField: TALENT_MEMBRANE_MOLECULE_DURATION_DESC
+  <Icon>k__BackingField: {fileID: 0}
   <MaxLevel>k__BackingField: 1
   <CostCurrency>k__BackingField: 0
   <CostsByLevel>k__BackingField: 50000000

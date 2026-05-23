@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 11400022}
   - component: {fileID: 11400023}
   - component: {fileID: 11400024}
+  - component: {fileID: 5985645545871786841}
   m_Layer: 0
   m_Name: EnemyUnit
   m_TagString: Untagged
@@ -235,6 +236,19 @@ MonoBehaviour:
   <RuntimeBehaviors>k__BackingField: {fileID: 11400023}
   <Vitality>k__BackingField: {fileID: 11400021}
   <Merge>k__BackingField: {fileID: 11400022}
+--- !u!114 &5985645545871786841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 055a414bcadfdb746a18a75f6a20b04b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDieEffectorBehaviour
+  enemyVitality: {fileID: 11400021}
 --- !u!1 &8954845912983384912
 GameObject:
   m_ObjectHideFlags: 0

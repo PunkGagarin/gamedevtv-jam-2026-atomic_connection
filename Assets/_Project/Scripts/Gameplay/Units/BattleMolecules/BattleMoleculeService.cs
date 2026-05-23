@@ -17,6 +17,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         private const float ARRIVAL_DISTANCE = 0.03f;
         private const float MIN_FLOW_RADIUS = 0.1f;
 
+        private readonly List<BattleMolecule> _molecules = new();
         private readonly List<FreeAtom> _coreAtoms = new();
         private readonly List<FlowAtomState> _flowAtoms = new();
         private bool _isStarted;
@@ -24,7 +25,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         private AtomCore _core;
         private OwnedAtoms _coreOwnedAtoms;
 
-        [Inject] private IBattleMoleculeFactory _battleMoleculeFactory;
         [Inject] private ITimeService _time;
         [Inject] private IAtomCoreService _atomCoreService;
         [Inject] private BattleMoleculeConfig _config;
@@ -32,22 +32,35 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         [Inject] private IDragService _dragService;
         [Inject] private IInputService _inputService;
 
+        public void Register(BattleMolecule molecule)
+        {
+            if (molecule == null || _molecules.Contains(molecule))
+                return;
+
+            if (_core == null || _coreOwnedAtoms == null)
+                CacheCoreReferences();
+
+            molecule.ConfigureCoreOrbit(_atomCoreService.CurrentCoreTransform, _config);
+            molecule.ConfigureCoreInteraction(_core, _config, _talentService);
+            molecule.Bonded += OnMoleculeBonded;
+            _molecules.Add(molecule);
+
+            if (molecule.IsBonded && !IsValidActiveMolecule(_activeMolecule))
+                SetActiveMolecule(molecule);
+        }
+
         public void Start()
         {
             if (_isStarted)
                 return;
 
             _isStarted = true;
-            _battleMoleculeFactory.MoleculeCreated += TrackMolecule;
             CacheCoreReferences();
-
-            foreach (BattleMolecule molecule in _battleMoleculeFactory.CreatedMolecules)
-                TrackMolecule(molecule);
         }
 
         public void Update()
         {
-            foreach (BattleMolecule molecule in _battleMoleculeFactory.CreatedMolecules)
+            foreach (BattleMolecule molecule in _molecules)
             {
                 if (molecule == null)
                     continue;
@@ -61,13 +74,12 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
         public void Cleanup()
         {
-            if (!_isStarted)
+            if (!_isStarted && _molecules.Count == 0)
                 return;
 
             _isStarted = false;
-            _battleMoleculeFactory.MoleculeCreated -= TrackMolecule;
 
-            foreach (BattleMolecule molecule in _battleMoleculeFactory.CreatedMolecules)
+            foreach (BattleMolecule molecule in _molecules)
             {
                 if (molecule == null)
                     continue;
@@ -78,26 +90,17 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
             ReleaseFlowAtomControl();
 
+            foreach (BattleMolecule molecule in _molecules)
+            {
+                if (molecule != null)
+                    Object.Destroy(molecule.gameObject);
+            }
+
+            _molecules.Clear();
             _coreAtoms.Clear();
             _activeMolecule = null;
             _core = null;
             _coreOwnedAtoms = null;
-        }
-
-        private void TrackMolecule(BattleMolecule molecule)
-        {
-            if (molecule == null)
-                return;
-
-            if (_core == null || _coreOwnedAtoms == null)
-                CacheCoreReferences();
-
-            molecule.ConfigureCoreOrbit(_atomCoreService.CurrentCoreTransform, _config);
-            molecule.ConfigureCoreInteraction(_core, _config, _talentService);
-            molecule.Bonded += OnMoleculeBonded;
-
-            if (molecule.IsBonded && !IsValidActiveMolecule(_activeMolecule))
-                SetActiveMolecule(molecule);
         }
 
         private void OnMoleculeBonded(BattleMolecule molecule)
@@ -118,11 +121,9 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                 return;
 
             Vector2 worldPosition = _inputService.GetWorldMousePosition();
-            IReadOnlyList<BattleMolecule> molecules = _battleMoleculeFactory.CreatedMolecules;
-
-            for (int i = molecules.Count - 1; i >= 0; i--)
+            for (int i = _molecules.Count - 1; i >= 0; i--)
             {
-                BattleMolecule molecule = molecules[i];
+                BattleMolecule molecule = _molecules[i];
                 if (!IsValidActiveMolecule(molecule) || !molecule.ContainsPoint(worldPosition))
                     continue;
 
@@ -554,7 +555,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
             _activeMolecule = molecule;
 
-            foreach (BattleMolecule createdMolecule in _battleMoleculeFactory.CreatedMolecules)
+            foreach (BattleMolecule createdMolecule in _molecules)
             {
                 if (createdMolecule == null)
                     continue;

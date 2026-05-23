@@ -19,7 +19,6 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
         [Inject] private IEnemyProjectileService _enemyProjectileService;
         [Inject] private IAtomCoreService _atomCoreService;
         [Inject] private IFreeAtomFactory _freeAtomFactory;
-        [Inject] private IBattleMoleculeFactory _battleMoleculeFactory;
         [Inject] private IBattleMoleculeService _battleMoleculeService;
         [Inject] private IDragService _dragService;
         [Inject] private ICurrencyPickupService _currencyPickupService;
@@ -75,9 +74,8 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
             _levelProgressService.Cleanup();
             _enemyProjectileService.Cleanup();
             _enemyService.Cleanup();
-            _atomCoreService.Cleanup();
             _battleMoleculeService.Cleanup();
-            _battleMoleculeFactory.Cleanup();
+            _atomCoreService.Cleanup();
             _freeAtomFactory.Cleanup();
             _runtimeHierarchy.Cleanup();
         }

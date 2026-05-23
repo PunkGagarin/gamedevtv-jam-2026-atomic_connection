@@ -28,6 +28,7 @@ namespace _Project.Scripts.GameplayData
         [field: SerializeField] private LevelCatalogConfig LevelCatalogConfig { get; set; }
         [field: SerializeField] private EnemySpawnerConfig EnemySpawnerConfig { get; set; }
         [field: SerializeField] private EnemyMergeConfig EnemyMergeConfig { get; set; }
+        [field: SerializeField] private EnemyKillRewardConfig EnemyKillRewardConfig { get; set; }
 
         public override void InstallBindings()
         {
@@ -43,6 +44,7 @@ namespace _Project.Scripts.GameplayData
             BindConfig(LevelCatalogConfig);
             BindConfig(EnemySpawnerConfig);
             BindConfig(EnemyMergeConfig);
+            BindConfig(EnemyKillRewardConfig);
         }
 
         private void BindConfig<TConfig>(TConfig config) where TConfig : ScriptableObject

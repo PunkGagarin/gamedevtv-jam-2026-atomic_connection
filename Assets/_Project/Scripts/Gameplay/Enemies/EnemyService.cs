@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Common.Random;
 using _Project.Scripts.Gameplay.Common.Time;
-using _Project.Scripts.Gameplay.Currencies;
-using _Project.Scripts.Gameplay.CurrencyDrops;
 using _Project.Scripts.Gameplay.Enemies.Components;
 using _Project.Scripts.Gameplay.Level;
 using _Project.Scripts.Gameplay.Levels;
@@ -40,7 +38,7 @@ namespace _Project.Scripts.Gameplay.Enemies
         [Inject] private ILevelSelectionService _levelSelectionService;
         [Inject] private IRandomService _random;
         [Inject] private ITimeService _time;
-        [Inject] private ICurrencyPickupService _currencyPickupService;
+        [Inject] private IEnemyKillRewardService _killRewardService;
 
         public event Action BossKilled;
 
@@ -491,11 +489,7 @@ namespace _Project.Scripts.Gameplay.Enemies
                 return;
             }
 
-            int reward = Mathf.Max(0, Mathf.RoundToInt(enemy.NucleotideReward * enemy.KillRewardMultiplier));
-
-            _currencyPickupService.Spawn(
-                new CurrencyAmount(CurrencyId.Nucleotides, reward),
-                enemy.transform.position);
+            _killRewardService.RewardKill(enemy);
         }
 
         private void UnsubscribeFromActiveEnemies()

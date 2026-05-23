@@ -16,6 +16,7 @@ namespace _Project.Scripts.Gameplay.Talents
         [field: SerializeField] public CurrencyId CostCurrency { get; private set; } = CurrencyId.Nucleotides;
         [field: SerializeField] public List<int> CostsByLevel { get; private set; } = new();
         [field: SerializeField] public List<TalentId> Prerequisites { get; private set; } = new();
+        [field: SerializeField, Min(0)] public int MinCompletedLevel { get; private set; }
         [field: SerializeField] public Vector2 GraphPosition { get; private set; }
         [field: SerializeField] public float BonusPerLevel { get; private set; }
         [field: SerializeField] public bool IsUnlock { get; private set; }

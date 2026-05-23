@@ -7,6 +7,7 @@ namespace _Project.Scripts.Gameplay.Currencies
     {
         [field: SerializeField, Min(0)] public int StartingNucleotides { get; private set; } = 500;
         [field: SerializeField, Min(0)] public int StartingIsotopes { get; private set; } = 3;
+        [field: SerializeField, Min(0)] public int StartingRadicals { get; private set; }
 
         public CurrencyAmount StartingAmount(CurrencyId currencyId)
         {
@@ -14,6 +15,7 @@ namespace _Project.Scripts.Gameplay.Currencies
             {
                 CurrencyId.Nucleotides => new CurrencyAmount(currencyId, StartingNucleotides),
                 CurrencyId.Isotopes => new CurrencyAmount(currencyId, StartingIsotopes),
+                CurrencyId.Radicals => new CurrencyAmount(currencyId, StartingRadicals),
                 _ => new CurrencyAmount(currencyId, 0)
             };
         }

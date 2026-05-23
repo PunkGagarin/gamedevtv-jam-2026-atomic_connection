@@ -65,8 +65,10 @@ Spawn tracks are independent:
 
 Runtime ownership:
 - `EnemyService` owns wave timing, active enemy tracking, per-frame enemy
-  ticking, death subscriptions, non-boss nucleotide pickup spawn requests, and
-  boss-kill notification.
+  ticking, death subscriptions, non-boss kill reward forwarding, and boss-kill
+  notification.
+- `EnemyKillRewardService` owns kill-reward economy rules and converts non-boss
+  enemy kills into configured currency pickup spawn requests.
 - `EnemySpawner` is only the spawn helper: choose offscreen position, ask
   `EnemyFactory` to create the unit, apply spawn-time object setup, and keep
   multi-enemy wave spawns clustered in one offscreen sector.

@@ -48,6 +48,8 @@
   <text key="TALENT_CORE_HEALTH_LARGE_DESC">Сильно увеличивает здоровье ядра.</text>
   <text key="TALENT_STINGER_MOLECULE_DAMAGE_SMALL_TITLE">Урон I</text>
   <text key="TALENT_STINGER_MOLECULE_DAMAGE_SMALL_DESC">Увеличивает урон StingerMolecule на 1.</text>
+  <text key="TALENT_STINGER_MOLECULE_CHARGE_REDUCTION_TITLE">Быстрое жало</text>
+  <text key="TALENT_STINGER_MOLECULE_CHARGE_REDUCTION_DESC">StingerMolecule требует на 1 атом меньше для полного заряда.</text>
   <text key="TALENT_STINGER_MOLECULE_AIM_TITLE">Боевой прицел</text>
   <text key="TALENT_STINGER_MOLECULE_AIM_DESC">Показывает направление выстрела StingerMolecule.</text>
   <text key="TALENT_STINGER_MOLECULE_PIERCE_TITLE">Пробитие</text>

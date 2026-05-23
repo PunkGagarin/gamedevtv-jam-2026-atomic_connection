@@ -26,5 +26,6 @@ namespace _Project.Scripts.Gameplay.Talents
         NucleotideFlatKillReward = 21,
         NucleotideExtraDropChance = 22,
         RadicalDropChance = 23,
+        StingerMoleculeChargeReduction = 24,
     }
 }

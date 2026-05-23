@@ -20,12 +20,15 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
         public BattleMolecule CreateStinger(Vector3 at, BattleMoleculeConfig config)
         {
+            int atomsRequired = config.StingerMoleculeAtomsRequired -
+                                Mathf.RoundToInt(_talentService.BonusOf(TalentType.StingerMoleculeChargeReduction));
+
             return Create(
                 at,
                 config,
                 STINGER_MOLECULE_PREFAB_PATH,
                 "StingerMolecule",
-                AdjustedAtomsRequired(config.StingerMoleculeAtomsRequired),
+                AdjustedAtomsRequired(atomsRequired),
                 AdjustedAtomsRequired(config.StingerMoleculeBondAtomsRequired));
         }
 

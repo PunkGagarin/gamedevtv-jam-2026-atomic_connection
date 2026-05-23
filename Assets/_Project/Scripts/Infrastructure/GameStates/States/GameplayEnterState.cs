@@ -16,6 +16,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
         [Inject] private ILevelStartPointProvider _levelStartPointProvider;
         [Inject] private IAtomCoreCreator _atomCoreCreator;
         [Inject] private IBattleMoleculeFactory _battleMoleculeFactory;
+        [Inject] private IBattleMoleculeService _battleMoleculeService;
         [Inject] private BattleMoleculeConfig _battleMoleculeConfig;
         [Inject] private ITalentService _talentService;
 
@@ -35,9 +36,9 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
 
         private void CreateStingerMolecule()
         {
-            _battleMoleculeFactory.CreateStinger(
+            RegisterMolecule(_battleMoleculeFactory.CreateStinger(
                 MoleculeSpawnPosition(_battleMoleculeConfig.StingerMoleculeSpawnOffset),
-                _battleMoleculeConfig);
+                _battleMoleculeConfig));
         }
 
         private void CreateSwarmMoleculeIfUnlocked()
@@ -45,9 +46,9 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
             if (!_talentService.IsUnlocked(TalentType.SwarmMolecule))
                 return;
 
-            _battleMoleculeFactory.CreateSwarm(
+            RegisterMolecule(_battleMoleculeFactory.CreateSwarm(
                 MoleculeSpawnPosition(_battleMoleculeConfig.SwarmMoleculeSpawnOffset),
-                _battleMoleculeConfig);
+                _battleMoleculeConfig));
         }
 
         private void CreateMembraneMoleculeIfUnlocked()
@@ -55,9 +56,14 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
             if (!_talentService.IsUnlocked(TalentType.MembraneMolecule))
                 return;
 
-            _battleMoleculeFactory.CreateMembrane(
+            RegisterMolecule(_battleMoleculeFactory.CreateMembrane(
                 MoleculeSpawnPosition(_battleMoleculeConfig.MembraneMoleculeSpawnOffset),
-                _battleMoleculeConfig);
+                _battleMoleculeConfig));
+        }
+
+        private void RegisterMolecule(BattleMolecule molecule)
+        {
+            _battleMoleculeService.Register(molecule);
         }
 
         private Vector3 MoleculeSpawnPosition(Vector2 direction)

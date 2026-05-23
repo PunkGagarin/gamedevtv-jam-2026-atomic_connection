@@ -123,8 +123,10 @@ belongs to `OwnedAtomReceiver`.
 molecules, while `AtomCoreHealth` owns HP, death, and shield-gated damage
 resolution.
 
-`IBattleMoleculeService` ticks created battle molecules and auto-loads core
-atoms into molecules when unlocked. `BattleMolecule` is a facade: setup,
+`BattleMoleculeFactory` only creates molecule prefabs. `IBattleMoleculeService`
+owns the registered battle molecule list, molecule subscriptions, active
+molecule ticking, cleanup, and auto-loading core atoms into molecules when
+unlocked. `BattleMolecule` is a facade: setup,
 identity, bond event relays, point hit-tests, core orbit/connection-line
 coordination, connection arrival geometry, atom orbiting, charge consumption,
 atom receiving, shot requests, attacks, aim-line feedback, and membrane

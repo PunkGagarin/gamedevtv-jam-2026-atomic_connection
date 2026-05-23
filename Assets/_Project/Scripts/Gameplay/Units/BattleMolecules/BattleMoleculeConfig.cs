@@ -36,7 +36,11 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         [field: SerializeField, Min(1)] public int MembraneMoleculeBondAtomsRequired { get; private set; } = 1;
         [field: SerializeField, Min(1)] public int MembraneMoleculeAtomsRequired { get; private set; } = 3;
         [field: SerializeField, Min(0.1f)] public float MembraneDurationSeconds { get; private set; } = 5f;
-        [field: SerializeField, Min(0f)] public float MembraneSecondsLostPerDamage { get; private set; } = 1f;
+        [field: SerializeField, Min(1)] public int MembraneIntegrity { get; private set; } = 3;
+        [field: SerializeField, Min(0f)] public float MembraneCooldownSeconds { get; private set; } = 6f;
+        [field: SerializeField, Min(0f)] public float MembraneKnockbackRadius { get; private set; } = 2.5f;
+        [field: SerializeField, Min(0f)] public float MembraneKnockbackDistance { get; private set; } = 0.8f;
+        [field: SerializeField, Min(0.01f)] public float MembraneKnockbackDurationSeconds { get; private set; } = 0.18f;
 
         [field: Header("Swarm Molecule")]
         [field: SerializeField] public Vector2 SwarmMoleculeSpawnOffset { get; private set; } = new(-2f, 0f);

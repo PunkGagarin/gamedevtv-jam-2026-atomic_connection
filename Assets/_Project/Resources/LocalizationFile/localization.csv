@@ -65,6 +65,10 @@ TALENT_MEMBRANE_MOLECULE_CHARGE_REDUCTION_TITLE,Лёгкая мембрана,Li
 TALENT_MEMBRANE_MOLECULE_CHARGE_REDUCTION_DESC,Уменьшает число зарядов для активации мембраны.,Reduces the projectile count needed to activate the membrane.
 TALENT_MEMBRANE_MOLECULE_DURATION_TITLE,Долгая мембрана,Long Membrane
 TALENT_MEMBRANE_MOLECULE_DURATION_DESC,Увеличивает длительность мембраны.,Increases membrane duration.
+TALENT_MEMBRANE_MOLECULE_INTEGRITY_TITLE,Плотная мембрана,Dense Membrane
+TALENT_MEMBRANE_MOLECULE_INTEGRITY_DESC,Увеличивает прочность мембраны на 1 за уровень.,Increases membrane integrity by 1 per level.
+TALENT_MEMBRANE_MOLECULE_COOLDOWN_REDUCTION_TITLE,Быстрая рекристаллизация,Fast Recrystallization
+TALENT_MEMBRANE_MOLECULE_COOLDOWN_REDUCTION_DESC,Уменьшает перезарядку мембраны на 20% за уровень.,Reduces membrane cooldown by 20% per level.
 TALENT_MEMBRANE_MOLECULE_AUTO_LOAD_TITLE,Заряд мембраны,Membrane Charge
 TALENT_MEMBRANE_MOLECULE_AUTO_LOAD_DESC,Мембрана автоматически получает бесплатные заряды.,Automatically charges MembraneMolecule with free projectiles.
 TALENT_SWARM_MOLECULE_TITLE,Роевая молекула,Swarm Molecule

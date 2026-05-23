@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
@@ -8,21 +9,24 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
 
         private float _duration;
         private float _timeRemaining;
-        private float _secondsLostPerDamage;
+        private int _integrity;
 
-        public bool IsActive => _timeRemaining > 0f;
+        public bool IsActive => _timeRemaining > 0f && _integrity > 0;
         public float NormalizedTime => _duration > 0f ? Mathf.Clamp01(_timeRemaining / _duration) : 0f;
+
+        public event Action Broken;
+        public event Action Expired;
 
         private void Awake()
         {
             UpdateVisual();
         }
 
-        public void Activate(float duration, float secondsLostPerDamage)
+        public void Activate(float duration, int integrity)
         {
             _duration = Mathf.Max(0.01f, duration);
             _timeRemaining = _duration;
-            _secondsLostPerDamage = Mathf.Max(0f, secondsLostPerDamage);
+            _integrity = Mathf.Max(1, integrity);
             UpdateVisual();
         }
 
@@ -33,6 +37,9 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
 
             _timeRemaining = Mathf.Max(0f, _timeRemaining - deltaTime);
             UpdateVisual();
+
+            if (!IsActive)
+                Expired?.Invoke();
         }
 
         public bool TryAbsorbDamage(int damage)
@@ -40,9 +47,11 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
             if (!IsActive)
                 return false;
 
-            float lostTime = Mathf.Max(0, damage) * _secondsLostPerDamage;
-            _timeRemaining = Mathf.Max(0f, _timeRemaining - lostTime);
+            _integrity = Mathf.Max(0, _integrity - Mathf.Max(0, damage));
             UpdateVisual();
+
+            if (!IsActive)
+                Broken?.Invoke();
 
             return true;
         }

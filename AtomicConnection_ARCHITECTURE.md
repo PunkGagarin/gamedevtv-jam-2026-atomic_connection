@@ -65,7 +65,8 @@ Spawn tracks are independent:
 
 Runtime ownership:
 - `EnemyService` owns wave timing, active enemy tracking, per-frame enemy
-  ticking, death subscriptions, and boss-kill notification.
+  ticking, death subscriptions, enemy selection for area pushes, and boss-kill
+  notification.
 - `MergeEnemyService` owns enemy merge eligibility, merge-pair checks, active
   merge links/groups, link tether ticking, death-wave progression, and merge
   cleanup. `GameplayLoopState` starts and cleans it, while `EnemyService` only
@@ -82,9 +83,12 @@ Runtime ownership:
   and collection feedback are component-owned.
 - Enemy object-internal behavior stays on focused components. `EnemyUnit` is
   only the public facade over `EnemyIdentity`, `EnemyVitality`,
-  `EnemyMergeState`, `EnemyRuntimeBehaviors`, and `EnemyLifecycle`.
+  `EnemyMergeState`, `EnemyRuntimeBehaviors`, `EnemyLifecycle`, and
+  `EnemyKnockback`.
 - `EnemyMovement` moves enemies directly toward the core; prefab-specific
   movement variants such as `MassEnemyArcMovement` own enemy-local path shapes.
+- `EnemyKnockback` owns enemy-local push displacement when another gameplay
+  system requests an area push through `EnemyService`.
 - Enemy-local runtime behaviors implement `IEnemyRuntimeBehavior`;
   `EnemyRuntimeBehaviors` configures and ticks them while `EnemyService` owns
   the active enemy loop.

@@ -66,6 +66,10 @@
   <text key="TALENT_MEMBRANE_MOLECULE_CHARGE_REDUCTION_DESC">Reduces the projectile count needed to activate the membrane.</text>
   <text key="TALENT_MEMBRANE_MOLECULE_DURATION_TITLE">Long Membrane</text>
   <text key="TALENT_MEMBRANE_MOLECULE_DURATION_DESC">Increases membrane duration.</text>
+  <text key="TALENT_MEMBRANE_MOLECULE_INTEGRITY_TITLE">Dense Membrane</text>
+  <text key="TALENT_MEMBRANE_MOLECULE_INTEGRITY_DESC">Increases membrane integrity by 1 per level.</text>
+  <text key="TALENT_MEMBRANE_MOLECULE_COOLDOWN_REDUCTION_TITLE">Fast Recrystallization</text>
+  <text key="TALENT_MEMBRANE_MOLECULE_COOLDOWN_REDUCTION_DESC">Reduces membrane cooldown by 20% per level.</text>
   <text key="TALENT_MEMBRANE_MOLECULE_AUTO_LOAD_TITLE">Membrane Charge</text>
   <text key="TALENT_MEMBRANE_MOLECULE_AUTO_LOAD_DESC">Automatically charges MembraneMolecule with free projectiles.</text>
   <text key="TALENT_SWARM_MOLECULE_TITLE">Swarm Molecule</text>

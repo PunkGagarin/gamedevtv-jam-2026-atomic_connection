@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 11400022}
   - component: {fileID: 11400023}
   - component: {fileID: 11400024}
+  - component: {fileID: 11400025}
   m_Layer: 0
   m_Name: BossEnemyUnit
   m_TagString: Untagged
@@ -99,6 +100,7 @@ MonoBehaviour:
   <RuntimeBehaviors>k__BackingField: {fileID: 11400023}
   <Lifecycle>k__BackingField: {fileID: 11400024}
   <Movement>k__BackingField: {fileID: 11400002}
+  <Knockback>k__BackingField: {fileID: 11400025}
   <CoreCollision>k__BackingField: {fileID: 11400004}
 --- !u!114 &11400020
 MonoBehaviour:
@@ -191,6 +193,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8b8d15b3421b42be9f84bcbdf4e60932, type: 3}
+  m_Name:
+  m_EditorClassIdentifier:
+--- !u!114 &11400025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97670ec007be4875a5f742d49e6b56cf, type: 3}
   m_Name:
   m_EditorClassIdentifier:
 --- !u!114 &11400004

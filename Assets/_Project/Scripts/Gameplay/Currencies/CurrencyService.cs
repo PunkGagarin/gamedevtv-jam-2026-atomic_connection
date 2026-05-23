@@ -1,6 +1,5 @@
 using System;
 using _Project.Scripts.Infrastructure.SaveLoad;
-using _Project.Scripts.Localization;
 using UnityEngine;
 using Zenject;
 
@@ -10,7 +9,6 @@ namespace _Project.Scripts.Gameplay.Currencies
     {
         [Inject] private IProgressProvider _progressProvider;
         [Inject] private ISaveLoadService _saveLoadService;
-        [Inject] private LocalizationTool _localizationTool;
 
         public event Action Changed;
 
@@ -49,24 +47,6 @@ namespace _Project.Scripts.Gameplay.Currencies
             _progressProvider.ProgressData.SetCurrencyAmount(currencyId, Mathf.Max(0, amount));
             _saveLoadService.SaveProgress();
             Changed?.Invoke();
-        }
-
-        public string Format(CurrencyAmount amount)
-        {
-            return $"{amount.Amount} {NameOf(amount.CurrencyId)}";
-        }
-
-        private string NameOf(CurrencyId currencyId)
-        {
-            string key = currencyId switch
-            {
-                CurrencyId.Dna => "CURRENCY_DNA_SHORT",
-                CurrencyId.Isotopes => "CURRENCY_ISOTOPES_SHORT",
-                CurrencyId.Radicals => "CURRENCY_RADICALS_SHORT",
-                _ => null
-            };
-
-            return key == null ? currencyId.ToString() : _localizationTool.GetText(key);
         }
     }
 }

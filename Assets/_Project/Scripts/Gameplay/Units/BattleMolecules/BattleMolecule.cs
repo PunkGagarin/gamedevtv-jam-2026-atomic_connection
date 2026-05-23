@@ -7,7 +7,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 {
     [RequireComponent(typeof(OwnedAtoms))]
     [RequireComponent(typeof(OwnedAtomOrbitLayout))]
-    [RequireComponent(typeof(ObjectRadius))]
     [RequireComponent(typeof(PointHitArea))]
     [RequireComponent(typeof(BattleMoleculeSetup))]
     [RequireComponent(typeof(BattleMoleculeCharge))]
@@ -83,14 +82,9 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             return HitArea.Contains(worldPosition);
         }
 
-        public Vector3 GetConnectionArrivalPosition(Vector3 fromPosition, float incomingAtomRadius)
+        public Vector3 GetConnectionArrivalPosition(Vector3 fromPosition)
         {
-            return ConnectionArrival.PositionFrom(fromPosition, incomingAtomRadius);
-        }
-
-        public bool IsConnectionArrivalReached(Vector3 fromPosition, float incomingAtomRadius, float tolerance)
-        {
-            return ConnectionArrival.IsReached(fromPosition, incomingAtomRadius, tolerance);
+            return ConnectionArrival.PositionFrom(fromPosition);
         }
 
         public void SetActiveFeedVisual(bool isActive)

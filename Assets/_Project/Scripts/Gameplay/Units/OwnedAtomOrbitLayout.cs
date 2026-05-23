@@ -9,20 +9,12 @@ namespace _Project.Scripts.Gameplay.Units
     [RequireComponent(typeof(OwnedAtoms))]
     public class OwnedAtomOrbitLayout : MonoBehaviour
     {
-        private enum RadiusMode
-        {
-            Fixed,
-            OwnerPlusAtom
-        }
-
         private readonly List<FreeAtom> _atomsBuffer = new();
 
         [field: SerializeField] private OwnedAtoms OwnedAtoms { get; set; }
 
         private FreeAtomOwnerKind _ownerKind;
-        private RadiusMode _radiusMode;
         private float _fixedRadius;
-        private float _ownerRadius;
 
         private void Awake()
         {
@@ -42,22 +34,8 @@ namespace _Project.Scripts.Gameplay.Units
         public void ConfigureFixedRadius(FreeAtomOwnerKind ownerKind, float radius)
         {
             _ownerKind = ownerKind;
-            _radiusMode = RadiusMode.Fixed;
             _fixedRadius = radius;
             Arrange();
-        }
-
-        public void ConfigureOwnerPlusAtomRadius(FreeAtomOwnerKind ownerKind, float ownerRadius)
-        {
-            _ownerKind = ownerKind;
-            _radiusMode = RadiusMode.OwnerPlusAtom;
-            _ownerRadius = ownerRadius;
-            Arrange();
-        }
-
-        public void ConfigureOwnerPlusAtomRadiusFromOwnerCollider(FreeAtomOwnerKind ownerKind)
-        {
-            ConfigureOwnerPlusAtomRadius(ownerKind, ObjectRadius.RadiusOf(transform));
         }
 
         private void Arrange()
@@ -89,14 +67,7 @@ namespace _Project.Scripts.Gameplay.Units
             if (atom == null)
                 return;
 
-            atom.ConfigureOrbit(transform, RadiusFor(atom), angle);
-        }
-
-        private float RadiusFor(FreeAtom atom)
-        {
-            return _radiusMode == RadiusMode.OwnerPlusAtom
-                ? _ownerRadius + ObjectRadius.RadiusOf(atom.transform)
-                : _fixedRadius;
+            atom.ConfigureOrbit(transform, _fixedRadius, angle);
         }
 
         private float GetStartAngle(FreeAtom atom)

@@ -1,32 +1,20 @@
-using _Project.Scripts.Gameplay.Units;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
     [DisallowMultipleComponent]
-    [RequireComponent(typeof(ObjectRadius))]
     public class BattleMoleculeConnectionArrival : MonoBehaviour
     {
-        [field: SerializeField] private ObjectRadius Radius { get; set; }
+        private float _arrivalRadius;
 
-        private float _minimumArrivalRadius;
-
-        private void Awake()
+        public void Configure(float arrivalRadius)
         {
-            if (Radius == null)
-                Radius = GetComponent<ObjectRadius>();
+            _arrivalRadius = Mathf.Max(0f, arrivalRadius);
         }
 
-        public void Configure(float minimumArrivalRadius)
+        public Vector3 PositionFrom(Vector3 fromPosition)
         {
-            _minimumArrivalRadius = Mathf.Max(0f, minimumArrivalRadius);
-        }
-
-        public Vector3 PositionFrom(Vector3 fromPosition, float incomingAtomRadius)
-        {
-            float arrivalRadius = ArrivalRadius(incomingAtomRadius);
-
-            if (arrivalRadius <= 0f)
+            if (_arrivalRadius <= 0f)
                 return transform.position;
 
             Vector3 offset = fromPosition - transform.position;
@@ -34,24 +22,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             if (offset.sqrMagnitude <= Mathf.Epsilon)
                 return transform.position;
 
-            return transform.position + offset.normalized * arrivalRadius;
-        }
-
-        public bool IsReached(Vector3 fromPosition, float incomingAtomRadius, float tolerance)
-        {
-            float arrivalRadius = ArrivalRadius(incomingAtomRadius) + Mathf.Max(0f, tolerance);
-            if (arrivalRadius <= 0f)
-                return false;
-
-            Vector3 offset = fromPosition - transform.position;
-            offset.z = 0f;
-            return offset.sqrMagnitude <= arrivalRadius * arrivalRadius;
-        }
-
-        private float ArrivalRadius(float incomingAtomRadius)
-        {
-            float visualArrivalRadius = (Radius != null ? Radius.Radius : 0f) + Mathf.Max(0f, incomingAtomRadius);
-            return Mathf.Max(_minimumArrivalRadius, visualArrivalRadius);
+            return transform.position + offset.normalized * _arrivalRadius;
         }
     }
 }

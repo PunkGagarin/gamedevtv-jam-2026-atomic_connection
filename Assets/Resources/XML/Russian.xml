@@ -28,9 +28,9 @@
   <text key="SETTINGS_OK">Применить</text>
   <text key="COMMON_RESTART">Повторить</text>
   <text key="COMMON_MAIN_MENU">Главное меню</text>
-  <text key="CURRENCY_NUCLEOTIDES">ДНК</text>
-  <text key="CURRENCY_NUCLEOTIDES_SHORT">ДНК</text>
-  <text key="CURRENCY_NUCLEOTIDES_BALANCE_SUFFIX">ДНК</text>
+  <text key="CURRENCY_NUCLEOTIDES">Нуклеотиды</text>
+  <text key="CURRENCY_NUCLEOTIDES_SHORT">Нуклеотиды</text>
+  <text key="CURRENCY_NUCLEOTIDES_BALANCE_SUFFIX">Нуклеотиды</text>
   <text key="CURRENCY_ISOTOPES">изотопы</text>
   <text key="CURRENCY_ISOTOPES_SHORT">изот.</text>
   <text key="CURRENCY_ISOTOPES_BALANCE_SUFFIX">изотоп</text>
@@ -80,7 +80,7 @@
   <text key="TALENT_CONNECTION_ATOM_SPEED_DESC">Ускоряет connection-поток атомов от ядра к активной боевой молекуле на 25% за уровень.</text>
   <text key="TALENT_STINGER_MOLECULE_CRITICAL_CHANCE_TITLE">Точный укол</text>
   <text key="TALENT_STINGER_MOLECULE_CRITICAL_CHANCE_DESC">Дает StingerMolecule 10% шанс нанести критический урон за уровень.</text>
-  <text key="TALENT_STINGER_MOLECULE_CRITICAL_REWARD_TITLE">ДНК-выброс</text>
+  <text key="TALENT_STINGER_MOLECULE_CRITICAL_REWARD_TITLE">Нуклеотидный выброс</text>
   <text key="TALENT_STINGER_MOLECULE_CRITICAL_REWARD_DESC">Увеличивает награду за критические убийства StingerMolecule на 50% за уровень.</text>
   <text key="DAMAGE_POPUP_CRITICAL">Критический урон!</text>
   <text key="TALENT_SWARM_MOLECULE_SHOT_COUNT_TITLE">Залп роя</text>
@@ -88,9 +88,9 @@
   <text key="TALENT_SWARM_MOLECULE_ATTACK_RANGE_TITLE">Дальность роя</text>
   <text key="TALENT_SWARM_MOLECULE_ATTACK_RANGE_DESC">Увеличивает дальность залпа SwarmMolecule.</text>
   <text key="TALENT_NUCLEOTIDE_FLAT_KILL_REWARD_TITLE">Нуклеоидный след</text>
-  <text key="TALENT_NUCLEOTIDE_FLAT_KILL_REWARD_DESC">Каждый обычный враг оставляет на 1 ДНК больше.</text>
+  <text key="TALENT_NUCLEOTIDE_FLAT_KILL_REWARD_DESC">Каждый обычный враг оставляет на 1 нуклеотид больше.</text>
   <text key="TALENT_NUCLEOTIDE_EXTRA_DROP_CHANCE_TITLE">Избыточный нуклеоид</text>
-  <text key="TALENT_NUCLEOTIDE_EXTRA_DROP_CHANCE_DESC">Даёт 20% шанс получить дополнительную 1 ДНК с обычного врага за уровень.</text>
+  <text key="TALENT_NUCLEOTIDE_EXTRA_DROP_CHANCE_DESC">Даёт 20% шанс получить дополнительный 1 нуклеотид с обычного врага за уровень.</text>
   <text key="TALENT_RADICAL_DROP_CHANCE_TITLE">Радикальный след</text>
   <text key="TALENT_RADICAL_DROP_CHANCE_DESC">Даёт 20% шанс получить 1 радикал с обычного врага за уровень. Доступно после второго уровня.</text>
   <text key="TALENT_RADICAL_DROP_CHANCE_LARGE_TITLE">Радикальный резонанс</text>

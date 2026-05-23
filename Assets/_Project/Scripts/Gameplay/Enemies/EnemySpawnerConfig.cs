@@ -19,7 +19,6 @@ namespace _Project.Scripts.Gameplay.Enemies
         [field: SerializeField, Min(0f)] public float GroupSpawnJitter { get; private set; } = 0.12f;
         [field: SerializeField, Min(0f)] public float MoveSpeed { get; private set; } = 0.7f;
         [field: SerializeField, Min(1)] public int CoreCollisionDamage { get; private set; } = 1;
-        [field: SerializeField, Min(0)] public int NucleotideReward { get; private set; } = 5;
 
         public EnemyDefinition EnemyFor(EnemyId enemyId)
         {

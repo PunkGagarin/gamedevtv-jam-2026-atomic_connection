@@ -13,7 +13,6 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
         private AtomCore _core;
         private AtomCoreDamageHitArea _coreHitArea;
 
-        protected EnemyUnit Enemy => _enemy;
         protected AtomCore Core => _core;
 
         private void Awake()

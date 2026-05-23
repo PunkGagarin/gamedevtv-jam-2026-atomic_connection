@@ -1,10 +1,19 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/_Project/Resources/Art/closeBtn.png.meta
 guid: 44b69fc0048a6403e83974657bbc8464
 TextureImporter:
   internalIDToNameTable:
   - first:
       213: -654415992179358624
     second: closeBtn_0
+========
+guid: b8cf7557a718e426b9854ea0e22a4dcd
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -6863344487209003999
+    second: uran_0
+>>>>>>>> c8fbe4c (added radicals;):Assets/_Project/Resources/Gameplay/UI/Currencies/uran.png.meta
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -51,7 +60,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -113,13 +122,22 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
+<<<<<<<< HEAD:Assets/_Project/Resources/Art/closeBtn.png.meta
       name: closeBtn_0
+========
+      name: uran_0
+>>>>>>>> c8fbe4c (added radicals;):Assets/_Project/Resources/Gameplay/UI/Currencies/uran.png.meta
       rect:
         serializedVersion: 2
         x: 0
         y: 0
+<<<<<<<< HEAD:Assets/_Project/Resources/Art/closeBtn.png.meta
         width: 32
         height: 32
+========
+        width: 21
+        height: 19
+>>>>>>>> c8fbe4c (added radicals;):Assets/_Project/Resources/Gameplay/UI/Currencies/uran.png.meta
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +146,13 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
+<<<<<<<< HEAD:Assets/_Project/Resources/Art/closeBtn.png.meta
       spriteID: 06480d25f1c0be6f0800000000000000
       internalID: -654415992179358624
+========
+      spriteID: 12495cc6d8080c0a0800000000000000
+      internalID: -6863344487209003999
+>>>>>>>> c8fbe4c (added radicals;):Assets/_Project/Resources/Gameplay/UI/Currencies/uran.png.meta
       vertices: []
       indices: 
       edges: []
@@ -148,7 +171,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
+<<<<<<<< HEAD:Assets/_Project/Resources/Art/closeBtn.png.meta
       closeBtn_0: -654415992179358624
+========
+      uran_0: -6863344487209003999
+>>>>>>>> c8fbe4c (added radicals;):Assets/_Project/Resources/Gameplay/UI/Currencies/uran.png.meta
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

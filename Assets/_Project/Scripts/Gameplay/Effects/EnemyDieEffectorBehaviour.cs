@@ -7,7 +7,7 @@ public class EnemyDieEffectorBehaviour : MonoBehaviour
     public EnemyVitality enemyVitality;
 
     // TODO 1: вынести в сервис управления эффектами
-    private const string DIE_EFFECT_PREFAB_PATH = "Test/EnemyDie";
+    private const string DIE_EFFECT_PREFAB_PATH = "FX/EnemyDie";
 
     private void OnKilled(EnemyUnit unit)
     {

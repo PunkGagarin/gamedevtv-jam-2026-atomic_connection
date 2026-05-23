@@ -9,7 +9,7 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
     public class EnemyCoreCollision : MonoBehaviour
     {
         // TODO 1: вынести в сервис управления эффектами
-        private const string CONTACT_EFFECT_PREFAB_PATH = "Test/EnemyCollisionEffect";
+        private const string CONTACT_EFFECT_PREFAB_PATH = "FX/EnemyCollisionEffect";
 
         [field: SerializeField] private Collider2D Collider { get; set; }
 

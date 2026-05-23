@@ -3,7 +3,7 @@ namespace _Project.Scripts.Gameplay.Talents
     public enum TalentType
     {
         CoreHealth = 0,
-        LegacyAutoClick = 1,
+        AutoClick = 1,
         CoreClickReduction = 2,
         StingerMoleculeDamage = 3,
         StingerMoleculeAim = 4,

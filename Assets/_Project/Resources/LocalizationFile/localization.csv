@@ -37,7 +37,7 @@ TALENT_NODE_MAX,МАКС,MAX
 TALENT_CORE_HEALTH_SMALL_TITLE,Крепкое ядро,Sturdy Core
 TALENT_CORE_HEALTH_SMALL_DESC,Увеличивает здоровье ядра на 1.,Increases core health by 1.
 TALENT_AUTO_CLICK_TITLE,Автогенерация,Auto Generation
-TALENT_AUTO_CLICK_DESC,Ядро автоматически создаёт заряд без клика.,The core automatically creates a charge without a click.
+TALENT_AUTO_CLICK_DESC,Ядро автоматически создаёт заряд без клика при наведении курсора на ядро.,The core automatically creates a charge without a click while the cursor is over the core.
 TALENT_CORE_CLICK_REDUCTION_TITLE,Быстрая сборка,Quick Assembly
 TALENT_CORE_CLICK_REDUCTION_DESC,Уменьшает время восстановления клика ядра.,Reduces the core click cooldown.
 TALENT_CORE_HEALTH_LARGE_TITLE,Прочное ядро,Reinforced Core

@@ -17,7 +17,7 @@ MonoBehaviour:
   <Title>k__BackingField: TALENT_CORE_CLICK_REDUCTION_TITLE
   <Description>k__BackingField: TALENT_CORE_CLICK_REDUCTION_DESC
   <Icon>k__BackingField: {fileID: 0}
-  <MaxLevel>k__BackingField: 5
+  <MaxLevel>k__BackingField: 4
   <CostCurrency>k__BackingField: 0
   <CostsByLevel>k__BackingField: 03000000050000000a000000140000003200000064000000
   <Prerequisites>k__BackingField: 00000000

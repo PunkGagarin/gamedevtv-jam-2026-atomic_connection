@@ -21,6 +21,10 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         [field: Header("Connection")]
         [field: SerializeField, Min(0.01f)] public float ConnectionAtomTravelSpeed { get; private set; } = 1f;
         [field: SerializeField, Min(0f)] public float ConnectionCoreRimDegreesPerSecond { get; private set; } = 60f;
+        [field: SerializeField, Min(0f)] public float ConnectionAtomArrivalDistance { get; private set; } = 0.03f;
+        [field: SerializeField, Min(0f)] public float ConnectionAtomMinimumFlowRadius { get; private set; } = 0.1f;
+        [field: SerializeField, Min(0f)] public float ConnectionCoreRimSnapDistance { get; private set; } = 0.06f;
+        [field: SerializeField, Min(0f)] public float ConnectionCoreRimArrivalAngleDegrees { get; private set; } = 0.5f;
         [field: SerializeField, Min(0f)] public float ConnectionLineWidth { get; private set; } = 0.08f;
         [field: SerializeField] public float ConnectionLineZOffset { get; private set; } = 0.05f;
         [field: SerializeField] public int ConnectionLineSortingOrder { get; private set; } = -1;

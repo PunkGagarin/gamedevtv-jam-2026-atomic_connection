@@ -96,8 +96,8 @@ Runtime ownership:
 
 ## Active Gameplay Loop
 
-`GameplayEnterState` creates the core and battle molecule, then enters
-`GameplayLoopState`.
+`GameplayEnterState` creates the core, configures `IBattleMoleculeService` with
+that core, creates battle molecule prefabs, then enters `GameplayLoopState`.
 
 `GameplayLoopState` inherits `EndOfFrameExitState`. It starts, ticks,
 fixed-ticks, and cleans active gameplay services such as `IEnemyService`, `IAtomCoreService`,
@@ -112,7 +112,8 @@ active-loop-facing `IAtomCoreService`. It creates/destroys the core, polls core
 click input during the active gameplay loop, creates generated free atoms
 through `FreeAtomFactory`, applies core HP and atom click count, exposes current
 core transform for active targeting services, subscribes to core death during
-`Start()`, and ticks current `AtomCore`.
+`Start()`, and ticks current `AtomCore` plus core-owned connection atom flow
+using the feed target exposed by `IBattleMoleculeFeedTargetProvider`.
 
 `AtomCore` is the root facade: it exposes core-facing methods/properties and
 passes ticks to focused components, but does not own behavior logic.
@@ -125,8 +126,11 @@ resolution.
 
 `BattleMoleculeFactory` only creates molecule prefabs. `IBattleMoleculeService`
 owns the registered battle molecule list, molecule subscriptions, active
-molecule ticking, cleanup, and auto-loading core atoms into molecules when
-unlocked. `BattleMolecule` is a facade: setup,
+molecule ticking, active selection, active feed target provider, and cleanup.
+`AtomCoreService` ticks core runtime behavior. Core-owned AutoLoad atom flow
+belongs to `AtomCoreConnectionAtomFlow`, which moves, returns, and delivers core
+atoms to molecule receivers using the current feed target from
+`IBattleMoleculeFeedTargetProvider`. `BattleMolecule` is a facade: setup,
 identity, bond event relays, point hit-tests, core orbit/connection-line
 coordination, connection arrival geometry, atom orbiting, charge consumption,
 atom receiving, shot requests, attacks, aim-line feedback, and membrane
@@ -229,7 +233,7 @@ Talent-adjusted runtime values are applied by the current owner:
 - `AtomCoreService` applies core HP and atom click count
 - `BattleMoleculeFactory` applies atom charge count
 - molecule-local attack components resolve shot damage and Pierce
-- `BattleMoleculeService` applies AutoLoad
+- `AtomCoreConnectionAtomFlow` applies AutoLoad movement speed
 
 Talent tree uses `TalentConfig`. `TalentService` owns talent progress and
 buying; `CurrencyService` owns saved meta-currencies. Talent progress and

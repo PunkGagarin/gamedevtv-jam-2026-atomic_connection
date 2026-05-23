@@ -22,16 +22,16 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
 
         public void Enter()
         {
-            CreateAtomCore();
+            _battleMoleculeService.ConfigureCore(CreateAtomCore());
             CreateStingerMolecule();
             CreateMembraneMoleculeIfUnlocked();
             CreateSwarmMoleculeIfUnlocked();
             _stateMachine.Enter<GameplayLoopState>();
         }
 
-        private void CreateAtomCore()
+        private AtomCore CreateAtomCore()
         {
-            _atomCoreCreator.Create(_levelStartPointProvider.StartPoint);
+            return _atomCoreCreator.Create(_levelStartPointProvider.StartPoint);
         }
 
         private void CreateStingerMolecule()

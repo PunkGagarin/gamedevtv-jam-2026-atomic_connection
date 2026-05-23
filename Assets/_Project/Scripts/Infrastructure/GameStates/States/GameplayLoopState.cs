@@ -55,12 +55,12 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
 
             _dragService.Update();
             _currencyPickupService.Update();
+            _battleMoleculeService.Update();
             _atomCoreService.Update();
 
             if (_terminalTransitionWasRequested)
                 return;
 
-            _battleMoleculeService.Update();
             _levelProgressService.Update();
         }
 
@@ -74,8 +74,8 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
             _levelProgressService.Cleanup();
             _enemyProjectileService.Cleanup();
             _enemyService.Cleanup();
-            _battleMoleculeService.Cleanup();
             _atomCoreService.Cleanup();
+            _battleMoleculeService.Cleanup();
             _freeAtomFactory.Cleanup();
             _runtimeHierarchy.Cleanup();
         }

@@ -25,6 +25,7 @@ GameObject:
   - component: {fileID: 9110000000000000000}
   - component: {fileID: 4199615189738945176}
   - component: {fileID: 4892306979794530531}
+  - component: {fileID: 3720869832442661001}
   m_Layer: 0
   m_Name: AtomCore
   m_TagString: Untagged
@@ -61,13 +62,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0de8b0430c494e50a395845a4d9fa7a3, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: 
   <AtomReceiver>k__BackingField: {fileID: 0}
   <AtomOrbitLayout>k__BackingField: {fileID: 11400007}
   <AtomOrbit>k__BackingField: {fileID: 0}
   <Health>k__BackingField: {fileID: 0}
   <ClickInteraction>k__BackingField: {fileID: 11400005}
+  <ConnectionAtomFlow>k__BackingField: {fileID: 3720869832442661001}
 --- !u!58 &5800000
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -305,6 +307,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Units.AtomCores.Components.AtomCoreHealth
   <Health>k__BackingField: {fileID: 0}
   <Shield>k__BackingField: {fileID: 0}
+--- !u!114 &3720869832442661001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d94e942fc9c4cb6be0bf5fa73ddf9a2, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Units.AtomCores.Components.AtomCoreConnectionAtomFlow
+  <OwnedAtoms>k__BackingField: {fileID: 11400001}
+  <AtomReceiver>k__BackingField: {fileID: 6190877939686151709}
 --- !u!1 &7256588296169355026
 GameObject:
   m_ObjectHideFlags: 0

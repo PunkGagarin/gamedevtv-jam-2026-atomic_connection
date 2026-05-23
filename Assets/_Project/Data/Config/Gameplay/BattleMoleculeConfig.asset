@@ -23,6 +23,10 @@ MonoBehaviour:
   <CoreOrbitDegreesPerSecond>k__BackingField: 20
   <ConnectionAtomTravelSpeed>k__BackingField: 1
   <ConnectionCoreRimDegreesPerSecond>k__BackingField: 60
+  <ConnectionAtomArrivalDistance>k__BackingField: 0.03
+  <ConnectionAtomMinimumFlowRadius>k__BackingField: 0.1
+  <ConnectionCoreRimSnapDistance>k__BackingField: 0.06
+  <ConnectionCoreRimArrivalAngleDegrees>k__BackingField: 0.5
   <ConnectionLineWidth>k__BackingField: 0.08
   <ConnectionLineZOffset>k__BackingField: 0.05
   <ConnectionLineSortingOrder>k__BackingField: -1

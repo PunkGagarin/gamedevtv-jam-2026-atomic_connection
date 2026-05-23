@@ -7,13 +7,21 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
     [CustomEditor(typeof(TalentConfig))]
     public class TalentConfigEditor : UnityEditor.Editor
     {
-        private const float PREVIEW_HEIGHT = 560f;
-        private const float NODE_RADIUS = 10f;
+        private const float DEFAULT_PREVIEW_HEIGHT = 720f;
+        private const float MIN_PREVIEW_HEIGHT = 360f;
+        private const float MAX_PREVIEW_HEIGHT = 1600f;
+        private const float RESIZE_HANDLE_HEIGHT = 12f;
+        private const float NODE_RADIUS = 12f;
+        private const float LABEL_WIDTH = 116f;
+        private const float LABEL_MIN_HEIGHT = 24f;
+        private const float LABEL_MAX_HEIGHT = 52f;
+        private const float LABEL_PADDING = 4f;
+        private const float LABEL_GAP = 6f;
         private const float GRID_SIZE = 120f;
         private const string ID_FIELD = "<Id>k__BackingField";
-        private const string TITLE_FIELD = "<Title>k__BackingField";
         private const string PREREQUISITES_FIELD = "<Prerequisites>k__BackingField";
         private const string GRAPH_POSITION_FIELD = "<GraphPosition>k__BackingField";
+        private const string PREVIEW_HEIGHT_PREF_KEY = "AtomicConnection.TalentConfigEditor.PreviewHeight";
 
         private SerializedProperty _talentsProp;
         private int _selectedIndex = -1;
@@ -26,14 +34,21 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
         private Vector2 _graphBoundsMax;
         private float _graphScale = 1f;
         private Rect _previewRect;
+        private Rect _resizeHandleRect;
+        private float _previewHeight = DEFAULT_PREVIEW_HEIGHT;
 
         private Vector2 _viewOffset;
         private float _panFactor = 1f;
         private bool _isPanning = false;
+        private bool _isResizingPreview = false;
 
         private void OnEnable()
         {
             _talentsProp = serializedObject.FindProperty("<Talents>k__BackingField");
+            _previewHeight = Mathf.Clamp(
+                EditorPrefs.GetFloat(PREVIEW_HEIGHT_PREF_KEY, DEFAULT_PREVIEW_HEIGHT),
+                MIN_PREVIEW_HEIGHT,
+                MAX_PREVIEW_HEIGHT);
         }
 
         public override void OnInspectorGUI()
@@ -66,17 +81,25 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
                 return;
 
             EditorGUILayout.Space(8);
-            EditorGUILayout.LabelField("Graph Preview (drag nodes, snap to grid, scroll to zoom, drag bg to pan)", EditorStyles.boldLabel);
+            EditorGUILayout.LabelField(
+                "Graph Preview (drag nodes, scroll to zoom, drag bg to pan, drag bottom edge to resize)",
+                EditorStyles.boldLabel);
 
             if (GUILayout.Button("Snap All Nodes To Grid", GUILayout.Width(180f)))
                 SnapAllNodesToGrid();
 
             Rect reserved = EditorGUILayout.BeginVertical();
-            GUILayout.Space(PREVIEW_HEIGHT);
+            GUILayout.Space(_previewHeight + RESIZE_HANDLE_HEIGHT);
             EditorGUILayout.EndVertical();
 
-            _previewRect = new Rect(reserved.x, reserved.y, reserved.width, PREVIEW_HEIGHT);
-            _previewRect = EditorGUI.IndentedRect(_previewRect);
+            Rect indentedReserved = EditorGUI.IndentedRect(
+                new Rect(reserved.x, reserved.y, reserved.width, _previewHeight + RESIZE_HANDLE_HEIGHT));
+            _previewRect = new Rect(indentedReserved.x, indentedReserved.y, indentedReserved.width, _previewHeight);
+            _resizeHandleRect = new Rect(
+                _previewRect.x,
+                _previewRect.yMax,
+                _previewRect.width,
+                RESIZE_HANDLE_HEIGHT);
 
             if (_previewRect.width <= 0 || _previewRect.height <= 0)
                 return;
@@ -92,9 +115,25 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
             DrawGrid();
             DrawConnections();
             DrawNodes();
+            DrawResizeHandle();
             HandleEvents();
 
             HandleUtility.Repaint();
+        }
+
+        private void DrawResizeHandle()
+        {
+            EditorGUIUtility.AddCursorRect(_resizeHandleRect, MouseCursor.ResizeVertical);
+            EditorGUI.DrawRect(_resizeHandleRect, new Color(0.13f, 0.13f, 0.16f, 1f));
+
+            float centerY = _resizeHandleRect.center.y;
+            Rect firstLine = new(_resizeHandleRect.center.x - 24f, centerY - 2f, 48f, 1f);
+            Rect secondLine = new(_resizeHandleRect.center.x - 24f, centerY + 2f, 48f, 1f);
+            Color lineColor = _isResizingPreview
+                ? new Color(0.48f, 0.78f, 1f, 1f)
+                : new Color(0.38f, 0.38f, 0.46f, 1f);
+            EditorGUI.DrawRect(firstLine, lineColor);
+            EditorGUI.DrawRect(secondLine, lineColor);
         }
 
         private void CalculateGraphScale()
@@ -158,6 +197,7 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
             if (Event.current.type != EventType.Repaint)
                 return;
 
+            bool hasSelection = TryGetSelectedTalentId(out int selectedId);
             Dictionary<int, Vector2> talentPositions = new();
             for (int i = 0; i < _talentsProp.arraySize; i++)
             {
@@ -190,11 +230,15 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
 
                     if (talentPositions.TryGetValue(parentId, out Vector2 parentPos))
                     {
+                        bool isSelectedConnection = hasSelection &&
+                                                    (parentId == selectedId || idProp.intValue == selectedId);
                         Vector3 start = new(parentPos.x, parentPos.y, 0f);
                         Vector3 end = new(childPos.x, childPos.y, 0f);
                         Handles.BeginGUI();
-                        Handles.color = new Color(0.55f, 0.45f, 0.2f, 0.5f);
-                        Handles.DrawLine(start, end);
+                        Handles.color = isSelectedConnection
+                            ? new Color(0.95f, 0.78f, 0.3f, 0.95f)
+                            : new Color(0.72f, 0.62f, 0.32f, 0.55f);
+                        Handles.DrawAAPolyLine(isSelectedConnection ? 3f : 1.5f, start, end);
                         Handles.EndGUI();
                     }
                 }
@@ -239,11 +283,12 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
             if (Event.current.type != EventType.Repaint)
                 return;
 
+            GUIStyle labelStyle = CreateNodeLabelStyle();
+
             for (int i = 0; i < _talentsProp.arraySize; i++)
             {
                 if (!TryGetTalentProperty(i, ID_FIELD, out SerializedProperty idProp) ||
-                    !TryGetTalentProperty(i, GRAPH_POSITION_FIELD, out SerializedProperty posProp) ||
-                    !TryGetTalentProperty(i, TITLE_FIELD, out SerializedProperty titleProp))
+                    !TryGetTalentProperty(i, GRAPH_POSITION_FIELD, out SerializedProperty posProp))
                 {
                     continue;
                 }
@@ -251,35 +296,109 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
                 Vector2 screenPos = GraphToScreen(posProp.vector2Value);
 
                 bool isSelected = i == _selectedIndex;
-                Color fillColor = isSelected
-                    ? new Color(0.2f, 0.6f, 1f, 0.9f)
-                    : new Color(0.5f, 0.5f, 0.6f, 0.8f);
-
-                Handles.BeginGUI();
-                Handles.color = fillColor;
-                Handles.DrawSolidDisc(screenPos, Vector3.forward, NODE_RADIUS);
-
-                if (isSelected)
-                {
-                    Handles.color = new Color(0.4f, 0.8f, 1f, 0.4f);
-                    Handles.DrawSolidDisc(screenPos, Vector3.forward, NODE_RADIUS + 3f);
-                }
-                Handles.EndGUI();
-
-                string label = titleProp.stringValue;
-                if (string.IsNullOrEmpty(label))
-                    label = ((TalentId)idProp.intValue).ToString();
-
-                GUIStyle labelStyle = new(EditorStyles.miniLabel)
-                {
-                    alignment = TextAnchor.MiddleCenter,
-                    fontSize = 9
-                };
-
-                float labelY = screenPos.y - NODE_RADIUS - 10f;
-                Rect labelRect = new(screenPos.x - 60f, labelY - 7f, 120f, 14f);
-                GUI.Label(labelRect, label, labelStyle);
+                DrawNodeDisc(screenPos, isSelected);
             }
+
+            for (int i = 0; i < _talentsProp.arraySize; i++)
+            {
+                if (!TryGetTalentProperty(i, ID_FIELD, out SerializedProperty idProp) ||
+                    !TryGetTalentProperty(i, GRAPH_POSITION_FIELD, out SerializedProperty posProp))
+                {
+                    continue;
+                }
+
+                Vector2 screenPos = GraphToScreen(posProp.vector2Value);
+                bool isSelected = i == _selectedIndex;
+                string label = DisplayNameForTalent(i, idProp);
+                Rect labelRect = GetNodeLabelRect(screenPos, label, labelStyle);
+                DrawNodeLabel(labelRect, label, labelStyle, isSelected);
+            }
+        }
+
+        private void DrawNodeDisc(Vector2 screenPos, bool isSelected)
+        {
+            Handles.BeginGUI();
+            if (isSelected)
+            {
+                Handles.color = new Color(0.35f, 0.72f, 1f, 0.28f);
+                Handles.DrawSolidDisc(screenPos, Vector3.forward, NODE_RADIUS + 7f);
+            }
+
+            Handles.color = isSelected
+                ? new Color(0.18f, 0.6f, 1f, 1f)
+                : new Color(0.66f, 0.66f, 0.78f, 1f);
+            Handles.DrawSolidDisc(screenPos, Vector3.forward, NODE_RADIUS);
+            Handles.color = isSelected
+                ? new Color(0.78f, 0.9f, 1f, 1f)
+                : new Color(0.18f, 0.18f, 0.24f, 1f);
+            Handles.DrawWireDisc(screenPos, Vector3.forward, NODE_RADIUS + 0.5f);
+            Handles.EndGUI();
+        }
+
+        private GUIStyle CreateNodeLabelStyle()
+        {
+            GUIStyle style = new(EditorStyles.miniBoldLabel)
+            {
+                alignment = TextAnchor.MiddleCenter,
+                clipping = TextClipping.Clip,
+                fontSize = 10,
+                wordWrap = true
+            };
+            style.normal.textColor = new Color(0.92f, 0.93f, 0.98f, 1f);
+            return style;
+        }
+
+        private string DisplayNameForTalent(int index, SerializedProperty idProp)
+        {
+            if (TryGetTalentAsset(index, out UnityEngine.Object talent) && !string.IsNullOrWhiteSpace(talent.name))
+                return ObjectNames.NicifyVariableName(talent.name);
+
+            return ObjectNames.NicifyVariableName(((TalentId)idProp.intValue).ToString());
+        }
+
+        private Rect GetNodeLabelRect(Vector2 screenPos, string label, GUIStyle labelStyle)
+        {
+            GUIContent content = new(label);
+            float height = Mathf.Clamp(
+                labelStyle.CalcHeight(content, LABEL_WIDTH - LABEL_PADDING * 2f) + LABEL_PADDING * 2f,
+                LABEL_MIN_HEIGHT,
+                LABEL_MAX_HEIGHT);
+            float belowY = screenPos.y + NODE_RADIUS + LABEL_GAP;
+            float aboveY = screenPos.y - NODE_RADIUS - LABEL_GAP - height;
+            float y = belowY + height <= _previewRect.yMax - LABEL_PADDING ? belowY : aboveY;
+
+            Rect rect = new(screenPos.x - LABEL_WIDTH * 0.5f, y, LABEL_WIDTH, height);
+            rect.x = Mathf.Clamp(rect.x, _previewRect.x + LABEL_PADDING, _previewRect.xMax - rect.width - LABEL_PADDING);
+            rect.y = Mathf.Clamp(rect.y, _previewRect.y + LABEL_PADDING, _previewRect.yMax - rect.height - LABEL_PADDING);
+            return rect;
+        }
+
+        private void DrawNodeLabel(Rect rect, string label, GUIStyle labelStyle, bool isSelected)
+        {
+            Color backgroundColor = isSelected
+                ? new Color(0.03f, 0.15f, 0.26f, 0.96f)
+                : new Color(0.02f, 0.02f, 0.05f, 0.9f);
+            Color borderColor = isSelected
+                ? new Color(0.48f, 0.78f, 1f, 1f)
+                : new Color(0.32f, 0.32f, 0.42f, 1f);
+
+            EditorGUI.DrawRect(rect, backgroundColor);
+            DrawRectBorder(rect, borderColor);
+
+            Rect textRect = new(
+                rect.x + LABEL_PADDING,
+                rect.y + LABEL_PADDING * 0.5f,
+                rect.width - LABEL_PADDING * 2f,
+                rect.height - LABEL_PADDING);
+            GUI.Label(textRect, label, labelStyle);
+        }
+
+        private void DrawRectBorder(Rect rect, Color color)
+        {
+            EditorGUI.DrawRect(new Rect(rect.x, rect.y, rect.width, 1f), color);
+            EditorGUI.DrawRect(new Rect(rect.x, rect.yMax - 1f, rect.width, 1f), color);
+            EditorGUI.DrawRect(new Rect(rect.x, rect.y, 1f, rect.height), color);
+            EditorGUI.DrawRect(new Rect(rect.xMax - 1f, rect.y, 1f, rect.height), color);
         }
 
         private void ClampViewOffset()
@@ -290,10 +409,42 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
             _viewOffset.y = Mathf.Clamp(_viewOffset.y, -maxPanY, maxPanY);
         }
 
+        private bool TryGetSelectedTalentId(out int selectedId)
+        {
+            selectedId = 0;
+
+            if (_selectedIndex < 0)
+                return false;
+
+            if (!TryGetTalentProperty(_selectedIndex, ID_FIELD, out SerializedProperty idProp))
+                return false;
+
+            selectedId = idProp.intValue;
+            return true;
+        }
+
         private void HandleEvents()
         {
             Event e = Event.current;
             Vector2 mousePos = e.mousePosition;
+
+            if (_isResizingPreview)
+            {
+                HandlePreviewResize(e);
+                return;
+            }
+
+            if (_resizeHandleRect.Contains(mousePos))
+            {
+                if (e.type == EventType.MouseDown && e.button == 0)
+                {
+                    _isResizingPreview = true;
+                    e.Use();
+                    Repaint();
+                }
+
+                return;
+            }
 
             if (!_previewRect.Contains(mousePos))
             {
@@ -413,6 +564,36 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
                     break;
                 }
             }
+        }
+
+        private void HandlePreviewResize(Event e)
+        {
+            switch (e.type)
+            {
+                case EventType.MouseDrag:
+                    SetPreviewHeight(_previewHeight + e.delta.y);
+                    e.Use();
+                    Repaint();
+                    break;
+
+                case EventType.MouseUp:
+                    _isResizingPreview = false;
+                    EditorPrefs.SetFloat(PREVIEW_HEIGHT_PREF_KEY, _previewHeight);
+                    e.Use();
+                    Repaint();
+                    break;
+            }
+        }
+
+        private void SetPreviewHeight(float height)
+        {
+            float clampedHeight = Mathf.Clamp(height, MIN_PREVIEW_HEIGHT, MAX_PREVIEW_HEIGHT);
+
+            if (Mathf.Approximately(_previewHeight, clampedHeight))
+                return;
+
+            _previewHeight = clampedHeight;
+            EditorPrefs.SetFloat(PREVIEW_HEIGHT_PREF_KEY, _previewHeight);
         }
 
         private static Vector2 SnapToGrid(Vector2 position)

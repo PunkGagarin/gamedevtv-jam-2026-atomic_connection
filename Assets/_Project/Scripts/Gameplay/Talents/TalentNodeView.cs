@@ -19,6 +19,7 @@ namespace _Project.Scripts.Gameplay.Talents
         [field: SerializeField] private TextMeshProUGUI LevelLabel { get; set; }
         [field: SerializeField] private TextMeshProUGUI CostLabel { get; set; }
         [field: SerializeField] private Image CostIconImage { get; set; }
+        [field: SerializeField] private Image TextBackground { get; set; }
 
         [field: Header("Cost Layout")]
         [field: SerializeField, Min(0f)] private float CostIconSpacing { get; set; } = 5f;
@@ -28,6 +29,8 @@ namespace _Project.Scripts.Gameplay.Talents
         [field: SerializeField] private Color NotEnoughCurrencyColor { get; set; } = new(0.22f, 0.12f, 0.1f, 1f);
         [field: SerializeField] private Color AvailableColor { get; set; } = new(0.18f, 0.25f, 0.18f, 1f);
         [field: SerializeField] private Color BoughtColor { get; set; } = new(0.12f, 0.2f, 0.32f, 1f);
+        [field: SerializeField] private Color UnavailableTextBackgroundColor { get; set; } = new(0.5647059f, 0.3215686f, 0.3215686f, 1f);
+        [field: SerializeField] private Color UnavailableTextColor { get; set; } = new(0.6352941f, 0.6352941f, 0.6352941f, 1f);
 
         private TalentId _talentId;
         private TalentDefinition _talent;
@@ -36,6 +39,9 @@ namespace _Project.Scripts.Gameplay.Talents
         private TalentNodeViewState _state;
         private CanvasGroup _canvasGroup;
         private Vector3 _baseScale;
+        private Color _textBackgroundDefaultColor;
+        private Color _levelLabelDefaultColor;
+        private Color _costLabelDefaultColor;
         private Tween _scaleTween;
         private Tween _shakeTween;
         private Tween _revealTween;
@@ -48,6 +54,9 @@ namespace _Project.Scripts.Gameplay.Talents
             _animationConfig = animationConfig;
             EnsureCanvasGroup();
             _baseScale = RectTransform.localScale;
+            _textBackgroundDefaultColor = TextBackground != null ? TextBackground.color : Color.white;
+            _levelLabelDefaultColor = LevelLabel != null ? LevelLabel.color : Color.white;
+            _costLabelDefaultColor = CostLabel != null ? CostLabel.color : Color.white;
 
             if (IconImage != null && talent.Icon != null)
                 IconImage.sprite = talent.Icon;
@@ -94,6 +103,8 @@ namespace _Project.Scripts.Gameplay.Talents
                     or TalentNodeViewState.NotEnoughCurrency
                     or TalentNodeViewState.Maxed;
 
+            RefreshTextBackground(state);
+            RefreshTextColor(state);
             RefreshNotificationDot(state);
         }
 
@@ -256,6 +267,27 @@ namespace _Project.Scripts.Gameplay.Talents
                 return;
 
             NotificationImage.gameObject.SetActive(state == TalentNodeViewState.Available);
+        }
+
+        private void RefreshTextBackground(TalentNodeViewState state)
+        {
+            if (TextBackground == null)
+                return;
+
+            TextBackground.color = state is TalentNodeViewState.Locked or TalentNodeViewState.NotEnoughCurrency
+                ? UnavailableTextBackgroundColor
+                : _textBackgroundDefaultColor;
+        }
+
+        private void RefreshTextColor(TalentNodeViewState state)
+        {
+            bool unavailable = state is TalentNodeViewState.Locked or TalentNodeViewState.NotEnoughCurrency;
+
+            if (LevelLabel != null)
+                LevelLabel.color = unavailable ? UnavailableTextColor : _levelLabelDefaultColor;
+
+            if (CostLabel != null)
+                CostLabel.color = unavailable ? UnavailableTextColor : _costLabelDefaultColor;
         }
 
         private Color ColorFor(TalentNodeViewState state)

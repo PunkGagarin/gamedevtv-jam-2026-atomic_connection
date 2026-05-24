@@ -13,6 +13,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
     public class AtomCoreConnectionAtomSource : MonoBehaviour
     {
         private readonly List<FreeAtom> _coreAtoms = new();
+        private readonly Dictionary<FreeAtom, int> _coreAtomOrder = new();
 
         [field: SerializeField] private OwnedAtoms OwnedAtoms { get; set; }
 
@@ -43,6 +44,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
                 return;
 
             OwnedAtoms.GetOwned(FreeAtomOwnerKind.Core, _coreAtoms);
+            SortCoreAtomsByDistanceTo(target);
 
             foreach (FreeAtom candidate in _coreAtoms)
             {
@@ -82,6 +84,37 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
                 return false;
 
             return atom.Draggable == null || _dragService == null || !_dragService.IsReserved(atom.Draggable);
+        }
+
+        private void SortCoreAtomsByDistanceTo(BattleMolecule target)
+        {
+            if (target == null)
+                return;
+
+            Vector3 targetPosition = target.transform.position;
+            _coreAtomOrder.Clear();
+
+            for (int i = 0; i < _coreAtoms.Count; i++)
+                _coreAtomOrder[_coreAtoms[i]] = i;
+
+            _coreAtoms.Sort((left, right) =>
+            {
+                if (left == right)
+                    return 0;
+
+                if (left == null)
+                    return 1;
+
+                if (right == null)
+                    return -1;
+
+                float leftDistanceSqr = (left.transform.position - targetPosition).sqrMagnitude;
+                float rightDistanceSqr = (right.transform.position - targetPosition).sqrMagnitude;
+                int distanceComparison = leftDistanceSqr.CompareTo(rightDistanceSqr);
+                return distanceComparison != 0
+                    ? distanceComparison
+                    : _coreAtomOrder[left].CompareTo(_coreAtomOrder[right]);
+            });
         }
 
         private static bool IsFlowAtom(FreeAtom atom, List<ConnectionAtomFlowState> activeFlowAtoms)

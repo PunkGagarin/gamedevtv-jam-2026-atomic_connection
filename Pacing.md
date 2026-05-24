@@ -159,12 +159,55 @@ ExpectedLevelRadicals =
 | 3 | `StingerMolecule`, `StingerMoleculeDamageSmall 1`, `StingerMoleculeAim`, `DnaFlatKillReward 1` |
 | 4 | `StingerMoleculePierce 1`, `StingerMoleculeCriticalChance 1`, `DnaFlatKillReward 2`, `RadicalDropChance 1`, `StingerMoleculeCriticalReward 1` |
 | 5 | `SwarmMolecule`, `SwarmMoleculeDamageSmall 1`, `CurrencyPickupArea 1`, `ConnectionAtomSpeed 1`, `RadicalDropChance 2`, `SwarmMoleculeAttackRange 1` |
-| 6 | `SwarmMoleculeShotCount 1`, `SwarmMoleculeDamageSmall 2`, `StingerMoleculePierce 2`, `RadicalPickupAmountBonus 1` |
-| 7 | `SwarmMoleculeShotCount 2`, `MembraneMolecule`, `MembraneMoleculeChargeReduction`, `RadicalPickupAmountBonus 2`, `CoreHealthLarge 1`, `RadicalDropChance 3` |
-| 8 | `CoreHealthLarge 2`, `DnaFlatKillReward 3`, `CurrencyPickupArea 2`, `ConnectionAtomSpeed 2`, `StingerMoleculeCriticalChance 2`, `StingerMoleculeDamageSmall 2-3`, `DnaPickupAmountBonus 1` |
-| 9 | `MembraneMoleculeDuration`, `DnaPickupAmountBonus 2`, `DnaFlatKillReward 4`, `StingerMoleculeChargeReduction 1-2`, `MembraneMoleculeIntegrity 1`, `MembraneMoleculeCooldownReduction 1`, `StingerMoleculeDamageLarge 1`, `SwarmMoleculeDamageLarge 1` |
-| 10 first-clear | `DnaFlatKillReward 5`, `CurrencyPickupArea 3-4`, `ConnectionAtomSpeed 3`, `CoreClickReduction 2-3`, `NeedleMoleculeDamage 3-4`, `StingerMoleculeCriticalChance 3`, `SwarmMoleculeDamageSmall 3-4`, `StingerMoleculeDamageLarge 2`, `SwarmMoleculeDamageLarge 2` |
-| 10 фарм | Остаток дерева: `CoreHealthSmall 3-5`, `CoreClickReduction 4`, `NeedleMoleculeDamage 5`, `NeedleMoleculeChargeReduction 2`, `MembraneMoleculeCooldownReduction 2-3`, `MembraneMoleculeIntegrity 2-3`, `StingerMoleculeDamageLarge 3`, `StingerMoleculeCriticalReward 2-3`, оставшиеся late DNA-грейды |
+| 6 | `SwarmMoleculeShotCount 1`, `StingerMoleculePierce 2`, `RadicalPickupAmountBonus 1` |
+| 7 | `NeedleMoleculeDamage 3`, `SwarmMoleculeShotCount 2`, `MembraneMolecule`, `MembraneMoleculeChargeReduction`, `RadicalPickupAmountBonus 2`, `CoreHealthLarge 1`, `RadicalDropChance 3` |
+| 8 | `NeedleMoleculeDamage 4`, `SwarmMoleculeDamageSmall 2`, `CoreHealthLarge 2`, `DnaFlatKillReward 3`, `CurrencyPickupArea 2`, `ConnectionAtomSpeed 2`, `StingerMoleculeCriticalChance 2`, `StingerMoleculeDamageSmall 2-3`, `DnaPickupAmountBonus 1` |
+| 9 | `MembraneMoleculeDuration`, `DnaPickupAmountBonus 2`, `DnaFlatKillReward 4`, `StingerMoleculeChargeReduction 1-2`, `MembraneMoleculeIntegrity 1`, `MembraneMoleculeCooldownReduction 1`, `StingerMoleculeDamageLarge 1` |
+| 10 first-clear | `DnaFlatKillReward 5`, `CurrencyPickupArea 3-4`, `ConnectionAtomSpeed 3`, `CoreClickReduction 2-3`, `StingerMoleculeCriticalChance 3`, `SwarmMoleculeDamageSmall 3-4`, `StingerMoleculeDamageLarge 2` |
+| 10 фарм | Остаток дерева: `CoreHealthSmall 3-5`, `CoreClickReduction 4`, `NeedleMoleculeDamage 5`, `NeedleMoleculeChargeReduction 2`, `MembraneMoleculeCooldownReduction 2-3`, `MembraneMoleculeIntegrity 2-3`, `StingerMoleculeDamageLarge 3`, `SwarmMoleculeDamageLarge 1-2`, `StingerMoleculeCriticalReward 2-3`, оставшиеся late DNA-грейды |
+
+## Боевой target path
+
+StingerMolecule должен быть гарантированным ответом на Elite: после открытия Stinger актуальная Elite должна умирать от одного обычного Stinger-выстрела. Крит не является требованием для убийства Elite и остается бонусом для overkill, ускорения босса и крит-награды.
+
+| Вход в уровень | Elite HP | Минимальный Stinger target path | Stinger damage | Crit damage |
+|---:|---:|---|---:|---:|
+| 3 | 8 | Stinger закрыт | - | - |
+| 4 | 10 | `StingerMoleculeDamageSmall 1` | 16 | 32 |
+| 5 | 10 | `StingerMoleculeDamageSmall 1` | 16 | 32 |
+| 6 | 12 | `StingerMoleculeDamageSmall 1` | 16 | 32 |
+| 7 | 14 | `StingerMoleculeDamageSmall 1` | 16 | 32 |
+| 8 | 16 | `StingerMoleculeDamageSmall 1` | 16 | 32 |
+| 9 | 20 | `StingerMoleculeDamageSmall 2` | 22 | 44 |
+| 10 | 27 | `StingerMoleculeDamageSmall 2`, `StingerMoleculeDamageLarge 1` | 32 | 64 |
+
+Обязательные combat-пороговые покупки: `NeedleMoleculeDamage 3` перед `Level8`, `NeedleMoleculeDamage 4` перед `Level9`, `SwarmMoleculeDamageSmall 2` перед `Level9`, `StingerMoleculeDamageSmall 2` перед `Level9`, `StingerMoleculeDamageLarge 1` перед `Level10`. `SwarmMoleculeDamageLarge` не является обязательным campaign target path и остается late/farm или boss-comfort.
+
+NeedleMolecule остается основным single-target ответом на Standard. Расчет: базовый урон Needle `1`, `NeedleMoleculeDamage` дает `+1` урона за уровень.
+
+| Вход в уровень | Standard HP | Standard+ HP | Target Needle-грейды | Needle damage | Standard hits | Standard+ hits |
+|---:|---:|---:|---|---:|---:|---:|
+| 3 | 2 | 2 | `NeedleMoleculeDamage 2` | 3 | 1 | 1 |
+| 4 | 2 | 4 | `NeedleMoleculeDamage 2` | 3 | 1 | 2 |
+| 5 | 2 | 4 | `NeedleMoleculeDamage 2` | 3 | 1 | 2 |
+| 6 | 3 | 5 | `NeedleMoleculeDamage 2` | 3 | 1 | 2 |
+| 7 | 3 | 5 | `NeedleMoleculeDamage 2` | 3 | 1 | 2 |
+| 8 | 4 | 6 | `NeedleMoleculeDamage 3` | 4 | 1 | 2 |
+| 9 | 5 | 7 | `NeedleMoleculeDamage 4` | 5 | 1 | 2 |
+| 10 | 6 | 8 | `NeedleMoleculeDamage 4` | 5 | 2 | 2 |
+
+SwarmMolecule должен быть ответом на Mass, но не должен становиться доминирующей стратегией против Standard. Расчет: базовый урон Swarm `1`, `SwarmMoleculeDamageSmall` дает `+1` урона за уровень, `SwarmMoleculeDamageLarge` дает `+2` урона за уровень.
+
+| Вход в уровень | Mass HP | Standard HP | Target Swarm-грейды | Swarm damage | Mass result | Standard result |
+|---:|---:|---:|---|---:|---|---|
+| 5 | 1 | 2 / 4 | Swarm закрыт | - | preview без ответа | - |
+| 6 | 2 | 3 / 5 | `SwarmMoleculeDamageSmall 1` | 2 | 1 залп | не ваншотит |
+| 7 | 2 | 3 / 5 | `SwarmMoleculeDamageSmall 1` | 2 | 1 залп | не ваншотит |
+| 8 | 2 | 4 / 6 | `SwarmMoleculeDamageSmall 1`, `ShotCount 2` | 2 | 1 залп | не ваншотит |
+| 9 | 3 | 5 / 7 | `SwarmMoleculeDamageSmall 2` | 3 | 1 залп | не ваншотит |
+| 10 | 3 | 6 / 8 | `SwarmMoleculeDamageSmall 2` | 3 | 1 залп | не ваншотит |
+
+Риск доминирования Swarm: `SwarmMoleculeDamageLarge` не входит в обязательный campaign target path, потому что вместе с дальнейшими small-грейдами он может вывести Swarm к breakpoint, где обычный Standard начинает умирать от залпа. Campaign target path держит Swarm на `DamageSmall 2`: Mass шотается, Standard/Ranged остаются задачей Needle. `SwarmMoleculeDamageLarge` остается late/farm или boss-comfort.
 
 ## Проверка
 

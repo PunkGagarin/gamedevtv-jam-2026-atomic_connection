@@ -55,7 +55,7 @@
 |---|---:|
 | Направление стартовой позиции от атомного ядра | `(0, 2)` |
 | Атомов для полного заряда | 5 |
-| Базовый урон выстрела | 3 |
+| Базовый урон выстрела | 10 |
 | Множитель критического урона | 2 |
 
 ### MembraneMolecule
@@ -105,6 +105,78 @@
 | Elite | `Gameplay/Enemies/EliteEnemyUnit` | 6 | 0.525 | 1 | нет | 5 DNA + 1 радикал |
 | Ranged | `Gameplay/Enemies/RangedEnemyUnit` | 2 | 0.455 | 1 projectile | нет | 1 DNA |
 | Boss | `Gameplay/Enemies/BossEnemyUnit` | 3 | 0.35 | 2 | да | нет; завершает уровень |
+
+### Боевые override-значения уровней
+
+Эти значения сейчас представлены в `Level03.asset`-`Level10.asset` как `MaxHealthOverride` и `CoreCollisionDamageOverride` в уже существующих wave entries. `Level01-Level02` остаются настроенным входом без изменений. Состав волн, `EnemyId`, тайминги и количество врагов не меняются в этом срезе. Elite HP настроен как сигнал переключиться с Needle на Stinger: Needle может добивать, но Stinger должен быть естественной реакцией на появление Elite.
+
+| Level | Standard | Standard+ / burst | Mass | Elite | Ranged | Boss |
+|---:|---|---|---|---|---|---|
+| 3 | HP2 DMG2 | HP2 DMG1 | - | HP8 DMG3 | - | HP10 |
+| 4 | HP2 DMG2 | HP4 DMG3 | - | HP10 DMG3 | - | HP28 |
+| 5 | HP2 DMG2 | HP4 DMG3 | HP1 DMG1 | HP10 DMG3 | - | HP36 |
+| 6 | HP3 DMG2 | HP5 DMG3 | HP2 DMG1 | HP12 DMG3 | - | HP42 |
+| 7 | HP3 DMG2 | HP5 DMG3 | HP2 DMG1 | HP14 DMG3 | - | HP46 |
+| 8 | HP4 DMG3 | HP6 DMG4 | HP2 DMG2 | HP16 DMG4 | HP4 | HP48 |
+| 9 | HP5 DMG3 | HP7 DMG4 | HP3 DMG2 | HP20 DMG4 | HP5 | HP60 |
+| 10 | HP6 DMG4 | HP8 DMG5 | HP3 DMG2 | HP27 DMG5 | HP6 | HP90 |
+
+### Контракт ролей по HP
+
+Mass держится примерно в половину обычного Standard HP, Ranged получает Standard-like HP и давит поведением/projectile pressure, Elite остается в диапазоне примерно `3-4x` среднего Standard HP. Это удерживает роли оружия: Needle решает Standard/Ranged, Swarm чистит Mass, Stinger закрывает Elite.
+
+| Вход в уровень | Standard HP | Ranged HP | Mass HP | Elite HP | Ответы игрока |
+|---:|---:|---:|---:|---:|---|
+| 6 | 3 / 5 | - | 2 | 12 | Needle / Swarm / Stinger |
+| 7 | 3 / 5 | - | 2 | 14 | Needle / Swarm / Stinger |
+| 8 | 4 / 6 | 4 | 2 | 16 | Ranged убивается как Standard |
+| 9 | 5 / 7 | 5 | 3 | 20 | Swarm не ваншотит Standard |
+| 10 | 6 / 8 | 6 | 3 | 27 | Ranged не становится Elite-lite |
+
+### Stinger против Elite на target path
+
+StingerMolecule балансируется как гарантированный ответ на Elite: после открытия Stinger актуальная Elite должна умирать от одного обычного Stinger-выстрела. Критический урон остается бонусом для overkill, ускорения босса и крит-награды, но не является обязательным условием убийства Elite.
+
+| Вход в уровень | Elite HP | Target Stinger-грейды | Stinger damage | Crit damage | Результат |
+|---:|---:|---|---:|---:|---|
+| 3 | 8 | Stinger закрыт | - | - | Elite intro без Stinger |
+| 4 | 10 | `DamageSmall 1` | 16 | 32 | 1 shot |
+| 5 | 10 | `DamageSmall 1`, `CritChance 1` | 16 | 32 | 1 shot |
+| 6 | 12 | `DamageSmall 1` | 16 | 32 | 1 shot |
+| 7 | 14 | `DamageSmall 1` | 16 | 32 | 1 shot |
+| 8 | 16 | `DamageSmall 1` | 16 | 32 | 1 shot |
+| 9 | 20 | `DamageSmall 2-3`, `CritChance 2` | 22-28 | 44-56 | 1 shot |
+| 10 | 27 | `DamageSmall 2-3`, `DamageLarge 1` | 32-38 | 64-76 | 1 shot |
+
+### Needle против Standard на target path
+
+NeedleMolecule остается основным single-target ответом на Standard. Расчет: базовый урон Needle `1`, `NeedleMoleculeDamage` дает `+1` урона за уровень.
+
+| Вход в уровень | Standard HP | Standard+ HP | Target Needle-грейды | Needle damage | Standard hits | Standard+ hits |
+|---:|---:|---:|---|---:|---:|---:|
+| 3 | 2 | 2 | `NeedleMoleculeDamage 2` | 3 | 1 | 1 |
+| 4 | 2 | 4 | `NeedleMoleculeDamage 2` | 3 | 1 | 2 |
+| 5 | 2 | 4 | `NeedleMoleculeDamage 2` | 3 | 1 | 2 |
+| 6 | 3 | 5 | `NeedleMoleculeDamage 2` | 3 | 1 | 2 |
+| 7 | 3 | 5 | `NeedleMoleculeDamage 2` | 3 | 1 | 2 |
+| 8 | 4 | 6 | `NeedleMoleculeDamage 3` | 4 | 1 | 2 |
+| 9 | 5 | 7 | `NeedleMoleculeDamage 4` | 5 | 1 | 2 |
+| 10 | 6 | 8 | `NeedleMoleculeDamage 4` | 5 | 2 | 2 |
+
+### Swarm против Mass и Standard на target path
+
+SwarmMolecule должен быть ответом на Mass, но не должен становиться доминирующей стратегией против Standard. Расчет: базовый урон Swarm `1`, `SwarmMoleculeDamageSmall` дает `+1` урона за уровень, `SwarmMoleculeDamageLarge` дает `+2` урона за уровень.
+
+| Вход в уровень | Mass HP | Standard HP | Target Swarm-грейды | Swarm damage | Mass result | Standard result |
+|---:|---:|---:|---|---:|---|---|
+| 5 | 1 | 2 / 4 | Swarm закрыт | - | preview без ответа | - |
+| 6 | 2 | 3 / 5 | `SwarmMoleculeDamageSmall 1` | 2 | 1 залп | не ваншотит |
+| 7 | 2 | 3 / 5 | `SwarmMoleculeDamageSmall 1` | 2 | 1 залп | не ваншотит |
+| 8 | 2 | 4 / 6 | `SwarmMoleculeDamageSmall 1`, `ShotCount 2` | 2 | 1 залп | не ваншотит |
+| 9 | 3 | 5 / 7 | `SwarmMoleculeDamageSmall 2` | 3 | 1 залп | не ваншотит |
+| 10 | 3 | 6 / 8 | `SwarmMoleculeDamageSmall 2` | 3 | 1 залп | не ваншотит |
+
+Риск доминирования Swarm: `SwarmMoleculeDamageLarge` не входит в обязательный campaign target path, потому что вместе с дальнейшими small-грейдами он может вывести Swarm к breakpoint, где обычный Standard начинает умирать от залпа. Campaign target path держит Swarm на `DamageSmall 2`: Mass шотается, Standard/Ranged остаются задачей Needle. `SwarmMoleculeDamageLarge` остается late/farm или boss-comfort.
 
 ### Enemy Merge
 
@@ -217,7 +289,7 @@
 | Атомов для полного заряда | 4 |
 | Базовый урон | 10 |
 | Пробитие обычного выстрела | unlock: первая цель + 1 цель за ней |
-| Бонус урона по уровням | `+20% / +40% / +60%` |
+| Бонус урона по уровням | Damage I `+6` за уровень; Damage II `+10` за уровень |
 | Бонус скорости перезарядки по уровням | `-10% / -20% / -30%` |
 
 ### SwarmMolecule
@@ -263,7 +335,7 @@
 | Лёгкая игла | 2 | `4 / 80` DNA | требует Крепкое ядро; NeedleMolecule требует на `1` атом меньше для полного заряда за уровень |
 | Боевой прицел | 1 | `1` изотоп | требует Автоклик; unlock shot-side preview направления будущего выстрела NeedleMolecule во время drag-подготовки |
 | Жало | 1 | `1` изотоп | требует Боевой прицел; unlock StingerMolecule |
-| Урон I | 3 | `14 / 45 / 160` DNA | требует Жало; `+1` урона StingerMolecule за уровень |
+| Урон I | 3 | `14 / 45 / 160` DNA | требует Жало; `+6` урона StingerMolecule за уровень |
 | Быстрое жало | 2 | `9 / 30` радикалов | требует Жало; StingerMolecule требует на `1` атом меньше для полного заряда за уровень |
 | Прицел жала | 1 | `15` DNA | требует Урон I; unlock shot-side preview направления будущего выстрела StingerMolecule во время drag-подготовки |
 | Пробитие | 2 | `4 / 10` радикалов | требует Урон I; обычный выстрел поражает дополнительные цели за уровни таланта |
@@ -317,7 +389,7 @@
 `3` атома для заряда и `1` базового урона NeedleMolecule,
 `5` атомов для заряда StingerMolecule, `3` атома для заряда MembraneMolecule,
 `5` секунд действия мембраны, `3` прочности, `6` секунд перезарядки,
-`2.5` радиуса, `0.8` дистанции и `0.18` сек плавного отталкивания при разрушении, `3` базового урона и `2x` критического урона
+`2.5` радиуса, `0.8` дистанции и `0.18` сек плавного отталкивания при разрушении, `10` базового урона и `2x` критического урона
 StingerMolecule, `7` атомов для заряда SwarmMolecule, `1` базового урона
 луча SwarmMolecule, `5` лучей роевого залпа, `30` градусов разброса,
 `10` градусов дополнительного разброса за бонусный луч и `8` дальности

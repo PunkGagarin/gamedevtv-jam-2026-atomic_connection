@@ -54,8 +54,8 @@
 |---:|---|---:|---:|---:|
 | 0 | Standard HP2 DMG2 | 1 | 8 | 8 |
 | 30 | Standard HP4 DMG3 | 2 | 1 | 2 |
-| 12 | Elite HP8 DMG3 | 1 | 3 | 3 |
-| 40 | Boss HP30 | 1 | 1 | 1 |
+| 12 | Elite HP10 DMG3 | 1 | 3 | 3 |
+| 40 | Boss HP28 | 1 | 1 | 1 |
 
 ## Level 5
 
@@ -65,9 +65,9 @@
 |---:|---|---:|---:|---:|
 | 0 | Standard HP2 DMG2 | 1 | 10 | 10 |
 | 32 | Standard HP4 DMG3 | 4 | 1 | 4 |
-| 20 | Mass | 6 | 1 | 6 |
-| 24 | Elite HP8 DMG3 | 1 | 1 | 1 |
-| 40 | Boss HP40 | 1 | 1 | 1 |
+| 20 | Mass HP1 DMG1 | 6 | 1 | 6 |
+| 24 | Elite HP10 DMG3 | 1 | 1 | 1 |
+| 40 | Boss HP36 | 1 | 1 | 1 |
 
 ## Level 6
 
@@ -75,11 +75,11 @@
 
 | Секунда | Враг | SpawnCount | SpawnLimit | Итого |
 |---:|---|---:|---:|---:|
-| 0 | Standard HP2 DMG2 | 1 | 8 | 8 |
-| 34 | Standard HP4 DMG3 | 4 | 1 | 4 |
-| 10 | Mass | 5 | 4 | 20 |
-| 14 | Elite HP8 DMG3 | 1 | 2 | 2 |
-| 40 | Boss HP50 | 1 | 1 | 1 |
+| 0 | Standard HP3 DMG2 | 1 | 8 | 8 |
+| 34 | Standard HP5 DMG3 | 4 | 1 | 4 |
+| 10 | Mass HP2 DMG1 | 5 | 4 | 20 |
+| 14 | Elite HP12 DMG3 | 1 | 2 | 2 |
+| 40 | Boss HP42 | 1 | 1 | 1 |
 
 ## Level 7
 
@@ -87,11 +87,11 @@
 
 | Секунда | Враг | SpawnCount | SpawnLimit | Итого |
 |---:|---|---:|---:|---:|
-| 0 | Standard HP2 DMG2 | 1 | 10 | 10 |
-| 28 | Standard HP4 DMG3 | 4 | 1 | 4 |
-| 8 | Mass | 5 | 5 | 25 |
-| 12 | Elite HP8 DMG3 | 1 | 2 | 2 |
-| 40 | Boss HP50 | 1 | 1 | 1 |
+| 0 | Standard HP3 DMG2 | 1 | 10 | 10 |
+| 28 | Standard HP5 DMG3 | 4 | 1 | 4 |
+| 8 | Mass HP2 DMG1 | 5 | 5 | 25 |
+| 12 | Elite HP14 DMG3 | 1 | 2 | 2 |
+| 40 | Boss HP46 | 1 | 1 | 1 |
 
 ## Level 8
 
@@ -99,12 +99,12 @@
 
 | Секунда | Враг | SpawnCount | SpawnLimit | Итого |
 |---:|---|---:|---:|---:|
-| 0 | Standard HP2 DMG2 | 1 | 8 | 8 |
-| 36 | Standard HP4 DMG3 | 4 | 1 | 4 |
-| 14 | Mass | 5 | 2 | 10 |
-| 26 | Elite HP8 DMG3 | 1 | 1 | 1 |
-| 18 | Ranged | 1 | 5 | 5 |
-| 45 | Boss HP50 | 1 | 1 | 1 |
+| 0 | Standard HP4 DMG3 | 1 | 8 | 8 |
+| 36 | Standard HP6 DMG4 | 4 | 1 | 4 |
+| 14 | Mass HP2 DMG2 | 5 | 2 | 10 |
+| 26 | Elite HP16 DMG4 | 1 | 1 | 1 |
+| 18 | Ranged HP4 | 1 | 5 | 5 |
+| 45 | Boss HP48 | 1 | 1 | 1 |
 
 ## Level 9
 
@@ -112,12 +112,12 @@
 
 | Секунда | Враг | SpawnCount | SpawnLimit | Итого |
 |---:|---|---:|---:|---:|
-| 0 | Standard HP2 DMG2 | 1 | 12 | 12 |
-| 36 | Standard HP4 DMG3 | 6 | 1 | 6 |
-| 10 | Mass | 5 | 4 | 20 |
-| 8 | Elite HP8 DMG3 | 1 | 4 | 4 |
-| 14 | Ranged | 2 | 5 | 10 |
-| 50 | Boss HP50 | 1 | 1 | 1 |
+| 0 | Standard HP5 DMG3 | 1 | 12 | 12 |
+| 36 | Standard HP7 DMG4 | 6 | 1 | 6 |
+| 10 | Mass HP3 DMG2 | 5 | 4 | 20 |
+| 8 | Elite HP20 DMG4 | 1 | 4 | 4 |
+| 14 | Ranged HP5 | 2 | 5 | 10 |
+| 50 | Boss HP60 | 1 | 1 | 1 |
 
 ## Level 10
 
@@ -125,9 +125,9 @@
 
 | Секунда | Враг | SpawnCount | SpawnLimit | Итого |
 |---:|---|---:|---:|---:|
-| 0 | Standard HP2 DMG2 | 1 | 14 | 14 |
-| 44 | Standard HP4 DMG3 | 8 | 1 | 8 |
-| 8 | Mass | 5 | 9 | 45 |
-| 6 | Elite HP8 DMG3 | 1 | 8 | 8 |
-| 12 | Ranged | 3 | 6 | 18 |
-| 60 | Boss HP50 | 1 | 1 | 1 |
+| 0 | Standard HP6 DMG4 | 1 | 14 | 14 |
+| 44 | Standard HP8 DMG5 | 8 | 1 | 8 |
+| 8 | Mass HP3 DMG2 | 5 | 9 | 45 |
+| 6 | Elite HP27 DMG5 | 1 | 8 | 8 |
+| 12 | Ranged HP6 | 3 | 6 | 18 |
+| 60 | Boss HP90 | 1 | 1 | 1 |

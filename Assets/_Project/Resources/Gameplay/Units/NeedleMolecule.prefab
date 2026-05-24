@@ -34,6 +34,7 @@ GameObject:
   - component: {fileID: 11400024}
   - component: {fileID: 11400026}
   - component: {fileID: 11400027}
+  - component: {fileID: 4786755609619816862}
   m_Layer: 0
   m_Name: NeedleMolecule
   m_TagString: Untagged
@@ -187,6 +188,7 @@ MonoBehaviour:
   <Charge>k__BackingField: {fileID: 11400002}
   <AimLineVisual>k__BackingField: {fileID: 11400006}
   <ShotQueue>k__BackingField: {fileID: 11400008}
+  <PullVisual>k__BackingField: {fileID: 4786755609619816862}
   <AimPullSound>k__BackingField: 10
 --- !u!114 &11400006
 MonoBehaviour:
@@ -452,6 +454,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81491604d20545d586e66a02e8c7c128, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &4786755609619816862
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80d5ecb7ae810c8479c46e5af4c6f8ec, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Units.BattleMolecules.Components.BattleMoleculePullVisual
+  <Strength>k__BackingField: 1
+  <Falloff>k__BackingField: 1
+  <Arc>k__BackingField: 180
+  <Taper>k__BackingField: 1
+  <Radius>k__BackingField: 0
 --- !u!1 &100001
 GameObject:
   m_ObjectHideFlags: 0
@@ -511,7 +530,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: b731409b188006f4c88cf255586204fc, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

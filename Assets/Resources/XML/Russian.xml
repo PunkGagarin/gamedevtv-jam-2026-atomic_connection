@@ -65,8 +65,6 @@
   <text key="TALENT_STINGER_MOLECULE_AIM_DESC">Показывает направление выстрела StingerMolecule.</text>
   <text key="TALENT_STINGER_MOLECULE_PIERCE_TITLE">Пробитие</text>
   <text key="TALENT_STINGER_MOLECULE_PIERCE_DESC">Выстрел StingerMolecule пробивает первого врага и летит дальше.</text>
-  <text key="TALENT_STINGER_MOLECULE_AUTO_LOAD_TITLE">Автозарядка</text>
-  <text key="TALENT_STINGER_MOLECULE_AUTO_LOAD_DESC">StingerMolecule автоматически получает бесплатные заряды.</text>
   <text key="TALENT_STINGER_MOLECULE_DAMAGE_LARGE_TITLE">Урон II</text>
   <text key="TALENT_STINGER_MOLECULE_DAMAGE_LARGE_DESC">Сильно увеличивает урон StingerMolecule на 10.</text>
   <text key="TALENT_MEMBRANE_MOLECULE_TITLE">Мембранная молекула</text>
@@ -79,14 +77,10 @@
   <text key="TALENT_MEMBRANE_MOLECULE_INTEGRITY_DESC">Увеличивает прочность мембраны на 1 за уровень.</text>
   <text key="TALENT_MEMBRANE_MOLECULE_COOLDOWN_REDUCTION_TITLE">Быстрая рекристаллизация</text>
   <text key="TALENT_MEMBRANE_MOLECULE_COOLDOWN_REDUCTION_DESC">Уменьшает перезарядку мембраны на 20% за уровень.</text>
-  <text key="TALENT_MEMBRANE_MOLECULE_AUTO_LOAD_TITLE">Заряд мембраны</text>
-  <text key="TALENT_MEMBRANE_MOLECULE_AUTO_LOAD_DESC">Мембрана автоматически получает бесплатные заряды.</text>
   <text key="TALENT_SWARM_MOLECULE_TITLE">Роевая молекула</text>
   <text key="TALENT_SWARM_MOLECULE_DESC">Разблокирует роевую молекулу с пробивающим залпом.</text>
   <text key="TALENT_SWARM_MOLECULE_DAMAGE_SMALL_TITLE">Урон роя I</text>
   <text key="TALENT_SWARM_MOLECULE_DAMAGE_SMALL_DESC">Увеличивает урон SwarmMolecule на 1.</text>
-  <text key="TALENT_SWARM_MOLECULE_AUTO_LOAD_TITLE">Заряд роя</text>
-  <text key="TALENT_SWARM_MOLECULE_AUTO_LOAD_DESC">SwarmMolecule автоматически получает бесплатные снаряды.</text>
   <text key="TALENT_SWARM_MOLECULE_DAMAGE_LARGE_TITLE">Урон роя II</text>
   <text key="TALENT_SWARM_MOLECULE_DAMAGE_LARGE_DESC">Увеличивает урон SwarmMolecule на 2.</text>
   <text key="TALENT_CURRENCY_PICKUP_AREA_TITLE">Широкий сбор</text>

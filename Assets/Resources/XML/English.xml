@@ -65,8 +65,6 @@
   <text key="TALENT_STINGER_MOLECULE_AIM_DESC">Shows the StingerMolecule shot direction.</text>
   <text key="TALENT_STINGER_MOLECULE_PIERCE_TITLE">Pierce</text>
   <text key="TALENT_STINGER_MOLECULE_PIERCE_DESC">StingerMolecule shot pierces the first enemy and keeps flying.</text>
-  <text key="TALENT_STINGER_MOLECULE_AUTO_LOAD_TITLE">Auto Charge</text>
-  <text key="TALENT_STINGER_MOLECULE_AUTO_LOAD_DESC">Automatically charges StingerMolecule with free shots.</text>
   <text key="TALENT_STINGER_MOLECULE_DAMAGE_LARGE_TITLE">Damage II</text>
   <text key="TALENT_STINGER_MOLECULE_DAMAGE_LARGE_DESC">Greatly increases StingerMolecule damage by 10.</text>
   <text key="TALENT_MEMBRANE_MOLECULE_TITLE">Membrane Molecule</text>
@@ -79,14 +77,10 @@
   <text key="TALENT_MEMBRANE_MOLECULE_INTEGRITY_DESC">Increases membrane integrity by 1 per level.</text>
   <text key="TALENT_MEMBRANE_MOLECULE_COOLDOWN_REDUCTION_TITLE">Fast Recrystallization</text>
   <text key="TALENT_MEMBRANE_MOLECULE_COOLDOWN_REDUCTION_DESC">Reduces membrane cooldown by 20% per level.</text>
-  <text key="TALENT_MEMBRANE_MOLECULE_AUTO_LOAD_TITLE">Membrane Charge</text>
-  <text key="TALENT_MEMBRANE_MOLECULE_AUTO_LOAD_DESC">Automatically charges MembraneMolecule with free projectiles.</text>
   <text key="TALENT_SWARM_MOLECULE_TITLE">Swarm Molecule</text>
   <text key="TALENT_SWARM_MOLECULE_DESC">Unlocks SwarmMolecule with a piercing swarm volley.</text>
   <text key="TALENT_SWARM_MOLECULE_DAMAGE_SMALL_TITLE">Swarm Damage I</text>
   <text key="TALENT_SWARM_MOLECULE_DAMAGE_SMALL_DESC">Increases SwarmMolecule damage by 1.</text>
-  <text key="TALENT_SWARM_MOLECULE_AUTO_LOAD_TITLE">Swarm Charge</text>
-  <text key="TALENT_SWARM_MOLECULE_AUTO_LOAD_DESC">Automatically charges SwarmMolecule with free projectiles.</text>
   <text key="TALENT_SWARM_MOLECULE_DAMAGE_LARGE_TITLE">Swarm Damage II</text>
   <text key="TALENT_SWARM_MOLECULE_DAMAGE_LARGE_DESC">Increases SwarmMolecule damage by 2.</text>
   <text key="TALENT_CURRENCY_PICKUP_AREA_TITLE">Wide Collection</text>

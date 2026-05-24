@@ -135,7 +135,7 @@ resolution.
 `BattleMoleculeFactory` only creates molecule prefabs. `IBattleMoleculeService`
 owns the registered battle molecule list, molecule subscriptions, active
 molecule ticking, active selection, active feed target provider, and cleanup.
-`AtomCoreService` ticks core runtime behavior. Core-owned AutoLoad atom flow
+`AtomCoreService` ticks core runtime behavior. Core-owned connection atom flow
 is coordinated by `AtomCoreConnectionAtomFlow` using the current feed target
 from `IBattleMoleculeFeedTargetProvider`; `AtomCoreConnectionAtomSource`
 selects startable core-owned atoms, while `AtomCoreConnectionAtomMotion` owns
@@ -242,7 +242,7 @@ Talent-adjusted runtime values are applied by the current owner:
 - `AtomCoreService` applies core HP and atom click count
 - `BattleMoleculeFactory` applies atom charge count
 - molecule-local attack components resolve shot damage and Pierce
-- `AtomCoreConnectionAtomMotion` applies AutoLoad movement speed
+- `AtomCoreConnectionAtomMotion` applies connection atom movement speed
 
 Talent tree uses `TalentConfig`. `TalentService` owns talent progress and
 buying; `CurrencyService` owns saved meta-currencies. Talent progress and

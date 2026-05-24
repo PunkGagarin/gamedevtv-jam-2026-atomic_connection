@@ -32,6 +32,9 @@
         },
         {
             "m_Id": "21b203444a2c47579577599a246a187b"
+        },
+        {
+            "m_Id": "b9119b77cc904fafab2d7087cb7ac3b9"
         }
     ],
     "m_Keywords": [],
@@ -732,6 +735,9 @@
         },
         {
             "m_Id": "21b203444a2c47579577599a246a187b"
+        },
+        {
+            "m_Id": "b9119b77cc904fafab2d7087cb7ac3b9"
         }
     ]
 }
@@ -3086,10 +3092,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -509.0000305175781,
-            "y": 388.9999694824219,
-            "width": 126.99996948242188,
-            "height": 34.0
+            "x": -671.0,
+            "y": 479.0,
+            "width": 127.0,
+            "height": 33.99993896484375
         }
     },
     "m_Slots": [
@@ -3291,6 +3297,43 @@
     "m_CustomColors": {
         "m_SerializableColors": []
     }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Internal.Texture2DShaderProperty",
+    "m_ObjectId": "b9119b77cc904fafab2d7087cb7ac3b9",
+    "m_Guid": {
+        "m_GuidSerialized": "3aef36d1-a8fe-49f0-b54c-d7be1b733559"
+    },
+    "promotedFromAssetID": "",
+    "promotedFromCategoryName": "",
+    "promotedOrdering": -1,
+    "m_Name": "Glow",
+    "m_DefaultRefNameVersion": 1,
+    "m_RefNameGeneratedByDisplayName": "Glow",
+    "m_DefaultReferenceName": "_Glow",
+    "m_OverrideReferenceName": "",
+    "m_GeneratePropertyBlock": true,
+    "m_UseCustomSlotLabel": false,
+    "m_CustomSlotLabel": "",
+    "m_DismissedVersion": 0,
+    "m_Precision": 0,
+    "overrideHLSLDeclaration": false,
+    "hlslDeclarationOverride": 0,
+    "m_Hidden": false,
+    "m_PerRendererData": false,
+    "m_customAttributes": [],
+    "m_Value": {
+        "m_SerializedTexture": "",
+        "m_Guid": ""
+    },
+    "isMainTexture": false,
+    "useTilingAndOffset": false,
+    "useTexelSize": true,
+    "isHDR": false,
+    "m_Modifiable": true,
+    "m_DefaultType": 0
 }
 
 {
@@ -3628,10 +3671,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -348.0000305175781,
-            "y": 378.0000305175781,
-            "width": 208.0,
-            "height": 432.9999694824219
+            "x": -509.9999694824219,
+            "y": 467.9999694824219,
+            "width": 207.99993896484376,
+            "height": 432.9999084472656
         }
     },
     "m_Slots": [

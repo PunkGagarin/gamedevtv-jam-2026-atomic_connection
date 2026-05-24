@@ -57,7 +57,7 @@ MonoBehaviour:
       _clip: {fileID: 8300000, guid: 5c3efe99f8769499286c55ccd0108398, type: 3}
   - _name: pulsating
     _clips:
-    - _volume: 10
+    - _volume: 1
       _clip: {fileID: 8300000, guid: 41476674bd6db45b6b6370ee84786aa1, type: 3}
   - _name: singlePop
     _clips:
@@ -67,6 +67,18 @@ MonoBehaviour:
     _clips:
     - _volume: 1
       _clip: {fileID: 8300000, guid: 3a0c4c1afad3d7f4385d120a0b31a838, type: 3}
+  - _name: talnetBought
+    _clips:
+    - _volume: 1
+      _clip: {fileID: 8300000, guid: b62743ff181ed491da5e8837efb7cfe9, type: 3}
+  - _name: talentMaxed
+    _clips:
+    - _volume: 1
+      _clip: {fileID: 8300000, guid: 90224d13277ef444ab6a1d18a5ad52b3, type: 3}
+  - _name: error
+    _clips:
+    - _volume: 1
+      _clip: {fileID: 8300000, guid: 54a84b3bfa87348efa53dcf980527211, type: 3}
   <Music>k__BackingField:
   - _name: intense_bgm
     _clips:

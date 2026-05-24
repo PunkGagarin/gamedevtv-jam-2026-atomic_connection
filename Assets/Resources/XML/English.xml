@@ -104,4 +104,5 @@
   <text key="TALENT_RADICAL_DROP_CHANCE_DESC">Gives a 5% chance per level to gain 1 radical from a non-boss enemy.</text>
   <text key="TALENT_RADICAL_DROP_CHANCE_LARGE_TITLE">Radical Resonance</text>
   <text key="TALENT_RADICAL_DROP_CHANCE_LARGE_DESC">Each collected radical grants 1 more radical per level.</text>
+  <text key="GAMEPLAY_TUTORIAL_ACTIVE_MOLECULE">First connect the new molecule to the core, then click it to make it active.%%Only one molecule can be active at a time.</text>
 </Language>

@@ -28,9 +28,12 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             : null;
         public BattleMolecule FirstMolecule => _molecules.Count > 0 ? _molecules[0] : null;
         public BattleMolecule ActiveMolecule => _activeMolecule;
+        public BattleMolecule FirstAdditionalMolecule => FindFirstAdditionalMolecule();
 
+        public event Action<BattleMolecule> MoleculeRegistered;
         public event Action<BattleMolecule> MoleculeBonded;
         public event Action<BattleMolecule> MoleculeCharged;
+        public event Action<BattleMolecule> ActiveMoleculeChanged;
         public event Action<BattleMoleculeShotRequest> ShotRequested;
 
         public void ConfigureCore(AtomCore core)
@@ -54,6 +57,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
             if (molecule.IsBonded && !IsValidActiveMolecule(_activeMolecule))
                 SetActiveMolecule(molecule);
+
+            MoleculeRegistered?.Invoke(molecule);
         }
 
         public void Start()
@@ -157,6 +162,9 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             if (!IsValidActiveMolecule(molecule))
                 molecule = null;
 
+            if (_activeMolecule == molecule)
+                return;
+
             _activeMolecule = molecule;
 
             foreach (BattleMolecule createdMolecule in _molecules)
@@ -166,6 +174,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
                 createdMolecule.SetActiveFeedVisual(createdMolecule == _activeMolecule);
             }
+
+            ActiveMoleculeChanged?.Invoke(_activeMolecule);
         }
 
         private void ConfigureMoleculeCore(BattleMolecule molecule)
@@ -175,6 +185,17 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
             molecule.ConfigureCoreOrbit(_core != null ? _core.transform : null, _config);
             molecule.ConfigureCoreInteraction(_core, _config, _talentService);
+        }
+
+        private BattleMolecule FindFirstAdditionalMolecule()
+        {
+            for (int i = 1; i < _molecules.Count; i++)
+            {
+                if (_molecules[i] != null)
+                    return _molecules[i];
+            }
+
+            return null;
         }
     }
 }

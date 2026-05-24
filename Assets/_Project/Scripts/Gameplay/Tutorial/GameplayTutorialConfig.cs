@@ -12,6 +12,7 @@ namespace _Project.Scripts.Gameplay.Tutorial
         [field: Header("Screen Placement")]
         [field: SerializeField] public Vector2 CoreCursorOffset { get; private set; } = Vector2.zero;
         [field: SerializeField] public Vector2 DragCursorOffset { get; private set; } = new(0f, 48f);
+        [field: SerializeField] public Vector2 ActiveMoleculeCursorOffset { get; private set; } = Vector2.zero;
         [field: SerializeField, Min(0f)] public float ScreenPadding { get; private set; } = 48f;
 
         [field: Header("Animation")]
@@ -29,6 +30,7 @@ namespace _Project.Scripts.Gameplay.Tutorial
         [field: SerializeField] public GameplayTutorialStepVisual CoreClickVisual { get; private set; } = new();
         [field: SerializeField] public GameplayTutorialStepVisual AtomDragVisual { get; private set; } = new();
         [field: SerializeField] public GameplayTutorialStepVisual AttackVisual { get; private set; } = new();
+        [field: SerializeField] public GameplayTutorialStepVisual ActiveMoleculeVisual { get; private set; } = new();
 
         [field: Header("Attack Hint")]
         [field: SerializeField] public Vector2 FallbackAttackPullDirection { get; private set; } = new(-1f, 0f);

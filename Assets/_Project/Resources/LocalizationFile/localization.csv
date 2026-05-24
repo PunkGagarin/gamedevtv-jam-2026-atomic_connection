@@ -103,3 +103,4 @@ TALENT_RADICAL_DROP_CHANCE_TITLE,Радикальный след,Radical Trace
 TALENT_RADICAL_DROP_CHANCE_DESC,Даёт 5% шанс получить 1 радикал с обычного врага за уровень.,Gives a 5% chance per level to gain 1 radical from a non-boss enemy.
 TALENT_RADICAL_DROP_CHANCE_LARGE_TITLE,Радикальный резонанс,Radical Resonance
 TALENT_RADICAL_DROP_CHANCE_LARGE_DESC,Каждый подобранный радикал приносит ещё 1 радикал за уровень.,Each collected radical grants 1 more radical per level.
+GAMEPLAY_TUTORIAL_ACTIVE_MOLECULE,"Сначала соедини новую молекулу с ядром, затем нажми на неё, чтобы сделать активной.%%Активна только одна молекула за раз.","First connect the new molecule to the core, then click it to make it active.%%Only one molecule can be active at a time."

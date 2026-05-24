@@ -102,9 +102,9 @@
   <text key="TALENT_DNA_FLAT_KILL_REWARD_TITLE">DNA Trace</text>
   <text key="TALENT_DNA_FLAT_KILL_REWARD_DESC">Each non-boss enemy leaves 1 more DNA.</text>
   <text key="TALENT_DNA_EXTRA_DROP_CHANCE_TITLE">Excess DNA</text>
-  <text key="TALENT_DNA_EXTRA_DROP_CHANCE_DESC">Gives a 20% chance per level to gain 1 extra DNA from a non-boss enemy.</text>
+  <text key="TALENT_DNA_EXTRA_DROP_CHANCE_DESC">Each collected DNA grants 1 more DNA per level.</text>
   <text key="TALENT_RADICAL_DROP_CHANCE_TITLE">Radical Trace</text>
-  <text key="TALENT_RADICAL_DROP_CHANCE_DESC">Gives a 20% chance per level to gain 1 radical from a non-boss enemy.</text>
+  <text key="TALENT_RADICAL_DROP_CHANCE_DESC">Gives a 5% chance per level to gain 1 radical from a non-boss enemy.</text>
   <text key="TALENT_RADICAL_DROP_CHANCE_LARGE_TITLE">Radical Resonance</text>
-  <text key="TALENT_RADICAL_DROP_CHANCE_LARGE_DESC">Adds another 20% chance per level to gain 1 radical from a non-boss enemy.</text>
+  <text key="TALENT_RADICAL_DROP_CHANCE_LARGE_DESC">Each collected radical grants 1 more radical per level.</text>
 </Language>

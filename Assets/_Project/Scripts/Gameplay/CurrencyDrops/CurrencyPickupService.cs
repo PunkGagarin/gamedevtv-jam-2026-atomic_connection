@@ -136,8 +136,34 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
         {
             _pickups.RemoveAt(index);
             PlayCollectSound();
-            _currencyService.Add(pickup.Amount);
-            pickup.PlayCollected(_config);
+            CurrencyAmount collectedAmount = CollectedAmountFor(pickup.Amount);
+            _currencyService.Add(collectedAmount);
+            pickup.PlayCollected(collectedAmount, _config);
+        }
+
+        private CurrencyAmount CollectedAmountFor(CurrencyAmount amount)
+        {
+            int bonusPerUnit = PickupBonusPerUnit(amount.CurrencyId);
+            if (bonusPerUnit <= 0)
+                return amount;
+
+            int multiplier = 1 + bonusPerUnit;
+            return new CurrencyAmount(amount.CurrencyId, amount.Amount * multiplier);
+        }
+
+        private int PickupBonusPerUnit(CurrencyId currencyId)
+        {
+            if (_talentService == null)
+                return 0;
+
+            float bonus = currencyId switch
+            {
+                CurrencyId.Dna => _talentService.BonusOf(TalentEffectType.DnaPickupAmountBonus),
+                CurrencyId.Radicals => _talentService.BonusOf(TalentEffectType.RadicalPickupAmountBonus),
+                _ => 0f
+            };
+
+            return Mathf.Max(0, Mathf.RoundToInt(bonus));
         }
 
         private void PlayCollectSound()

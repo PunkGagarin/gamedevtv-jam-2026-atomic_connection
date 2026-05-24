@@ -20,7 +20,7 @@ MonoBehaviour:
     <ApplyKillRewardMultiplierToBase>k__BackingField: 1
     <UseFlatBonusTalent>k__BackingField: 1
     <FlatBonusTalentEffectType>k__BackingField: 21
-    <UseExtraDropChanceTalent>k__BackingField: 1
+    <UseExtraDropChanceTalent>k__BackingField: 0
     <ExtraDropChanceTalentEffectType>k__BackingField: 22
     <ExtraDropAmount>k__BackingField: 1
   - <CurrencyId>k__BackingField: 2

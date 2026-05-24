@@ -78,7 +78,7 @@ namespace _Project.Scripts.Gameplay.Talents
         public float BonusOf(TalentEffectType effectType) =>
             _config.Talents
                 .Where(talent => talent.EffectType == effectType)
-                .Sum(talent => LevelOf(talent.Id) * talent.BonusPerLevel);
+                .Sum(talent => Math.Min(LevelOf(talent.Id), talent.MaxLevel) * talent.BonusPerLevel);
 
         public bool IsUnlocked(TalentEffectType effectType) =>
             _config.Talents.Any(talent => talent.EffectType == effectType && talent.IsUnlock && LevelOf(talent.Id) > 0);

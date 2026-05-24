@@ -23,7 +23,7 @@ namespace _Project.Scripts.Gameplay.Talents
         StingerMoleculeCriticalChance = 19,
         StingerMoleculeCriticalReward = 20,
         DnaFlatKillReward = 21,
-        DnaExtraDropChance = 22,
+        DnaPickupAmountBonus = 22,
         RadicalDropChance = 23,
         StingerMoleculeChargeReduction = 24,
         MembraneMoleculeIntegrity = 25,
@@ -32,5 +32,6 @@ namespace _Project.Scripts.Gameplay.Talents
         NeedleMoleculeDamage = 28,
         NeedleMoleculeChargeReduction = 29,
         NeedleMoleculeAim = 30,
+        RadicalPickupAmountBonus = 31,
     }
 }

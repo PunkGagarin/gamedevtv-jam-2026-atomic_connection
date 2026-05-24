@@ -38,10 +38,10 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
             return HitArea.IsInside(areaCenter, areaHalfSize);
         }
 
-        public void PlayCollected(CurrencyPickupConfig config)
+        public void PlayCollected(CurrencyAmount collectedAmount, CurrencyPickupConfig config)
         {
             HitArea.Disable();
-            Feedback.PlayCollected(Amount, config);
+            Feedback.PlayCollected(collectedAmount, config);
         }
     }
 }

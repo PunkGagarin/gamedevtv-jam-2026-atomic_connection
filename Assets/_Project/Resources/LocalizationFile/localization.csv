@@ -13,6 +13,7 @@ LEVEL_COMPLETE_TITLE,Уровень пройден,Level Complete
 LEVEL_COMPLETE_FINAL_TITLE,"Спасибо, что поиграли в игру",Thanks for playing
 LEVEL_COMPLETE_REWARD_FORMAT,Награда: +{0} {1},Reward: +{0} {1}
 LEVEL_COMPLETE_REWARD_CLAIMED,Награда уже получена,Reward already claimed
+LEVEL_COMPLETE_NEXT_LEVEL,К следующему уровню,To Next Level
 CREDITS_POPUP_TITLE,Авторы,Credits
 CREDITS_POPUP_DESC,"@punkgagarin - геймдизайнер, программист%%@Madgine_Solis - программист%%@the_nomah - художник%%@CoderLivingDeath - тех артист","@punkgagarin - game designer, programmer%%@Madgine_Solis - programmer%%@the_nomah - artist%%@CoderLivingDeath - tech artist"
 CREDITS_POPUP_CLOSE,Закрыть,Close

@@ -16,12 +16,15 @@ namespace _Project.Scripts.Gameplay.Windows
     {
         [field: SerializeField] private GameObject Content { get; set; }
         [field: SerializeField] private Button RestartButton { get; set; }
+        [field: SerializeField] private Button NextLevelButton { get; set; }
         [field: SerializeField] private Button MainMenuButton { get; set; }
+        [field: SerializeField] private GameObject RewardCurrencyIcon { get; set; }
         [field: SerializeField] private TextMeshProUGUI RewardLabel { get; set; }
 
         [Inject] private GameStateMachine _stateMachine;
         [Inject] private PauseService _pauseService;
         [Inject] private ILevelProgressService _levelProgressService;
+        [Inject] private ILevelSelectionService _levelSelectionService;
         [Inject] private LocalizationTool _localizationTool;
         [Inject] private AudioService _audio;
 
@@ -45,17 +48,23 @@ namespace _Project.Scripts.Gameplay.Windows
                 : _localizationTool.GetText("LEVEL_COMPLETE_REWARD_CLAIMED");
 
             RewardLabel.text = $"{title}\n{rewardText}";
+            RewardCurrencyIcon.SetActive(
+                _levelProgressService.LastCompletionWasFirstClear
+                && reward.CurrencyId == CurrencyId.Isotopes);
+            NextLevelButton.gameObject.SetActive(!_levelProgressService.LastCompletedLevelWasFinal);
         }
 
         protected override void SubscribeUpdates()
         {
             RestartButton.onClick.AddListener(RestartGameplay);
+            NextLevelButton.onClick.AddListener(StartNextLevel);
             MainMenuButton.onClick.AddListener(OpenMainMenu);
         }
 
         protected override void UnsubscribeUpdates()
         {
             RestartButton.onClick.RemoveListener(RestartGameplay);
+            NextLevelButton.onClick.RemoveListener(StartNextLevel);
             MainMenuButton.onClick.RemoveListener(OpenMainMenu);
         }
 
@@ -70,6 +79,17 @@ namespace _Project.Scripts.Gameplay.Windows
         {
             _audio.PlaySound(Sounds.buttonClick);
             _pauseService.SetPaused(false);
+            _stateMachine.Enter<LoadGameplayState>();
+        }
+
+        private void StartNextLevel()
+        {
+            _audio.PlaySound(Sounds.buttonClick);
+            _pauseService.SetPaused(false);
+
+            if (!_levelProgressService.LastCompletionWasFirstClear && _levelSelectionService.CanSelectNext)
+                _levelSelectionService.SelectNext();
+
             _stateMachine.Enter<LoadGameplayState>();
         }
 

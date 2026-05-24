@@ -14,6 +14,7 @@
   <text key="LEVEL_COMPLETE_FINAL_TITLE">Спасибо, что поиграли в игру</text>
   <text key="LEVEL_COMPLETE_REWARD_FORMAT">Награда: +{0} {1}</text>
   <text key="LEVEL_COMPLETE_REWARD_CLAIMED">Награда уже получена</text>
+  <text key="LEVEL_COMPLETE_NEXT_LEVEL">К следующему уровню</text>
   <text key="CREDITS_POPUP_TITLE">Авторы</text>
   <text key="CREDITS_POPUP_DESC">@punkgagarin - геймдизайнер, программист%%@Madgine_Solis - программист%%@the_nomah - художник%%@CoderLivingDeath - тех артист</text>
   <text key="CREDITS_POPUP_CLOSE">Закрыть</text>
@@ -58,7 +59,7 @@
   <text key="TALENT_NEEDLE_MOLECULE_AIM_TITLE">Боевой прицел</text>
   <text key="TALENT_NEEDLE_MOLECULE_AIM_DESC">Показывает направление выстрела NeedleMolecule.</text>
   <text key="TALENT_STINGER_MOLECULE_DAMAGE_SMALL_TITLE">Урон I</text>
-  <text key="TALENT_STINGER_MOLECULE_DAMAGE_SMALL_DESC">Увеличивает урон StingerMolecule на 1.</text>
+  <text key="TALENT_STINGER_MOLECULE_DAMAGE_SMALL_DESC">Увеличивает урон StingerMolecule на 6 за уровень.</text>
   <text key="TALENT_STINGER_MOLECULE_CHARGE_REDUCTION_TITLE">Быстрое жало</text>
   <text key="TALENT_STINGER_MOLECULE_CHARGE_REDUCTION_DESC">StingerMolecule требует на 1 атом меньше для полного заряда.</text>
   <text key="TALENT_STINGER_MOLECULE_AIM_TITLE">Прицел жала</text>

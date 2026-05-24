@@ -14,6 +14,7 @@
   <text key="LEVEL_COMPLETE_FINAL_TITLE">Thanks for playing</text>
   <text key="LEVEL_COMPLETE_REWARD_FORMAT">Reward: +{0} {1}</text>
   <text key="LEVEL_COMPLETE_REWARD_CLAIMED">Reward already claimed</text>
+  <text key="LEVEL_COMPLETE_NEXT_LEVEL">To Next Level</text>
   <text key="CREDITS_POPUP_TITLE">Credits</text>
   <text key="CREDITS_POPUP_DESC">@punkgagarin - game designer, programmer%%@Madgine_Solis - programmer%%@the_nomah - artist%%@CoderLivingDeath - tech artist</text>
   <text key="CREDITS_POPUP_CLOSE">Close</text>
@@ -58,7 +59,7 @@
   <text key="TALENT_NEEDLE_MOLECULE_AIM_TITLE">Combat Aim</text>
   <text key="TALENT_NEEDLE_MOLECULE_AIM_DESC">Shows the NeedleMolecule shot direction.</text>
   <text key="TALENT_STINGER_MOLECULE_DAMAGE_SMALL_TITLE">Damage I</text>
-  <text key="TALENT_STINGER_MOLECULE_DAMAGE_SMALL_DESC">Increases StingerMolecule damage by 1.</text>
+  <text key="TALENT_STINGER_MOLECULE_DAMAGE_SMALL_DESC">Increases StingerMolecule damage by 6 per level.</text>
   <text key="TALENT_STINGER_MOLECULE_CHARGE_REDUCTION_TITLE">Quick Sting</text>
   <text key="TALENT_STINGER_MOLECULE_CHARGE_REDUCTION_DESC">StingerMolecule needs 1 fewer atom to fully charge.</text>
   <text key="TALENT_STINGER_MOLECULE_AIM_TITLE">Stinger Aim</text>

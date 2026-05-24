@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using _Project.Scripts.Gameplay.Currencies;
+using _Project.Scripts.Gameplay.Tutorial;
 using Zenject;
 using _Project.Scripts.Infrastructure.SaveLoad;
 
@@ -14,6 +15,7 @@ namespace _Project.Scripts.Gameplay.Talents
         [Inject] private ISaveLoadService _saveLoadService;
         [Inject] private ICurrencyService _currencyService;
         [Inject] private CurrencyConfig _currencyConfig;
+        [Inject] private ITutorialPreferencesService _tutorialPreferencesService;
 
         public event Action Changed;
 
@@ -69,7 +71,8 @@ namespace _Project.Scripts.Gameplay.Talents
 
         public void ResetProgress()
         {
-            _saveLoadService.DeleteAllSavedData();
+            _saveLoadService.DeleteProgressData();
+            _tutorialPreferencesService.ClearGameplayTutorialCompleted();
             CreateProgressWithStartingCurrencies();
             Changed?.Invoke();
         }

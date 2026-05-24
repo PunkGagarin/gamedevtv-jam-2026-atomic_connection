@@ -3,6 +3,7 @@ using _Project.Scripts.Gameplay.Enemies;
 using _Project.Scripts.Gameplay.CurrencyDrops;
 using _Project.Scripts.Gameplay.Level;
 using _Project.Scripts.Gameplay.Levels;
+using _Project.Scripts.Gameplay.Tutorial;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using _Project.Scripts.Gameplay.Units.BattleMolecules;
 using _Project.Scripts.Gameplay.Units.AtomCores;
@@ -25,6 +26,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
         [Inject] private IDragService _dragService;
         [Inject] private ICurrencyPickupService _currencyPickupService;
         [Inject] private ILevelProgressService _levelProgressService;
+        [Inject] private IGameplayTutorialService _gameplayTutorialService;
         [Inject] private IGameplayRuntimeHierarchy _runtimeHierarchy;
         [Inject] private GameStateMachine _stateMachine;
         [Inject] private PauseService _pauseService;
@@ -43,6 +45,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
             _battleMoleculeService.Start();
             _currencyPickupService.Start();
             _levelProgressService.Start();
+            _gameplayTutorialService.Start();
         }
 
         protected override void OnUpdate()
@@ -60,6 +63,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
             _currencyPickupService.Update();
             _battleMoleculeService.Update();
             _atomCoreService.Update();
+            _gameplayTutorialService.Update();
 
             if (_terminalTransitionWasRequested)
                 return;
@@ -73,6 +77,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
             _enemyService.BossKilled -= OnBossKilled;
             _levelProgressService.Completed -= OnLevelCompleted;
             _dragService.CancelDrag();
+            _gameplayTutorialService.Cleanup();
             _currencyPickupService.Cleanup();
             _levelProgressService.Cleanup();
             _enemyProjectileService.Cleanup();

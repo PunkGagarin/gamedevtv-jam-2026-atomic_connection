@@ -39,7 +39,7 @@ namespace _Project.Scripts.Infrastructure.SaveLoad
 
             if (data == null || data.ProgressVersion != CURRENT_PROGRESS_VERSION)
             {
-                DeleteAllSavedData();
+                DeleteProgressData();
                 return;
             }
 
@@ -54,9 +54,9 @@ namespace _Project.Scripts.Infrastructure.SaveLoad
             });
         }
 
-        public void DeleteAllSavedData()
+        public void DeleteProgressData()
         {
-            PlayerPrefs.DeleteAll();
+            PlayerPrefs.DeleteKey(PROGRESS_KEY);
             PlayerPrefs.Save();
             CreateProgress();
         }

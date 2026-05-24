@@ -11,6 +11,7 @@ using _Project.Scripts.Gameplay.Levels;
 using _Project.Scripts.Infrastructure.GameStates.States;
 using _Project.Scripts.Infrastructure.GameStates.StateMachine;
 using _Project.Scripts.Gameplay.Level;
+using _Project.Scripts.Gameplay.Tutorial;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using _Project.Scripts.Gameplay.Units.BattleMolecules;
 using _Project.Scripts.Gameplay.Units.AtomCores;
@@ -19,6 +20,7 @@ using _Project.Scripts.Gameplay.Windows;
 using _Project.Scripts.Infrastructure.AssetManagement;
 using _Project.Scripts.Infrastructure.GameStates.Factory;
 using _Project.Scripts.Infrastructure.SaveLoad;
+using _Project.Scripts.Infrastructure.UI;
 using _Project.Scripts.Utils.Pause;
 using UnityEngine;
 using Zenject;
@@ -45,7 +47,9 @@ namespace _Project.Scripts.Infrastructure
             BindAtomCoreGameplay();
             BindLevelProgress();
             BindWindowInfrastructure();
+            BindUiRootProvider();
             BindGameplayBattleMolecule();
+            BindGameplayTutorial();
         }
 
         private void BindAssetManagement()
@@ -111,6 +115,11 @@ namespace _Project.Scripts.Infrastructure
             Container.Bind<IWindowFactory>().To<WindowFactory>().AsSingle();
         }
 
+        private void BindUiRootProvider()
+        {
+            Container.Bind<IUiRootProvider>().To<UiRootProvider>().AsSingle();
+        }
+
         private void BindCameraProvider()
         {
             Container.BindInterfacesAndSelfTo<CameraProvider>().AsSingle();
@@ -127,6 +136,12 @@ namespace _Project.Scripts.Infrastructure
         {
             Container.Bind<IBattleMoleculeFactory>().To<BattleMoleculeFactory>().AsSingle();
             Container.BindInterfacesTo<BattleMoleculeService>().AsSingle();
+        }
+
+        private void BindGameplayTutorial()
+        {
+            Container.Bind<ITutorialPreferencesService>().To<TutorialPreferencesService>().AsSingle();
+            Container.Bind<IGameplayTutorialService>().To<GameplayTutorialService>().AsSingle();
         }
 
         private void BindPauseService()

@@ -7,6 +7,7 @@ using _Project.Scripts.Gameplay.Enemies;
 using _Project.Scripts.Gameplay.Feedback;
 using _Project.Scripts.Gameplay.Levels;
 using _Project.Scripts.Gameplay.Talents;
+using _Project.Scripts.Gameplay.Tutorial;
 using _Project.Scripts.Gameplay.Units;
 using _Project.Scripts.Gameplay.Units.BattleMolecules;
 using _Project.Scripts.Localization;
@@ -29,6 +30,7 @@ namespace _Project.Scripts.GameplayData
         [field: SerializeField] private EnemySpawnerConfig EnemySpawnerConfig { get; set; }
         [field: SerializeField] private EnemyMergeConfig EnemyMergeConfig { get; set; }
         [field: SerializeField] private EnemyKillRewardConfig EnemyKillRewardConfig { get; set; }
+        [field: SerializeField] private GameplayTutorialConfig GameplayTutorialConfig { get; set; }
 
         public override void InstallBindings()
         {
@@ -45,6 +47,7 @@ namespace _Project.Scripts.GameplayData
             BindConfig(EnemySpawnerConfig);
             BindConfig(EnemyMergeConfig);
             BindConfig(EnemyKillRewardConfig);
+            BindConfig(GameplayTutorialConfig);
         }
 
         private void BindConfig<TConfig>(TConfig config) where TConfig : ScriptableObject

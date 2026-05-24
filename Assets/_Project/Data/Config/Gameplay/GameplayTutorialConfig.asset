@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47a65f1dc76c4431b9618570fd764cae, type: 3}
+  m_Name: GameplayTutorialConfig
+  m_EditorClassIdentifier: 
+  <PrefabResourcePath>k__BackingField: Gameplay/UI/GameplayTutorialView
+  <CoreCursorOffset>k__BackingField: {x: 0, y: 0}
+  <DragCursorOffset>k__BackingField: {x: 0, y: 48}
+  <ScreenPadding>k__BackingField: 48
+  <PulseDurationSeconds>k__BackingField: 0.55
+  <DragLoopDurationSeconds>k__BackingField: 1.4
+  <DragPressedFrameSeconds>k__BackingField: 0.35
+  <DragReleaseFrameSeconds>k__BackingField: 0.25
+  <CursorBaseScale>k__BackingField: 1
+  <CursorPulseScale>k__BackingField: 0.86
+  <DragPathSprite>k__BackingField: {fileID: -1816058856755745280, guid: 1f48d53d37e9f49ea8cec79b2fa4b905, type: 3}
+  <DragPathSize>k__BackingField: {x: 27, y: 64}
+  <DragPathAngleOffsetDegrees>k__BackingField: -90
+  <CoreClickVisual>k__BackingField:
+    <CursorSprite>k__BackingField: {fileID: 6317526053111568887, guid: 3d85f85c410d54ee3a280ba723546395, type: 3}
+    <PressedCursorSprite>k__BackingField: {fileID: 0}
+    <ReleasedCursorSprite>k__BackingField: {fileID: 6317526053111568887, guid: 3d85f85c410d54ee3a280ba723546395, type: 3}
+    <CursorIconSprite>k__BackingField: {fileID: 0}
+    <TargetIconSprite>k__BackingField: {fileID: 0}
+    <CursorIconOffset>k__BackingField: {x: 0, y: -58}
+    <TargetIconOffset>k__BackingField: {x: 0, y: 0}
+    <CursorIconSize>k__BackingField: 48
+    <TargetIconSize>k__BackingField: 72
+  <AtomDragVisual>k__BackingField:
+    <CursorSprite>k__BackingField: {fileID: 2926929911320684054, guid: 9afd78eb8b303482385341aa541dacd3, type: 3}
+    <PressedCursorSprite>k__BackingField: {fileID: 8784844329768798039, guid: 8a9397a8a2daf49e998be987f9e7506b, type: 3}
+    <ReleasedCursorSprite>k__BackingField: {fileID: 2926929911320684054, guid: 9afd78eb8b303482385341aa541dacd3, type: 3}
+    <CursorIconSprite>k__BackingField: {fileID: 7043984996573275655, guid: 3766832f9fa37455ab90111e52058d0e, type: 3}
+    <TargetIconSprite>k__BackingField: {fileID: 0}
+    <CursorIconOffset>k__BackingField: {x: 0, y: -58}
+    <TargetIconOffset>k__BackingField: {x: 0, y: 0}
+    <CursorIconSize>k__BackingField: 48
+    <TargetIconSize>k__BackingField: 72
+  <AttackVisual>k__BackingField:
+    <CursorSprite>k__BackingField: {fileID: 2926929911320684054, guid: 9afd78eb8b303482385341aa541dacd3, type: 3}
+    <PressedCursorSprite>k__BackingField: {fileID: 8784844329768798039, guid: 8a9397a8a2daf49e998be987f9e7506b, type: 3}
+    <ReleasedCursorSprite>k__BackingField: {fileID: 2926929911320684054, guid: 9afd78eb8b303482385341aa541dacd3, type: 3}
+    <CursorIconSprite>k__BackingField: {fileID: 0}
+    <TargetIconSprite>k__BackingField: {fileID: 8542106802068212497, guid: 6721b223615fe478b9ea43ecf93f1327, type: 3}
+    <CursorIconOffset>k__BackingField: {x: 0, y: -58}
+    <TargetIconOffset>k__BackingField: {x: 0, y: 0}
+    <CursorIconSize>k__BackingField: 48
+    <TargetIconSize>k__BackingField: 72
+  <FallbackAttackPullDirection>k__BackingField: {x: -1, y: 0}
+  <AttackPullDistancePixels>k__BackingField: 220

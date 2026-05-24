@@ -36,6 +36,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
 
         public Transform CurrentCoreTransform => _core != null ? _core.transform : null;
         public event Action CoreDied;
+        public event Action<FreeAtom> AtomGenerated;
 
         public AtomCore Create(Vector3 at)
         {
@@ -168,6 +169,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
             Vector3 spawnPosition = _core.transform.position + new Vector3(offset.x, offset.y, 0f);
             FreeAtom freeAtom = _freeAtomFactory.Create(spawnPosition, _core.transform);
             _core.TakeGeneratedAtom(freeAtom);
+            AtomGenerated?.Invoke(freeAtom);
         }
 
         private void TryRegisterGeneratedAtomClick()

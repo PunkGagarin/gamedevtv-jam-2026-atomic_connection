@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Common.Time;
 using _Project.Scripts.Gameplay.Drag;
@@ -25,6 +26,12 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         public BattleMolecule ActiveFeedTarget => IsValidActiveMolecule(_activeMolecule) && _activeMolecule.CanReceiveConnectionAtom
             ? _activeMolecule
             : null;
+        public BattleMolecule FirstMolecule => _molecules.Count > 0 ? _molecules[0] : null;
+        public BattleMolecule ActiveMolecule => _activeMolecule;
+
+        public event Action<BattleMolecule> MoleculeBonded;
+        public event Action<BattleMolecule> MoleculeCharged;
+        public event Action<BattleMoleculeShotRequest> ShotRequested;
 
         public void ConfigureCore(AtomCore core)
         {
@@ -41,6 +48,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
             ConfigureMoleculeCore(molecule);
             molecule.Bonded += OnMoleculeBonded;
+            molecule.Charged += OnMoleculeCharged;
+            molecule.ShotRequested += OnMoleculeShotRequested;
             _molecules.Add(molecule);
 
             if (molecule.IsBonded && !IsValidActiveMolecule(_activeMolecule))
@@ -81,13 +90,15 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
                     continue;
 
                 molecule.Bonded -= OnMoleculeBonded;
+                molecule.Charged -= OnMoleculeCharged;
+                molecule.ShotRequested -= OnMoleculeShotRequested;
                 molecule.SetActiveFeedVisual(false);
             }
 
             foreach (BattleMolecule molecule in _molecules)
             {
                 if (molecule != null)
-                    Object.Destroy(molecule.gameObject);
+                    UnityEngine.Object.Destroy(molecule.gameObject);
             }
 
             _molecules.Clear();
@@ -102,6 +113,18 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
             if (!IsValidActiveMolecule(_activeMolecule))
                 SetActiveMolecule(molecule);
+
+            MoleculeBonded?.Invoke(molecule);
+        }
+
+        private void OnMoleculeCharged(BattleMolecule molecule)
+        {
+            MoleculeCharged?.Invoke(molecule);
+        }
+
+        private void OnMoleculeShotRequested(BattleMoleculeShotRequest request)
+        {
+            ShotRequested?.Invoke(request);
         }
 
         private void TickMoleculeSelection()

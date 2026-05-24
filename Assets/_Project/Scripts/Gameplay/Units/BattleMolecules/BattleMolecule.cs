@@ -36,16 +36,22 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         [field: SerializeField] private PointHitArea HitArea { get; set; }
         [field: SerializeField] private BattleMoleculeAimLineVisual AimLineVisual { get; set; }
         [field: SerializeField] private MembraneMoleculeActivation MembraneActivation { get; set; }
+        [field: SerializeField] private BattleMoleculeCharge Charge { get; set; }
+        [field: SerializeField] private BattleMoleculeShotQueue ShotQueue { get; set; }
 
         public bool IsBonded => Bond.IsBonded;
         public bool CanReceiveConnectionAtom => ConnectionAtomReceiver.CanReceiveAtom;
         public int ConnectionAtomsRemaining => ConnectionAtomReceiver.RemainingAtoms;
+        public bool IsCharged => Charge != null && Charge.IsCharged;
 
         public event Action<BattleMolecule> Bonded
         {
             add => BondEvents.Bonded += value;
             remove => BondEvents.Bonded -= value;
         }
+
+        public event Action<BattleMolecule> Charged;
+        public event Action<BattleMoleculeShotRequest> ShotRequested;
 
         private void Awake()
         {
@@ -60,6 +66,23 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             HitArea = GetComponent<PointHitArea>();
             AimLineVisual = GetComponent<BattleMoleculeAimLineVisual>();
             MembraneActivation = GetComponent<MembraneMoleculeActivation>();
+            Charge = GetComponent<BattleMoleculeCharge>();
+            ShotQueue = GetComponent<BattleMoleculeShotQueue>();
+
+            if (Charge != null)
+                Charge.Charged += OnCharged;
+
+            if (ShotQueue != null)
+                ShotQueue.ShotRequested += OnShotRequested;
+        }
+
+        private void OnDestroy()
+        {
+            if (Charge != null)
+                Charge.Charged -= OnCharged;
+
+            if (ShotQueue != null)
+                ShotQueue.ShotRequested -= OnShotRequested;
         }
 
         public void Configure(BattleMoleculeConfig config, int atomsRequired, int bondAtomsRequired)
@@ -103,6 +126,16 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         public void SetActiveFeedVisual(bool isActive)
         {
             ConnectionVisual.SetActiveConnection(isActive);
+        }
+
+        private void OnCharged()
+        {
+            Charged?.Invoke(this);
+        }
+
+        private void OnShotRequested(BattleMoleculeShotRequest request)
+        {
+            ShotRequested?.Invoke(request);
         }
     }
 }

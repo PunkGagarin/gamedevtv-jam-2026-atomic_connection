@@ -16,7 +16,7 @@ MonoBehaviour:
   <Type>k__BackingField: 12
   <Title>k__BackingField: TALENT_SWARM_MOLECULE_TITLE
   <Description>k__BackingField: TALENT_SWARM_MOLECULE_DESC
-  <Icon>k__BackingField: {fileID: 0}
+  <Icon>k__BackingField: {fileID: 4099191518589774541, guid: 96b274445eeba824696184e6741630b2, type: 3}
   <MaxLevel>k__BackingField: 1
   <CostCurrency>k__BackingField: 1
   <CostsByLevel>k__BackingField: 01000000

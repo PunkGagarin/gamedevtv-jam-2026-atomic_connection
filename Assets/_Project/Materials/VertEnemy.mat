@@ -44,7 +44,7 @@ Material:
     - _Angle_speed: 1.2
     - _Max: 0.24
     - _Min: 0.2
-    - _Pixel: 32
+    - _Pixel: 64
     - _Scale: 0.57
     - _SmootUp: 0.55
     - _SmoothDown: 0.87

@@ -16,7 +16,7 @@ MonoBehaviour:
   <Type>k__BackingField: 15
   <Title>k__BackingField: TALENT_CURRENCY_PICKUP_AREA_TITLE
   <Description>k__BackingField: TALENT_CURRENCY_PICKUP_AREA_DESC
-  <Icon>k__BackingField: {fileID: 0}
+  <Icon>k__BackingField: {fileID: 7043984996573275655, guid: 3766832f9fa37455ab90111e52058d0e, type: 3}
   <MaxLevel>k__BackingField: 4
   <CostCurrency>k__BackingField: 0
   <CostsByLevel>k__BackingField: 060000000c000000140000001e000000

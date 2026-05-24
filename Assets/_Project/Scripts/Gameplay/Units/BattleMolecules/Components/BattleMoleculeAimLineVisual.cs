@@ -10,6 +10,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         private const string AIM_PREVIEW_LINE_OBJECT_NAME = "AimPreviewLine";
         private const string SHOT_LINE_OBJECT_NAME = "ShotLine";
 
+        [field: SerializeField] private bool DragLineEnabled { get; set; } = true;
         [field: SerializeField, Min(0f)] private float AimLineWidth { get; set; } = 0.08f;
         [field: SerializeField, Min(0f)] private float AimPreviewLineWidth { get; set; } = 0.06f;
         [field: SerializeField, Min(0f)] private float AimPreviewLineLength { get; set; } = 20f;
@@ -42,6 +43,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
         private void OnDisable()
         {
+            Hide();
+
             for (int i = 0; i < _shotLines.Count; i++)
             {
                 _shotLineTimesLeft[i] = 0f;
@@ -75,6 +78,13 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         public void Show(Vector3 origin)
         {
             _origin = origin;
+
+            if (!DragLineEnabled)
+            {
+                Hide();
+                return;
+            }
+
             SetEnd(origin);
 
             if (_aimLine != null)
@@ -84,6 +94,9 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         public void SetSegment(Vector3 origin, Vector3 end)
         {
             _origin = origin;
+            if (!DragLineEnabled)
+                return;
+
             SetEnd(end);
         }
 

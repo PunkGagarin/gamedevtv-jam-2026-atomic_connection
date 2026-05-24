@@ -7,8 +7,7 @@ using UnityEngine;
 namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
 {
     [DisallowMultipleComponent]
-    [RequireComponent(typeof(AtomCore))]
-    [RequireComponent(typeof(OwnedAtoms))]
+    [RequireComponent(typeof(Collider2D))]
     public class AtomCoreAtomDragSource : MonoBehaviour, IDragSource
     {
         private readonly List<FreeAtom> _atomsBuffer = new();
@@ -18,10 +17,10 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
         private void Awake()
         {
             if (Core == null)
-                Core = GetComponent<AtomCore>();
+                Core = GetComponentInParent<AtomCore>();
 
             if (OwnedAtoms == null)
-                OwnedAtoms = GetComponent<OwnedAtoms>();
+                OwnedAtoms = GetComponentInParent<OwnedAtoms>();
         }
 
         public IDraggable GetDraggable()

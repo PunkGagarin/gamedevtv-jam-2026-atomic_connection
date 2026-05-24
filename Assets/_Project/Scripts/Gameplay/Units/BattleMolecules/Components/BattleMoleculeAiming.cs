@@ -8,11 +8,13 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
     [RequireComponent(typeof(BattleMoleculeCharge))]
     [RequireComponent(typeof(BattleMoleculeAimLineVisual))]
     [RequireComponent(typeof(BattleMoleculeShotQueue))]
+    [RequireComponent(typeof(BattleMoleculePullVisual))]
     public class BattleMoleculeAiming : MonoBehaviour, IDraggable, IDragReleaseHandler
     {
         [field: SerializeField] protected BattleMoleculeCharge Charge { get; private set; }
         [field: SerializeField] protected BattleMoleculeAimLineVisual AimLineVisual { get; private set; }
         [field: SerializeField] protected BattleMoleculeShotQueue ShotQueue { get; private set; }
+        [field: SerializeField] private BattleMoleculePullVisual PullVisual { get; set; }
         [field: SerializeField] private Sounds AimPullSound { get; set; } = Sounds.pew;
 
         [Inject] private AudioService _audioService;
@@ -33,12 +35,16 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
             if (ShotQueue == null)
                 ShotQueue = GetComponent<BattleMoleculeShotQueue>();
+
+            if (PullVisual == null)
+                PullVisual = GetComponent<BattleMoleculePullVisual>();
         }
 
         public virtual void OnDragStart()
         {
             _isAiming = true;
             AimLineVisual?.Show(CurrentAimOrigin());
+            PullVisual?.Show();
             _audioService?.PlaySfxWithRandomPitch(AimPullSound);
             OnAimingStarted();
         }
@@ -52,6 +58,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             Vector3 dragEnd = GetDragEnd(worldPosition);
 
             AimLineVisual?.SetSegment(origin, dragEnd);
+            PullVisual?.SetMouseWorldPosition(worldPosition);
             OnAimingMoved(origin, dragEnd, GetShotDirection(worldPosition));
         }
 
@@ -81,6 +88,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         {
             _isAiming = false;
             AimLineVisual?.Hide();
+            PullVisual?.Hide();
             OnAimingStopped();
         }
 

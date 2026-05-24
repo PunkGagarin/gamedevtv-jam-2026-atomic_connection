@@ -215,6 +215,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b86d8a29fa7a482d91c1936f71b78fed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <DragLineEnabled>k__BackingField: 0
   <AimLineWidth>k__BackingField: 0.08
   <AimPreviewLineWidth>k__BackingField: 0.06
   <AimPreviewLineLength>k__BackingField: 20

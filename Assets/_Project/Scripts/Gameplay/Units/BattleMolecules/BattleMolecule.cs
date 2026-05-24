@@ -4,6 +4,7 @@ using _Project.Scripts.Gameplay.Units.AtomCores;
 using _Project.Scripts.Gameplay.Units.BattleMolecules.Components;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 {
@@ -38,6 +39,12 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         [field: SerializeField] private MembraneMoleculeActivation MembraneActivation { get; set; }
         [field: SerializeField] private BattleMoleculeCharge Charge { get; set; }
         [field: SerializeField] private BattleMoleculeShotQueue ShotQueue { get; set; }
+
+        [Header("Activation Events")]
+        [field: SerializeField] private UnityEvent OnActivate { get; set; }
+        [field: SerializeField] private UnityEvent OnDeactivate { get; set; }
+
+        private bool _wasActiveFeedTarget;
 
         public bool IsBonded => Bond.IsBonded;
         public bool CanReceiveConnectionAtom => ConnectionAtomReceiver.CanReceiveAtom;
@@ -126,6 +133,13 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         public void SetActiveFeedVisual(bool isActive)
         {
             ConnectionVisual.SetActiveConnection(isActive);
+
+            if (isActive && !_wasActiveFeedTarget)
+                OnActivate?.Invoke();
+            else if (!isActive && _wasActiveFeedTarget)
+                OnDeactivate?.Invoke();
+
+            _wasActiveFeedTarget = isActive;
         }
 
         private void OnCharged()

@@ -1,6 +1,6 @@
 namespace _Project.Scripts.Gameplay.Talents
 {
-    public enum TalentType
+    public enum TalentEffectType
     {
         CoreHealth = 0,
         AutoClick = 1,

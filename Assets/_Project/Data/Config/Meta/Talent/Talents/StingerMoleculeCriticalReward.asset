@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: StingerMoleculeCriticalReward
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Talents.TalentDefinition
   <Id>k__BackingField: 23
-  <Type>k__BackingField: 20
+  <EffectType>k__BackingField: 20
   <Title>k__BackingField: TALENT_STINGER_MOLECULE_CRITICAL_REWARD_TITLE
   <Description>k__BackingField: TALENT_STINGER_MOLECULE_CRITICAL_REWARD_DESC
   <Icon>k__BackingField: {fileID: 0}

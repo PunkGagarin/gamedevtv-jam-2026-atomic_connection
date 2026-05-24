@@ -44,7 +44,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
 
         private void CreateStingerMoleculeIfUnlocked()
         {
-            if (!_talentService.IsUnlocked(TalentType.StingerMolecule))
+            if (!_talentService.IsUnlocked(TalentEffectType.StingerMolecule))
                 return;
 
             RegisterMolecule(_battleMoleculeFactory.CreateStinger(
@@ -54,7 +54,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
 
         private void CreateSwarmMoleculeIfUnlocked()
         {
-            if (!_talentService.IsUnlocked(TalentType.SwarmMolecule))
+            if (!_talentService.IsUnlocked(TalentEffectType.SwarmMolecule))
                 return;
 
             RegisterMolecule(_battleMoleculeFactory.CreateSwarm(
@@ -64,7 +64,7 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
 
         private void CreateMembraneMoleculeIfUnlocked()
         {
-            if (!_talentService.IsUnlocked(TalentType.MembraneMolecule))
+            if (!_talentService.IsUnlocked(TalentEffectType.MembraneMolecule))
                 return;
 
             RegisterMolecule(_battleMoleculeFactory.CreateMembrane(

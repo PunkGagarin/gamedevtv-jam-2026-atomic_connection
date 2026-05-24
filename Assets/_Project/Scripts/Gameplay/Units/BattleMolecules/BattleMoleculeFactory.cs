@@ -22,7 +22,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         public BattleMolecule CreateNeedle(Vector3 at, BattleMoleculeConfig config)
         {
             int atomsRequired = config.NeedleMoleculeAtomsRequired -
-                                Mathf.RoundToInt(_talentService.BonusOf(TalentType.NeedleMoleculeChargeReduction));
+                                Mathf.RoundToInt(_talentService.BonusOf(TalentEffectType.NeedleMoleculeChargeReduction));
 
             return Create(
                 at,
@@ -36,7 +36,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         public BattleMolecule CreateStinger(Vector3 at, BattleMoleculeConfig config)
         {
             int atomsRequired = config.StingerMoleculeAtomsRequired -
-                                Mathf.RoundToInt(_talentService.BonusOf(TalentType.StingerMoleculeChargeReduction));
+                                Mathf.RoundToInt(_talentService.BonusOf(TalentEffectType.StingerMoleculeChargeReduction));
 
             return Create(
                 at,
@@ -50,7 +50,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         public BattleMolecule CreateMembrane(Vector3 at, BattleMoleculeConfig config)
         {
             int atomsRequired = config.MembraneMoleculeAtomsRequired -
-                                Mathf.RoundToInt(_talentService.BonusOf(TalentType.MembraneMoleculeChargeReduction));
+                                Mathf.RoundToInt(_talentService.BonusOf(TalentEffectType.MembraneMoleculeChargeReduction));
 
             return Create(
                 at,

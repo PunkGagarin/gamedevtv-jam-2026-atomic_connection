@@ -34,10 +34,10 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         protected BattleMoleculeAimLineVisual AimLine => AimLineVisual;
         protected List<EnemyHit> EnemyHits => _enemyHits;
         protected abstract int BaseShotDamage { get; }
-        protected abstract TalentType DamageTalentType { get; }
+        protected abstract TalentEffectType DamageTalentEffectType { get; }
         protected virtual bool UsesCriticalHits => false;
-        protected virtual TalentType CriticalChanceTalentType => DamageTalentType;
-        protected virtual TalentType CriticalRewardTalentType => DamageTalentType;
+        protected virtual TalentEffectType CriticalChanceTalentEffectType => DamageTalentEffectType;
+        protected virtual TalentEffectType CriticalRewardTalentEffectType => DamageTalentEffectType;
         protected virtual float CriticalDamageMultiplier => 1f;
 
         protected virtual void Awake()
@@ -94,7 +94,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
         protected int CurrentShotDamage()
         {
-            float bonusDamage = TalentService != null ? TalentService.BonusOf(DamageTalentType) : 0f;
+            float bonusDamage = TalentService != null ? TalentService.BonusOf(DamageTalentEffectType) : 0f;
             return Mathf.Max(1, BaseShotDamage + Mathf.RoundToInt(bonusDamage));
         }
 
@@ -114,7 +114,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             if (!UsesCriticalHits || TalentService == null || _randomService == null)
                 return false;
 
-            float chance = Mathf.Clamp01(TalentService.BonusOf(CriticalChanceTalentType));
+            float chance = Mathf.Clamp01(TalentService.BonusOf(CriticalChanceTalentEffectType));
             return chance >= 1f || chance > 0f && _randomService.Range(0f, 1f) < chance;
         }
 
@@ -125,7 +125,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
         private float CriticalKillRewardMultiplier()
         {
-            float rewardBonus = TalentService != null ? TalentService.BonusOf(CriticalRewardTalentType) : 0f;
+            float rewardBonus = TalentService != null ? TalentService.BonusOf(CriticalRewardTalentEffectType) : 0f;
             return Mathf.Max(0f, 1f + rewardBonus);
         }
 

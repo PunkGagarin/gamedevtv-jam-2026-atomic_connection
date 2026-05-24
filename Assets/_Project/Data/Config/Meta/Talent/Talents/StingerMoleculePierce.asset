@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: StingerMoleculePierce
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Talents.TalentDefinition
   <Id>k__BackingField: 6
-  <Type>k__BackingField: 5
+  <EffectType>k__BackingField: 5
   <Title>k__BackingField: TALENT_STINGER_MOLECULE_PIERCE_TITLE
   <Description>k__BackingField: TALENT_STINGER_MOLECULE_PIERCE_DESC
   <Icon>k__BackingField: {fileID: 0}

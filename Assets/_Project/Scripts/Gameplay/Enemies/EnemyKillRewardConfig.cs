@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Currencies;
 using _Project.Scripts.Gameplay.Talents;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _Project.Scripts.Gameplay.Enemies
 {
@@ -21,9 +22,9 @@ namespace _Project.Scripts.Gameplay.Enemies
         [field: SerializeField, Min(0)] public int FixedAmount { get; private set; }
         [field: SerializeField] public bool ApplyKillRewardMultiplierToBase { get; private set; }
         [field: SerializeField] public bool UseFlatBonusTalent { get; private set; }
-        [field: SerializeField] public TalentType FlatBonusTalentType { get; private set; }
+        [field: SerializeField, FormerlySerializedAs("<FlatBonusTalentType>k__BackingField")] public TalentEffectType FlatBonusTalentEffectType { get; private set; }
         [field: SerializeField] public bool UseExtraDropChanceTalent { get; private set; }
-        [field: SerializeField] public TalentType ExtraDropChanceTalentType { get; private set; }
+        [field: SerializeField, FormerlySerializedAs("<ExtraDropChanceTalentType>k__BackingField")] public TalentEffectType ExtraDropChanceTalentEffectType { get; private set; }
         [field: SerializeField, Min(0)] public int ExtraDropAmount { get; private set; } = 1;
 
         public bool Matches(EnemyId enemyId)

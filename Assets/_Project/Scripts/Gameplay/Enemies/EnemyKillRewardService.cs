@@ -74,7 +74,7 @@ namespace _Project.Scripts.Gameplay.Enemies
             int amount = BaseReward(enemy, rule);
 
             if (rule.UseFlatBonusTalent)
-                amount += Mathf.Max(0, Mathf.RoundToInt(_talentService.BonusOf(rule.FlatBonusTalentType)));
+                amount += Mathf.Max(0, Mathf.RoundToInt(_talentService.BonusOf(rule.FlatBonusTalentEffectType)));
 
             if (RollExtraDrop(rule))
                 amount += Mathf.Max(0, rule.ExtraDropAmount);
@@ -102,7 +102,7 @@ namespace _Project.Scripts.Gameplay.Enemies
             if (!rule.UseExtraDropChanceTalent || rule.ExtraDropAmount <= 0)
                 return false;
 
-            float chance = Mathf.Clamp01(_talentService.BonusOf(rule.ExtraDropChanceTalentType));
+            float chance = Mathf.Clamp01(_talentService.BonusOf(rule.ExtraDropChanceTalentEffectType));
             return chance >= 1f || chance > 0f && _randomService.Range(0f, 1f) < chance;
         }
     }

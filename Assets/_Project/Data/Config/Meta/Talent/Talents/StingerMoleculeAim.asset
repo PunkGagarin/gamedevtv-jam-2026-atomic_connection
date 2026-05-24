@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: StingerMoleculeAim
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Talents.TalentDefinition
   <Id>k__BackingField: 5
-  <Type>k__BackingField: 4
+  <EffectType>k__BackingField: 4
   <Title>k__BackingField: TALENT_STINGER_MOLECULE_AIM_TITLE
   <Description>k__BackingField: TALENT_STINGER_MOLECULE_AIM_DESC
   <Icon>k__BackingField: {fileID: 0}

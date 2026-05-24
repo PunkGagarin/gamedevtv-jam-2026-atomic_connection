@@ -121,7 +121,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
 
         private float ConnectionAtomSpeedMultiplier()
         {
-            float bonus = _talentService != null ? _talentService.BonusOf(TalentType.ConnectionAtomSpeed) : 0f;
+            float bonus = _talentService != null ? _talentService.BonusOf(TalentEffectType.ConnectionAtomSpeed) : 0f;
             return Mathf.Max(0f, 1f + bonus);
         }
 

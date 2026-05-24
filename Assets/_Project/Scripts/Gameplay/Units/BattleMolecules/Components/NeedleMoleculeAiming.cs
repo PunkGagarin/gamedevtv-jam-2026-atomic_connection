@@ -4,6 +4,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
     public class NeedleMoleculeAiming : TalentPreviewBattleMoleculeAiming
     {
-        protected override TalentType PreviewTalentType => TalentType.NeedleMoleculeAim;
+        protected override TalentEffectType PreviewTalentEffectType => TalentEffectType.NeedleMoleculeAim;
     }
 }

@@ -31,7 +31,7 @@ public class CameraShaker : MonoBehaviour
         AtomCoreEventBus.OnDamageEvent += OnDamage;
     }
 
-    void OnDisable()
+    void OnDestroy()
     {
         AtomCoreEventBus.OnDamageEvent -= OnDamage;
     }

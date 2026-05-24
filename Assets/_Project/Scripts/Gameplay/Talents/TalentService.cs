@@ -20,7 +20,7 @@ namespace _Project.Scripts.Gameplay.Talents
         public event Action Changed;
 
         public IReadOnlyList<TalentDefinition> Talents => _config.Talents;
-        public float AtomGenerationMultiplier => 1f + BonusOf(TalentType.CoreClickReduction);
+        public float AtomGenerationMultiplier => 1f + BonusOf(TalentEffectType.CoreClickReduction);
         public bool HasAvailableUpgradeNotification => _config.Talents.Any(talent => ShouldShowNotification(talent.Id));
 
         public void Initialize()
@@ -75,13 +75,13 @@ namespace _Project.Scripts.Gameplay.Talents
             Changed?.Invoke();
         }
 
-        public float BonusOf(TalentType type) =>
+        public float BonusOf(TalentEffectType effectType) =>
             _config.Talents
-                .Where(talent => talent.Type == type)
+                .Where(talent => talent.EffectType == effectType)
                 .Sum(talent => LevelOf(talent.Id) * talent.BonusPerLevel);
 
-        public bool IsUnlocked(TalentType type) =>
-            _config.Talents.Any(talent => talent.Type == type && talent.IsUnlock && LevelOf(talent.Id) > 0);
+        public bool IsUnlocked(TalentEffectType effectType) =>
+            _config.Talents.Any(talent => talent.EffectType == effectType && talent.IsUnlock && LevelOf(talent.Id) > 0);
 
         public bool ShouldShowNotification(TalentId talentId)
         {

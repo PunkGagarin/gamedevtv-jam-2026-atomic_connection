@@ -15,8 +15,8 @@ namespace _Project.Scripts.Gameplay.Talents
         bool CanBuy(TalentId talentId);
         bool Buy(TalentId talentId);
         void ResetProgress();
-        float BonusOf(TalentType type);
-        bool IsUnlocked(TalentType type);
+        float BonusOf(TalentEffectType effectType);
+        bool IsUnlocked(TalentEffectType effectType);
         bool ShouldShowNotification(TalentId talentId);
     }
 }

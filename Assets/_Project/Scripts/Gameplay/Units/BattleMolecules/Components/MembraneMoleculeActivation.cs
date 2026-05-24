@@ -64,9 +64,9 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         {
             SetCoreMembrane(core != null ? core.GetComponent<AtomCoreShield>() : null);
 
-            float durationBonus = talentService != null ? talentService.BonusOf(TalentType.MembraneMoleculeDuration) : 0f;
-            int integrityBonus = talentService != null ? Mathf.RoundToInt(talentService.BonusOf(TalentType.MembraneMoleculeIntegrity)) : 0;
-            float cooldownReduction = talentService != null ? Mathf.Clamp01(talentService.BonusOf(TalentType.MembraneMoleculeCooldownReduction)) : 0f;
+            float durationBonus = talentService != null ? talentService.BonusOf(TalentEffectType.MembraneMoleculeDuration) : 0f;
+            int integrityBonus = talentService != null ? Mathf.RoundToInt(talentService.BonusOf(TalentEffectType.MembraneMoleculeIntegrity)) : 0;
+            float cooldownReduction = talentService != null ? Mathf.Clamp01(talentService.BonusOf(TalentEffectType.MembraneMoleculeCooldownReduction)) : 0f;
 
             _duration = config != null
                 ? Mathf.Max(0.01f, config.MembraneDurationSeconds + durationBonus)

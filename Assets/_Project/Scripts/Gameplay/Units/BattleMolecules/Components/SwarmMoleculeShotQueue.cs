@@ -41,7 +41,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         {
             int shotSequenceId = NextShotSequenceId();
             int bonusShotCount = _talentService != null
-                ? Mathf.Max(0, Mathf.RoundToInt(_talentService.BonusOf(TalentType.SwarmMoleculeShotCount)))
+                ? Mathf.Max(0, Mathf.RoundToInt(_talentService.BonusOf(TalentEffectType.SwarmMoleculeShotCount)))
                 : 0;
             int shotCount = Mathf.Max(1, ShotCount + bonusShotCount);
             float spreadDegrees = Mathf.Max(0f, SpreadDegrees + bonusShotCount * SpreadDegreesPerShotCountBonus);

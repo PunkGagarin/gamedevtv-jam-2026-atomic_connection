@@ -8,7 +8,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
     {
         [Inject] private ITalentService _talentService;
 
-        protected abstract TalentType PreviewTalentType { get; }
+        protected abstract TalentEffectType PreviewTalentEffectType { get; }
 
         protected override void OnAimingStarted()
         {
@@ -39,7 +39,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
                    && AimLineVisual != null
                    && shotDirection.sqrMagnitude > Mathf.Epsilon
                    && _talentService != null
-                   && _talentService.IsUnlocked(PreviewTalentType);
+                   && _talentService.IsUnlocked(PreviewTalentEffectType);
         }
     }
 }

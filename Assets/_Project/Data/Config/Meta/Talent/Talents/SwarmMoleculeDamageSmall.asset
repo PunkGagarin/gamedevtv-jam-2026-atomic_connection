@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SwarmMoleculeDamageSmall
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Talents.TalentDefinition
   <Id>k__BackingField: 15
-  <Type>k__BackingField: 13
+  <EffectType>k__BackingField: 13
   <Title>k__BackingField: TALENT_SWARM_MOLECULE_DAMAGE_SMALL_TITLE
   <Description>k__BackingField: TALENT_SWARM_MOLECULE_DAMAGE_SMALL_DESC
   <Icon>k__BackingField: {fileID: 0}

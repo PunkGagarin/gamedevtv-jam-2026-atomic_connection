@@ -6,6 +6,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
     {
         protected override BattleMoleculeShotKind ShotKind => BattleMoleculeShotKind.Needle;
         protected override int BaseShotDamage => Config.NeedleMoleculeShotDamage;
-        protected override TalentType DamageTalentType => TalentType.NeedleMoleculeDamage;
+        protected override TalentEffectType DamageTalentEffectType => TalentEffectType.NeedleMoleculeDamage;
     }
 }

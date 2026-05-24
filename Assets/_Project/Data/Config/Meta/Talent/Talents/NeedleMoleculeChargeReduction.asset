@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: NeedleMoleculeChargeReduction
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Talents.TalentDefinition
   <Id>k__BackingField: 33
-  <Type>k__BackingField: 29
+  <EffectType>k__BackingField: 29
   <Title>k__BackingField: TALENT_NEEDLE_MOLECULE_CHARGE_REDUCTION_TITLE
   <Description>k__BackingField: TALENT_NEEDLE_MOLECULE_CHARGE_REDUCTION_DESC
   <Icon>k__BackingField: {fileID: 0}

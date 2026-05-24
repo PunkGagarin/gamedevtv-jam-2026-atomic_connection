@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: StingerMoleculeAutoLoad
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Talents.TalentDefinition
   <Id>k__BackingField: 7
-  <Type>k__BackingField: 6
+  <EffectType>k__BackingField: 6
   <Title>k__BackingField: TALENT_STINGER_MOLECULE_AUTO_LOAD_TITLE
   <Description>k__BackingField: TALENT_STINGER_MOLECULE_AUTO_LOAD_DESC
   <MaxLevel>k__BackingField: 1

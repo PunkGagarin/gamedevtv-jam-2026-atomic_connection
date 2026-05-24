@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: AutoClick
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Talents.TalentDefinition
   <Id>k__BackingField: 1
-  <Type>k__BackingField: 1
+  <EffectType>k__BackingField: 1
   <Title>k__BackingField: TALENT_AUTO_CLICK_TITLE
   <Description>k__BackingField: TALENT_AUTO_CLICK_DESC
   <Icon>k__BackingField: {fileID: 0}

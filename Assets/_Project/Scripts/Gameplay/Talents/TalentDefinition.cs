@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Currencies;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace _Project.Scripts.Gameplay.Talents
 {
@@ -8,7 +9,7 @@ namespace _Project.Scripts.Gameplay.Talents
     public class TalentDefinition : ScriptableObject
     {
         [field: SerializeField] public TalentId Id { get; private set; }
-        [field: SerializeField] public TalentType Type { get; private set; }
+        [field: SerializeField, FormerlySerializedAs("<Type>k__BackingField")] public TalentEffectType EffectType { get; private set; }
         [field: SerializeField] public string Title { get; private set; }
         [field: SerializeField, TextArea] public string Description { get; private set; }
         [field: SerializeField] public Sprite Icon { get; private set; }

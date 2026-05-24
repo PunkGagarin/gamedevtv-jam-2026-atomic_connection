@@ -198,7 +198,7 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
         private float CurrentPickupAreaHalfSize()
         {
             float talentBonus = _talentService != null
-                ? _talentService.BonusOf(TalentType.CurrencyPickupArea)
+                ? _talentService.BonusOf(TalentEffectType.CurrencyPickupArea)
                 : 0f;
 
             return Mathf.Max(0f, _config.PickupAreaHalfSize + talentBonus);

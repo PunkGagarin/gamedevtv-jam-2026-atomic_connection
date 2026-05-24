@@ -7,15 +7,15 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
     {
         protected override BattleMoleculeShotKind ShotKind => BattleMoleculeShotKind.Stinger;
         protected override int BaseShotDamage => Config.StingerMoleculeShotDamage;
-        protected override TalentType DamageTalentType => TalentType.StingerMoleculeDamage;
+        protected override TalentEffectType DamageTalentEffectType => TalentEffectType.StingerMoleculeDamage;
         protected override bool UsesCriticalHits => true;
-        protected override TalentType CriticalChanceTalentType => TalentType.StingerMoleculeCriticalChance;
-        protected override TalentType CriticalRewardTalentType => TalentType.StingerMoleculeCriticalReward;
+        protected override TalentEffectType CriticalChanceTalentEffectType => TalentEffectType.StingerMoleculeCriticalChance;
+        protected override TalentEffectType CriticalRewardTalentEffectType => TalentEffectType.StingerMoleculeCriticalReward;
         protected override float CriticalDamageMultiplier => Config.StingerMoleculeCriticalDamageMultiplier;
 
         protected override int TargetCount()
         {
-            int pierce = Mathf.RoundToInt(TalentService.BonusOf(TalentType.StingerMoleculePierce));
+            int pierce = Mathf.RoundToInt(TalentService.BonusOf(TalentEffectType.StingerMoleculePierce));
             return Mathf.Max(1, 1 + pierce);
         }
     }

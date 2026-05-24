@@ -130,7 +130,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
 
         private bool CanAutoClick()
         {
-            if (_talentService == null || !_talentService.IsUnlocked(TalentType.AutoClick))
+            if (_talentService == null || !_talentService.IsUnlocked(TalentEffectType.AutoClick))
                 return false;
 
             if (!IsPointerOverCore())
@@ -192,7 +192,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
                 _config.ClicksToGenerateFreeAtom / _talentService.AtomGenerationMultiplier));
 
             int adjustedHealth = Mathf.Max(1, Mathf.RoundToInt(
-                _config.CoreMaxHealth + _talentService.BonusOf(TalentType.CoreHealth)));
+                _config.CoreMaxHealth + _talentService.BonusOf(TalentEffectType.CoreHealth)));
 
             _core.Configure(_config, adjustedClicks, adjustedHealth);
         }

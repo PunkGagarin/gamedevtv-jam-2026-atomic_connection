@@ -12,7 +12,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         private int _currentShotSequenceId = -1;
 
         protected override int BaseShotDamage => Config.SwarmMoleculeShotDamage;
-        protected override TalentType DamageTalentType => TalentType.SwarmMoleculeDamage;
+        protected override TalentEffectType DamageTalentEffectType => TalentEffectType.SwarmMoleculeDamage;
 
         protected override void OnDisable()
         {
@@ -45,7 +45,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
         private float CurrentAttackRange()
         {
-            float rangeBonus = TalentService != null ? TalentService.BonusOf(TalentType.SwarmMoleculeAttackRange) : 0f;
+            float rangeBonus = TalentService != null ? TalentService.BonusOf(TalentEffectType.SwarmMoleculeAttackRange) : 0f;
             return Mathf.Max(0f, Config.SwarmMoleculeAttackRange + rangeBonus);
         }
     }

@@ -60,6 +60,8 @@ namespace _Project.Scripts.Gameplay.Talents
         private float _zoom = 1f;
         private bool _isRevealQueuePlaying;
         private Tween _tooltipTween;
+        private IEnumerable<TalentDefinition> DefinedTalents =>
+            _talentService?.Talents?.Where(talent => talent != null) ?? Enumerable.Empty<TalentDefinition>();
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStaticState()
@@ -196,17 +198,19 @@ namespace _Project.Scripts.Gameplay.Talents
 
         private void BuildGraph()
         {
-            IReadOnlyList<TalentDefinition> talents = _talentService.Talents;
             _talentsById.Clear();
 
-            foreach (TalentDefinition talent in talents)
+            foreach (TalentDefinition talent in DefinedTalents)
                 _talentsById[talent.Id] = talent;
 
-            foreach (TalentDefinition talent in talents)
+            foreach (TalentDefinition talent in DefinedTalents)
                 CreateNode(talent);
 
-            foreach (TalentDefinition child in talents)
+            foreach (TalentDefinition child in DefinedTalents)
             {
+                if (child.Prerequisites == null)
+                    continue;
+
                 foreach (TalentId parentId in child.Prerequisites)
                 {
                     if (!_talentsById.TryGetValue(parentId, out TalentDefinition parent))
@@ -271,7 +275,7 @@ namespace _Project.Scripts.Gameplay.Talents
 
         private void Refresh(bool animateNewVisibleNodes)
         {
-            bool hasBoughtTalents = _talentService.Talents.Any(talent => _talentService.LevelOf(talent.Id) > 0);
+            bool hasBoughtTalents = DefinedTalents.Any(talent => _talentService.LevelOf(talent.Id) > 0);
             ResetRevealCacheIfProgressWasReset(hasBoughtTalents);
 
             List<TalentDefinition> newlyVisibleTalents = RefreshTalentNodes(animateNewVisibleNodes);
@@ -284,7 +288,7 @@ namespace _Project.Scripts.Gameplay.Talents
         {
             List<TalentDefinition> newlyVisibleTalents = new();
 
-            foreach (TalentDefinition talent in _talentService.Talents)
+            foreach (TalentDefinition talent in DefinedTalents)
                 if (RefreshTalentNode(talent, animateNewVisibleNodes))
                     newlyVisibleTalents.Add(talent);
 

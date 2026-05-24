@@ -86,6 +86,32 @@ namespace _Project.Scripts.Gameplay.Enemies
             return pushedCount;
         }
 
+        public bool TryGetNearestEnemyPosition(Vector3 origin, out Vector3 position)
+        {
+            position = default;
+            EnemyUnit nearestEnemy = null;
+            float nearestDistanceSqr = float.MaxValue;
+
+            foreach (EnemyUnit enemy in _activeEnemies)
+            {
+                if (enemy == null || !enemy.IsAlive)
+                    continue;
+
+                float distanceSqr = (enemy.transform.position - origin).sqrMagnitude;
+                if (distanceSqr >= nearestDistanceSqr)
+                    continue;
+
+                nearestDistanceSqr = distanceSqr;
+                nearestEnemy = enemy;
+            }
+
+            if (nearestEnemy == null)
+                return false;
+
+            position = nearestEnemy.transform.position;
+            return true;
+        }
+
         public void Cleanup()
         {
             UnsubscribeFromActiveEnemies();

@@ -30,7 +30,7 @@ MonoBehaviour:
     <MaxHealth>k__BackingField: 6
     <MoveSpeed>k__BackingField: 0.525
     <CoreCollisionDamage>k__BackingField: 1
-    <DnaReward>k__BackingField: 2
+    <DnaReward>k__BackingField: 5
   - <Id>k__BackingField: 4
     <PrefabResourcePath>k__BackingField: Gameplay/Enemies/RangedEnemyUnit
     <MaxHealth>k__BackingField: 2
@@ -42,7 +42,7 @@ MonoBehaviour:
     <MaxHealth>k__BackingField: 3
     <MoveSpeed>k__BackingField: 0.35
     <CoreCollisionDamage>k__BackingField: 2
-    <DnaReward>k__BackingField: 3
+    <DnaReward>k__BackingField: 0
   <InitialSpawnDelaySeconds>k__BackingField: 3
   <SpawnIntervalSeconds>k__BackingField: 6
   <OffscreenSpawnPadding>k__BackingField: 1

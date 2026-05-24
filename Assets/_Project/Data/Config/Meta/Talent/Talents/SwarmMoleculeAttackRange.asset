@@ -17,9 +17,9 @@ MonoBehaviour:
   <Title>k__BackingField: TALENT_SWARM_MOLECULE_ATTACK_RANGE_TITLE
   <Description>k__BackingField: TALENT_SWARM_MOLECULE_ATTACK_RANGE_DESC
   <Icon>k__BackingField: {fileID: 1525844322228093430, guid: fb904debbd7654c8089277f48efebd93, type: 3}
-  <MaxLevel>k__BackingField: 1
+  <MaxLevel>k__BackingField: 2
   <CostCurrency>k__BackingField: 2
-  <CostsByLevel>k__BackingField: 06000000
+  <CostsByLevel>k__BackingField: 0500000010000000
   <Prerequisites>k__BackingField: 0e000000
   <GraphPosition>k__BackingField: {x: -480, y: -960}
   <BonusPerLevel>k__BackingField: 3

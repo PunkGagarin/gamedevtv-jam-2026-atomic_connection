@@ -17,9 +17,9 @@ MonoBehaviour:
   <Title>k__BackingField: TALENT_STINGER_MOLECULE_CHARGE_REDUCTION_TITLE
   <Description>k__BackingField: TALENT_STINGER_MOLECULE_CHARGE_REDUCTION_DESC
   <Icon>k__BackingField: {fileID: 48219680630978696, guid: df4c97b674933a140b0dd7d026bb3dc2, type: 3}
-  <MaxLevel>k__BackingField: 1
-  <CostCurrency>k__BackingField: 1
-  <CostsByLevel>k__BackingField: 01000000
+  <MaxLevel>k__BackingField: 2
+  <CostCurrency>k__BackingField: 2
+  <CostsByLevel>k__BackingField: 090000001e000000
   <Prerequisites>k__BackingField: 1f000000
   <GraphPosition>k__BackingField: {x: -240, y: -720}
   <BonusPerLevel>k__BackingField: 1

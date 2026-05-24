@@ -15,6 +15,7 @@ MonoBehaviour:
   <PrefabResourcePath>k__BackingField: Gameplay/UI/GameplayTutorialView
   <CoreCursorOffset>k__BackingField: {x: 0, y: 0}
   <DragCursorOffset>k__BackingField: {x: 0, y: 48}
+  <ActiveMoleculeCursorOffset>k__BackingField: {x: 0, y: 0}
   <ScreenPadding>k__BackingField: 48
   <PulseDurationSeconds>k__BackingField: 0.55
   <DragLoopDurationSeconds>k__BackingField: 1.4
@@ -51,6 +52,16 @@ MonoBehaviour:
     <ReleasedCursorSprite>k__BackingField: {fileID: 2926929911320684054, guid: 9afd78eb8b303482385341aa541dacd3, type: 3}
     <CursorIconSprite>k__BackingField: {fileID: 0}
     <TargetIconSprite>k__BackingField: {fileID: 8542106802068212497, guid: 6721b223615fe478b9ea43ecf93f1327, type: 3}
+    <CursorIconOffset>k__BackingField: {x: 0, y: -58}
+    <TargetIconOffset>k__BackingField: {x: 0, y: 0}
+    <CursorIconSize>k__BackingField: 48
+    <TargetIconSize>k__BackingField: 72
+  <ActiveMoleculeVisual>k__BackingField:
+    <CursorSprite>k__BackingField: {fileID: 6317526053111568887, guid: 3d85f85c410d54ee3a280ba723546395, type: 3}
+    <PressedCursorSprite>k__BackingField: {fileID: 0}
+    <ReleasedCursorSprite>k__BackingField: {fileID: 6317526053111568887, guid: 3d85f85c410d54ee3a280ba723546395, type: 3}
+    <CursorIconSprite>k__BackingField: {fileID: 0}
+    <TargetIconSprite>k__BackingField: {fileID: 0}
     <CursorIconOffset>k__BackingField: {x: 0, y: -58}
     <TargetIconOffset>k__BackingField: {x: 0, y: 0}
     <CursorIconSize>k__BackingField: 48

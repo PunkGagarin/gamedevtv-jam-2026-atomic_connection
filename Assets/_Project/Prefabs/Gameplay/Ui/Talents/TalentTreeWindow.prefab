@@ -598,6 +598,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 9100000002}
     m_Modifications:
+    - target: {fileID: 6071223176968285216, guid: ac33aaabecbc841029c98af0e3a50025, type: 3}
+      propertyPath: m_fontSize
+      value: 44.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 6071223176968285216, guid: ac33aaabecbc841029c98af0e3a50025, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: e3df08d386579401495a30d678cfb5a5, type: 2}
+    - target: {fileID: 6071223176968285216, guid: ac33aaabecbc841029c98af0e3a50025, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2378316875688634224, guid: e3df08d386579401495a30d678cfb5a5, type: 2}
+    - target: {fileID: 6071223176968285226, guid: ac33aaabecbc841029c98af0e3a50025, type: 3}
+      propertyPath: m_fontSize
+      value: 44.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 6071223176968285226, guid: ac33aaabecbc841029c98af0e3a50025, type: 3}
+      propertyPath: m_fontAsset
+      value: 
+      objectReference: {fileID: 11400000, guid: e3df08d386579401495a30d678cfb5a5, type: 2}
+    - target: {fileID: 6071223176968285226, guid: ac33aaabecbc841029c98af0e3a50025, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 2378316875688634224, guid: e3df08d386579401495a30d678cfb5a5, type: 2}
     - target: {fileID: 6071223176968285273, guid: ac33aaabecbc841029c98af0e3a50025, type: 3}
       propertyPath: m_Name
       value: TooltipPanel
@@ -632,7 +656,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6071223176968285278, guid: ac33aaabecbc841029c98af0e3a50025, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 158
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 6071223176968285278, guid: ac33aaabecbc841029c98af0e3a50025, type: 3}
       propertyPath: m_LocalPosition.x

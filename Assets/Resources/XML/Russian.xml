@@ -104,4 +104,5 @@
   <text key="TALENT_RADICAL_DROP_CHANCE_DESC">Даёт 5% шанс получить 1 радикал с обычного врага за уровень.</text>
   <text key="TALENT_RADICAL_DROP_CHANCE_LARGE_TITLE">Радикальный резонанс</text>
   <text key="TALENT_RADICAL_DROP_CHANCE_LARGE_DESC">Каждый подобранный радикал приносит ещё 1 радикал за уровень.</text>
+  <text key="GAMEPLAY_TUTORIAL_ACTIVE_MOLECULE">Сначала соедини новую молекулу с ядром, затем нажми на неё, чтобы сделать активной.%%Активна только одна молекула за раз.</text>
 </Language>

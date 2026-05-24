@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: UiThemeConfig
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.GameplayData.UiThemeConfig
   <AccentTextColor>k__BackingField: {r: 0.5518868, g: 1, b: 0.878471, a: 1}
-  <CurrencyTextFontSize>k__BackingField: 37
+  <CurrencyTextFontSize>k__BackingField: 80
   <AccentGraphicColor>k__BackingField: {r: 0.5518868, g: 1, b: 0.878471, a: 1}

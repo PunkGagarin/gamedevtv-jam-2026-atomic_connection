@@ -13,6 +13,8 @@ namespace _Project.Scripts.Gameplay.Tutorial
 {
     public class GameplayTutorialService : IGameplayTutorialService
     {
+        private const string ACTIVE_MOLECULE_HINT_KEY = "GAMEPLAY_TUTORIAL_ACTIVE_MOLECULE";
+
         private GameplayTutorialView _view;
         private TutorialStep _step;
         private bool _isStarted;
@@ -32,11 +34,13 @@ namespace _Project.Scripts.Gameplay.Tutorial
         {
             Cleanup();
 
-            if (_preferences.GameplayTutorialCompleted)
+            if (_preferences.GameplayTutorialCompleted && _preferences.ActiveMoleculeTutorialCompleted)
                 return;
 
             Subscribe();
-            _step = TutorialStep.GenerateAtom;
+            _step = _preferences.GameplayTutorialCompleted
+                ? ActiveMoleculeTutorialStartStep()
+                : TutorialStep.GenerateAtom;
             _isStarted = true;
             TryCreateView();
         }
@@ -64,6 +68,9 @@ namespace _Project.Scripts.Gameplay.Tutorial
                     break;
                 case TutorialStep.Shoot:
                     UpdateAttackHint();
+                    break;
+                case TutorialStep.SelectActiveMolecule:
+                    UpdateActiveMoleculeHint();
                     break;
             }
         }
@@ -101,16 +108,20 @@ namespace _Project.Scripts.Gameplay.Tutorial
         private void Subscribe()
         {
             _atomCoreService.AtomGenerated += OnAtomGenerated;
+            _battleMoleculeService.MoleculeRegistered += OnMoleculeRegistered;
             _battleMoleculeService.MoleculeBonded += OnMoleculeBonded;
             _battleMoleculeService.MoleculeCharged += OnMoleculeCharged;
+            _battleMoleculeService.ActiveMoleculeChanged += OnActiveMoleculeChanged;
             _battleMoleculeService.ShotRequested += OnShotRequested;
         }
 
         private void Unsubscribe()
         {
             _atomCoreService.AtomGenerated -= OnAtomGenerated;
+            _battleMoleculeService.MoleculeRegistered -= OnMoleculeRegistered;
             _battleMoleculeService.MoleculeBonded -= OnMoleculeBonded;
             _battleMoleculeService.MoleculeCharged -= OnMoleculeCharged;
+            _battleMoleculeService.ActiveMoleculeChanged -= OnActiveMoleculeChanged;
             _battleMoleculeService.ShotRequested -= OnShotRequested;
         }
 
@@ -179,6 +190,22 @@ namespace _Project.Scripts.Gameplay.Tutorial
                 enemyScreenPosition);
         }
 
+        private void UpdateActiveMoleculeHint()
+        {
+            BattleMolecule molecule = _battleMoleculeService.FirstAdditionalMolecule;
+            if (molecule == null)
+                return;
+
+            if (!TryWorldToScreen(molecule.transform.position, out Vector2 screenPosition))
+                return;
+
+            _view.ShowActiveMoleculeHint(
+                screenPosition + _config.ActiveMoleculeCursorOffset,
+                _config,
+                _config.ActiveMoleculeVisual,
+                ACTIVE_MOLECULE_HINT_KEY);
+        }
+
         private bool TryWorldToScreen(Vector3 worldPosition, out Vector2 screenPosition)
         {
             screenPosition = default;
@@ -196,12 +223,22 @@ namespace _Project.Scripts.Gameplay.Tutorial
                 _step = TutorialStep.DropAtomToMolecule;
         }
 
+        private void OnMoleculeRegistered(BattleMolecule molecule)
+        {
+            if (_step == TutorialStep.WaitForSecondMolecule && _battleMoleculeService.FirstAdditionalMolecule != null)
+                _step = TutorialStep.SelectActiveMolecule;
+        }
+
         private void OnMoleculeBonded(BattleMolecule molecule)
         {
             if (_step == TutorialStep.DropAtomToMolecule)
             {
                 _step = TutorialStep.WaitForCharge;
                 _view?.Hide();
+            }
+            else if (_step == TutorialStep.WaitForSecondMolecule && _battleMoleculeService.FirstAdditionalMolecule != null)
+            {
+                _step = TutorialStep.SelectActiveMolecule;
             }
         }
 
@@ -216,13 +253,51 @@ namespace _Project.Scripts.Gameplay.Tutorial
             if (_step != TutorialStep.Shoot)
                 return;
 
+            if (_battleMoleculeService.FirstAdditionalMolecule != null)
+            {
+                _step = TutorialStep.SelectActiveMolecule;
+                return;
+            }
+
             CompleteTutorial();
+        }
+
+        private void OnActiveMoleculeChanged(BattleMolecule molecule)
+        {
+            if (_step != TutorialStep.SelectActiveMolecule)
+                return;
+
+            CompleteActiveMoleculeTutorial();
         }
 
         private void CompleteTutorial()
         {
             _preferences.MarkGameplayTutorialCompleted();
+
+            if (_preferences.ActiveMoleculeTutorialCompleted)
+            {
+                Cleanup();
+                return;
+            }
+
+            _step = ActiveMoleculeTutorialStartStep();
+            _view?.Hide();
+        }
+
+        private void CompleteActiveMoleculeTutorial()
+        {
+            _preferences.MarkActiveMoleculeTutorialCompleted();
             Cleanup();
+        }
+
+        private TutorialStep ActiveMoleculeTutorialStartStep()
+        {
+            if (_preferences.ActiveMoleculeTutorialCompleted)
+                return TutorialStep.None;
+
+            return _battleMoleculeService.FirstAdditionalMolecule != null
+                ? TutorialStep.SelectActiveMolecule
+                : TutorialStep.WaitForSecondMolecule;
         }
 
         private enum TutorialStep
@@ -231,7 +306,9 @@ namespace _Project.Scripts.Gameplay.Tutorial
             GenerateAtom = 1,
             DropAtomToMolecule = 2,
             WaitForCharge = 3,
-            Shoot = 4
+            Shoot = 4,
+            WaitForSecondMolecule = 5,
+            SelectActiveMolecule = 6
         }
     }
 }

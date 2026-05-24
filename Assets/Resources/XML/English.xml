@@ -40,17 +40,25 @@
   <text key="TALENT_NODE_MAX">MAX</text>
   <text key="TALENT_CORE_HEALTH_SMALL_TITLE">Sturdy Core</text>
   <text key="TALENT_CORE_HEALTH_SMALL_DESC">Increases core health by 1.</text>
-  <text key="TALENT_AUTO_CLICK_TITLE">Auto Generation</text>
-  <text key="TALENT_AUTO_CLICK_DESC">The core automatically creates a charge without a click while the cursor is over the core.</text>
+  <text key="TALENT_AUTO_CLICK_TITLE">Auto Click</text>
+  <text key="TALENT_AUTO_CLICK_DESC">The core automatically adds a generation click while the cursor is over the core.</text>
   <text key="TALENT_CORE_CLICK_REDUCTION_TITLE">Quick Assembly</text>
   <text key="TALENT_CORE_CLICK_REDUCTION_DESC">Reduces the core click cooldown.</text>
   <text key="TALENT_CORE_HEALTH_LARGE_TITLE">Reinforced Core</text>
   <text key="TALENT_CORE_HEALTH_LARGE_DESC">Greatly increases core health.</text>
+  <text key="TALENT_STINGER_MOLECULE_TITLE">Stinger Molecule</text>
+  <text key="TALENT_STINGER_MOLECULE_DESC">Unlocks a stronger battle molecule with a single shot.</text>
+  <text key="TALENT_NEEDLE_MOLECULE_DAMAGE_TITLE">Needle Damage</text>
+  <text key="TALENT_NEEDLE_MOLECULE_DAMAGE_DESC">Increases NeedleMolecule damage by 1 per level.</text>
+  <text key="TALENT_NEEDLE_MOLECULE_CHARGE_REDUCTION_TITLE">Light Needle</text>
+  <text key="TALENT_NEEDLE_MOLECULE_CHARGE_REDUCTION_DESC">NeedleMolecule needs 1 fewer atom to fully charge per level.</text>
+  <text key="TALENT_NEEDLE_MOLECULE_AIM_TITLE">Combat Aim</text>
+  <text key="TALENT_NEEDLE_MOLECULE_AIM_DESC">Shows the NeedleMolecule shot direction.</text>
   <text key="TALENT_STINGER_MOLECULE_DAMAGE_SMALL_TITLE">Damage I</text>
   <text key="TALENT_STINGER_MOLECULE_DAMAGE_SMALL_DESC">Increases StingerMolecule damage by 1.</text>
   <text key="TALENT_STINGER_MOLECULE_CHARGE_REDUCTION_TITLE">Quick Sting</text>
   <text key="TALENT_STINGER_MOLECULE_CHARGE_REDUCTION_DESC">StingerMolecule needs 1 fewer atom to fully charge.</text>
-  <text key="TALENT_STINGER_MOLECULE_AIM_TITLE">Combat Aim</text>
+  <text key="TALENT_STINGER_MOLECULE_AIM_TITLE">Stinger Aim</text>
   <text key="TALENT_STINGER_MOLECULE_AIM_DESC">Shows the StingerMolecule shot direction.</text>
   <text key="TALENT_STINGER_MOLECULE_PIERCE_TITLE">Pierce</text>
   <text key="TALENT_STINGER_MOLECULE_PIERCE_DESC">StingerMolecule shot pierces the first enemy and keeps flying.</text>
@@ -58,8 +66,6 @@
   <text key="TALENT_STINGER_MOLECULE_AUTO_LOAD_DESC">Automatically charges StingerMolecule with free shots.</text>
   <text key="TALENT_STINGER_MOLECULE_DAMAGE_LARGE_TITLE">Damage II</text>
   <text key="TALENT_STINGER_MOLECULE_DAMAGE_LARGE_DESC">Greatly increases StingerMolecule damage by 10.</text>
-  <text key="TALENT_EXTRA_BATTLE_MOLECULE_TITLE">Second Molecule</text>
-  <text key="TALENT_EXTRA_BATTLE_MOLECULE_DESC">Unlocks a second battle molecule.</text>
   <text key="TALENT_MEMBRANE_MOLECULE_TITLE">Membrane Molecule</text>
   <text key="TALENT_MEMBRANE_MOLECULE_DESC">Unlocks a defensive membrane molecule.</text>
   <text key="TALENT_MEMBRANE_MOLECULE_CHARGE_REDUCTION_TITLE">Light Membrane</text>
@@ -98,7 +104,7 @@
   <text key="TALENT_NUCLEOTIDE_EXTRA_DROP_CHANCE_TITLE">Excess Nucleoid</text>
   <text key="TALENT_NUCLEOTIDE_EXTRA_DROP_CHANCE_DESC">Gives a 20% chance per level to gain 1 extra Nucleotid from a non-boss enemy.</text>
   <text key="TALENT_RADICAL_DROP_CHANCE_TITLE">Radical Trace</text>
-  <text key="TALENT_RADICAL_DROP_CHANCE_DESC">Gives a 20% chance per level to gain 1 radical from a non-boss enemy. Available after level two.</text>
+  <text key="TALENT_RADICAL_DROP_CHANCE_DESC">Gives a 20% chance per level to gain 1 radical from a non-boss enemy.</text>
   <text key="TALENT_RADICAL_DROP_CHANCE_LARGE_TITLE">Radical Resonance</text>
   <text key="TALENT_RADICAL_DROP_CHANCE_LARGE_DESC">Adds another 20% chance per level to gain 1 radical from a non-boss enemy.</text>
 </Language>

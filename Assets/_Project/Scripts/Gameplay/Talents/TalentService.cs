@@ -21,7 +21,6 @@ namespace _Project.Scripts.Gameplay.Talents
 
         public IReadOnlyList<TalentDefinition> Talents => _config.Talents;
         public float AtomGenerationMultiplier => 1f + BonusOf(TalentType.CoreClickReduction);
-        public int CompletedLevelCount => _progressProvider.ProgressData.CompletedLevelCount;
         public bool HasAvailableUpgradeNotification => _config.Talents.Any(talent => ShouldShowNotification(talent.Id));
 
         public void Initialize()
@@ -46,8 +45,7 @@ namespace _Project.Scripts.Gameplay.Talents
 
             return currentLevel < talent.MaxLevel &&
                    _currencyService.CanSpend(talent.PriceForLevel(currentLevel)) &&
-                   PrerequisitesBought(talent) &&
-                   CompletedLevelGateReached(talent);
+                   PrerequisitesBought(talent);
         }
 
         public bool Buy(TalentId talentId)
@@ -92,7 +90,6 @@ namespace _Project.Scripts.Gameplay.Talents
 
             return currentLevel < talent.MaxLevel &&
                    PrerequisitesBought(talent) &&
-                   CompletedLevelGateReached(talent) &&
                    _currencyService.CanSpend(talent.PriceForLevel(currentLevel));
         }
 
@@ -106,9 +103,6 @@ namespace _Project.Scripts.Gameplay.Talents
             _currencyService.SetBalance(CurrencyId.Isotopes, _currencyConfig.StartingAmount(CurrencyId.Isotopes).Amount);
             _currencyService.SetBalance(CurrencyId.Radicals, _currencyConfig.StartingAmount(CurrencyId.Radicals).Amount);
         }
-
-        private bool CompletedLevelGateReached(TalentDefinition talent) =>
-            CompletedLevelCount >= talent.MinCompletedLevel;
 
         private TalentDefinition DefinitionFor(TalentId talentId) =>
             _config.Talents.FirstOrDefault(talent => talent.Id == talentId)

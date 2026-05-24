@@ -21,7 +21,6 @@ MonoBehaviour:
   <CostCurrency>k__BackingField: 0
   <CostsByLevel>k__BackingField: 10000000
   <Prerequisites>k__BackingField: 0a000000
-  <MinCompletedLevel>k__BackingField: 0
-  <GraphPosition>k__BackingField: {x: -600, y: -480}
+  <GraphPosition>k__BackingField: {x: 0, y: -1320}
   <BonusPerLevel>k__BackingField: 3
   <IsUnlock>k__BackingField: 0

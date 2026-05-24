@@ -290,9 +290,8 @@ namespace _Project.Scripts.Gameplay.Talents
         {
             int level = _talentService.LevelOf(talent.Id);
             bool prerequisitesBought = PrerequisitesBought(talent);
-            bool completedLevelGateReached = CompletedLevelGateReached(talent);
             bool canBuy = _talentService.CanBuy(talent.Id);
-            TalentNodeViewState viewState = ViewStateFor(talent, level, prerequisitesBought, completedLevelGateReached, canBuy);
+            TalentNodeViewState viewState = ViewStateFor(talent, level, prerequisitesBought, canBuy);
             bool shouldBeVisible = ShouldBeVisible(talent, level, prerequisitesBought);
             bool wasVisible = _visibleNodes.Contains(talent.Id);
 
@@ -378,13 +377,12 @@ namespace _Project.Scripts.Gameplay.Talents
             TalentDefinition talent,
             int level,
             bool prerequisitesBought,
-            bool completedLevelGateReached,
             bool canBuy)
         {
             if (level >= talent.MaxLevel)
                 return TalentNodeViewState.Maxed;
 
-            if (!prerequisitesBought || !completedLevelGateReached)
+            if (!prerequisitesBought)
                 return TalentNodeViewState.Locked;
 
             return canBuy ? TalentNodeViewState.Available : TalentNodeViewState.NotEnoughCurrency;
@@ -395,9 +393,6 @@ namespace _Project.Scripts.Gameplay.Talents
             return talent.Prerequisites == null ||
                    talent.Prerequisites.All(prerequisite => _talentService.LevelOf(prerequisite) > 0);
         }
-
-        private bool CompletedLevelGateReached(TalentDefinition talent) =>
-            _talentService.CompletedLevelCount >= talent.MinCompletedLevel;
 
         private void RefreshOnLanguageChanged()
         {

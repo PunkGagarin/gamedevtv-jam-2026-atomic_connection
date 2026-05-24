@@ -22,5 +22,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
     {
         Stinger = 0,
         Swarm = 1,
+        Needle = 2,
     }
 }

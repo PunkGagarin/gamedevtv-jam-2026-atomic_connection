@@ -23,7 +23,8 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
         public void Enter()
         {
             _battleMoleculeService.ConfigureCore(CreateAtomCore());
-            CreateStingerMolecule();
+            CreateNeedleMolecule();
+            CreateStingerMoleculeIfUnlocked();
             CreateMembraneMoleculeIfUnlocked();
             CreateSwarmMoleculeIfUnlocked();
             _stateMachine.Enter<GameplayLoopState>();
@@ -34,8 +35,18 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
             return _atomCoreCreator.Create(_levelStartPointProvider.StartPoint);
         }
 
-        private void CreateStingerMolecule()
+        private void CreateNeedleMolecule()
         {
+            RegisterMolecule(_battleMoleculeFactory.CreateNeedle(
+                MoleculeSpawnPosition(_battleMoleculeConfig.NeedleMoleculeSpawnOffset),
+                _battleMoleculeConfig));
+        }
+
+        private void CreateStingerMoleculeIfUnlocked()
+        {
+            if (!_talentService.IsUnlocked(TalentType.StingerMolecule))
+                return;
+
             RegisterMolecule(_battleMoleculeFactory.CreateStinger(
                 MoleculeSpawnPosition(_battleMoleculeConfig.StingerMoleculeSpawnOffset),
                 _battleMoleculeConfig));

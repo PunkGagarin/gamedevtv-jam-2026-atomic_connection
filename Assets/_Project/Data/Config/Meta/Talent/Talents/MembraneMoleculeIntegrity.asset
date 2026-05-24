@@ -18,8 +18,8 @@ MonoBehaviour:
   <Description>k__BackingField: TALENT_MEMBRANE_MOLECULE_INTEGRITY_DESC
   <Icon>k__BackingField: {fileID: -6717884257390833292, guid: caded05716564aa47a5bf86ba474dc35, type: 3}
   <MaxLevel>k__BackingField: 3
-  <CostCurrency>k__BackingField: 0
-  <CostsByLevel>k__BackingField: 120000001e0000002c000000
+  <CostCurrency>k__BackingField: 2
+  <CostsByLevel>k__BackingField: 080000001e00000064000000
   <Prerequisites>k__BackingField: 0a000000
   <GraphPosition>k__BackingField: {x: -240, y: -1320}
   <BonusPerLevel>k__BackingField: 1

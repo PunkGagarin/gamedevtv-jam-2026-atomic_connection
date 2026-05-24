@@ -1,44 +1,133 @@
 # Спавн уровней
 
+`Spawn.md` - детальная таблица волн `LevelDefinition`. Если меняются `LevelCatalogConfig` или `LevelXX.asset`, этот документ обновляется в том же проходе.
+
 | Правило | Значение |
 |---|---|
-| Источник данных | отдельные `LevelDefinition` SO, подключенные в `LevelCatalogConfig` |
-| Когда обновлять | При изменении волн, длительности уровней, `SpawnCount`, `SpawnLimit`, HP/урон override или момента босса |
-| Отсчет времени | `0` = сразу после стартовой задержки врагов |
-| Стартовый ритм | Не делаем долгие пустые паузы между первыми врагами; первые секунды должны быстро вводить игрока в ритм |
+| Источник данных | `Assets/_Project/Data/Config/Gameplay/Levels/LevelXX.asset` |
+| Отсчет времени | `0` = момент после стартовой задержки спавна врагов |
+| `SpawnLimit` | количество срабатываний волны |
+| `SpawnCount` | количество врагов за одно срабатывание |
+| Boss | есть на каждом уровне и завершает уровень, валюту не дает |
+
+## Сводка
+
+`Level01-Level02` остаются настроенным входом. С `Level03` кампания следует целевой 10-уровневой кривой.
+
+| Level | Standard | Mass | Elite | Ranged | Boss |
+|---:|---:|---:|---:|---:|---:|
+| 1 | уже настроен | 0 | 0 | 0 | 1 |
+| 2 | уже настроен | 0 | 0 | 0 | 1 |
+| 3 | 9 | 0 | 1 | 0 | 1 |
+| 4 | 10 | 0 | 3 | 0 | 1 |
+| 5 | 14 | 6 | 1 | 0 | 1 |
+| 6 | 12 | 20 | 2 | 0 | 1 |
+| 7 | 14 | 25 | 2 | 0 | 1 |
+| 8 | 12 | 10 | 1 | 5 | 1 |
+| 9 | 18 | 20 | 4 | 10 | 1 |
+| 10 | 22 | 45 | 8 | 18 | 1 |
 
 ## Level 1
 
-| Секунда | 0 | 6 | 10 | 12 | 17 | 18 | 20 | 24 | 30 |
-|---|---|---|---|---|---|---|---|---|---|
-| Враг | Standard | Standard | Standard | Standard | Standard | Standard | Standard | Standard x2 | Boss |
+Оставлен как настроенный входной уровень.
 
 ## Level 2
 
-| Секунда | 0 | 5 | 10 | 14 | 18 | 22 | 23 | 26 | 30 | 35 |
-|---|---|---|---|---|---|---|---|---|---|---|
-| Враг | Standard | Standard | Standard | Standard HP2 DMG2 | Standard | Standard HP2 DMG2 | Standard HP2 DMG1 | Standard HP2 DMG1 x3 | Standard HP2 DMG2 | Boss HP10 |
+Оставлен как настроенный уровень связей и усиленных Standard.
 
 ## Level 3
 
-| Секунда | 0 | 6 | 10 | 12 | 15 | 18 | 24 | 27 | 30 | 33 | 36 | 40 |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Враг | Standard HP2 DMG2 | Standard HP2 DMG2 | Standard HP2 DMG2 | Standard HP2 DMG2 | Elite HP8 DMG3 | Standard HP2 DMG2 | Standard HP2 DMG2 | Standard HP2 DMG2 | Standard HP2 DMG2 + Standard HP4 DMG3 | Elite HP8 DMG3 | Standard HP2 DMG2 | Boss HP30 |
+Роль: первое знакомство с Elite.
+
+| Секунда | Враг | SpawnCount | SpawnLimit | Итого |
+|---:|---|---:|---:|---:|
+| 0 | Standard HP2 DMG2 | 1 | 6 | 6 |
+| 24 | Standard HP2 DMG1 | 3 | 1 | 3 |
+| 18 | Elite HP8 DMG3 | 1 | 1 | 1 |
+| 35 | Boss HP10 | 1 | 1 | 1 |
 
 ## Level 4
 
-| Секунда | 0 | 4 | 8 | 12 | 15 | 16 | 20 | 24 | 28 | 32 | 35 | 36 | 40 |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Враг | Standard HP2 DMG2 | Standard HP2 DMG2 | Standard HP2 DMG2 | Standard HP2 DMG2 | Elite HP8 DMG3 | Standard HP2 DMG2 | Standard HP2 DMG2 + Mass x5 | Standard HP2 DMG2 | Standard HP2 DMG2 + Mass x5 | Standard HP2 DMG2 | Elite HP8 DMG3 | Standard HP2 DMG2 + Standard HP4 DMG3 + Mass x5 | Boss HP40 |
+Роль: закрепление Elite.
+
+| Секунда | Враг | SpawnCount | SpawnLimit | Итого |
+|---:|---|---:|---:|---:|
+| 0 | Standard HP2 DMG2 | 1 | 8 | 8 |
+| 30 | Standard HP4 DMG3 | 2 | 1 | 2 |
+| 12 | Elite HP10 DMG3 | 1 | 3 | 3 |
+| 40 | Boss HP28 | 1 | 1 | 1 |
 
 ## Level 5
 
-| Секунда | 0 | 4 | 8 | 10 | 12 | 16 | 18 | 20 | 24 | 26 | 28 | 30 | 32 | 34 | 36 | 40 |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Враг | Standard HP2 DMG2 | Standard HP2 DMG2 | Standard HP2 DMG2 | Mass x5 | Standard HP2 DMG2 + Elite HP8 DMG3 | Standard HP2 DMG2 | Mass x5 | Standard HP2 DMG2 | Standard HP2 DMG2 | Mass x5 | Standard HP2 DMG2 + Standard HP4 DMG3 | Elite HP8 DMG3 | Standard HP2 DMG2 | Mass x5 | Standard HP2 DMG2 + Standard HP4 DMG3 | Boss HP50 |
+Роль: preview Mass. Mass приходит одной пачкой из 6.
+
+| Секунда | Враг | SpawnCount | SpawnLimit | Итого |
+|---:|---|---:|---:|---:|
+| 0 | Standard HP2 DMG2 | 1 | 10 | 10 |
+| 32 | Standard HP4 DMG3 | 4 | 1 | 4 |
+| 20 | Mass HP1 DMG1 | 6 | 1 | 6 |
+| 24 | Elite HP10 DMG3 | 1 | 1 | 1 |
+| 40 | Boss HP36 | 1 | 1 | 1 |
 
 ## Level 6
 
-| Секунда | 0 | 4 | 8 | 10 | 12 | 16 | 18 | 20 | 24 | 26 | 28 | 30 | 32 | 34 | 36 | 40 |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| Враг | Standard HP2 DMG2 | Standard HP2 DMG2 | Standard HP2 DMG2 | Mass x5 | Standard HP2 DMG2 + Elite HP8 DMG3 | Standard HP2 DMG2 | Mass x5 | Standard HP2 DMG2 + Ranged | Standard HP2 DMG2 | Mass x5 | Standard HP2 DMG2 + Standard HP4 DMG3 | Elite HP8 DMG3 | Standard HP2 DMG2 | Mass x5 | Standard HP2 DMG2 + Standard HP4 DMG3 | Boss HP50 |
+Роль: Mass становится основной проблемой.
+
+| Секунда | Враг | SpawnCount | SpawnLimit | Итого |
+|---:|---|---:|---:|---:|
+| 0 | Standard HP3 DMG2 | 1 | 8 | 8 |
+| 34 | Standard HP5 DMG3 | 4 | 1 | 4 |
+| 10 | Mass HP2 DMG1 | 5 | 4 | 20 |
+| 14 | Elite HP12 DMG3 | 1 | 2 | 2 |
+| 40 | Boss HP42 | 1 | 1 | 1 |
+
+## Level 7
+
+Роль: Swarm payoff на плотных Mass-пачках.
+
+| Секунда | Враг | SpawnCount | SpawnLimit | Итого |
+|---:|---|---:|---:|---:|
+| 0 | Standard HP3 DMG2 | 1 | 10 | 10 |
+| 28 | Standard HP5 DMG3 | 4 | 1 | 4 |
+| 8 | Mass HP2 DMG1 | 5 | 5 | 25 |
+| 12 | Elite HP14 DMG3 | 1 | 2 | 2 |
+| 40 | Boss HP46 | 1 | 1 | 1 |
+
+## Level 8
+
+Роль: первое знакомство с Ranged. Mass идет двумя пачками по 5.
+
+| Секунда | Враг | SpawnCount | SpawnLimit | Итого |
+|---:|---|---:|---:|---:|
+| 0 | Standard HP4 DMG3 | 1 | 8 | 8 |
+| 36 | Standard HP6 DMG4 | 4 | 1 | 4 |
+| 14 | Mass HP2 DMG2 | 5 | 2 | 10 |
+| 26 | Elite HP16 DMG4 | 1 | 1 | 1 |
+| 18 | Ranged HP4 | 1 | 5 | 5 |
+| 45 | Boss HP48 | 1 | 1 | 1 |
+
+## Level 9
+
+Роль: mixed exam.
+
+| Секунда | Враг | SpawnCount | SpawnLimit | Итого |
+|---:|---|---:|---:|---:|
+| 0 | Standard HP5 DMG3 | 1 | 12 | 12 |
+| 36 | Standard HP7 DMG4 | 6 | 1 | 6 |
+| 10 | Mass HP3 DMG2 | 5 | 4 | 20 |
+| 8 | Elite HP20 DMG4 | 1 | 4 | 4 |
+| 14 | Ranged HP5 | 2 | 5 | 10 |
+| 50 | Boss HP60 | 1 | 1 | 1 |
+
+## Level 10
+
+Роль: финальный экзамен по Mass + Elite + Ranged + приоритетам.
+
+| Секунда | Враг | SpawnCount | SpawnLimit | Итого |
+|---:|---|---:|---:|---:|
+| 0 | Standard HP6 DMG4 | 1 | 14 | 14 |
+| 44 | Standard HP8 DMG5 | 8 | 1 | 8 |
+| 8 | Mass HP3 DMG2 | 5 | 9 | 45 |
+| 6 | Elite HP27 DMG5 | 1 | 8 | 8 |
+| 12 | Ranged HP6 | 3 | 6 | 18 |
+| 60 | Boss HP90 | 1 | 1 | 1 |

@@ -17,9 +17,9 @@ MonoBehaviour:
   <Title>k__BackingField: TALENT_STINGER_MOLECULE_DAMAGE_SMALL_TITLE
   <Description>k__BackingField: TALENT_STINGER_MOLECULE_DAMAGE_SMALL_DESC
   <Icon>k__BackingField: {fileID: -769475824557780554, guid: 04fc7ad91bfa3424983d55a9184994b4, type: 3}
-  <MaxLevel>k__BackingField: 1
+  <MaxLevel>k__BackingField: 3
   <CostCurrency>k__BackingField: 0
-  <CostsByLevel>k__BackingField: 0c000000
+  <CostsByLevel>k__BackingField: 0e0000002d000000a0000000
   <Prerequisites>k__BackingField: 1f000000
   <GraphPosition>k__BackingField: {x: 240, y: -720}
   <BonusPerLevel>k__BackingField: 1

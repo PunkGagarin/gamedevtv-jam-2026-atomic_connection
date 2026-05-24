@@ -17,9 +17,9 @@ MonoBehaviour:
   <Title>k__BackingField: TALENT_CORE_HEALTH_LARGE_TITLE
   <Description>k__BackingField: TALENT_CORE_HEALTH_LARGE_DESC
   <Icon>k__BackingField: {fileID: -902086654454736923, guid: 551e839c419807b488c4af9ed4bf5ee5, type: 3}
-  <MaxLevel>k__BackingField: 1
-  <CostCurrency>k__BackingField: 0
-  <CostsByLevel>k__BackingField: 0e000000
+  <MaxLevel>k__BackingField: 2
+  <CostCurrency>k__BackingField: 2
+  <CostsByLevel>k__BackingField: 0800000018000000
   <Prerequisites>k__BackingField: 00000000
   <GraphPosition>k__BackingField: {x: -0, y: 240}
   <BonusPerLevel>k__BackingField: 10

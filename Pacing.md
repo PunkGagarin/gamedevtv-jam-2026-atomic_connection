@@ -1,227 +1,177 @@
 # Пейсинг прогрессии
 
-| Правило | Значение |
-|---|---|
-| Назначение файла | Связать спавн уровней, валюту и доступные апгрейды |
-| Спавн-источник | `Spawn.md` |
-| Конфиг-источники | `LevelCatalogConfig`, `EnemySpawnerConfig`, `BattleMoleculeConfig`, `CurrencyConfig`, `CurrencyPickupConfig`, `EnemyKillRewardConfig`, `TalentConfig` + `TalentDefinition` assets |
-| Когда обновлять | При изменении спавна, наград врагов, наград уровней, стартовых валют, цен или prerequisites апгрейдов |
-| Цель апгрейд-пейсинга | Около 1 meaningful unlock после каждого first-clear уровня; 2 покупки допустимы как catch-up, если игрок копил |
-| Старт угроз | Враги стартуют после 3-секундной задержки активной игры; таблицы волн отсчитываются после этой задержки |
-| Learning arc Mass | Level 4 показывает проблему массовиков без SwarmMolecule; после Level 4 открывается SwarmMolecule; Level 5 проверяет решение |
-| Learning arc Ranged | Level 6 добавляет дальнобойного врага как проверку HP/мембраны |
+`Pacing.md` - целевое состояние кампании, экономики и дерева талантов. Конкретные волны живут в [Spawn.md](Spawn.md), численные конфиги - в [AtomicConnection_BALANCE.md](AtomicConnection_BALANCE.md).
 
-## Расширенная кампания на 10 уровней
+## Коротко
 
-Это дизайн-черновик для расширения кампании. Он не заменяет текущие `LevelDefinition` и таблицы `Spawn.md`, пока уровни 7-10 не будут заведены в конфигах.
+- Кампания состоит из 10 уровней.
+- `Level01-Level02` остаются входом; `Level03-Level10` задают основную кривую кампании.
+- Кампания должна проходиться по target path без обязательного фарма, но полное закрытие дерева допускает 1-3 фарм-забега после `Level10`.
+- Elite дает `5 DNA + 1 Radical`.
+- Radicals используются как полноценная вторая валюта: 10 radical-талантов, первый spend после `Level4`.
+- Поздние DNA-таланты являются фарм-синками, потому что к `Level10` игрок получает тысячи DNA.
+- AutoLoad-таланты исключены из активного дерева.
 
-Базовый ритм обучения: сначала показать проблему, затем дать или подтолкнуть инструмент, затем проверить инструмент в смешанной ситуации. Новые враги не должны появляться один раз и пропадать: после знакомства они становятся частью словаря уровней.
+## Уровни
 
-### Роли уровней
+| Level | Роль | Standard | Mass | Elite | Ranged |
+|---:|---|---:|---:|---:|---:|
+| 1 | Входной | уже настроен | 0 | 0 | 0 |
+| 2 | Связи / усиленные Standard | уже настроен | 0 | 0 | 0 |
+| 3 | Elite intro | 9 | 0 | 1 | 0 |
+| 4 | Elite закрепление | 10 | 0 | 3 | 0 |
+| 5 | Mass preview | 14 | 6 | 1 | 0 |
+| 6 | Mass problem | 12 | 20 | 2 | 0 |
+| 7 | Swarm payoff | 14 | 25 | 2 | 0 |
+| 8 | Ranged intro | 12 | 10 | 1 | 5 |
+| 9 | Mixed exam | 18 | 20 | 4 | 10 |
+| 10 | Final exam | 22 | 45 | 8 | 18 |
 
-| Level | Роль | Основная проверка | Контент/апгрейдный толчок |
-|---|---|---|---|
-| 1 | Входной уровень | Ритм ядра, заряд молекулы, выстрел, первый boss | Крепкое ядро, Лёгкая игла, ранний comfort |
-| 2 | Связи между врагами | Приоритеты, чуть более крепкие цели, первый pressure spike | Needle-урон, Автоклик, Боевой прицел Needle |
-| 3 | Первый damage-check | Мягкое знакомство с Elite: толстая цель среди обычных | Жало открывается после этой проблемы как первый сильный single-target ответ |
-| 4 | Закрепление Elite | Elite уже не сюрприз, а регулярная priority-цель | Урон I, пробитие/темп, single-target ветка должна ощущаться полезной |
-| 5 | Прогрев к Mass | Малые пачки Mass рядом с обычными и одной Elite-целью | Игрок чувствует, что одиночный урон скоро перестанет хватать |
-| 6 | Mass как проблема | Толпа становится главной угрозой, но без hard-wall | SwarmMolecule становится желанным ответом |
-| 7 | Swarm payoff | Массовики чистятся новым инструментом, Elite держит focus-задачу | Урон Swarm I, Swarm Volley/Reach |
-| 8 | Ranged intro | Дальнобойный враг давит по ядру, пока игрок занят привычными целями | MembraneMolecule, HP/защитная ветка |
-| 9 | Mixed exam | Ranged + Mass + Elite требуют переключения молекул и приоритетов | Mid-tier апгрейды, радикальная экономика, усиление защиты |
-| 10 | Capstone | Все изученные угрозы в финальной композиции и сильный boss | Финал кампании, replay/endless/prestige при наличии времени |
+Правила:
+- Boss есть на каждом уровне, но валюту не дает.
+- `Level5` mass - одна пачка из 6.
+- `Level8` mass - две пачки по 5.
+- `Level10` намеренно плотнее остальных уровней.
 
-### Cadence врагов
+## Экономика
 
-| Тип | Когда вводится | Как повторяется |
-|---|---|---|
-| Standard | Level 1 | Базовый ритм всех уровней |
-| Связанные/усиленные Standard | Level 2 | Возвращаются как фон давления и проверка пробития |
-| Elite | Level 3 мягко, Level 4 полноценно | После Level 4 появляется каждые 1-2 уровня как priority-цель: в Level 5 рядом с первыми Mass, в Level 7 рядом со Swarm-payoff, в Level 9-10 как часть mixed exam |
-| Mass | Level 5 мягко, Level 6 полноценно | После Level 6 возвращается часто, но плотность зависит от того, проверяем ли Swarm или другой слой |
-| Ranged | Level 8 | После знакомства возвращается в Level 9-10, но сначала малым количеством, чтобы не перебивать чтение поля |
-| Boss | Каждый уровень | Отражает главную тему уровня: damage-check boss после Elite, плотный boss после Mass, защищённый/дальний pressure boss ближе к финалу |
+Модель прохождения: 3 неудачных попытки + 1 успешная. Доход с врагов считается как:
 
-### Правило для Elite
+```text
+AttemptMultiplier = 2.65
+30% + 55% + 80% + 100% = 2.65x
+```
 
-Elite не должна быть "уровнем 3-4 и потом забыли". После введения она становится регулярной проверкой фокуса:
+Базовые награды:
 
-- Level 3: один мягкий Elite-момент, игрок впервые видит толстую цель.
-- Level 4: Elite закрепляется как цель, которую нельзя игнорировать.
-- Level 5: Elite появляется вместе с первыми Mass, чтобы игрок выбирал между зачисткой пачки и фокусом.
-- Level 6: Elite можно убрать или оставить в малом количестве, если Mass-проблема должна читаться максимально чисто.
-- Level 7: Elite возвращается как якорь single-target фокуса на фоне Swarm-payoff.
-- Level 8: Elite используется осторожно, потому что Ranged сам по себе новый слой.
-- Level 9-10: Elite участвует в mixed exam как регулярная priority-цель.
-
-### Экономика расширенной кампании
-
-Цель экономики: после каждого first-clear игрок должен понимать, какую новую проблему он только увидел и какой апгрейд является естественным ответом. Радикалы вводятся как вторая валюта через Elite: сначала это редкая гарантированная награда за priority-цель, затем игрок может открыть талант, который начинает давать радикалы с обычных врагов шансом.
-
-Техническая пометка: `EnemyKillRewardConfig` поддерживает фильтр reward-rule по `EnemyId` и `FixedAmount`, поэтому гарантированный "только Elite +1 радикал" живёт отдельным правилом поверх базовой DNA-награды.
-
-| Правило | Значение |
-|---|---|
-| Базовая валюта | DNA с каждого не-босса по `EnemyDnaReward` |
-| Вторая валюта до таланта | `+1` радикал за каждого убитого Elite |
-| Вторая валюта после таланта | `RadicalDropChance` добавляет шанс `+1` радикала с любого не-босса |
-| Boss reward | Не даёт валюту, завершает уровень |
-| Роль радикалов | Mid-tier покупки: большой урон, reach/дальность, critical/economy-ветки |
-| Важное ограничение | Радикалы не должны быть обязательны для прохождения сразу после первого появления; первая радикальная покупка должна становиться реальной примерно после 2-4 Elite kills |
-
-#### Целевой доход без учёта трат
-
-Таблица ниже задаёт gross-ориентир для будущей настройки `LevelDefinition`. Фактическая сумма у игрока будет ниже, если он тратит валюту между уровнями.
-
-| Level | Роль | Состав до boss | Perfect DNA | Perfect радикалы | First-clear изотопы | Комментарий |
-|---|---|---|---:|---:|---:|---|
-| 1 | Входной | Только Standard | 8-9 | 0 | 1 | Первый комфортный апгрейд |
-| 2 | Связи/усиленные Standard | Standard + усиленные Standard | 11-12 | 0 | 1 | Подводит к первому урону/темпу |
-| 3 | Elite intro | `9 Standard + 1 Elite` | 11 | 1 | 1 | Первый радикал как тизер второй валюты |
-| 4 | Elite закрепление | `10 Standard + 2 Elite` | 14 | 2 | 1 | Радикалы уже видны, но ещё не ломают дерево |
-| 5 | Mass preview | `11 Standard + 1 Elite + 10 Mass` | 23 | 1 | 1 | Толпа появляется, Elite удерживает focus-задачу |
-| 6 | Mass problem | `10 Standard + 2 Elite + 20 Mass` | 34 | 2 | 1 | После уровня игрок близок к первой радикальной покупке |
-| 7 | Swarm payoff | `8 Standard + 2 Elite + 25 Mass` | 37 | 2 | 1 | Swarm должен ощущаться ответом, Elite требует Stinger/focus |
-| 8 | Ranged intro | `9 Standard + 1 Elite + 10 Mass + 2 Ranged` | 23 | 1 | 1 | Новый слой защиты, плотность ниже ради читаемости |
-| 9 | Mixed exam | `8 Standard + 2 Elite + 20 Mass + 3 Ranged` | 35 | 2 | 1 | Проверка переключения приоритетов |
-| 10 | Capstone | `10 Standard + 3 Elite + 20 Mass + 3 Ranged` | 39 | 3 | 1 | Финальная композиция всех изученных угроз |
-
-#### Накопленный gross-доход
-
-| После | Perfect DNA | Perfect радикалы | First-clear изотопы | Что игрок должен рассматривать |
-|---|---:|---:|---:|---|
-| Level 1 | 8-9 | 0 | 1 | Крепкое ядро, Лёгкая игла, Автоклик или Needle aim/comfort |
-| Level 2 | 19-21 | 0 | 2 | Урон иглы, темп кликов/заряда, подготовка к Elite |
-| Level 3 | 30-32 | 1 | 3 | Жало/Stinger как ответ на толстую цель, первый focus-путь |
-| Level 4 | 44-46 | 3 | 4 | Урон Stinger, пробитие, tempo; радикалы копятся на первую mid-tier покупку |
-| Level 5 | 67-69 | 4 | 5 | Вторая молекула/Swarm становятся желанными, но игрок ещё может дотянуть single-target билдом |
-| Level 6 | 101-103 | 6 | 6 | Первая радикальная покупка становится доступной: economy chance, critical reward или Swarm reach |
-| Level 7 | 138-140 | 8 | 7 | Swarm upgrades + single-target upgrades; игрок выбирает специализацию |
-| Level 8 | 161-163 | 9 | 8 | Membrane/HP/defense после Ranged intro |
-| Level 9 | 196-198 | 11 | 9 | Mid-tier смешанные апгрейды перед финалом |
-| Level 10 | 235-237 | 14 | 10 | Финальный бюджет, replay/endless/prestige при наличии следующего слоя |
-
-#### Покупки после стадий
-
-| После уровня | Желательная покупка | Зачем |
-|---|---|---|
-| 1 | Дешёвый comfort или survivability | Игрок снижает трение базового цикла, не решает боевую игру заранее |
-| 2 | Урон/темп Needle, подготовка к Stinger | Следующий уровень впервые покажет толстую цель |
-| 3 | Stinger/Жало или первый single-target апгрейд | Elite объясняет, зачем нужен focus-инструмент |
-| 4 | Урон Stinger, пробитие или charge reduction | Elite становится регулярной угрозой, игрок закрепляет решение |
-| 5 | Подготовка к Swarm/второй молекуле | Mass уже показан как будущая проблема |
-| 6 | Swarm или первая радикальная покупка | Толпа стала главным вопросом, радикалы впервые можно потратить осмысленно |
-| 7 | Swarm damage/volley/reach или Stinger focus | У игрока появляется выбор: шире чистить или быстрее снимать priority-цели |
-| 8 | Membrane/HP/defense | Ranged объясняет ценность защиты и перехвата урона |
-| 9 | Смешанные mid-tier апгрейды | Подготовка к финальному экзамену |
-
-## Расчет
-
-| Метрика | Правило |
-|---|---|
-| Победа | Boss убит |
-| Perfect | Все враги до boss убиты + boss убит |
-| Expected | Около 80% не-боссовых врагов убито + boss убит |
-| Minimum | Около 60% не-боссовых врагов убито + boss убит |
-| Изотопы с врагов | Не выпадают; first-clear награда уровня |
-| Радикалы с врагов | `+1` с каждого убитого Elite; остальные не-боссы не дают радикалы до покупки talent chance |
-
-## Валюта
-
-| Значение | Сейчас |
+| Источник | Награда |
 |---|---:|
-| Стартовая DNA | 0 |
-| Стартовые радикалы | 0 |
-| Стартовые изотопы | 0 |
-| First-clear награда за уровень | 1 изотоп |
-| Standard reward | 1 DNA |
-| Mass reward | 1 DNA |
-| Elite reward | 2 DNA |
-| Elite radical reward | 1 радикал |
-| Ranged reward | 1 DNA |
-| Boss reward | нет; завершает уровень |
-| ДНК-след | +1 DNA с каждого не-боссового врага |
-| Избыточная ДНК | каждая подобранная DNA приносит еще +1 DNA за уровень |
-| Радикальный след | +5% шанс +1 радикал с не-боссового врага за уровень; доступен через ветку Широкого сбора |
-| Радикальный резонанс | каждый подобранный радикал приносит еще +1 радикал за уровень |
+| Standard | `1 DNA` |
+| Mass | `1 DNA` |
+| Ranged | `1 DNA` |
+| Elite | `5 DNA + 1 Radical` |
+| Boss | `0` |
+| First-clear любого уровня | `+1 Isotope` |
 
-## Доход По Уровням
+Формула:
 
-| Level | Длина | Враги до boss | Perfect DNA | Expected DNA | Minimum DNA | First-clear изотоп |
-|---|---:|---:|---:|---:|---:|---:|
-| 1 | 30 сек | 9 | 9 | 7 | 5 | 1 |
-| 2 | 35 сек | 11 | 11 | 9 | 7 | 1 |
-| 3 | 40 сек | 12 | 14 | 11 | 8 | 1 |
-| 4 | 40 сек | 28 | 30 | 24 | 18 | 1 |
-| 5 | 40 сек | 34 | 36 | 29 | 22 | 1 |
-| 6 | 40 сек | 35 | 37 | 30 | 22 | 1 |
+```text
+NonBossCount = Standard + Mass + Elite + Ranged
 
-## Накопленный Доход
+RawDnaDrops =
+  Standard + Mass + Ranged + Elite * 5
 
-| После | Perfect DNA | Expected DNA | Minimum DNA | Изотопы first-clear |
-|---|---:|---:|---:|---:|
-| Level 1 | 9 | 7 | 5 | 1 |
-| Level 2 | 20 | 16 | 12 | 2 |
-| Level 3 | 34 | 27 | 20 | 3 |
-| Level 4 | 64 | 51 | 38 | 4 |
-| Level 5 | 100 | 80 | 60 | 5 |
-| Level 6 | 137 | 110 | 82 | 6 |
+DnaKillBonus =
+  NonBossCount * DnaFlatKillRewardLevel
 
-## Апгрейды
+DnaCollected =
+  (RawDnaDrops + DnaKillBonus) * (1 + DnaPickupAmountBonusLevel)
 
-| Апгрейд | Стоимость | Требует | Pacing-комментарий |
-|---|---:|---|---|
-| Крепкое ядро | 2 / 4 / 6 DNA | нет | Центральная нода; дешевый safety/gateway |
-| Автоклик | 1 изотоп | Крепкое ядро | Comfort unlock; снижает ручную нагрузку, но требует наведения на ядро |
-| Быстрая сборка | 7 DNA | Крепкое ядро | Early economy/comfort; меньше кликов для снаряда |
-| Широкий сбор | 6 / 12 / 20 / 30 DNA | Быстрая сборка | Comfort/economy-цепочка; легче собирать разбросанные DNA под давлением |
-| Ускоренный поток | 10 / 18 / 28 DNA | Быстрая сборка | Comfort/tempo-цепочка; быстрее доставляет атомы в активную боевую молекулу |
-| Прочное ядро | 14 DNA | Крепкое ядро | Большой HP breakpoint, вынесен отдельной нодой |
-| Урон иглы | 15 / 15 / 15 / 15 / 15 DNA | Крепкое ядро | Длинная стартовая ветка NeedleMolecule; каждый уровень дает простой damage breakpoint |
-| Лёгкая игла | 3 / 20 DNA | Крепкое ядро | Ранний tempo-breakpoint NeedleMolecule; второй уровень доводит заряд до минимума |
-| Боевой прицел | 1 изотоп | Автоклик | NeedleMolecule показывает направление будущего выстрела; второй значимый стартовый изотопный шаг |
-| Жало | 1 изотоп | Боевой прицел | Unlock более сильной одиночной молекулы после знакомства с Elite на Level 3 |
-| Урон I | 12 DNA | Жало | Первый боевой breakpoint StingerMolecule |
-| Быстрое жало | 1 изотоп | Жало | Уменьшает заряд StingerMolecule после её открытия |
-| Прицел жала | 1 изотоп | Урон I | Utility unlock ветки StingerMolecule |
-| Пробитие | 1 изотоп | Урон I | Подготовка к плотным линиям врагов |
-| Точный укол | 16 / 28 / 44 DNA | Урон I | Вероятностный damage breakpoint StingerMolecule без нового weapon pattern |
-| Нуклеотидный выброс | 6 / 10 / 16 радикалов | Точный укол | Economy-ветка StingerMolecule; повышает доход только при критических убийствах |
-| Урон II | 8 радикалов | Пробитие | Большой damage breakpoint, не идет сразу после Урон I |
-| ДНК-след | 25 / 50 / 100 / 200 / 500 DNA | Широкий сбор | Первый flat-бонус к доходу DNA |
-| Избыточная ДНК | 4 / 8 радикалов | ДНК-след | Pickup-бонус к доходу DNA, покупается уже через новую валюту |
-| Радикальный след | 24 / 36 / 52 DNA | Широкий сбор | Ускоряет радикальную экономику через chance-дроп без hard-lock по уровню |
-| Радикальный резонанс | 6 / 10 радикалов | Радикальный след | Умножает уже выпавшие радикалы при подборе, поэтому усиливает доход без изменения частоты дропа |
-| SwarmMolecule | 1 изотоп | Жало | Ответ на проблему массовиков из Level 4 |
-| Урон Swarm I | 16 DNA | SwarmMolecule | Первый damage breakpoint SwarmMolecule |
-| Swarm Volley | 24 DNA | SwarmMolecule | Делает Swarm шире: больше лучей и больше угол залпа |
-| Swarm Reach | 6 радикалов | SwarmMolecule | Увеличивает дальность массовой зачистки |
-| Урон Swarm II | 10 радикалов | Урон Swarm I | Небольшой AoE damage breakpoint; Swarm остается слабее Stinger по одиночной цели |
-| MembraneMolecule | 1 изотоп | SwarmMolecule | Финальная защитная ветка после молекулы против толпы |
-| Легкая мембрана | 12 ДНК | MembraneMolecule | Уменьшает цену включения мембраны |
-| Долгая мембрана | 16 ДНК | MembraneMolecule | Увеличивает длительность мембраны |
-| Плотная мембрана | 18 / 30 / 44 ДНК | MembraneMolecule | Позволяет мембране пережить больше контактов до разрушения |
-| Быстрая рекристаллизация | 16 / 28 / 44 ДНК | MembraneMolecule | Сокращает окно без мембраны после окончания или разрушения |
+RawRadicalDrops =
+  Elite
 
-## Кривая
+RadicalChanceDrops =
+  NonBossCount * RadicalDropChance
 
-| Этап | Игрок обычно имеет | Следующая проверка |
-|---|---|---|
-| После Level 1 | 5-9 DNA, 1 изотоп | Крепкое ядро + Лёгкая игла или Автоклик; игрок выбирает между ускорением Needle и comfort-цепочкой |
-| После Level 2 | 12-20 суммарных DNA, 2 изотопа | Боевой прицел Needle или первый урон Needle; Stinger ещё закрыт следующей изотопной ступенью |
-| После Level 3 | 20-34 суммарных DNA, первый радикал с Elite, 3 изотопа | Жало открывается как ответ на Elite; дальше игрок выбирает урон, пробитие или темп |
-| После Level 4 | 38-64 суммарных DNA, 4 изотопа | SwarmMolecule открывается как ответ на впервые показанную Mass-проблему |
-| После Level 5 | 60-100 суммарных DNA, 5 изотопов | Mass-проверка закреплена; MembraneMolecule становится финальным защитным unlock перед дальнобойным давлением |
-| После Level 6 | 82-137 суммарных DNA, 6 изотопов | Дальше игрок вкладывается в L2/L3 апгрейды за DNA, радикальные mid-tier таланты и мембранные улучшения |
+RadicalsCollected =
+  (RawRadicalDrops + RadicalChanceDrops) * (1 + RadicalPickupAmountBonusLevel)
 
-## Риски
+ExpectedLevelDna =
+  floor(AttemptMultiplier * DnaCollected)
 
-| Риск | Почему важно | Возможная правка |
-|---|---|---|
-| Level 4 показывает Mass без SwarmMolecule | Игрок должен увидеть проблему, но не упереться в hard-wall | Держать Mass-волны Level 4 умеренными; проверять ручным прохождением без SwarmMolecule |
-| Stinger закрыт балансом, а не отдельным level-gate | Игрок может делать catch-up, если копил изотопы, но обычная цепочка требует 3 изотопа | Держать AutoClick -> Боевой прицел -> Жало как обязательную изотопную лестницу |
-| Connection-поток слишком быстрый, медленный или незаметный | Новая основная логистика должна читаться сразу | Проверить скорость атома, яркость активной линии и понятность первого подключения |
-| Враги после замедления теряют давление | Connection-ритм должен стать читаемым, но не превращать уровни в ожидание | Проверить ранние уровни и mixed-сцены после снижения enemy move speed до 70% |
-| Level 5 заметно плотнее Level 4 | Это первый mixed exam со SwarmMolecule | Проверить, что веер чистит стаи, а Elite/Boss всё еще требуют Stinger-фокуса |
-| Level 6 добавляет Ranged поверх знакомого давления | Это первая проверка HP/мембраны без перегруза Level 5 новым типом врага | Проверить, что ranged стабильно стреляет после остановки и что мембрана поглощает projectile-урон |
+ExpectedLevelRadicals =
+  floor(AttemptMultiplier * RadicalsCollected)
+```
+
+Экономические таланты применяются со следующего уровня после покупки:
+
+| Talent | Целевой момент |
+|---|---|
+| `RadicalDropChance 1` | после `Level4` |
+| `RadicalDropChance 2` | после `Level5` |
+| `RadicalPickupAmountBonus 1` | после `Level6` |
+| `RadicalPickupAmountBonus 2` | после `Level7` |
+| `DnaPickupAmountBonus 1` | после `Level8` |
+| `DnaPickupAmountBonus 2` | после `Level9` |
+
+Ожидаемый first-clear итог при текущих `Level01-Level02` и целевой экономике `Level03-Level10`: примерно `6.3k-6.5k DNA` и `360-390 Radicals`. Полная цена дерева выше first-clear дохода, поэтому остаток закрывается фармом.
+
+## Изотопы
+
+Всего в активном дереве тратится ровно 9 изотопов. Кампания при first-clear всех 10 уровней выдает 10 изотопов; финальный уровень не имеет отдельной валютной логики, а отличается только финальным экраном.
+
+| Talent | Isotopes |
+|---|---:|
+| `AutoClick` | 1 |
+| `NeedleMoleculeAim` | 1 |
+| `StingerMolecule` | 1 |
+| `SwarmMolecule` | 1 |
+| `SwarmMoleculeShotCount 1` | 1 |
+| `SwarmMoleculeShotCount 2` | 1 |
+| `MembraneMolecule` | 1 |
+| `MembraneMoleculeDuration` | 2 |
+
+Не стоят изотопы:
+- `StingerMoleculeAim`
+- `StingerMoleculePierce`
+- `StingerMoleculeChargeReduction`
+
+## DNA-таланты
+
+| Talent | MaxLevel | CostsByLevel |
+|---|---:|---|
+| `CoreHealthSmall` | 5 | `2 / 8 / 25 / 90 / 240` |
+| `CoreClickReduction` | 4 | `8 / 30 / 120 / 420` |
+| `NeedleMoleculeDamage` | 5 | `8 / 25 / 80 / 250 / 750` |
+| `NeedleMoleculeChargeReduction` | 2 | `4 / 80` |
+| `StingerMoleculeDamageSmall` | 3 | `14 / 45 / 160` |
+| `StingerMoleculeAim` | 1 | `15` |
+| `StingerMoleculeCriticalChance` | 3 | `30 / 110 / 420` |
+| `SwarmMoleculeDamageSmall` | 4 | `30 / 100 / 360 / 1100` |
+| `CurrencyPickupArea` | 4 | `20 / 80 / 300 / 900` |
+| `ConnectionAtomSpeed` | 3 | `20 / 80 / 280` |
+| `DnaFlatKillReward` | 5 | `40 / 150 / 500 / 1300 / 3000` |
+| `RadicalDropChance` | 3 | `60 / 220 / 700` |
+| `MembraneMoleculeChargeReduction` | 1 | `350` |
+| `MembraneMoleculeCooldownReduction` | 3 | `250 / 750 / 1800` |
+
+## Radical-таланты
+
+| Talent | MaxLevel | CostsByLevel |
+|---|---:|---|
+| `StingerMoleculePierce` | 2 | `4 / 10` |
+| `StingerMoleculeCriticalReward` | 3 | `5 / 15 / 45` |
+| `SwarmMoleculeAttackRange` | 2 | `5 / 16` |
+| `CoreHealthLarge` | 2 | `8 / 24` |
+| `RadicalPickupAmountBonus` | 2 | `10 / 28` |
+| `DnaPickupAmountBonus` | 2 | `12 / 40` |
+| `StingerMoleculeChargeReduction` | 2 | `9 / 30` |
+| `StingerMoleculeDamageLarge` | 3 | `10 / 26 / 80` |
+| `SwarmMoleculeDamageLarge` | 2 | `8 / 26` |
+| `MembraneMoleculeIntegrity` | 3 | `8 / 30 / 100` |
+
+## Таймлайн покупок
+
+| После | Целевой bundle |
+|---:|---|
+| 1 | `CoreHealthSmall 1`, `NeedleMoleculeChargeReduction 1`, `NeedleMoleculeDamage 1`, `AutoClick` |
+| 2 | `NeedleMoleculeAim`, `CoreClickReduction 1`, `NeedleMoleculeDamage 2`, `CoreHealthSmall 2` |
+| 3 | `StingerMolecule`, `StingerMoleculeDamageSmall 1`, `StingerMoleculeAim`, `DnaFlatKillReward 1` |
+| 4 | `StingerMoleculePierce 1`, `StingerMoleculeCriticalChance 1`, `DnaFlatKillReward 2`, `RadicalDropChance 1`, `StingerMoleculeCriticalReward 1` |
+| 5 | `SwarmMolecule`, `SwarmMoleculeDamageSmall 1`, `CurrencyPickupArea 1`, `ConnectionAtomSpeed 1`, `RadicalDropChance 2`, `SwarmMoleculeAttackRange 1` |
+| 6 | `SwarmMoleculeShotCount 1`, `SwarmMoleculeDamageSmall 2`, `StingerMoleculePierce 2`, `RadicalPickupAmountBonus 1` |
+| 7 | `SwarmMoleculeShotCount 2`, `MembraneMolecule`, `MembraneMoleculeChargeReduction`, `RadicalPickupAmountBonus 2`, `CoreHealthLarge 1`, `RadicalDropChance 3` |
+| 8 | `CoreHealthLarge 2`, `DnaFlatKillReward 3`, `CurrencyPickupArea 2`, `ConnectionAtomSpeed 2`, `StingerMoleculeCriticalChance 2`, `StingerMoleculeDamageSmall 2-3`, `DnaPickupAmountBonus 1` |
+| 9 | `MembraneMoleculeDuration`, `DnaPickupAmountBonus 2`, `DnaFlatKillReward 4`, `StingerMoleculeChargeReduction 1-2`, `MembraneMoleculeIntegrity 1`, `MembraneMoleculeCooldownReduction 1`, `StingerMoleculeDamageLarge 1`, `SwarmMoleculeDamageLarge 1` |
+| 10 first-clear | `DnaFlatKillReward 5`, `CurrencyPickupArea 3-4`, `ConnectionAtomSpeed 3`, `CoreClickReduction 2-3`, `NeedleMoleculeDamage 3-4`, `StingerMoleculeCriticalChance 3`, `SwarmMoleculeDamageSmall 3-4`, `StingerMoleculeDamageLarge 2`, `SwarmMoleculeDamageLarge 2` |
+| 10 фарм | Остаток дерева: `CoreHealthSmall 3-5`, `CoreClickReduction 4`, `NeedleMoleculeDamage 5`, `NeedleMoleculeChargeReduction 2`, `MembraneMoleculeCooldownReduction 2-3`, `MembraneMoleculeIntegrity 2-3`, `StingerMoleculeDamageLarge 3`, `StingerMoleculeCriticalReward 2-3`, оставшиеся late DNA-грейды |
+
+## Проверка
+
+- Суммарная isotope-стоимость активного дерева равна `9`.
+- Radical-талантов в активном дереве ровно `10`.
+- Первый radical-spend доступен после `Level4`.
+- `StingerMoleculeAim`, `StingerMoleculePierce`, `StingerMoleculeChargeReduction` не стоят изотопы.
+- AutoLoad-таланты не участвуют в активном `TalentConfig`.
+- Target path доступен без фарма до прохождения `Level10`.
+- Full tree требует примерно `1-3` фарм-забега после `Level10`.

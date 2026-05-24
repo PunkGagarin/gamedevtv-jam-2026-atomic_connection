@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using _Project.Scripts.Localization;
 
 namespace _Project.Scripts.Gameplay.Tutorial
 {
@@ -17,6 +18,8 @@ namespace _Project.Scripts.Gameplay.Tutorial
         [field: SerializeField] private Image TargetIconImage { get; set; }
         [field: SerializeField] private RectTransform DragPath { get; set; }
         [field: SerializeField] private Image DragPathImage { get; set; }
+        [field: SerializeField] private RectTransform TopHint { get; set; }
+        [field: SerializeField] private ToLocalize TopHintLocalize { get; set; }
 
         private TutorialHintMode _hintMode;
         private float _hintTime;
@@ -44,6 +47,7 @@ namespace _Project.Scripts.Gameplay.Tutorial
             SetCursorPressed(false);
             SetCursorScreenPosition(screenPosition);
             SetTargetIconVisible(false);
+            SetTopHintVisible(false);
         }
 
         public void ShowDragHint(
@@ -64,7 +68,28 @@ namespace _Project.Scripts.Gameplay.Tutorial
             SetDragPathVisible(true);
             SetDragPath(fromScreenPosition, toScreenPosition);
             SetTargetIcon(targetIconScreenPosition, visual);
+            SetTopHintVisible(false);
             UpdateDragCursor(fromScreenPosition, toScreenPosition);
+        }
+
+        public void ShowActiveMoleculeHint(
+            Vector2 screenPosition,
+            GameplayTutorialConfig config,
+            GameplayTutorialStepVisual visual,
+            string textKey)
+        {
+            _config = config;
+            if (_hintMode != TutorialHintMode.Pulse)
+                _hintTime = 0f;
+
+            _hintMode = TutorialHintMode.Pulse;
+            ApplyVisual(visual, false);
+            SetVisible(true);
+            SetDragPathVisible(false);
+            SetCursorPressed(false);
+            SetCursorScreenPosition(screenPosition);
+            SetTargetIconVisible(false);
+            SetTopHint(textKey);
         }
 
         public void Tick(float deltaTime)
@@ -88,6 +113,7 @@ namespace _Project.Scripts.Gameplay.Tutorial
             SetVisible(false);
             SetDragPathVisible(false);
             SetTargetIconVisible(false);
+            SetTopHintVisible(false);
         }
 
         private void UpdateDragCursor(Vector2 fromScreenPosition, Vector2 toScreenPosition)
@@ -213,6 +239,20 @@ namespace _Project.Scripts.Gameplay.Tutorial
         {
             if (TargetIcon != null)
                 TargetIcon.gameObject.SetActive(isVisible);
+        }
+
+        private void SetTopHint(string textKey)
+        {
+            SetTopHintVisible(true);
+
+            if (TopHintLocalize != null)
+                TopHintLocalize.SetKey(textKey);
+        }
+
+        private void SetTopHintVisible(bool isVisible)
+        {
+            if (TopHint != null)
+                TopHint.gameObject.SetActive(isVisible);
         }
 
         private enum TutorialHintMode

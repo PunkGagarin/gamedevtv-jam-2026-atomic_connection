@@ -40,8 +40,8 @@
   <text key="TALENT_NODE_MAX">МАКС</text>
   <text key="TALENT_CORE_HEALTH_SMALL_TITLE">Крепкое ядро</text>
   <text key="TALENT_CORE_HEALTH_SMALL_DESC">Увеличивает здоровье ядра на 1.</text>
-  <text key="TALENT_AUTO_CLICK_TITLE">Автогенерация</text>
-  <text key="TALENT_AUTO_CLICK_DESC">Ядро автоматически создаёт заряд без клика при наведении курсора на ядро.</text>
+  <text key="TALENT_AUTO_CLICK_TITLE">Автоклик</text>
+  <text key="TALENT_AUTO_CLICK_DESC">Ядро автоматически добавляет клик генерации при наведении курсора на ядро.</text>
   <text key="TALENT_CORE_CLICK_REDUCTION_TITLE">Быстрая сборка</text>
   <text key="TALENT_CORE_CLICK_REDUCTION_DESC">Уменьшает время восстановления клика ядра.</text>
   <text key="TALENT_CORE_HEALTH_LARGE_TITLE">Прочное ядро</text>
@@ -52,11 +52,13 @@
   <text key="TALENT_NEEDLE_MOLECULE_DAMAGE_DESC">Увеличивает урон NeedleMolecule на 1 за уровень.</text>
   <text key="TALENT_NEEDLE_MOLECULE_CHARGE_REDUCTION_TITLE">Лёгкая игла</text>
   <text key="TALENT_NEEDLE_MOLECULE_CHARGE_REDUCTION_DESC">NeedleMolecule требует на 1 атом меньше для полного заряда за уровень.</text>
+  <text key="TALENT_NEEDLE_MOLECULE_AIM_TITLE">Боевой прицел</text>
+  <text key="TALENT_NEEDLE_MOLECULE_AIM_DESC">Показывает направление выстрела NeedleMolecule.</text>
   <text key="TALENT_STINGER_MOLECULE_DAMAGE_SMALL_TITLE">Урон I</text>
   <text key="TALENT_STINGER_MOLECULE_DAMAGE_SMALL_DESC">Увеличивает урон StingerMolecule на 1.</text>
   <text key="TALENT_STINGER_MOLECULE_CHARGE_REDUCTION_TITLE">Быстрое жало</text>
   <text key="TALENT_STINGER_MOLECULE_CHARGE_REDUCTION_DESC">StingerMolecule требует на 1 атом меньше для полного заряда.</text>
-  <text key="TALENT_STINGER_MOLECULE_AIM_TITLE">Боевой прицел</text>
+  <text key="TALENT_STINGER_MOLECULE_AIM_TITLE">Прицел жала</text>
   <text key="TALENT_STINGER_MOLECULE_AIM_DESC">Показывает направление выстрела StingerMolecule.</text>
   <text key="TALENT_STINGER_MOLECULE_PIERCE_TITLE">Пробитие</text>
   <text key="TALENT_STINGER_MOLECULE_PIERCE_DESC">Выстрел StingerMolecule пробивает первого врага и летит дальше.</text>
@@ -64,8 +66,6 @@
   <text key="TALENT_STINGER_MOLECULE_AUTO_LOAD_DESC">StingerMolecule автоматически получает бесплатные заряды.</text>
   <text key="TALENT_STINGER_MOLECULE_DAMAGE_LARGE_TITLE">Урон II</text>
   <text key="TALENT_STINGER_MOLECULE_DAMAGE_LARGE_DESC">Сильно увеличивает урон StingerMolecule на 10.</text>
-  <text key="TALENT_EXTRA_BATTLE_MOLECULE_TITLE">Вторая молекула</text>
-  <text key="TALENT_EXTRA_BATTLE_MOLECULE_DESC">Разблокирует вторую боевую молекулу.</text>
   <text key="TALENT_MEMBRANE_MOLECULE_TITLE">Мембранная молекула</text>
   <text key="TALENT_MEMBRANE_MOLECULE_DESC">Разблокирует защитную мембранную молекулу.</text>
   <text key="TALENT_MEMBRANE_MOLECULE_CHARGE_REDUCTION_TITLE">Лёгкая мембрана</text>
@@ -104,7 +104,7 @@
   <text key="TALENT_NUCLEOTIDE_EXTRA_DROP_CHANCE_TITLE">Избыточный нуклеоид</text>
   <text key="TALENT_NUCLEOTIDE_EXTRA_DROP_CHANCE_DESC">Даёт 20% шанс получить дополнительный 1 нуклеотид с обычного врага за уровень.</text>
   <text key="TALENT_RADICAL_DROP_CHANCE_TITLE">Радикальный след</text>
-  <text key="TALENT_RADICAL_DROP_CHANCE_DESC">Даёт 20% шанс получить 1 радикал с обычного врага за уровень. Доступно после второго уровня.</text>
+  <text key="TALENT_RADICAL_DROP_CHANCE_DESC">Даёт 20% шанс получить 1 радикал с обычного врага за уровень.</text>
   <text key="TALENT_RADICAL_DROP_CHANCE_LARGE_TITLE">Радикальный резонанс</text>
   <text key="TALENT_RADICAL_DROP_CHANCE_LARGE_DESC">Ещё на 20% повышает шанс получить 1 радикал с обычного врага за уровень.</text>
 </Language>

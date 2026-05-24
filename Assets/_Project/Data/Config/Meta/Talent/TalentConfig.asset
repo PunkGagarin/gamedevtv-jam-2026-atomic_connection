@@ -16,6 +16,7 @@ MonoBehaviour:
   <Talents>k__BackingField:
   - {fileID: 11400000, guid: dba7fdf4bb0d1c71ff0c67f18f045578, type: 2}
   - {fileID: 11400000, guid: 0291001701f8c6fd18aadfd636bd33df, type: 2}
+  - {fileID: 11400000, guid: b4f2d9e95ab84ee3a2bbad6d0c98f3f4, type: 2}
   - {fileID: 11400000, guid: 91da2b7eb0204a7cd85d04d1a572c993, type: 2}
   - {fileID: 11400000, guid: 36ffd0c608ae1946c04d52814ce65618, type: 2}
   - {fileID: 11400000, guid: b132735d77134f60ac33286012116300, type: 2}
@@ -23,7 +24,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6dd152ee35524ccaaf50b1e2763f726f, type: 2}
   - {fileID: 11400000, guid: 9d315e5069b99cac42926917b991603c, type: 2}
   - {fileID: 11400000, guid: c97c3d41530ff1c09c96c022f275d8cf, type: 2}
-  - {fileID: 11400000, guid: 15137eefa3e5bc8ae711a8b12e29460e, type: 2}
   - {fileID: 11400000, guid: 041a9ab44bcffebe8323fa9c74801d27, type: 2}
   - {fileID: 11400000, guid: 46f6378148c4c4ca66044f1a2951d673, type: 2}
   - {fileID: 11400000, guid: 3beec7a3591b5fb9bef910edba278efd, type: 2}

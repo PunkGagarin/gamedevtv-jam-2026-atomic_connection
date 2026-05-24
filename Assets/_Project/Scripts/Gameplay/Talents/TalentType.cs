@@ -9,7 +9,6 @@ namespace _Project.Scripts.Gameplay.Talents
         StingerMoleculeAim = 4,
         StingerMoleculePierce = 5,
         LegacyStingerMoleculeAutoLoad = 6,
-        ExtraBattleMolecule = 7,
         MembraneMolecule = 8,
         MembraneMoleculeChargeReduction = 9,
         MembraneMoleculeDuration = 10,
@@ -32,5 +31,6 @@ namespace _Project.Scripts.Gameplay.Talents
         StingerMolecule = 27,
         NeedleMoleculeDamage = 28,
         NeedleMoleculeChargeReduction = 29,
+        NeedleMoleculeAim = 30,
     }
 }

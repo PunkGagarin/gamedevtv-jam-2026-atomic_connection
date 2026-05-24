@@ -16,7 +16,7 @@ MonoBehaviour:
   <Type>k__BackingField: 23
   <Title>k__BackingField: TALENT_RADICAL_DROP_CHANCE_LARGE_TITLE
   <Description>k__BackingField: TALENT_RADICAL_DROP_CHANCE_LARGE_DESC
-  <Icon>k__BackingField: {fileID: 0}
+  <Icon>k__BackingField: {fileID: 21300000, guid: b8cf7557a718e426b9854ea0e22a4dcd, type: 3}
   <MaxLevel>k__BackingField: 3
   <CostCurrency>k__BackingField: 2
   <CostsByLevel>k__BackingField: 060000000a00000010000000

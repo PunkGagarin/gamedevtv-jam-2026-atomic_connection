@@ -16,7 +16,7 @@ MonoBehaviour:
   <Type>k__BackingField: 28
   <Title>k__BackingField: TALENT_NEEDLE_MOLECULE_DAMAGE_TITLE
   <Description>k__BackingField: TALENT_NEEDLE_MOLECULE_DAMAGE_DESC
-  <Icon>k__BackingField: {fileID: 0}
+  <Icon>k__BackingField: {fileID: 21300000, guid: 2ed045dbe25a49b689caf9471eeec349, type: 3}
   <MaxLevel>k__BackingField: 5
   <CostCurrency>k__BackingField: 0
   <CostsByLevel>k__BackingField: 0a000000140000002800000064000000c8000000

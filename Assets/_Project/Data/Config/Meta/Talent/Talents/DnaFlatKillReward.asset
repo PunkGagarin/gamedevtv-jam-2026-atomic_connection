@@ -16,7 +16,7 @@ MonoBehaviour:
   <Type>k__BackingField: 21
   <Title>k__BackingField: TALENT_DNA_FLAT_KILL_REWARD_TITLE
   <Description>k__BackingField: TALENT_DNA_FLAT_KILL_REWARD_DESC
-  <Icon>k__BackingField: {fileID: 0}
+  <Icon>k__BackingField: {fileID: 21300000, guid: eff0a37881f24d6fbbe3b8f81245624f, type: 3}
   <MaxLevel>k__BackingField: 5
   <CostCurrency>k__BackingField: 0
   <CostsByLevel>k__BackingField: 190000003200000064000000c8000000f4010000

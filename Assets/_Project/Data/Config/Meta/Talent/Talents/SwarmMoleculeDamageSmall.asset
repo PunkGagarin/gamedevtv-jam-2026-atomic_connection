@@ -16,7 +16,7 @@ MonoBehaviour:
   <EffectType>k__BackingField: 13
   <Title>k__BackingField: TALENT_SWARM_MOLECULE_DAMAGE_SMALL_TITLE
   <Description>k__BackingField: TALENT_SWARM_MOLECULE_DAMAGE_SMALL_DESC
-  <Icon>k__BackingField: {fileID: 0}
+  <Icon>k__BackingField: {fileID: -769475824557780554, guid: 04fc7ad91bfa3424983d55a9184994b4, type: 3}
   <MaxLevel>k__BackingField: 1
   <CostCurrency>k__BackingField: 0
   <CostsByLevel>k__BackingField: 10000000

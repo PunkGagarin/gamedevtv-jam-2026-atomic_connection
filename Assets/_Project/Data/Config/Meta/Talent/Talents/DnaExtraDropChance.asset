@@ -16,7 +16,7 @@ MonoBehaviour:
   <EffectType>k__BackingField: 22
   <Title>k__BackingField: TALENT_DNA_EXTRA_DROP_CHANCE_TITLE
   <Description>k__BackingField: TALENT_DNA_EXTRA_DROP_CHANCE_DESC
-  <Icon>k__BackingField: {fileID: 0}
+  <Icon>k__BackingField: {fileID: 21300000, guid: eff0a37881f24d6fbbe3b8f81245624f, type: 3}
   <MaxLevel>k__BackingField: 3
   <CostCurrency>k__BackingField: 2
   <CostsByLevel>k__BackingField: 04000000080000000c000000

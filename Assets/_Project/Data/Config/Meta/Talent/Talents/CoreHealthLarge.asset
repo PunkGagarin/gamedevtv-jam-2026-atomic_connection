@@ -16,7 +16,7 @@ MonoBehaviour:
   <EffectType>k__BackingField: 0
   <Title>k__BackingField: TALENT_CORE_HEALTH_LARGE_TITLE
   <Description>k__BackingField: TALENT_CORE_HEALTH_LARGE_DESC
-  <Icon>k__BackingField: {fileID: 0}
+  <Icon>k__BackingField: {fileID: -902086654454736923, guid: 551e839c419807b488c4af9ed4bf5ee5, type: 3}
   <MaxLevel>k__BackingField: 1
   <CostCurrency>k__BackingField: 0
   <CostsByLevel>k__BackingField: 0e000000

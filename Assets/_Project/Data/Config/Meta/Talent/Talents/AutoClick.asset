@@ -16,7 +16,7 @@ MonoBehaviour:
   <EffectType>k__BackingField: 1
   <Title>k__BackingField: TALENT_AUTO_CLICK_TITLE
   <Description>k__BackingField: TALENT_AUTO_CLICK_DESC
-  <Icon>k__BackingField: {fileID: 0}
+  <Icon>k__BackingField: {fileID: 2395158100669332950, guid: f5349ce696fdd4029aa1ba75a9250bb3, type: 3}
   <MaxLevel>k__BackingField: 1
   <CostCurrency>k__BackingField: 1
   <CostsByLevel>k__BackingField: 01000000

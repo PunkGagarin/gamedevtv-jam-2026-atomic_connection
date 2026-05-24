@@ -16,6 +16,7 @@ MonoBehaviour:
   <EffectType>k__BackingField: 6
   <Title>k__BackingField: TALENT_STINGER_MOLECULE_AUTO_LOAD_TITLE
   <Description>k__BackingField: TALENT_STINGER_MOLECULE_AUTO_LOAD_DESC
+  <Icon>k__BackingField: {fileID: 1409784008657242652, guid: 4d8f38cc7989a4769be965080d0303d3, type: 3}
   <MaxLevel>k__BackingField: 1
   <CostCurrency>k__BackingField: 1
   <CostsByLevel>k__BackingField: 01000000

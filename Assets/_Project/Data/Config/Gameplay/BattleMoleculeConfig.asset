@@ -34,8 +34,8 @@ MonoBehaviour:
   <ConnectionLineWidth>k__BackingField: 0.08
   <ConnectionLineZOffset>k__BackingField: 0.05
   <ConnectionLineSortingOrder>k__BackingField: -1
-  <ConnectionInactiveColor>k__BackingField: {r: 0.357, g: 0.925, b: 1, a: 0.45}
-  <ConnectionActiveColor>k__BackingField: {r: 0.357, g: 0.925, b: 1, a: 0.95}
+  <ConnectionInactiveColor>k__BackingField: {r: 1, g: 0.35686278, b: 0.6402831, a: 0.45}
+  <ConnectionActiveColor>k__BackingField: {r: 1, g: 0.35686278, b: 0.6577703, a: 0.95}
   <MembraneMoleculeSpawnOffset>k__BackingField: {x: 0, y: -2}
   <MembraneMoleculeBondAtomsRequired>k__BackingField: 1
   <MembraneMoleculeAtomsRequired>k__BackingField: 3

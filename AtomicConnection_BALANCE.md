@@ -102,7 +102,7 @@
 |---|---|---:|---:|---:|---|---:|
 | Standard | `Gameplay/Enemies/EnemyUnit` | 1 | 0.7 | 1 | нет | 1 нуклеотид |
 | Mass | `Gameplay/Enemies/MassEnemyUnit` | 1 | 0.91 | 1 | нет | 1 нуклеотид |
-| Elite | `Gameplay/Enemies/EliteEnemyUnit` | 6 | 0.525 | 1 | нет | 2 нуклеотида |
+| Elite | `Gameplay/Enemies/EliteEnemyUnit` | 6 | 0.525 | 1 | нет | 2 нуклеотида + 1 радикал |
 | Ranged | `Gameplay/Enemies/RangedEnemyUnit` | 2 | 0.455 | 1 projectile | нет | 1 нуклеотид |
 | Boss | `Gameplay/Enemies/BossEnemyUnit` | 3 | 0.35 | 2 | да | нет; завершает уровень |
 

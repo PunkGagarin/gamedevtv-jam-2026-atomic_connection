@@ -4,5 +4,6 @@ namespace _Project.Scripts.Gameplay.Enemies
     {
         None = 0,
         EnemyDnaReward = 1,
+        FixedAmount = 2,
     }
 }

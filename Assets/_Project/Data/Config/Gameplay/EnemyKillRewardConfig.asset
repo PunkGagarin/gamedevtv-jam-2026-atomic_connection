@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Enemies.EnemyKillRewardConfig
   <RewardRules>k__BackingField:
   - <CurrencyId>k__BackingField: 0
+    <AllowedEnemyIds>k__BackingField: []
     <BaseSource>k__BackingField: 1
+    <FixedAmount>k__BackingField: 0
     <ApplyKillRewardMultiplierToBase>k__BackingField: 1
     <UseFlatBonusTalent>k__BackingField: 1
     <FlatBonusTalentType>k__BackingField: 21
@@ -22,7 +24,20 @@ MonoBehaviour:
     <ExtraDropChanceTalentType>k__BackingField: 22
     <ExtraDropAmount>k__BackingField: 1
   - <CurrencyId>k__BackingField: 2
+    <AllowedEnemyIds>k__BackingField:
+    - 2
+    <BaseSource>k__BackingField: 2
+    <FixedAmount>k__BackingField: 1
+    <ApplyKillRewardMultiplierToBase>k__BackingField: 0
+    <UseFlatBonusTalent>k__BackingField: 0
+    <FlatBonusTalentType>k__BackingField: 21
+    <UseExtraDropChanceTalent>k__BackingField: 0
+    <ExtraDropChanceTalentType>k__BackingField: 23
+    <ExtraDropAmount>k__BackingField: 1
+  - <CurrencyId>k__BackingField: 2
+    <AllowedEnemyIds>k__BackingField: []
     <BaseSource>k__BackingField: 0
+    <FixedAmount>k__BackingField: 0
     <ApplyKillRewardMultiplierToBase>k__BackingField: 0
     <UseFlatBonusTalent>k__BackingField: 0
     <FlatBonusTalentType>k__BackingField: 21

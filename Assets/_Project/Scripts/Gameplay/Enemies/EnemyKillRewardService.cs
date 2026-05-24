@@ -58,6 +58,9 @@ namespace _Project.Scripts.Gameplay.Enemies
 
             foreach (EnemyKillRewardRule rule in _config.RewardRules)
             {
+                if (rule == null || !rule.Matches(enemy.Id))
+                    continue;
+
                 int amount = RewardAmount(enemy, rule);
                 if (amount <= 0)
                     continue;
@@ -84,6 +87,7 @@ namespace _Project.Scripts.Gameplay.Enemies
             int amount = rule.BaseSource switch
             {
                 EnemyKillRewardBaseSource.EnemyDnaReward => enemy.DnaReward,
+                EnemyKillRewardBaseSource.FixedAmount => rule.FixedAmount,
                 _ => 0
             };
 

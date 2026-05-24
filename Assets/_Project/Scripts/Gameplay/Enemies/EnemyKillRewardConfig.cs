@@ -16,12 +16,19 @@ namespace _Project.Scripts.Gameplay.Enemies
     public class EnemyKillRewardRule
     {
         [field: SerializeField] public CurrencyId CurrencyId { get; private set; }
+        [field: SerializeField] public List<EnemyId> AllowedEnemyIds { get; private set; } = new();
         [field: SerializeField] public EnemyKillRewardBaseSource BaseSource { get; private set; }
+        [field: SerializeField, Min(0)] public int FixedAmount { get; private set; }
         [field: SerializeField] public bool ApplyKillRewardMultiplierToBase { get; private set; }
         [field: SerializeField] public bool UseFlatBonusTalent { get; private set; }
         [field: SerializeField] public TalentType FlatBonusTalentType { get; private set; }
         [field: SerializeField] public bool UseExtraDropChanceTalent { get; private set; }
         [field: SerializeField] public TalentType ExtraDropChanceTalentType { get; private set; }
         [field: SerializeField, Min(0)] public int ExtraDropAmount { get; private set; } = 1;
+
+        public bool Matches(EnemyId enemyId)
+        {
+            return AllowedEnemyIds == null || AllowedEnemyIds.Count == 0 || AllowedEnemyIds.Contains(enemyId);
+        }
     }
 }

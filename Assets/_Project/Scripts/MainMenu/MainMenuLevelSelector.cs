@@ -33,14 +33,17 @@ namespace _Project.Scripts.MainMenu
 
         private void OnDestroy()
         {
-            PreviousButton.onClick.RemoveListener(SelectPrevious);
-            NextButton.onClick.RemoveListener(SelectNext);
-
             if (_levelSelectionService != null)
                 _levelSelectionService.Changed -= Refresh;
 
             if (_languageService != null)
                 _languageService.OnSwitchLanguage -= Refresh;
+
+            if (PreviousButton != null)
+                PreviousButton.onClick.RemoveListener(SelectPrevious);
+
+            if (NextButton != null)
+                NextButton.onClick.RemoveListener(SelectNext);
         }
 
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
@@ -64,6 +67,10 @@ namespace _Project.Scripts.MainMenu
 
         private void Refresh()
         {
+            if (LevelLabel == null || PreviousButton == null || NextButton == null
+                                   || _localizationTool == null || _levelSelectionService == null)
+                return;
+
             LevelLabel.text = string.Format(
                 _localizationTool.GetText("MAIN_MENU_LEVEL_FORMAT"),
                 _levelSelectionService.SelectedLevel);

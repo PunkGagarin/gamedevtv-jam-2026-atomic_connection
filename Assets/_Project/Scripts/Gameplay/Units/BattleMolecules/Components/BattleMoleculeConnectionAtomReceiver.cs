@@ -1,6 +1,8 @@
+using _Project.Scripts.Audio.Domain;
 using _Project.Scripts.Gameplay.Units;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
+using Zenject;
 
 namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
@@ -15,6 +17,9 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         [field: SerializeField] private OwnedAtomReceiver AtomReceiver { get; set; }
         [field: SerializeField] private BattleMoleculeCharge Charge { get; set; }
         [field: SerializeField] private BattleMoleculeBond Bond { get; set; }
+        [field: SerializeField] private Sounds ConnectionAtomSound { get; set; } = Sounds.singlePop;
+
+        [Inject] private AudioService _audioService;
 
         public bool CanReceiveAtom => Bond.IsBonded
                                       && Charge.CanReceiveAtom(OwnedAtoms.Count);
@@ -38,7 +43,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
                 Bond = GetComponent<BattleMoleculeBond>();
         }
 
-        public bool TryReceive(FreeAtom atom)
+        public bool TryReceive(FreeAtom atom, bool playConnectionSound = true)
         {
             if (atom == null || !CanReceiveAtom)
                 return false;
@@ -48,6 +53,9 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
             if (!AtomReceiver.TryTake(atom))
                 return false;
+
+            if (playConnectionSound)
+                _audioService?.PlaySfxWithRandomPitch(ConnectionAtomSound);
 
             Charge.RegisterAtomCount(OwnedAtoms.Count);
             return true;

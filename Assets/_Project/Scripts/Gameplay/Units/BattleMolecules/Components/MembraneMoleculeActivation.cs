@@ -1,5 +1,6 @@
 using UnityEngine;
 using Zenject;
+using _Project.Scripts.Audio.Domain;
 using _Project.Scripts.Gameplay.Enemies;
 using _Project.Scripts.Gameplay.Talents;
 using _Project.Scripts.Gameplay.Units.AtomCores;
@@ -17,6 +18,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         [field: SerializeField] private BattleMoleculeChargeConsumption ChargeConsumption { get; set; }
         [field: SerializeField] private ProgressBar CooldownProgressBar { get; set; }
         [field: SerializeField] private ProgressBar ShieldDurationProgressBar { get; set; }
+        [field: SerializeField] private Sounds ShieldActivatedSound { get; set; } = Sounds.BubbleClick;
+        [field: SerializeField] private Sounds ShieldBrokenSound { get; set; } = Sounds.popWithEcho;
 
         private AtomCoreShield _coreMembrane;
         private float _duration;
@@ -28,6 +31,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         private float _knockbackDuration;
 
         [Inject] private IEnemyService _enemyService;
+        [Inject] private AudioService _audioService;
 
         private void Awake()
         {
@@ -125,6 +129,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
                 return;
 
             _coreMembrane.Activate(_duration, _integrity);
+            _audioService?.PlaySound(ShieldActivatedSound);
             HideProgress(CooldownProgressBar);
             ShowProgress(ShieldDurationProgressBar, 1f);
         }
@@ -144,6 +149,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
         private void OnMembraneBroken()
         {
+            _audioService?.PlaySound(ShieldBrokenSound);
             StartCooldown();
 
             if (_coreMembrane == null)

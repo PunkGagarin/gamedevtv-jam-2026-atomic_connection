@@ -1,6 +1,8 @@
 using System;
+using _Project.Scripts.Audio.Domain;
 using _Project.Scripts.Gameplay.Common.Health;
 using UnityEngine;
+using Zenject;
 
 namespace _Project.Scripts.Gameplay.Enemies.Components
 {
@@ -10,6 +12,10 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
     {
         [field: SerializeField] private EnemyUnit Enemy { get; set; }
         [field: SerializeField] private Health Health { get; set; }
+        [field: SerializeField] private Sounds DamageSound { get; set; } = Sounds.damabProbably;
+        [field: SerializeField] private Sounds DeathSound { get; set; } = Sounds.doublePop;
+
+        [Inject] private AudioService _audioService;
 
         public bool IsAlive => Health == null || Health.IsAlive;
         public int MaxHealth => Health?.MaxHealth ?? 1;
@@ -62,11 +68,15 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
         public void TakeDamage(int amount, float killRewardMultiplier, bool isCritical)
         {
             KillRewardMultiplier = Mathf.Max(0f, killRewardMultiplier);
+            int previousHealth = CurrentHealth;
 
             if (Health != null)
                 Health.TakeDamage(amount, isCritical);
             else
                 Kill();
+
+            if (Health != null && Health.IsAlive && previousHealth > Health.CurrentHealth)
+                _audioService?.PlaySfxWithRandomPitch(DamageSound);
 
             if (IsAlive)
                 KillRewardMultiplier = 1f;
@@ -84,6 +94,7 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
         {
             KillRewardMultiplier = 1f;
             KillWithoutHealthEvents();
+            PlayDeathSound();
             Died?.Invoke(Enemy);
         }
 
@@ -92,15 +103,20 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
             if (Health == null)
                 return;
 
+            int previousHealth = Health.CurrentHealth;
             Health.Died -= OnHealthDied;
             Health.TakeDamage(amount, isCritical);
             Health.Died += OnHealthDied;
+
+            if (Health.IsAlive && previousHealth > Health.CurrentHealth)
+                _audioService?.PlaySfxWithRandomPitch(DamageSound);
         }
 
         public void DieFromMergeGroupDamage(float killRewardMultiplier)
         {
             KillRewardMultiplier = Mathf.Max(0f, killRewardMultiplier);
             KillWithoutHealthEvents();
+            PlayDeathSound();
             Killed?.Invoke(Enemy);
             Died?.Invoke(Enemy);
         }
@@ -109,6 +125,7 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
         {
             KillRewardMultiplier = 1f;
             KillWithoutHealthEvents();
+            PlayDeathSound();
             Died?.Invoke(Enemy);
         }
 
@@ -124,8 +141,14 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
 
         private void OnHealthDied()
         {
+            PlayDeathSound();
             Killed?.Invoke(Enemy);
             Died?.Invoke(Enemy);
+        }
+
+        private void PlayDeathSound()
+        {
+            _audioService?.PlaySound(DeathSound);
         }
     }
 }

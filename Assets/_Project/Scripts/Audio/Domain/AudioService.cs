@@ -9,6 +9,9 @@ namespace _Project.Scripts.Audio.Domain
 {
     public class AudioService : MonoBehaviour
     {
+        private const float DEFAULT_RANDOM_PITCH_MIN = 0.92f;
+        private const float DEFAULT_RANDOM_PITCH_MAX = 1.08f;
+
         [Inject] private SoundRepository _soundRepository;
         [Inject] private IAudioMixerService _audioMixerService;
 
@@ -53,6 +56,38 @@ namespace _Project.Scripts.Audio.Domain
 
             SetSoundClip(source, clip);
         }
+
+        public void PlaySfxWithRandomPitch(Sounds sound) =>
+            PlaySfxWithRandomPitch(sound.ToString());
+
+        public void PlaySfxWithRandomPitch(string clipName) =>
+            PlaySfxWithRandomPitch(clipName, DEFAULT_RANDOM_PITCH_MIN, DEFAULT_RANDOM_PITCH_MAX);
+
+        public void PlaySfxWithRandomPitch(Sounds sound, float minPitch, float maxPitch) =>
+            PlaySfxWithRandomPitch(sound.ToString(), minPitch, maxPitch);
+
+        public void PlaySfxWithRandomPitch(string clipName, float minPitch, float maxPitch)
+        {
+            SoundElement clip = FindClip(clipName, SoundType.Effect);
+
+            if (clip == null)
+                return;
+
+            AudioSource source = GetSource();
+            float lowerPitch = Mathf.Min(minPitch, maxPitch);
+            float upperPitch = Mathf.Max(minPitch, maxPitch);
+            float pitch = Mathf.Approximately(lowerPitch, upperPitch)
+                ? lowerPitch
+                : Random.Range(lowerPitch, upperPitch);
+
+            SetSoundClip(source, clip, pitch);
+        }
+
+        public void PlaySfxWtihRandomPitch(Sounds sound) =>
+            PlaySfxWithRandomPitch(sound);
+
+        public void PlaySfxWtihRandomPitch(string clipName) =>
+            PlaySfxWithRandomPitch(clipName);
 
         public void PlaySoundInSingleAudioSource(string clipName)
         {
@@ -131,6 +166,9 @@ namespace _Project.Scripts.Audio.Domain
                 _sfxLoopSource.pitch = pitch;
         }
 
+        public void PlaySfxLoop(Sounds sound) =>
+            PlaySfxLoop(sound.ToString());
+
         private AudioSource GetSource()
         {
             foreach (AudioSource soundSource in _soundSources.Where(soundSource => !soundSource.isPlaying))
@@ -148,17 +186,19 @@ namespace _Project.Scripts.Audio.Domain
             return clip;
         }
 
-        private void SetSoundClip(AudioSource soundSource, SoundElement clip)
+        private void SetSoundClip(AudioSource soundSource, SoundElement clip, float pitch = 1f)
         {
-            soundSource.clip = clip.Clip;
-            soundSource.volume = clip.Volume;
-            soundSource.Play();
+            soundSource.Stop();
+            soundSource.clip = null;
+            soundSource.volume = 1f;
+            soundSource.pitch = pitch;
+            soundSource.PlayOneShot(clip.Clip, clip.Volume);
         }
 
         private void SetMusicClip(SoundElement clip)
         {
             _musicSource.clip = clip.Clip;
-            _musicSource.volume = clip.Volume;
+            _musicSource.volume = Mathf.Clamp01(clip.Volume);
             _musicSource.loop = true;
             _musicSource.Play();
         }
@@ -166,7 +206,8 @@ namespace _Project.Scripts.Audio.Domain
         private void SetSfxLoopClip(SoundElement clip)
         {
             _sfxLoopSource.clip = clip.Clip;
-            _sfxLoopSource.volume = clip.Volume;
+            _sfxLoopSource.volume = Mathf.Clamp01(clip.Volume);
+            _sfxLoopSource.pitch = 1f;
             _sfxLoopSource.loop = true;
             _sfxLoopSource.Play();
         }

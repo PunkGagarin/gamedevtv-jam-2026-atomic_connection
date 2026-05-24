@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: VertEnemy
-  m_Shader: {fileID: -6465566751694194690, guid: f30192295772ac44f9d3ce51083e8155, type: 3}
+  m_Name: VertEnemyElite
+  m_Shader: {fileID: -6465566751694194690, guid: 21d97cc04845f1a469b1163fbff08081, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -46,7 +46,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _Angle_speed: 1.2
-    - _GlowIntesivity: 1
+    - _GlowIntesivity: 3.49
     - _Max: 0.24
     - _Min: 0.2
     - _Pixel: 64
@@ -57,7 +57,7 @@ Material:
     m_Colors:
     - White: {r: 1, g: 1, b: 1, a: 1}
     - _Center: {r: 0, g: 0, b: 0, a: 0}
-    - _GlowColor: {r: 1, g: 1, b: 1, a: 1}
+    - _GlowColor: {r: 0.00000011920929, g: 0, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &3241281225030909190

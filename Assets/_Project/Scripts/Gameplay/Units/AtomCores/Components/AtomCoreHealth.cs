@@ -1,7 +1,9 @@
 using System;
+using _Project.Scripts.Audio.Domain;
 using _Project.Scripts.Gameplay.Common.Health;
 using _Project.Scripts.Gameplay.Units.AtomCores;
 using UnityEngine;
+using Zenject;
 
 namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
 {
@@ -11,6 +13,10 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
     {
         [field: SerializeField] private Health Health { get; set; }
         [field: SerializeField] private AtomCoreShield Shield { get; set; }
+        [field: SerializeField] private Sounds DamageSound { get; set; } = Sounds.damage;
+        [field: SerializeField] private Sounds DeathSound { get; set; } = Sounds.intensiveDamage;
+
+        [Inject] private AudioService _audioService;
 
         public bool IsAlive => Health.IsAlive;
 
@@ -44,13 +50,27 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
             if (Shield != null && Shield.TryAbsorbDamage(amount))
                 return;
 
+            int previousHealth = Health.CurrentHealth;
             Health.TakeDamage(amount);
+
+            if (previousHealth <= Health.CurrentHealth)
+                return;
+
+            if (Health.IsAlive)
+                _audioService?.PlaySfxWithRandomPitch(DamageSound);
+            else
+                _audioService?.PlaySound(DeathSound);
+
             AtomCoreEventBus.RiseOnDamageEvent(amount);
         }
 
         public void Kill()
         {
+            bool wasAlive = Health.IsAlive;
             Health.Kill();
+
+            if (wasAlive)
+                _audioService?.PlaySound(DeathSound);
         }
     }
 }

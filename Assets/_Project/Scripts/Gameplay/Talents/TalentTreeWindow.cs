@@ -19,6 +19,10 @@ namespace _Project.Scripts.Gameplay.Talents
     public class TalentTreeWindow : BaseWindow, IDragHandler
     {
         private const float PAN_PADDING = 160f;
+        private const Sounds TALENT_NODE_REVEAL_SOUND = Sounds.BubbleClick;
+        private const Sounds TALENT_PURCHASE_SOUND = Sounds.doublePop;
+        private const Sounds TALENT_MAXED_SOUND = Sounds.buttonClickShortHigh;
+        private const Sounds TALENT_CANNOT_BUY_SOUND = Sounds.buttonClickShortHigh;
 
         [field: SerializeField] private Button CloseButton { get; set; }
         [field: SerializeField, FormerlySerializedAs("<GoldLabel>k__BackingField")]
@@ -110,6 +114,18 @@ namespace _Project.Scripts.Gameplay.Talents
 
         internal void PlayButtonClickSound() =>
             _audio.PlaySound(Sounds.buttonClick);
+
+        internal void PlayTalentNodeRevealSound() =>
+            _audio.PlaySfxWithRandomPitch(TALENT_NODE_REVEAL_SOUND);
+
+        internal void PlayTalentPurchaseSound() =>
+            _audio.PlaySound(TALENT_PURCHASE_SOUND);
+
+        internal void PlayTalentMaxedSound() =>
+            _audio.PlaySoundInSingleAudioSource(TALENT_MAXED_SOUND.ToString());
+
+        internal void PlayTalentCannotBuySound() =>
+            _audio.PlaySoundInSingleAudioSource(TALENT_CANNOT_BUY_SOUND.ToString());
 
         public void ShowTooltip(TalentDefinition talent, RectTransform nodeTransform)
         {
@@ -474,7 +490,7 @@ namespace _Project.Scripts.Gameplay.Talents
         {
             _revealingNodes.Remove(talent.Id);
             ShowVisibleConnectionsFor(talent.Id);
-            // TODO: Проиграть SFX открытия/появления новой ноды, например AudioService.PlaySound(Sounds.talentNodeReveal).
+            PlayTalentNodeRevealSound();
             onComplete?.Invoke();
         }
 

@@ -1,5 +1,7 @@
+using _Project.Scripts.Audio.Domain;
 using _Project.Scripts.Gameplay.Drag;
 using UnityEngine;
+using Zenject;
 
 namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
@@ -11,6 +13,9 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         [field: SerializeField] protected BattleMoleculeCharge Charge { get; private set; }
         [field: SerializeField] protected BattleMoleculeAimLineVisual AimLineVisual { get; private set; }
         [field: SerializeField] protected BattleMoleculeShotQueue ShotQueue { get; private set; }
+        [field: SerializeField] private Sounds AimPullSound { get; set; } = Sounds.pew;
+
+        [Inject] private AudioService _audioService;
 
         private bool _isAiming;
 
@@ -34,6 +39,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         {
             _isAiming = true;
             AimLineVisual?.Show(CurrentAimOrigin());
+            _audioService?.PlaySfxWithRandomPitch(AimPullSound);
             OnAimingStarted();
         }
 

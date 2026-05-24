@@ -173,7 +173,7 @@ namespace _Project.Scripts.Gameplay.Talents
                     true)
                 .OnComplete(() => RectTransform.anchoredPosition = anchoredPosition);
 
-            // TODO: Проиграть SFX нехватки валюты/ошибки, например AudioService.PlaySound(Sounds.error).
+            _window.PlayTalentCannotBuySound();
         }
 
         private void OnDestroy()
@@ -200,7 +200,7 @@ namespace _Project.Scripts.Gameplay.Talents
 
                     if (result == TalentNodePurchaseResult.Purchased)
                     {
-                        // TODO: Проиграть SFX успешной покупки ноды, например AudioService.PlaySound(Sounds.talentBuy).
+                        _window.PlayTalentPurchaseSound();
                         return;
                     }
 
@@ -210,7 +210,7 @@ namespace _Project.Scripts.Gameplay.Talents
                     PlayCannotBuyFeedback();
                     return;
                 case TalentNodeViewState.Maxed:
-                    // TODO: Проиграть мягкий SFX "нода уже замакшена", без shake/error.
+                    _window.PlayTalentMaxedSound();
                     return;
             }
         }

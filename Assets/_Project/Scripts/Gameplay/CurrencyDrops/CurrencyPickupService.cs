@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
+using _Project.Scripts.Audio.Domain;
 using _Project.Scripts.Gameplay.Cameras.Provider;
 using _Project.Scripts.Gameplay.Common.Random;
 using _Project.Scripts.Gameplay.Currencies;
@@ -16,6 +17,7 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
     {
         private const string PICKUP_CONTAINER_NAME = "CurrencyPickups";
         private const string PICKUP_AREA_OBJECT_NAME = "CurrencyPickupArea";
+        private const Sounds PICKUP_SOUND = Sounds.singlePop;
 
         private readonly List<CurrencyPickup> _pickups = new();
         private CurrencyPickupAreaIndicator _pickupAreaIndicator;
@@ -30,6 +32,7 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
         [Inject] private IRandomService _random;
         [Inject] private CurrencyPickupConfig _config;
         [Inject] private ITalentService _talentService;
+        [Inject] private AudioService _audioService;
 
         public void Start()
         {
@@ -139,7 +142,7 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
 
         private void PlayCollectSound()
         {
-            // TODO: inject AudioService and play Sounds.currencyPickup when the pickup sound asset is ready.
+            _audioService?.PlaySfxWithRandomPitch(PICKUP_SOUND);
         }
 
         private Vector3 CursorWorldPosition(Camera camera)

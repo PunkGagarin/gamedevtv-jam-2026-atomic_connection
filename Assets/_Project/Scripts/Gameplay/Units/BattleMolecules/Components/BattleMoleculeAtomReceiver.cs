@@ -1,7 +1,9 @@
+using _Project.Scripts.Audio.Domain;
 using _Project.Scripts.Gameplay.Drag;
 using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using _Project.Scripts.Gameplay.Units.FreeAtoms.Components;
 using UnityEngine;
+using Zenject;
 
 namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
@@ -11,6 +13,9 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
     {
         [field: SerializeField] private BattleMoleculeBond Bond { get; set; }
         [field: SerializeField] private BattleMoleculeConnectionAtomReceiver ConnectionReceiver { get; set; }
+        [field: SerializeField] private Sounds DropAcceptedSound { get; set; } = Sounds.singlePop;
+
+        [Inject] private AudioService _audioService;
 
         private void Awake()
         {
@@ -36,11 +41,19 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
             if (Bond.CanReceiveAtom)
             {
-                Bond.TryAcceptAtom(freeAtom);
+                if (Bond.TryAcceptAtom(freeAtom))
+                    PlayDropAcceptedSound();
+
                 return;
             }
 
-            ConnectionReceiver.TryReceive(freeAtom);
+            if (ConnectionReceiver.TryReceive(freeAtom, false))
+                PlayDropAcceptedSound();
+        }
+
+        private void PlayDropAcceptedSound()
+        {
+            _audioService?.PlaySfxWithRandomPitch(DropAcceptedSound);
         }
 
         private static bool TryGetFreeAtom(IDraggable draggable, out FreeAtom freeAtom)

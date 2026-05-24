@@ -57,7 +57,7 @@ MonoBehaviour:
       _clip: {fileID: 8300000, guid: 5c3efe99f8769499286c55ccd0108398, type: 3}
   - _name: pulsating
     _clips:
-    - _volume: 1
+    - _volume: 10
       _clip: {fileID: 8300000, guid: 41476674bd6db45b6b6370ee84786aa1, type: 3}
   - _name: singlePop
     _clips:

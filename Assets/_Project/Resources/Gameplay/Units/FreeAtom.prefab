@@ -12,6 +12,13 @@ GameObject:
   - component: {fileID: 5800000}
   - component: {fileID: 11400000}
   - component: {fileID: 11400001}
+  - component: {fileID: 11400003}
+  - component: {fileID: 11400004}
+  - component: {fileID: 11400005}
+  - component: {fileID: 11400006}
+  - component: {fileID: 11400007}
+  - component: {fileID: 11400008}
+  - component: {fileID: 11400009}
   m_Layer: 0
   m_Name: FreeAtom
   m_TagString: Untagged
@@ -102,6 +109,101 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81491604d20545d586e66a02e8c7c128, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &11400003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cf7401d29fd48f38801387adb1927e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &11400004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 473cccd626784dc88668dfbc5c52b77c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &11400005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d12d33c834e34946b73d22655af953fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Atom>k__BackingField: {fileID: 11400000}
+  <OrbitMotion>k__BackingField: {fileID: 11400001}
+--- !u!114 &11400006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81d98f1a4f134439a54704ae5d697ad0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &11400007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 570482d9114f4eb5818a17ec4091b4c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Atom>k__BackingField: {fileID: 11400000}
+  <State>k__BackingField: {fileID: 11400006}
+  <OrbitMotion>k__BackingField: {fileID: 11400001}
+--- !u!114 &11400008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b102da3bff39426687467802ad0ba68d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <Atom>k__BackingField: {fileID: 11400000}
+--- !u!114 &11400009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7baa0e1f3c7b498098cc32222bd6666e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <ColliderSet>k__BackingField: {fileID: 11400003}
+  <InitialLocalScale>k__BackingField: {fileID: 11400004}
+  <Ownership>k__BackingField: {fileID: 11400005}
+  <State>k__BackingField: {fileID: 11400006}
+  <HoverBehaviour>k__BackingField: {fileID: 0}
 --- !u!1 &5015733676031192469
 GameObject:
   m_ObjectHideFlags: 0
@@ -183,8 +285,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 1
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 0cfce4574a088304b94b7bc932c4c0bc, type: 2}
-  m_Color: {r: 0, g: 1, b: 0.99010336, a: 1}
+  m_Sprite: {fileID: 7043984996573275655, guid: 3766832f9fa37455ab90111e52058d0e, type: 3}
+  m_Color: {r: 0, g: 0.6976142, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -193,98 +295,3 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!114 &11400003
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9cf7401d29fd48f38801387adb1927e6, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
---- !u!114 &11400004
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 473cccd626784dc88668dfbc5c52b77c, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
---- !u!114 &11400005
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d12d33c834e34946b73d22655af953fc, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
-  <Atom>k__BackingField: {fileID: 11400000}
-  <OrbitMotion>k__BackingField: {fileID: 11400001}
---- !u!114 &11400006
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81d98f1a4f134439a54704ae5d697ad0, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
---- !u!114 &11400007
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 570482d9114f4eb5818a17ec4091b4c8, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
-  <Atom>k__BackingField: {fileID: 11400000}
-  <State>k__BackingField: {fileID: 11400006}
-  <OrbitMotion>k__BackingField: {fileID: 11400001}
---- !u!114 &11400008
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b102da3bff39426687467802ad0ba68d, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
-  <Atom>k__BackingField: {fileID: 11400000}
---- !u!114 &11400009
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100000}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7baa0e1f3c7b498098cc32222bd6666e, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
-  <ColliderSet>k__BackingField: {fileID: 11400003}
-  <InitialLocalScale>k__BackingField: {fileID: 11400004}
-  <Ownership>k__BackingField: {fileID: 11400005}
-  <State>k__BackingField: {fileID: 11400006}
-  <HoverBehaviour>k__BackingField: {fileID: 8480504063172188488}

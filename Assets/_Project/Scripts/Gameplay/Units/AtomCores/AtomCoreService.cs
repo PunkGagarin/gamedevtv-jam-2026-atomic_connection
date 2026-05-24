@@ -1,4 +1,5 @@
 using System;
+using _Project.Scripts.Audio.Domain;
 using _Project.Scripts.Gameplay.Cameras.Provider;
 using _Project.Scripts.Gameplay.Common.Random;
 using _Project.Scripts.Gameplay.Common.Time;
@@ -14,6 +15,8 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
 {
     public class AtomCoreService : IAtomCoreService, IAtomCoreCreator
     {
+        private const Sounds CORE_IDLE_LOOP_SOUND = Sounds.pulsating;
+
         private AtomCore _core;
         private bool _isStarted;
         private bool _clickWasStartedOnCore;
@@ -29,6 +32,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
         [Inject] private IAtomCoreFactory _atomCoreFactory;
         [Inject] private IFreeAtomFactory _freeAtomFactory;
         [Inject] private IBattleMoleculeFeedTargetProvider _battleMoleculeFeedTargetProvider;
+        [Inject] private AudioService _audioService;
 
         public Transform CurrentCoreTransform => _core != null ? _core.transform : null;
         public event Action CoreDied;
@@ -55,6 +59,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
             _talentService.Changed += OnTalentChanged;
             _autoClickTimer = 0f;
             _isStarted = true;
+            _audioService?.PlaySfxLoop(CORE_IDLE_LOOP_SOUND);
         }
 
         public void Update()
@@ -78,6 +83,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
             }
 
             _core?.CleanupAtoms();
+            _audioService?.StopSfxLoop();
             _isStarted = false;
             _clickWasStartedOnCore = false;
             _autoClickTimer = 0f;
@@ -191,6 +197,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
         
         private void OnCoreDied()
         {
+            _audioService?.StopSfxLoop();
             CoreDied?.Invoke();
         }
     }

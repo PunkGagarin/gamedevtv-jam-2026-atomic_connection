@@ -31,6 +31,9 @@
   <text key="CURRENCY_DNA">DNA</text>
   <text key="CURRENCY_DNA_SHORT">DNA</text>
   <text key="CURRENCY_DNA_BALANCE_SUFFIX">DNA</text>
+  <text key="CURRENCY_NUCLEOTIDES">DNA</text>
+  <text key="CURRENCY_NUCLEOTIDES_SHORT">DNA</text>
+  <text key="CURRENCY_NUCLEOTIDES_BALANCE_SUFFIX">DNA</text>
   <text key="CURRENCY_ISOTOPES">isotopes</text>
   <text key="CURRENCY_ISOTOPES_SHORT">iso.</text>
   <text key="CURRENCY_ISOTOPES_BALANCE_SUFFIX">isotope</text>

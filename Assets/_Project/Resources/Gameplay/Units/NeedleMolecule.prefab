@@ -82,6 +82,8 @@ MonoBehaviour:
   <HitArea>k__BackingField: {fileID: 11400016}
   <AimLineVisual>k__BackingField: {fileID: 0}
   <MembraneActivation>k__BackingField: {fileID: 0}
+  <Charge>k__BackingField: {fileID: 0}
+  <ShotQueue>k__BackingField: {fileID: 0}
 --- !u!58 &5800000
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -533,7 +535,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: 3852d5f53a7207d488e08cf5a2073720, type: 3}
-  m_Color: {r: 0.011712074, g: 1, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

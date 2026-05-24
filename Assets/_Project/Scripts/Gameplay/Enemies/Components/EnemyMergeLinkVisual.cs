@@ -8,6 +8,11 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
         [field: SerializeField] private LineRenderer Line { get; set; }
         [field: SerializeField] private Color LineColor { get; set; } = new(0.1f, 0.95f, 1f, 1f);
 
+        [Header("Sine Wave")]
+        [field: SerializeField] private float WaveAmplitude { get; set; } = 0.3f;
+        [field: SerializeField, Range(0.5f, 8f)] private float WaveFrequency { get; set; } = 2f;
+        [field: SerializeField] private float WaveSpeed { get; set; } = 1.5f;
+
         private Transform _from;
         private Transform _to;
         private float _zOffset;
@@ -37,10 +42,21 @@ namespace _Project.Scripts.Gameplay.Enemies.Components
             fromPosition.z += _zOffset;
             toPosition.z += _zOffset;
 
+            Vector3 direction = (toPosition - fromPosition).normalized;
+            Vector3 perpendicular = new Vector3(-direction.y, direction.x, 0f);
+
             for (int i = 0; i < _pointCount; i++)
             {
                 float t = _pointCount > 1 ? (float)i / (_pointCount - 1) : 0f;
-                Line.SetPosition(i, Vector3.Lerp(fromPosition, toPosition, t));
+                Vector3 basePosition = Vector3.Lerp(fromPosition, toPosition, t);
+
+                if (i > 0 && i < _pointCount - 1)
+                {
+                    float sineOffset = WaveAmplitude * Mathf.Sin(t * WaveFrequency * Mathf.PI * 2f + Time.time * WaveSpeed);
+                    basePosition += perpendicular * sineOffset;
+                }
+
+                Line.SetPosition(i, basePosition);
             }
         }
 

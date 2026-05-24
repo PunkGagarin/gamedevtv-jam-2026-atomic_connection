@@ -17,6 +17,7 @@ Do not edit until ownership is clear. If you cannot name the owning component,
 do not put the behavior in a service yet. Run these gates before code changes:
 
 - Existing project first: check `AGENTS.md` and current `Assets/_Project`; AtomicConnection code and approved deviations win over `ecs-survivors`.
+- User-facing implementation plans should be written in Russian by default unless the user asks for another language.
 - Ownership: object-local behavior goes to focused components; cross-object coordination, input, spawning, cleanup, lifecycle, and active loops go to state-owned services/states.
 - Root object: runtime roots are facades only. Key entity scripts must not own behavior logic, including validation, ownership changes, geometry, state mutation, spawn/pool reset, or collection cleanup; they only expose facade methods/properties and pass ticks to focused components. Gameplay object components must own a domain behavior or pure visual behavior; do not add MVP-style Presenter/Controller/View/ViewModel layers to runtime gameplay objects. Use gameplay names like `Visual`, `Line`, `Indicator`, or `Feedback` for pure visuals. Different unit/enemy behavior should be a prefab component variant, not a config bool in a shared component.
 - Reuse: search for similar components/interfaces before adding object-local logic. Prefer a reusable component over a per-entity duplicate whenever the behavior shape matches.

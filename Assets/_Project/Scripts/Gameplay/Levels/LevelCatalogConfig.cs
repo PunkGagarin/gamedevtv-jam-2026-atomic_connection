@@ -10,27 +10,33 @@ namespace _Project.Scripts.Gameplay.Levels
     {
         [field: SerializeField] public List<LevelDefinition> Levels { get; private set; } = new();
 
-        public int MaxLevelNumber => Levels == null || Levels.Count == 0
-            ? 1
-            : Levels.Max(level => level.LevelNumber);
+        public int MaxLevelNumber => ValidLevels()
+            .Select(level => level.LevelNumber)
+            .DefaultIfEmpty(1)
+            .Max();
 
         public LevelDefinition LevelFor(int levelNumber)
         {
-            if (Levels == null || Levels.Count == 0)
+            List<LevelDefinition> levels = ValidLevels().ToList();
+
+            if (levels.Count == 0)
                 throw new InvalidOperationException($"{nameof(LevelCatalogConfig)} has no level definitions.");
 
-            LevelDefinition exactLevel = Levels.FirstOrDefault(level => level.LevelNumber == levelNumber);
+            LevelDefinition exactLevel = levels.FirstOrDefault(level => level.LevelNumber == levelNumber);
 
             if (exactLevel != null)
                 return exactLevel;
 
-            LevelDefinition fallbackLevel = Levels
+            LevelDefinition fallbackLevel = levels
                 .Where(level => level.LevelNumber <= levelNumber)
                 .OrderByDescending(level => level.LevelNumber)
-                .FirstOrDefault() ?? Levels[0];
+                .FirstOrDefault() ?? levels[0];
 
             Debug.LogWarning($"{nameof(LevelCatalogConfig)} has no data for level {levelNumber}. Using level {fallbackLevel.LevelNumber} data.");
             return fallbackLevel;
         }
+
+        private IEnumerable<LevelDefinition> ValidLevels() =>
+            Levels?.Where(level => level != null) ?? Enumerable.Empty<LevelDefinition>();
     }
 }

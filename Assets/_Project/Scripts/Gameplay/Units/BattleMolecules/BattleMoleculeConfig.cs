@@ -5,8 +5,14 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
     [CreateAssetMenu(fileName = "BattleMoleculeConfig", menuName = "Game Resources/Configs/Battle Molecule")]
     public class BattleMoleculeConfig : ScriptableObject
     {
+        [field: Header("Needle Molecule")]
+        [field: SerializeField] public Vector2 NeedleMoleculeSpawnOffset { get; private set; } = new(4f, 0f);
+        [field: SerializeField, Min(1)] public int NeedleMoleculeBondAtomsRequired { get; private set; } = 1;
+        [field: SerializeField, Min(1)] public int NeedleMoleculeAtomsRequired { get; private set; } = 3;
+        [field: SerializeField, Min(1)] public int NeedleMoleculeShotDamage { get; private set; } = 1;
+
         [field: Header("Stinger Molecule")]
-        [field: SerializeField] public Vector2 StingerMoleculeSpawnOffset { get; private set; } = new(2f, 0f);
+        [field: SerializeField] public Vector2 StingerMoleculeSpawnOffset { get; private set; } = new(0f, 2f);
         [field: SerializeField, Min(1)] public int StingerMoleculeBondAtomsRequired { get; private set; } = 1;
         [field: SerializeField, Min(1)] public int StingerMoleculeAtomsRequired { get; private set; } = 5;
         [field: SerializeField, Min(1)] public int StingerMoleculeShotDamage { get; private set; } = 3;

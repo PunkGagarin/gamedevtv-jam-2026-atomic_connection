@@ -33,5 +33,8 @@ namespace _Project.Scripts.Gameplay.Talents
         StingerMoleculeChargeReduction = 28,
         MembraneMoleculeIntegrity = 29,
         MembraneMoleculeCooldownReduction = 30,
+        StingerMolecule = 31,
+        NeedleMoleculeDamage = 32,
+        NeedleMoleculeChargeReduction = 33,
     }
 }

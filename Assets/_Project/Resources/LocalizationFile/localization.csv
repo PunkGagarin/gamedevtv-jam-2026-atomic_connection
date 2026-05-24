@@ -45,6 +45,12 @@ TALENT_CORE_CLICK_REDUCTION_TITLE,Быстрая сборка,Quick Assembly
 TALENT_CORE_CLICK_REDUCTION_DESC,Уменьшает время восстановления клика ядра.,Reduces the core click cooldown.
 TALENT_CORE_HEALTH_LARGE_TITLE,Прочное ядро,Reinforced Core
 TALENT_CORE_HEALTH_LARGE_DESC,Сильно увеличивает здоровье ядра.,Greatly increases core health.
+TALENT_STINGER_MOLECULE_TITLE,Жало,Stinger Molecule
+TALENT_STINGER_MOLECULE_DESC,Разблокирует сильную боевую молекулу с одиночным выстрелом.,Unlocks a stronger battle molecule with a single shot.
+TALENT_NEEDLE_MOLECULE_DAMAGE_TITLE,Урон иглы,Needle Damage
+TALENT_NEEDLE_MOLECULE_DAMAGE_DESC,Увеличивает урон NeedleMolecule на 1 за уровень.,Increases NeedleMolecule damage by 1 per level.
+TALENT_NEEDLE_MOLECULE_CHARGE_REDUCTION_TITLE,Лёгкая игла,Light Needle
+TALENT_NEEDLE_MOLECULE_CHARGE_REDUCTION_DESC,NeedleMolecule требует на 1 атом меньше для полного заряда за уровень.,NeedleMolecule needs 1 fewer atom to fully charge per level.
 TALENT_STINGER_MOLECULE_DAMAGE_SMALL_TITLE,Урон I,Damage I
 TALENT_STINGER_MOLECULE_DAMAGE_SMALL_DESC,Увеличивает урон StingerMolecule на 1.,Increases StingerMolecule damage by 1.
 TALENT_STINGER_MOLECULE_CHARGE_REDUCTION_TITLE,Быстрое жало,Quick Sting

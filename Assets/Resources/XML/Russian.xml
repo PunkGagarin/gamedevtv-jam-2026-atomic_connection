@@ -46,6 +46,12 @@
   <text key="TALENT_CORE_CLICK_REDUCTION_DESC">Уменьшает время восстановления клика ядра.</text>
   <text key="TALENT_CORE_HEALTH_LARGE_TITLE">Прочное ядро</text>
   <text key="TALENT_CORE_HEALTH_LARGE_DESC">Сильно увеличивает здоровье ядра.</text>
+  <text key="TALENT_STINGER_MOLECULE_TITLE">Жало</text>
+  <text key="TALENT_STINGER_MOLECULE_DESC">Разблокирует сильную боевую молекулу с одиночным выстрелом.</text>
+  <text key="TALENT_NEEDLE_MOLECULE_DAMAGE_TITLE">Урон иглы</text>
+  <text key="TALENT_NEEDLE_MOLECULE_DAMAGE_DESC">Увеличивает урон NeedleMolecule на 1 за уровень.</text>
+  <text key="TALENT_NEEDLE_MOLECULE_CHARGE_REDUCTION_TITLE">Лёгкая игла</text>
+  <text key="TALENT_NEEDLE_MOLECULE_CHARGE_REDUCTION_DESC">NeedleMolecule требует на 1 атом меньше для полного заряда за уровень.</text>
   <text key="TALENT_STINGER_MOLECULE_DAMAGE_SMALL_TITLE">Урон I</text>
   <text key="TALENT_STINGER_MOLECULE_DAMAGE_SMALL_DESC">Увеличивает урон StingerMolecule на 1.</text>
   <text key="TALENT_STINGER_MOLECULE_CHARGE_REDUCTION_TITLE">Быстрое жало</text>

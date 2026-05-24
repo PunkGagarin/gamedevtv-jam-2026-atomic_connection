@@ -10,18 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 90b71f339c424f7cb0ae75644c43326e, type: 3}
-  m_Name: StingerMoleculeChargeReduction
+  m_Name: NeedleMoleculeChargeReduction
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Talents.TalentDefinition
-  <Id>k__BackingField: 28
-  <Type>k__BackingField: 24
-  <Title>k__BackingField: TALENT_STINGER_MOLECULE_CHARGE_REDUCTION_TITLE
-  <Description>k__BackingField: TALENT_STINGER_MOLECULE_CHARGE_REDUCTION_DESC
+  <Id>k__BackingField: 33
+  <Type>k__BackingField: 29
+  <Title>k__BackingField: TALENT_NEEDLE_MOLECULE_CHARGE_REDUCTION_TITLE
+  <Description>k__BackingField: TALENT_NEEDLE_MOLECULE_CHARGE_REDUCTION_DESC
   <Icon>k__BackingField: {fileID: 0}
-  <MaxLevel>k__BackingField: 1
-  <CostCurrency>k__BackingField: 1
-  <CostsByLevel>k__BackingField: 01000000
-  <Prerequisites>k__BackingField: 1f000000
+  <MaxLevel>k__BackingField: 2
+  <CostCurrency>k__BackingField: 0
+  <CostsByLevel>k__BackingField: 0300000014000000
+  <Prerequisites>k__BackingField: 00000000
   <MinCompletedLevel>k__BackingField: 0
-  <GraphPosition>k__BackingField: {x: 720, y: 240}
+  <GraphPosition>k__BackingField: {x: 240, y: -120}
   <BonusPerLevel>k__BackingField: 1
   <IsUnlock>k__BackingField: 0

@@ -46,6 +46,12 @@
   <text key="TALENT_CORE_CLICK_REDUCTION_DESC">Reduces the core click cooldown.</text>
   <text key="TALENT_CORE_HEALTH_LARGE_TITLE">Reinforced Core</text>
   <text key="TALENT_CORE_HEALTH_LARGE_DESC">Greatly increases core health.</text>
+  <text key="TALENT_STINGER_MOLECULE_TITLE">Stinger Molecule</text>
+  <text key="TALENT_STINGER_MOLECULE_DESC">Unlocks a stronger battle molecule with a single shot.</text>
+  <text key="TALENT_NEEDLE_MOLECULE_DAMAGE_TITLE">Needle Damage</text>
+  <text key="TALENT_NEEDLE_MOLECULE_DAMAGE_DESC">Increases NeedleMolecule damage by 1 per level.</text>
+  <text key="TALENT_NEEDLE_MOLECULE_CHARGE_REDUCTION_TITLE">Light Needle</text>
+  <text key="TALENT_NEEDLE_MOLECULE_CHARGE_REDUCTION_DESC">NeedleMolecule needs 1 fewer atom to fully charge per level.</text>
   <text key="TALENT_STINGER_MOLECULE_DAMAGE_SMALL_TITLE">Damage I</text>
   <text key="TALENT_STINGER_MOLECULE_DAMAGE_SMALL_DESC">Increases StingerMolecule damage by 1.</text>
   <text key="TALENT_STINGER_MOLECULE_CHARGE_REDUCTION_TITLE">Quick Sting</text>

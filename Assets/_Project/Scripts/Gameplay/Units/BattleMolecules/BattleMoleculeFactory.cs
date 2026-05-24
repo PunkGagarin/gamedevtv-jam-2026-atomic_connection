@@ -8,6 +8,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 {
     public class BattleMoleculeFactory : IBattleMoleculeFactory
     {
+        private const string NEEDLE_MOLECULE_PREFAB_PATH = "Gameplay/Units/NeedleMolecule";
         private const string STINGER_MOLECULE_PREFAB_PATH = "Gameplay/Units/StingerMolecule";
         private const string MEMBRANE_MOLECULE_PREFAB_PATH = "Gameplay/Units/MembraneMolecule";
         private const string SWARM_MOLECULE_PREFAB_PATH = "Gameplay/Units/SwarmMolecule";
@@ -17,6 +18,20 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         [Inject] private IGameplayRuntimeHierarchy _runtimeHierarchy;
         [Inject] private IInstantiator _instantiator;
         [Inject] private ITalentService _talentService;
+
+        public BattleMolecule CreateNeedle(Vector3 at, BattleMoleculeConfig config)
+        {
+            int atomsRequired = config.NeedleMoleculeAtomsRequired -
+                                Mathf.RoundToInt(_talentService.BonusOf(TalentType.NeedleMoleculeChargeReduction));
+
+            return Create(
+                at,
+                config,
+                NEEDLE_MOLECULE_PREFAB_PATH,
+                "NeedleMolecule",
+                AdjustedAtomsRequired(atomsRequired),
+                AdjustedAtomsRequired(config.NeedleMoleculeBondAtomsRequired));
+        }
 
         public BattleMolecule CreateStinger(Vector3 at, BattleMoleculeConfig config)
         {

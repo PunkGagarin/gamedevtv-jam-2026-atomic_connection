@@ -12,10 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f636fc0da8ab43528d99f7c64ba358c4, type: 3}
   m_Name: BattleMoleculeConfig
   m_EditorClassIdentifier: 
-  <StingerMoleculeSpawnOffset>k__BackingField: {x: 4, y: 0}
+  <NeedleMoleculeSpawnOffset>k__BackingField: {x: 4, y: 0}
+  <NeedleMoleculeBondAtomsRequired>k__BackingField: 1
+  <NeedleMoleculeAtomsRequired>k__BackingField: 3
+  <NeedleMoleculeShotDamage>k__BackingField: 1
+  <StingerMoleculeSpawnOffset>k__BackingField: {x: 0, y: 2}
   <StingerMoleculeBondAtomsRequired>k__BackingField: 1
   <StingerMoleculeAtomsRequired>k__BackingField: 5
-  <StingerMoleculeShotDamage>k__BackingField: 1
+  <StingerMoleculeShotDamage>k__BackingField: 3
   <StingerMoleculeCriticalDamageMultiplier>k__BackingField: 2
   <AtomsPosCircleRadius>k__BackingField: 1
   <DepositedAtomsOrbitDegreesPerSecond>k__BackingField: 90

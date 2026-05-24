@@ -20,8 +20,10 @@ namespace _Project.Scripts.Gameplay.Talents
         public event Action Changed;
 
         public IReadOnlyList<TalentDefinition> Talents => _config.Talents;
+        private IEnumerable<TalentDefinition> DefinedTalents =>
+            _config?.Talents?.Where(talent => talent != null) ?? Enumerable.Empty<TalentDefinition>();
         public float AtomGenerationMultiplier => 1f + BonusOf(TalentEffectType.CoreClickReduction);
-        public bool HasAvailableUpgradeNotification => _config.Talents.Any(talent => ShouldShowNotification(talent.Id));
+        public bool HasAvailableUpgradeNotification => DefinedTalents.Any(talent => ShouldShowNotification(talent.Id));
 
         public void Initialize()
         {
@@ -76,12 +78,14 @@ namespace _Project.Scripts.Gameplay.Talents
         }
 
         public float BonusOf(TalentEffectType effectType) =>
-            _config.Talents
+            DefinedTalents
                 .Where(talent => talent.EffectType == effectType)
                 .Sum(talent => Math.Min(LevelOf(talent.Id), talent.MaxLevel) * talent.BonusPerLevel);
 
         public bool IsUnlocked(TalentEffectType effectType) =>
-            _config.Talents.Any(talent => talent.EffectType == effectType && talent.IsUnlock && LevelOf(talent.Id) > 0);
+            DefinedTalents.Any(talent => talent.EffectType == effectType
+                                          && talent.IsUnlock
+                                          && LevelOf(talent.Id) > 0);
 
         public bool ShouldShowNotification(TalentId talentId)
         {
@@ -105,7 +109,7 @@ namespace _Project.Scripts.Gameplay.Talents
         }
 
         private TalentDefinition DefinitionFor(TalentId talentId) =>
-            _config.Talents.FirstOrDefault(talent => talent.Id == talentId)
+            DefinedTalents.FirstOrDefault(talent => talent.Id == talentId)
             ?? throw new InvalidOperationException($"Talent {talentId} is not present in {nameof(TalentConfig)}.");
     }
 }

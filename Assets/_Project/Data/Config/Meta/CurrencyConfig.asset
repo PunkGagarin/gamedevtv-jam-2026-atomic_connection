@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdb607db9bef4240b61a16c87dcde6ac, type: 3}
   m_Name: CurrencyConfig
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Currencies.CurrencyConfig
-  <StartingDna>k__BackingField: 0
-  <StartingIsotopes>k__BackingField: 0
-  <StartingRadicals>k__BackingField: 0
+  <StartingDna>k__BackingField: 1111
+  <StartingIsotopes>k__BackingField: 1111
+  <StartingRadicals>k__BackingField: 11111

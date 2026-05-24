@@ -15,6 +15,9 @@
         pulsating = 12,
         singlePop = 13,
         BubbleClick = 15,
+        talnetBought = 16,
+        talentMaxed = 17,
+        error = 18,
         intenseBgm = 14,
     }
 }

@@ -20,9 +20,9 @@ namespace _Project.Scripts.Gameplay.Talents
     {
         private const float PAN_PADDING = 160f;
         private const Sounds TALENT_NODE_REVEAL_SOUND = Sounds.BubbleClick;
-        private const Sounds TALENT_PURCHASE_SOUND = Sounds.doublePop;
-        private const Sounds TALENT_MAXED_SOUND = Sounds.buttonClickShortHigh;
-        private const Sounds TALENT_CANNOT_BUY_SOUND = Sounds.buttonClickShortHigh;
+        private const Sounds TALENT_PURCHASE_SOUND = Sounds.talnetBought;
+        private const Sounds TALENT_MAXED_SOUND = Sounds.talentMaxed;
+        private const Sounds TALENT_CANNOT_BUY_SOUND = Sounds.error;
 
         [field: SerializeField] private Button CloseButton { get; set; }
         [field: SerializeField, FormerlySerializedAs("<GoldLabel>k__BackingField")]
@@ -107,9 +107,14 @@ namespace _Project.Scripts.Gameplay.Talents
             if (_isRevealQueuePlaying)
                 return TalentNodePurchaseResult.Ignored;
 
-            return _talentService.Buy(talentId)
-                ? TalentNodePurchaseResult.Purchased
-                : TalentNodePurchaseResult.Failed;
+            TalentDefinition talent = _talentsById[talentId];
+
+            if (!_talentService.Buy(talentId))
+                return TalentNodePurchaseResult.Failed;
+
+            return _talentService.LevelOf(talentId) >= talent.MaxLevel
+                ? TalentNodePurchaseResult.PurchasedFinalLevel
+                : TalentNodePurchaseResult.Purchased;
         }
 
         internal void PlayButtonClickSound() =>

@@ -204,6 +204,12 @@ namespace _Project.Scripts.Gameplay.Talents
                         return;
                     }
 
+                    if (result == TalentNodePurchaseResult.PurchasedFinalLevel)
+                    {
+                        _window.PlayTalentMaxedSound();
+                        return;
+                    }
+
                     PlayCannotBuyFeedback();
                     return;
                 case TalentNodeViewState.NotEnoughCurrency:
@@ -276,6 +282,7 @@ namespace _Project.Scripts.Gameplay.Talents
     {
         Ignored = 0,
         Failed = 1,
-        Purchased = 2
+        Purchased = 2,
+        PurchasedFinalLevel = 3
     }
 }

@@ -158,30 +158,30 @@ ExpectedLevelRadicals =
 | 2 | `AutoClick`, `CoreClickReduction 1`, `NeedleMoleculeDamage 2`, `CoreHealthSmall 2` |
 | 3 | `StingerMolecule`, `StingerMoleculeDamageSmall 1`, `StingerMoleculeAim`, `DnaFlatKillReward 1` |
 | 4 | `StingerMoleculePierce 1`, `StingerMoleculeCriticalChance 1`, `DnaFlatKillReward 2`, `RadicalDropChance 1`, `StingerMoleculeCriticalReward 1` |
-| 5 | `SwarmMolecule`, `SwarmMoleculeDamageSmall 1`, `CurrencyPickupArea 1`, `ConnectionAtomSpeed 1`, `RadicalDropChance 2`, `SwarmMoleculeAttackRange 1` |
+| 5 | `StingerMoleculeDamageSmall 2`, `SwarmMolecule`, `SwarmMoleculeDamageSmall 1`, `CurrencyPickupArea 1`, `ConnectionAtomSpeed 1`, `RadicalDropChance 2`, `SwarmMoleculeAttackRange 1` |
 | 6 | `SwarmMoleculeShotCount 1`, `StingerMoleculePierce 2`, `RadicalPickupAmountBonus 1` |
 | 7 | `NeedleMoleculeDamage 3`, `SwarmMoleculeShotCount 2`, `MembraneMolecule`, `MembraneMoleculeChargeReduction`, `RadicalPickupAmountBonus 2`, `CoreHealthLarge 1`, `RadicalDropChance 3` |
-| 8 | `NeedleMoleculeDamage 4`, `SwarmMoleculeDamageSmall 2`, `CoreHealthLarge 2`, `DnaFlatKillReward 3`, `CurrencyPickupArea 2`, `ConnectionAtomSpeed 2`, `StingerMoleculeCriticalChance 2`, `StingerMoleculeDamageSmall 2-3`, `DnaPickupAmountBonus 1` |
+| 8 | `NeedleMoleculeDamage 4`, `SwarmMoleculeDamageSmall 2`, `CoreHealthLarge 2`, `DnaFlatKillReward 3`, `CurrencyPickupArea 2`, `ConnectionAtomSpeed 2`, `StingerMoleculeCriticalChance 2`, `StingerMoleculeDamageSmall 3`, `DnaPickupAmountBonus 1` |
 | 9 | `MembraneMoleculeDuration`, `DnaPickupAmountBonus 2`, `DnaFlatKillReward 4`, `StingerMoleculeChargeReduction 1-2`, `MembraneMoleculeIntegrity 1`, `MembraneMoleculeCooldownReduction 1`, `StingerMoleculeDamageLarge 1` |
 | 10 first-clear | `DnaFlatKillReward 5`, `CurrencyPickupArea 3-4`, `ConnectionAtomSpeed 3`, `CoreClickReduction 2-3`, `StingerMoleculeCriticalChance 3`, `SwarmMoleculeDamageSmall 3-4`, `StingerMoleculeDamageLarge 2` |
 | 10 фарм | Остаток дерева: `CoreHealthSmall 3-5`, `CoreClickReduction 4`, `NeedleMoleculeDamage 5`, `NeedleMoleculeChargeReduction 2`, `MembraneMoleculeCooldownReduction 2-3`, `MembraneMoleculeIntegrity 2-3`, `StingerMoleculeDamageLarge 3`, `SwarmMoleculeDamageLarge 1-2`, `StingerMoleculeCriticalReward 2-3`, оставшиеся late DNA-грейды |
 
 ## Боевой target path
 
-StingerMolecule должен быть гарантированным ответом на Elite: после открытия Stinger актуальная Elite должна умирать от одного обычного Stinger-выстрела. Крит не является требованием для убийства Elite и остается бонусом для overkill, ускорения босса и крит-награды.
+StingerMolecule должен быть гарантированным ответом на Elite: после открытия Stinger актуальная Elite должна умирать от одного обычного Stinger-выстрела. Boss на target path держится примерно 4 обычных Stinger-выстрела. Крит не является требованием для убийства Elite и остается бонусом для overkill, ускорения босса и крит-награды.
 
-| Вход в уровень | Elite HP | Минимальный Stinger target path | Stinger damage | Crit damage |
-|---:|---:|---|---:|---:|
-| 3 | 8 | Stinger закрыт | - | - |
-| 4 | 10 | `StingerMoleculeDamageSmall 1` | 16 | 32 |
-| 5 | 10 | `StingerMoleculeDamageSmall 1` | 16 | 32 |
-| 6 | 12 | `StingerMoleculeDamageSmall 1` | 16 | 32 |
-| 7 | 14 | `StingerMoleculeDamageSmall 1` | 16 | 32 |
-| 8 | 16 | `StingerMoleculeDamageSmall 1` | 16 | 32 |
-| 9 | 20 | `StingerMoleculeDamageSmall 2` | 22 | 44 |
-| 10 | 27 | `StingerMoleculeDamageSmall 2`, `StingerMoleculeDamageLarge 1` | 32 | 64 |
+| Вход в уровень | Elite HP | Boss HP | Минимальный Stinger target path | Stinger damage | Crit damage | Elite result | Boss result |
+|---:|---:|---:|---|---:|---:|---|---|
+| 3 | 8 | 15 | Stinger закрыт | - | - | intro без Stinger | - |
+| 4 | 15 | 60 | `StingerMoleculeDamageSmall 1` | 17 | 34 | 1 shot | 4 shots |
+| 5 | 15 | 64 | `StingerMoleculeDamageSmall 1` | 17 | 34 | 1 shot | 4 shots |
+| 6 | 18 | 80 | `StingerMoleculeDamageSmall 2` | 24 | 48 | 1 shot | 4 shots |
+| 7 | 21 | 88 | `StingerMoleculeDamageSmall 2` | 24 | 48 | 1 shot | 4 shots |
+| 8 | 24 | 96 | `StingerMoleculeDamageSmall 2` | 24 | 48 | 1 shot | 4 shots |
+| 9 | 30 | 120 | `StingerMoleculeDamageSmall 3` | 31 | 62 | 1 shot | 4 shots |
+| 10 | 42 | 168 | `StingerMoleculeDamageSmall 3`, `StingerMoleculeDamageLarge 1` | 42 | 84 | 1 shot | 4 shots |
 
-Обязательные combat-пороговые покупки: `NeedleMoleculeDamage 3` перед `Level8`, `NeedleMoleculeDamage 4` перед `Level9`, `SwarmMoleculeDamageSmall 2` перед `Level9`, `StingerMoleculeDamageSmall 2` перед `Level9`, `StingerMoleculeDamageLarge 1` перед `Level10`. `SwarmMoleculeDamageLarge` не является обязательным campaign target path и остается late/farm или boss-comfort.
+Обязательные combat-пороговые покупки: `StingerMoleculeDamageSmall 1` перед `Level4`, `StingerMoleculeDamageSmall 2` перед `Level6`, `NeedleMoleculeDamage 3` перед `Level8`, `NeedleMoleculeDamage 4` перед `Level9`, `SwarmMoleculeDamageSmall 2` перед `Level9`, `StingerMoleculeDamageSmall 3` перед `Level9`, `StingerMoleculeDamageLarge 1` перед `Level10`. `SwarmMoleculeDamageLarge` не является обязательным campaign target path и остается late/farm или boss-comfort.
 
 NeedleMolecule остается основным single-target ответом на Standard. Расчет: базовый урон Needle `1`, `NeedleMoleculeDamage` дает `+1` урона за уровень.
 

@@ -59,7 +59,7 @@ TALENT_NEEDLE_MOLECULE_CHARGE_REDUCTION_DESC,NeedleMolecule требует на 
 TALENT_NEEDLE_MOLECULE_AIM_TITLE,Боевой прицел,Combat Aim
 TALENT_NEEDLE_MOLECULE_AIM_DESC,Показывает направление выстрела NeedleMolecule.,Shows the NeedleMolecule shot direction.
 TALENT_STINGER_MOLECULE_DAMAGE_SMALL_TITLE,Урон I,Damage I
-TALENT_STINGER_MOLECULE_DAMAGE_SMALL_DESC,Увеличивает урон StingerMolecule на 6 за уровень.,Increases StingerMolecule damage by 6 per level.
+TALENT_STINGER_MOLECULE_DAMAGE_SMALL_DESC,Увеличивает урон StingerMolecule на 7 за уровень.,Increases StingerMolecule damage by 7 per level.
 TALENT_STINGER_MOLECULE_CHARGE_REDUCTION_TITLE,Быстрое жало,Quick Sting
 TALENT_STINGER_MOLECULE_CHARGE_REDUCTION_DESC,StingerMolecule требует на 1 атом меньше для полного заряда.,StingerMolecule needs 1 fewer atom to fully charge.
 TALENT_STINGER_MOLECULE_AIM_TITLE,Прицел жала,Stinger Aim
@@ -67,7 +67,7 @@ TALENT_STINGER_MOLECULE_AIM_DESC,Показывает направление в�
 TALENT_STINGER_MOLECULE_PIERCE_TITLE,Пробитие,Pierce
 TALENT_STINGER_MOLECULE_PIERCE_DESC,Выстрел StingerMolecule пробивает первого врага и летит дальше.,StingerMolecule shot pierces the first enemy and keeps flying.
 TALENT_STINGER_MOLECULE_DAMAGE_LARGE_TITLE,Урон II,Damage II
-TALENT_STINGER_MOLECULE_DAMAGE_LARGE_DESC,Сильно увеличивает урон StingerMolecule на 10.,Greatly increases StingerMolecule damage by 10.
+TALENT_STINGER_MOLECULE_DAMAGE_LARGE_DESC,Сильно увеличивает урон StingerMolecule на 11.,Greatly increases StingerMolecule damage by 11.
 TALENT_MEMBRANE_MOLECULE_TITLE,Мембранная молекула,Membrane Molecule
 TALENT_MEMBRANE_MOLECULE_DESC,Разблокирует защитную мембранную молекулу.,Unlocks a defensive membrane molecule.
 TALENT_MEMBRANE_MOLECULE_CHARGE_REDUCTION_TITLE,Лёгкая мембрана,Light Membrane

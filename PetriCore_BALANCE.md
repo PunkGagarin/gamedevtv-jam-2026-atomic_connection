@@ -13,9 +13,9 @@
 
 | Значение | Сейчас |
 |---|---:|
-| Кликов для генерации свободного атома | 6 |
+| Кликов для генерации свободного атома | 7 |
 | Интервал автоклика после таланта | 0.35 сек |
-| HP атомного ядра | 2 |
+| HP атомного ядра | 3 |
 | Радиус смещения спавна свободного атома | 1 |
 | Радиус орбиты свободных атомов вокруг ядра | 1.1 |
 | Скорость вращения свободных атомов вокруг ядра, градусов/сек | 60 |
@@ -112,58 +112,58 @@
 
 | Level | Standard | Standard+ / burst | Mass | Elite | Ranged | Boss |
 |---:|---|---|---|---|---|---|
-| 3 | HP2 DMG2 | HP2 DMG1 | - | HP8 DMG3 | - | HP10 |
-| 4 | HP2 DMG2 | HP4 DMG3 | - | HP10 DMG3 | - | HP28 |
-| 5 | HP2 DMG2 | HP4 DMG3 | HP1 DMG1 | HP10 DMG3 | - | HP36 |
-| 6 | HP3 DMG2 | HP5 DMG3 | HP2 DMG1 | HP12 DMG3 | - | HP42 |
-| 7 | HP3 DMG2 | HP5 DMG3 | HP2 DMG1 | HP14 DMG3 | - | HP46 |
-| 8 | HP4 DMG3 | HP6 DMG4 | HP2 DMG2 | HP16 DMG4 | HP4 | HP48 |
-| 9 | HP5 DMG3 | HP7 DMG4 | HP3 DMG2 | HP20 DMG4 | HP5 | HP60 |
-| 10 | HP6 DMG4 | HP8 DMG5 | HP3 DMG2 | HP27 DMG5 | HP6 | HP90 |
+| 3 | HP2 DMG2 | HP2 DMG1 | - | HP8 DMG3 | - | HP15 |
+| 4 | HP2 DMG2 | HP4 DMG3 | - | HP15 DMG3 | - | HP60 |
+| 5 | HP2 DMG2 | HP4 DMG3 | HP1 DMG1 | HP15 DMG3 | - | HP64 |
+| 6 | HP3 DMG2 | HP5 DMG3 | HP2 DMG1 | HP18 DMG3 | - | HP80 |
+| 7 | HP3 DMG2 | HP5 DMG3 | HP2 DMG1 | HP21 DMG3 | - | HP88 |
+| 8 | HP4 DMG3 | HP6 DMG4 | HP2 DMG2 | HP24 DMG4 | HP4 | HP96 |
+| 9 | HP5 DMG3 | HP7 DMG4 | HP3 DMG2 | HP30 DMG4 | HP5 | HP120 |
+| 10 | HP6 DMG4 | HP8 DMG5 | HP3 DMG2 | HP42 DMG5 | HP6 | HP168 |
 
 ### Итоговая HP/Damage таблица на входе в уровень
 
-Урон молекул считается по минимальному target path на входе в уровень, то есть с учетом покупок, которые игрок должен сделать после предыдущего уровня. `Standard HP` показывает обычный Standard и поздний burst-Standard, если на уровне есть обе версии. `Swarm damage` указан как урон одного снаряда; количество снарядов залпа настраивается отдельными shot-count талантами и здесь не умножается.
+Урон молекул считается по минимальному target path на входе в уровень, то есть с учетом покупок, которые игрок должен сделать после предыдущего уровня. `Standard HP` показывает обычный Standard; поздний burst-Standard оставлен в детальной Needle-таблице ниже. `Swarm damage` указан как урон одного снаряда; количество снарядов залпа настраивается отдельными shot-count талантами и здесь не умножается.
 
 | Level | Standard HP | Mass HP | Elite HP | Ranged HP | Boss HP | Needle damage | Swarm damage | Stinger damage |
 |---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | 1 | 1 | - | - | - | 3 | 1 | - | - |
 | 2 | 1 | - | - | - | 10 | 2 | - | - |
-| 3 | 2 / 2 | - | 8 | - | 10 | 3 | - | - |
-| 4 | 2 / 4 | - | 10 | - | 28 | 3 | - | 16 |
-| 5 | 2 / 4 | 1 | 10 | - | 36 | 3 | - | 16 |
-| 6 | 3 / 5 | 2 | 12 | - | 42 | 3 | 2 | 16 |
-| 7 | 3 / 5 | 2 | 14 | - | 46 | 3 | 2 | 16 |
-| 8 | 4 / 6 | 2 | 16 | 4 | 48 | 4 | 2 | 16 |
-| 9 | 5 / 7 | 3 | 20 | 5 | 60 | 5 | 3 | 22 |
-| 10 | 6 / 8 | 3 | 27 | 6 | 90 | 5 | 3 | 32 |
+| 3 | 2 | - | 8 | - | 15 | 3 | - | - |
+| 4 | 2 | - | 15 | - | 60 | 3 | - | 17 |
+| 5 | 2 | 1 | 15 | - | 64 | 3 | - | 17 |
+| 6 | 3 | 2 | 18 | - | 80 | 3 | 2 | 24 |
+| 7 | 3 | 2 | 21 | - | 88 | 3 | 2 | 24 |
+| 8 | 4 | 2 | 24 | 4 | 96 | 4 | 2 | 24 |
+| 9 | 5 | 3 | 30 | 5 | 120 | 5 | 3 | 31 |
+| 10 | 6 | 3 | 42 | 6 | 168 | 5 | 3 | 42 |
 
 ### Контракт ролей по HP
 
-Mass держится примерно в половину обычного Standard HP, Ranged получает Standard-like HP и давит поведением/projectile pressure, Elite остается в диапазоне примерно `3-4x` среднего Standard HP. Это удерживает роли оружия: Needle решает Standard/Ranged, Swarm чистит Mass, Stinger закрывает Elite.
+Mass держится примерно в половину обычного Standard HP, Ranged получает Standard-like HP и давит поведением/projectile pressure. Elite намеренно вынесен выше Standard-кривой и балансируется относительно Stinger, а не Needle/Swarm. Это удерживает роли оружия: Needle решает Standard/Ranged, Swarm чистит Mass, Stinger закрывает Elite.
 
 | Вход в уровень | Standard HP | Ranged HP | Mass HP | Elite HP | Ответы игрока |
 |---:|---:|---:|---:|---:|---|
-| 6 | 3 / 5 | - | 2 | 12 | Needle / Swarm / Stinger |
-| 7 | 3 / 5 | - | 2 | 14 | Needle / Swarm / Stinger |
-| 8 | 4 / 6 | 4 | 2 | 16 | Ranged убивается как Standard |
-| 9 | 5 / 7 | 5 | 3 | 20 | Swarm не ваншотит Standard |
-| 10 | 6 / 8 | 6 | 3 | 27 | Ranged не становится Elite-lite |
+| 6 | 3 / 5 | - | 2 | 18 | Needle / Swarm / Stinger |
+| 7 | 3 / 5 | - | 2 | 21 | Needle / Swarm / Stinger |
+| 8 | 4 / 6 | 4 | 2 | 24 | Ranged убивается как Standard |
+| 9 | 5 / 7 | 5 | 3 | 30 | Swarm не ваншотит Standard |
+| 10 | 6 / 8 | 6 | 3 | 42 | Ranged не становится Elite-lite |
 
 ### Stinger против Elite на target path
 
-StingerMolecule балансируется как гарантированный ответ на Elite: после открытия Stinger актуальная Elite должна умирать от одного обычного Stinger-выстрела. Критический урон остается бонусом для overkill, ускорения босса и крит-награды, но не является обязательным условием убийства Elite.
+StingerMolecule балансируется как гарантированный ответ на Elite: после открытия Stinger актуальная Elite должна умирать от одного обычного Stinger-выстрела. Boss на target path держится примерно 4 обычных Stinger-выстрела. Критический урон остается бонусом для overkill, ускорения босса и крит-награды, но не является обязательным условием убийства Elite.
 
-| Вход в уровень | Elite HP | Target Stinger-грейды | Stinger damage | Crit damage | Результат |
-|---:|---:|---|---:|---:|---|
-| 3 | 8 | Stinger закрыт | - | - | Elite intro без Stinger |
-| 4 | 10 | `DamageSmall 1` | 16 | 32 | 1 shot |
-| 5 | 10 | `DamageSmall 1`, `CritChance 1` | 16 | 32 | 1 shot |
-| 6 | 12 | `DamageSmall 1` | 16 | 32 | 1 shot |
-| 7 | 14 | `DamageSmall 1` | 16 | 32 | 1 shot |
-| 8 | 16 | `DamageSmall 1` | 16 | 32 | 1 shot |
-| 9 | 20 | `DamageSmall 2-3`, `CritChance 2` | 22-28 | 44-56 | 1 shot |
-| 10 | 27 | `DamageSmall 2-3`, `DamageLarge 1` | 32-38 | 64-76 | 1 shot |
+| Вход в уровень | Elite HP | Boss HP | Target Stinger-грейды | Stinger damage | Crit damage | Elite result | Boss result |
+|---:|---:|---:|---|---:|---:|---|---|
+| 3 | 8 | 15 | Stinger закрыт | - | - | Elite intro без Stinger | - |
+| 4 | 15 | 60 | `DamageSmall 1` | 17 | 34 | 1 shot | 4 shots |
+| 5 | 15 | 64 | `DamageSmall 1`, `CritChance 1` | 17 | 34 | 1 shot | 4 shots |
+| 6 | 18 | 80 | `DamageSmall 2` | 24 | 48 | 1 shot | 4 shots |
+| 7 | 21 | 88 | `DamageSmall 2` | 24 | 48 | 1 shot | 4 shots |
+| 8 | 24 | 96 | `DamageSmall 2` | 24 | 48 | 1 shot | 4 shots |
+| 9 | 30 | 120 | `DamageSmall 3`, `CritChance 2` | 31 | 62 | 1 shot | 4 shots |
+| 10 | 42 | 168 | `DamageSmall 3`, `DamageLarge 1` | 42 | 84 | 1 shot | 4 shots |
 
 ### Needle против Standard на target path
 

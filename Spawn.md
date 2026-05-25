@@ -44,7 +44,7 @@
 | 0 | Standard HP2 DMG2 | 1 | 6 | 6 |
 | 24 | Standard HP2 DMG1 | 3 | 1 | 3 |
 | 18 | Elite HP8 DMG3 | 1 | 1 | 1 |
-| 35 | Boss HP10 | 1 | 1 | 1 |
+| 35 | Boss HP15 | 1 | 1 | 1 |
 
 ## Level 4
 
@@ -54,8 +54,8 @@
 |---:|---|---:|---:|---:|
 | 0 | Standard HP2 DMG2 | 1 | 8 | 8 |
 | 30 | Standard HP4 DMG3 | 2 | 1 | 2 |
-| 12 | Elite HP10 DMG3 | 1 | 3 | 3 |
-| 40 | Boss HP28 | 1 | 1 | 1 |
+| 12 | Elite HP15 DMG3 | 1 | 3 | 3 |
+| 40 | Boss HP60 | 1 | 1 | 1 |
 
 ## Level 5
 
@@ -66,8 +66,8 @@
 | 0 | Standard HP2 DMG2 | 1 | 10 | 10 |
 | 32 | Standard HP4 DMG3 | 4 | 1 | 4 |
 | 20 | Mass HP1 DMG1 | 6 | 1 | 6 |
-| 24 | Elite HP10 DMG3 | 1 | 1 | 1 |
-| 40 | Boss HP36 | 1 | 1 | 1 |
+| 24 | Elite HP15 DMG3 | 1 | 1 | 1 |
+| 40 | Boss HP64 | 1 | 1 | 1 |
 
 ## Level 6
 
@@ -78,8 +78,8 @@
 | 0 | Standard HP3 DMG2 | 1 | 8 | 8 |
 | 34 | Standard HP5 DMG3 | 4 | 1 | 4 |
 | 10 | Mass HP2 DMG1 | 5 | 4 | 20 |
-| 14 | Elite HP12 DMG3 | 1 | 2 | 2 |
-| 40 | Boss HP42 | 1 | 1 | 1 |
+| 14 | Elite HP18 DMG3 | 1 | 2 | 2 |
+| 40 | Boss HP80 | 1 | 1 | 1 |
 
 ## Level 7
 
@@ -90,8 +90,8 @@
 | 0 | Standard HP3 DMG2 | 1 | 10 | 10 |
 | 28 | Standard HP5 DMG3 | 4 | 1 | 4 |
 | 8 | Mass HP2 DMG1 | 5 | 5 | 25 |
-| 12 | Elite HP14 DMG3 | 1 | 2 | 2 |
-| 40 | Boss HP46 | 1 | 1 | 1 |
+| 12 | Elite HP21 DMG3 | 1 | 2 | 2 |
+| 40 | Boss HP88 | 1 | 1 | 1 |
 
 ## Level 8
 
@@ -102,9 +102,9 @@
 | 0 | Standard HP4 DMG3 | 1 | 8 | 8 |
 | 36 | Standard HP6 DMG4 | 4 | 1 | 4 |
 | 14 | Mass HP2 DMG2 | 5 | 2 | 10 |
-| 26 | Elite HP16 DMG4 | 1 | 1 | 1 |
+| 26 | Elite HP24 DMG4 | 1 | 1 | 1 |
 | 18 | Ranged HP4 | 1 | 5 | 5 |
-| 45 | Boss HP48 | 1 | 1 | 1 |
+| 45 | Boss HP96 | 1 | 1 | 1 |
 
 ## Level 9
 
@@ -115,9 +115,9 @@
 | 0 | Standard HP5 DMG3 | 1 | 12 | 12 |
 | 36 | Standard HP7 DMG4 | 6 | 1 | 6 |
 | 10 | Mass HP3 DMG2 | 5 | 4 | 20 |
-| 8 | Elite HP20 DMG4 | 1 | 4 | 4 |
+| 8 | Elite HP30 DMG4 | 1 | 4 | 4 |
 | 14 | Ranged HP5 | 2 | 5 | 10 |
-| 50 | Boss HP60 | 1 | 1 | 1 |
+| 50 | Boss HP120 | 1 | 1 | 1 |
 
 ## Level 10
 
@@ -128,6 +128,6 @@
 | 0 | Standard HP6 DMG4 | 1 | 14 | 14 |
 | 44 | Standard HP8 DMG5 | 8 | 1 | 8 |
 | 8 | Mass HP3 DMG2 | 5 | 9 | 45 |
-| 6 | Elite HP27 DMG5 | 1 | 8 | 8 |
+| 6 | Elite HP42 DMG5 | 1 | 8 | 8 |
 | 12 | Ranged HP6 | 3 | 6 | 18 |
-| 60 | Boss HP90 | 1 | 1 | 1 |
+| 60 | Boss HP168 | 1 | 1 | 1 |

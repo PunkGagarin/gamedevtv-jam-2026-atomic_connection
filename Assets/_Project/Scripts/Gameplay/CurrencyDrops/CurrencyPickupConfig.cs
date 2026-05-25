@@ -35,6 +35,10 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
         [field: SerializeField, Min(1f)] public float CollectIconScaleMultiplier { get; private set; } = 1.35f;
         [field: SerializeField, Min(0f)] public float CollectIconScaleDuration { get; private set; } = 0.12f;
 
+        [field: Header("Victory Auto Collect")]
+        [field: SerializeField, Min(0f)] public float VictoryAutoCollectDuration { get; private set; } = 0.35f;
+        [field: SerializeField, Min(0f)] public float VictoryAutoCollectEndScaleMultiplier { get; private set; } = 0.2f;
+
         [field: Header("Collect Popup")]
         [field: SerializeField] public Vector3 CollectPopupWorldOffset { get; private set; } = new(0f, 0.55f, 0f);
         [field: SerializeField, Min(0f)] public float CollectPopupRiseDistance { get; private set; } = 0.45f;

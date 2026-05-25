@@ -110,6 +110,40 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
             }
         }
 
+        public float CollectAllToCursor()
+        {
+            HidePickupArea();
+
+            if (_pickups.Count == 0)
+                return 0f;
+
+            Vector3 targetWorldPosition = AutoCollectTargetPosition();
+            Dictionary<CurrencyId, int> collectedAmounts = new();
+            bool anyPickupWasCollected = false;
+
+            for (int i = _pickups.Count - 1; i >= 0; i--)
+            {
+                CurrencyPickup pickup = _pickups[i];
+                _pickups.RemoveAt(i);
+
+                if (pickup == null)
+                    continue;
+
+                CurrencyAmount collectedAmount = CollectedAmountFor(pickup.Amount);
+                AddCollectedAmount(collectedAmounts, collectedAmount);
+                pickup.PlayVictoryCollected(targetWorldPosition, _config);
+                anyPickupWasCollected = true;
+            }
+
+            if (!anyPickupWasCollected)
+                return 0f;
+
+            ApplyCollectedAmounts(collectedAmounts);
+            PlayCollectSound();
+
+            return Mathf.Max(0f, _config.VictoryAutoCollectDuration);
+        }
+
         public void Cleanup()
         {
             foreach (CurrencyPickup pickup in _pickups)
@@ -141,6 +175,23 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
             pickup.PlayCollected(collectedAmount, _config);
         }
 
+        private void AddCollectedAmount(Dictionary<CurrencyId, int> collectedAmounts, CurrencyAmount amount)
+        {
+            if (amount.Amount <= 0)
+                return;
+
+            if (collectedAmounts.TryGetValue(amount.CurrencyId, out int currentAmount))
+                collectedAmounts[amount.CurrencyId] = currentAmount + amount.Amount;
+            else
+                collectedAmounts[amount.CurrencyId] = amount.Amount;
+        }
+
+        private void ApplyCollectedAmounts(Dictionary<CurrencyId, int> collectedAmounts)
+        {
+            foreach (KeyValuePair<CurrencyId, int> collectedAmount in collectedAmounts)
+                _currencyService.Add(new CurrencyAmount(collectedAmount.Key, collectedAmount.Value));
+        }
+
         private CurrencyAmount CollectedAmountFor(CurrencyAmount amount)
         {
             int bonusPerUnit = PickupBonusPerUnit(amount.CurrencyId);
@@ -169,6 +220,21 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
         private void PlayCollectSound()
         {
             _audioService?.PlaySfxWithRandomPitch(PICKUP_SOUND);
+        }
+
+        private Vector3 AutoCollectTargetPosition()
+        {
+            Camera camera = _cameraProvider.MainCamera;
+            if (camera != null)
+                return CursorWorldPosition(camera);
+
+            foreach (CurrencyPickup pickup in _pickups)
+            {
+                if (pickup != null)
+                    return pickup.transform.position;
+            }
+
+            return Vector3.zero;
         }
 
         private Vector3 CursorWorldPosition(Camera camera)

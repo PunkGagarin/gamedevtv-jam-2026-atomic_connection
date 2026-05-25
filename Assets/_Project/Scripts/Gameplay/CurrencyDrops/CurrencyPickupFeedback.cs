@@ -17,23 +17,38 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
         private Tween _idleTween;
         private Tween _collectTween;
 
-        public void Initialize(CurrencyAmount amount, CurrencyPickupConfig config)
+        private void Awake()
         {
             if (Icon != null)
-            {
                 _baseIconScale = Icon.transform.localScale;
+
+            if (CollectPopupLabel != null)
+            {
+                _baseCollectPopupScale = CollectPopupLabel.transform.localScale;
+                _baseCollectPopupColor = CollectPopupLabel.color;
+            }
+        }
+
+        public void Initialize(CurrencyAmount amount, CurrencyPickupConfig config)
+        {
+            _idleTween?.Kill();
+            _collectTween?.Kill();
+
+            if (Icon != null)
+            {
                 Sprite icon = config.IconFor(amount.CurrencyId);
                 if (icon != null)
                     Icon.sprite = icon;
 
+                Icon.transform.localScale = _baseIconScale;
                 Icon.gameObject.SetActive(true);
                 PlayIdleAnimation(config);
             }
 
             if (CollectPopupLabel != null)
             {
-                _baseCollectPopupScale = CollectPopupLabel.transform.localScale;
-                _baseCollectPopupColor = CollectPopupLabel.color;
+                CollectPopupLabel.transform.localScale = _baseCollectPopupScale;
+                CollectPopupLabel.color = _baseCollectPopupColor;
                 CollectPopupLabel.gameObject.SetActive(false);
             }
         }
@@ -63,6 +78,41 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
                 config.CollectPopupPulseScale,
                 gameObject,
                 DestroySelf);
+        }
+
+        public void PlayVictoryCollected(Vector3 targetWorldPosition, CurrencyPickupConfig config)
+        {
+            _idleTween?.Kill();
+            _collectTween?.Kill();
+
+            if (CollectPopupLabel != null)
+                CollectPopupLabel.gameObject.SetActive(false);
+
+            if (Icon == null)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            float duration = Mathf.Max(0f, config.VictoryAutoCollectDuration);
+            if (Mathf.Approximately(duration, 0f))
+            {
+                DestroySelf();
+                return;
+            }
+
+            Icon.gameObject.SetActive(true);
+            Icon.transform.localScale = _baseIconScale;
+
+            _collectTween = DOTween.Sequence()
+                .Append(transform
+                    .DOMove(targetWorldPosition, duration)
+                    .SetEase(Ease.InCubic))
+                .Join(Icon.transform
+                    .DOScale(_baseIconScale * Mathf.Max(0f, config.VictoryAutoCollectEndScaleMultiplier), duration)
+                    .SetEase(Ease.InBack))
+                .SetLink(gameObject)
+                .OnComplete(DestroySelf);
         }
 
         private void PlayCollectIconAnimation(CurrencyPickupConfig config)
@@ -104,7 +154,17 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
                 Destroy(gameObject);
         }
 
+        private void OnDisable()
+        {
+            KillTweens();
+        }
+
         private void OnDestroy()
+        {
+            KillTweens();
+        }
+
+        private void KillTweens()
         {
             _idleTween?.Kill();
             _collectTween?.Kill();

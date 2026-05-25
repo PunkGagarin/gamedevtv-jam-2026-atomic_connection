@@ -19,5 +19,7 @@
         talentMaxed = 17,
         error = 18,
         intenseBgm = 14,
+        mainMenuBgm = 19,
+        gameplayMusic = 20,
     }
 }

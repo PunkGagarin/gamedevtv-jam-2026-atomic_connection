@@ -13,6 +13,14 @@ public class CameraShaker : MonoBehaviour
     [SerializeField]
     private CinemachineBasicMultiChannelPerlin noise;
 
+    public float Duration = 3f;
+
+    public float minForce = 6f;
+    public float maxForce = 10f;
+
+    public float minDamage = 1f;
+    public float maxDamage = 10f;
+
     private void Awake()
     {
         if (camera == null)
@@ -39,12 +47,6 @@ public class CameraShaker : MonoBehaviour
     // TODO 1: вынести в конфиги параметры
     private void OnDamage(float amount)
     {
-        float minForce = 6f;
-        float maxForce = 10f;
-
-        float minDamage = 1f;
-        float maxDamage = 10f;
-
         float t = Mathf.InverseLerp(minDamage, maxDamage, amount);
 
         float force = Mathf.Lerp(minForce, maxForce, t);

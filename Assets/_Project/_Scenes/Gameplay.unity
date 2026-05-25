@@ -1626,6 +1626,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CameraShaker
   camera: {fileID: 1848818619}
   noise: {fileID: 0}
+  Duration: 3
+  minForce: 3
+  maxForce: 6
+  minDamage: 1
+  maxDamage: 10
 --- !u!1 &1882764967
 GameObject:
   m_ObjectHideFlags: 0

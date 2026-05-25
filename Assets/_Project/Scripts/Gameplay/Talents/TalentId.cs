@@ -33,5 +33,7 @@ namespace _Project.Scripts.Gameplay.Talents
         NeedleMoleculeDamage = 32,
         NeedleMoleculeChargeReduction = 33,
         NeedleMoleculeAim = 34,
+        SwarmMoleculeChargeReduction = 35,
+        AutoClickAnywhere = 36,
     }
 }

@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 90b71f339c424f7cb0ae75644c43326e, type: 3}
-  m_Name: StingerMoleculePierce
+  m_Name: AutoClickAnywhere
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Talents.TalentDefinition
-  <Id>k__BackingField: 6
-  <EffectType>k__BackingField: 5
-  <Title>k__BackingField: TALENT_STINGER_MOLECULE_PIERCE_TITLE
-  <Description>k__BackingField: TALENT_STINGER_MOLECULE_PIERCE_DESC
-  <Icon>k__BackingField: {fileID: 21300000, guid: 3852d5f53a7207d488e08cf5a2073720, type: 3}
-  <MaxLevel>k__BackingField: 2
+  <Id>k__BackingField: 36
+  <EffectType>k__BackingField: 33
+  <Title>k__BackingField: TALENT_AUTO_CLICK_ANYWHERE_TITLE
+  <Description>k__BackingField: TALENT_AUTO_CLICK_ANYWHERE_DESC
+  <Icon>k__BackingField: {fileID: 2395158100669332950, guid: f5349ce696fdd4029aa1ba75a9250bb3, type: 3}
+  <MaxLevel>k__BackingField: 1
   <CostCurrency>k__BackingField: 2
-  <CostsByLevel>k__BackingField: 040000000a000000
-  <Prerequisites>k__BackingField: 1f000000
-  <GraphPosition>k__BackingField: {x: 240, y: -960}
+  <CostsByLevel>k__BackingField: 28000000
+  <Prerequisites>k__BackingField: 01000000
+  <GraphPosition>k__BackingField: {x: -240, y: -480}
   <BonusPerLevel>k__BackingField: 1
   <IsUnlock>k__BackingField: 1

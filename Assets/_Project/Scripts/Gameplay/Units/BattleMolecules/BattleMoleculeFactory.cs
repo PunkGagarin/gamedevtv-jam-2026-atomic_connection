@@ -63,12 +63,15 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 
         public BattleMolecule CreateSwarm(Vector3 at, BattleMoleculeConfig config)
         {
+            int atomsRequired = config.SwarmMoleculeAtomsRequired -
+                                Mathf.RoundToInt(_talentService.BonusOf(TalentEffectType.SwarmMoleculeChargeReduction));
+
             return Create(
                 at,
                 config,
                 SWARM_MOLECULE_PREFAB_PATH,
                 "SwarmMolecule",
-                AdjustedAtomsRequired(config.SwarmMoleculeAtomsRequired),
+                AdjustedAtomsRequired(atomsRequired),
                 AdjustedAtomsRequired(config.SwarmMoleculeBondAtomsRequired));
         }
 

@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 90b71f339c424f7cb0ae75644c43326e, type: 3}
-  m_Name: SwarmMoleculeAttackRange
+  m_Name: SwarmMoleculeChargeReduction
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Talents.TalentDefinition
-  <Id>k__BackingField: 20
-  <EffectType>k__BackingField: 17
-  <Title>k__BackingField: TALENT_SWARM_MOLECULE_ATTACK_RANGE_TITLE
-  <Description>k__BackingField: TALENT_SWARM_MOLECULE_ATTACK_RANGE_DESC
-  <Icon>k__BackingField: {fileID: 1525844322228093430, guid: fb904debbd7654c8089277f48efebd93, type: 3}
+  <Id>k__BackingField: 35
+  <EffectType>k__BackingField: 32
+  <Title>k__BackingField: TALENT_SWARM_MOLECULE_CHARGE_REDUCTION_TITLE
+  <Description>k__BackingField: TALENT_SWARM_MOLECULE_CHARGE_REDUCTION_DESC
+  <Icon>k__BackingField: {fileID: 4099191518589774541, guid: 96b274445eeba824696184e6741630b2, type: 3}
   <MaxLevel>k__BackingField: 2
   <CostCurrency>k__BackingField: 2
-  <CostsByLevel>k__BackingField: 0500000010000000
-  <Prerequisites>k__BackingField: 23000000
+  <CostsByLevel>k__BackingField: 090000001e000000
+  <Prerequisites>k__BackingField: 0e000000
   <GraphPosition>k__BackingField: {x: -480, y: -960}
-  <BonusPerLevel>k__BackingField: 3
+  <BonusPerLevel>k__BackingField: 1
   <IsUnlock>k__BackingField: 0

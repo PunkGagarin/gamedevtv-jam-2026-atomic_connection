@@ -30,5 +30,7 @@ namespace _Project.Scripts.Gameplay.Talents
         NeedleMoleculeChargeReduction = 29,
         NeedleMoleculeAim = 30,
         RadicalPickupAmountBonus = 31,
+        SwarmMoleculeChargeReduction = 32,
+        AutoClickAnywhere = 33,
     }
 }

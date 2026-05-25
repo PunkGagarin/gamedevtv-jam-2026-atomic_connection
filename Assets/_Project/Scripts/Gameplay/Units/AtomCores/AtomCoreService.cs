@@ -133,7 +133,8 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
             if (_talentService == null || !_talentService.IsUnlocked(TalentEffectType.AutoClick))
                 return false;
 
-            if (!IsPointerOverCore())
+            bool canClickAnywhere = _talentService.IsUnlocked(TalentEffectType.AutoClickAnywhere);
+            if (!canClickAnywhere && !IsPointerOverCore())
                 return false;
 
             if (_inputService.GetLeftMouseButtonRaw())

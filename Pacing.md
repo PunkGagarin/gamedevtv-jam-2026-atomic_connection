@@ -8,7 +8,7 @@
 - `Level01-Level02` остаются входом; `Level03-Level10` задают основную кривую кампании.
 - Кампания должна проходиться по target path без обязательного фарма, но полное закрытие дерева допускает 1-3 фарм-забега после `Level10`.
 - Elite дает `5 DNA + 1 Radical`.
-- Radicals используются как полноценная вторая валюта: 10 radical-талантов, первый spend после `Level4`.
+- Radicals используются как полноценная вторая валюта: 12 radical-талантов, первый spend после `Level4`.
 - Поздние DNA-таланты являются фарм-синками, потому что к `Level10` игрок получает тысячи DNA.
 - AutoLoad-таланты исключены из активного дерева.
 
@@ -115,6 +115,8 @@ ExpectedLevelRadicals =
 - `StingerMoleculeAim`
 - `StingerMoleculePierce`
 - `StingerMoleculeChargeReduction`
+- `SwarmMoleculeChargeReduction`
+- `AutoClickAnywhere`
 
 ## DNA-таланты
 
@@ -146,6 +148,8 @@ ExpectedLevelRadicals =
 | `RadicalPickupAmountBonus` | 2 | `10 / 28` |
 | `DnaPickupAmountBonus` | 2 | `12 / 40` |
 | `StingerMoleculeChargeReduction` | 2 | `9 / 30` |
+| `SwarmMoleculeChargeReduction` | 2 | `9 / 30` |
+| `AutoClickAnywhere` | 1 | `40` |
 | `StingerMoleculeDamageLarge` | 3 | `10 / 26 / 80` |
 | `SwarmMoleculeDamageLarge` | 2 | `8 / 26` |
 | `MembraneMoleculeIntegrity` | 3 | `8 / 30 / 100` |
@@ -158,11 +162,11 @@ ExpectedLevelRadicals =
 | 2 | `AutoClick`, `CoreClickReduction 1`, `NeedleMoleculeDamage 2`, `CoreHealthSmall 2` |
 | 3 | `StingerMolecule`, `StingerMoleculeDamageSmall 1`, `StingerMoleculeAim`, `DnaFlatKillReward 1` |
 | 4 | `StingerMoleculePierce 1`, `StingerMoleculeCriticalChance 1`, `DnaFlatKillReward 2`, `RadicalDropChance 1`, `StingerMoleculeCriticalReward 1` |
-| 5 | `StingerMoleculeDamageSmall 2`, `SwarmMolecule`, `SwarmMoleculeDamageSmall 1`, `CurrencyPickupArea 1`, `ConnectionAtomSpeed 1`, `RadicalDropChance 2`, `SwarmMoleculeAttackRange 1` |
+| 5 | `StingerMoleculeDamageSmall 2`, `SwarmMolecule`, `SwarmMoleculeDamageSmall 1`, `CurrencyPickupArea 1`, `ConnectionAtomSpeed 1`, `RadicalDropChance 2`, `SwarmMoleculeChargeReduction 1`, `SwarmMoleculeAttackRange 1` |
 | 6 | `SwarmMoleculeShotCount 1`, `StingerMoleculePierce 2`, `RadicalPickupAmountBonus 1` |
 | 7 | `NeedleMoleculeDamage 3`, `SwarmMoleculeShotCount 2`, `MembraneMolecule`, `MembraneMoleculeChargeReduction`, `RadicalPickupAmountBonus 2`, `CoreHealthLarge 1`, `RadicalDropChance 3` |
-| 8 | `NeedleMoleculeDamage 4`, `SwarmMoleculeDamageSmall 2`, `CoreHealthLarge 2`, `DnaFlatKillReward 3`, `CurrencyPickupArea 2`, `ConnectionAtomSpeed 2`, `StingerMoleculeCriticalChance 2`, `StingerMoleculeDamageSmall 3`, `DnaPickupAmountBonus 1` |
-| 9 | `MembraneMoleculeDuration`, `DnaPickupAmountBonus 2`, `DnaFlatKillReward 4`, `StingerMoleculeChargeReduction 1-2`, `MembraneMoleculeIntegrity 1`, `MembraneMoleculeCooldownReduction 1`, `StingerMoleculeDamageLarge 1` |
+| 8 | `NeedleMoleculeDamage 4`, `SwarmMoleculeDamageSmall 2`, `CoreHealthLarge 2`, `DnaFlatKillReward 3`, `CurrencyPickupArea 2`, `ConnectionAtomSpeed 2`, `StingerMoleculeCriticalChance 2`, `StingerMoleculeDamageSmall 3`, `DnaPickupAmountBonus 1`, `AutoClickAnywhere` |
+| 9 | `MembraneMoleculeDuration`, `DnaPickupAmountBonus 2`, `DnaFlatKillReward 4`, `StingerMoleculeChargeReduction 1-2`, `SwarmMoleculeChargeReduction 2`, `MembraneMoleculeIntegrity 1`, `MembraneMoleculeCooldownReduction 1`, `StingerMoleculeDamageLarge 1` |
 | 10 first-clear | `DnaFlatKillReward 5`, `CurrencyPickupArea 3-4`, `ConnectionAtomSpeed 3`, `CoreClickReduction 2-3`, `StingerMoleculeCriticalChance 3`, `SwarmMoleculeDamageSmall 3-4`, `StingerMoleculeDamageLarge 2` |
 | 10 фарм | Остаток дерева: `CoreHealthSmall 3-5`, `CoreClickReduction 4`, `NeedleMoleculeDamage 5`, `NeedleMoleculeChargeReduction 2`, `MembraneMoleculeCooldownReduction 2-3`, `MembraneMoleculeIntegrity 2-3`, `StingerMoleculeDamageLarge 3`, `SwarmMoleculeDamageLarge 1-2`, `StingerMoleculeCriticalReward 2-3`, оставшиеся late DNA-грейды |
 
@@ -212,9 +216,9 @@ SwarmMolecule должен быть ответом на Mass, но не долж
 ## Проверка
 
 - Суммарная isotope-стоимость активного дерева равна `9`.
-- Radical-талантов в активном дереве ровно `10`.
+- Radical-талантов в активном дереве ровно `12`.
 - Первый radical-spend доступен после `Level4`.
-- `StingerMoleculeAim`, `StingerMoleculePierce`, `StingerMoleculeChargeReduction` не стоят изотопы.
+- `StingerMoleculeAim`, `StingerMoleculePierce`, `StingerMoleculeChargeReduction`, `SwarmMoleculeChargeReduction` и `AutoClickAnywhere` не стоят изотопы.
 - AutoLoad-таланты не участвуют в активном `TalentConfig`.
 - Target path доступен без фарма до прохождения `Level10`.
 - Full tree требует примерно `1-3` фарм-забега после `Level10`.

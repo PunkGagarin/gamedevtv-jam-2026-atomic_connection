@@ -47,6 +47,8 @@
   <text key="TALENT_CORE_HEALTH_SMALL_DESC">Увеличивает здоровье ядра на 1.</text>
   <text key="TALENT_AUTO_CLICK_TITLE">Автоклик</text>
   <text key="TALENT_AUTO_CLICK_DESC">Ядро автоматически добавляет клик генерации при наведении курсора на ядро.</text>
+  <text key="TALENT_AUTO_CLICK_ANYWHERE_TITLE">Свободный автоклик</text>
+  <text key="TALENT_AUTO_CLICK_ANYWHERE_DESC">Автоклик работает независимо от положения курсора.</text>
   <text key="TALENT_CORE_CLICK_REDUCTION_TITLE">Быстрая сборка</text>
   <text key="TALENT_CORE_CLICK_REDUCTION_DESC">Уменьшает время восстановления клика ядра.</text>
   <text key="TALENT_CORE_HEALTH_LARGE_TITLE">Прочное ядро</text>
@@ -62,7 +64,7 @@
   <text key="TALENT_STINGER_MOLECULE_DAMAGE_SMALL_TITLE">Урон I</text>
   <text key="TALENT_STINGER_MOLECULE_DAMAGE_SMALL_DESC">Увеличивает урон StingerMolecule на 6 за уровень.</text>
   <text key="TALENT_STINGER_MOLECULE_CHARGE_REDUCTION_TITLE">Быстрое жало</text>
-  <text key="TALENT_STINGER_MOLECULE_CHARGE_REDUCTION_DESC">StingerMolecule требует на 1 атом меньше для полного заряда.</text>
+  <text key="TALENT_STINGER_MOLECULE_CHARGE_REDUCTION_DESC">StingerMolecule требует на 1 атом меньше для полного заряда за уровень.</text>
   <text key="TALENT_STINGER_MOLECULE_AIM_TITLE">Прицел жала</text>
   <text key="TALENT_STINGER_MOLECULE_AIM_DESC">Показывает направление выстрела StingerMolecule.</text>
   <text key="TALENT_STINGER_MOLECULE_PIERCE_TITLE">Пробитие</text>
@@ -81,6 +83,8 @@
   <text key="TALENT_MEMBRANE_MOLECULE_COOLDOWN_REDUCTION_DESC">Уменьшает перезарядку мембраны на 20% за уровень.</text>
   <text key="TALENT_SWARM_MOLECULE_TITLE">Роевая молекула</text>
   <text key="TALENT_SWARM_MOLECULE_DESC">Разблокирует роевую молекулу с пробивающим залпом.</text>
+  <text key="TALENT_SWARM_MOLECULE_CHARGE_REDUCTION_TITLE">Лёгкий рой</text>
+  <text key="TALENT_SWARM_MOLECULE_CHARGE_REDUCTION_DESC">SwarmMolecule требует на 1 атом меньше для полного заряда за уровень.</text>
   <text key="TALENT_SWARM_MOLECULE_DAMAGE_SMALL_TITLE">Урон роя I</text>
   <text key="TALENT_SWARM_MOLECULE_DAMAGE_SMALL_DESC">Увеличивает урон SwarmMolecule на 1.</text>
   <text key="TALENT_SWARM_MOLECULE_DAMAGE_LARGE_TITLE">Урон роя II</text>

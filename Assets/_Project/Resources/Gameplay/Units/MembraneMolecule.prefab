@@ -32,6 +32,7 @@ GameObject:
   - component: {fileID: 11400024}
   - component: {fileID: 11400026}
   - component: {fileID: 11400027}
+  - component: {fileID: 5117320698878402129}
   m_Layer: 0
   m_Name: MembraneMolecule
   m_TagString: Untagged
@@ -228,6 +229,35 @@ MonoBehaviour:
   <AimLineColor>k__BackingField: {r: 1, g: 0.9215686, b: 0.01568628, a: 1}
   <AimPreviewLineColor>k__BackingField: {r: 0, g: 1, b: 0, a: 1}
   <ShotLineColor>k__BackingField: {r: 0, g: 1, b: 1, a: 1}
+  <PreviewWobbleSegmentCount>k__BackingField: 14
+  <PreviewWobbleAmplitude>k__BackingField: 1.5
+  <PreviewWobbleFrequency>k__BackingField: 3
+  <PreviewWobbleDuration>k__BackingField: 0.4
+  <PreviewWobbleAnimationSpeed>k__BackingField: 4
+  <WidthCurve>k__BackingField:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &11400008
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -455,6 +485,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81491604d20545d586e66a02e8c7c128, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5117320698878402129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dce4739fafe49447fb80c1405f714179, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Bookmark4Unity.Runtime::Bookmark4Unity.Guid.GuidComponent
+  serializedGuid: 
 --- !u!1 &100001
 GameObject:
   m_ObjectHideFlags: 0
@@ -818,7 +861,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 11400005, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
       propertyPath: m_Color.b
-      value: 1
+      value: 0.15642649
       objectReference: {fileID: 0}
     - target: {fileID: 11400005, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
       propertyPath: m_Color.g
@@ -826,7 +869,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 11400005, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
       propertyPath: m_Color.r
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 22400000, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
       propertyPath: m_AnchorMax.x
@@ -850,7 +893,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 22400000, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0.08
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 22400000, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
       propertyPath: m_LocalPosition.x
@@ -931,15 +974,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 11400005, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
       propertyPath: m_Color.b
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11400005, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
       propertyPath: m_Color.g
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11400005, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
       propertyPath: m_Color.r
-      value: 1
+      value: 0.745283
       objectReference: {fileID: 0}
     - target: {fileID: 22400000, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
       propertyPath: m_AnchorMax.x
@@ -963,7 +1006,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 22400000, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0.08
+      value: 0.09
       objectReference: {fileID: 0}
     - target: {fileID: 22400000, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
       propertyPath: m_LocalPosition.x

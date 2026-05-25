@@ -40,6 +40,7 @@ namespace _Project.Scripts.Gameplay.Talents
         [field: SerializeField, Min(0f)] private float TooltipViewportPadding { get; set; } = 12f;
 
         [Inject] private ITalentService _talentService;
+        [Inject] private TalentConfig _talentConfig;
         [Inject] private ICurrencyService _currencyService;
         [Inject] private CurrencyPickupConfig _currencyPickupConfig;
         [Inject] private IWindowService _windowService;
@@ -226,9 +227,7 @@ namespace _Project.Scripts.Gameplay.Talents
         private void CreateNode(TalentDefinition talent)
         {
             TalentNodeView node = Instantiate(NodePrefab, NodesRoot);
-            Vector2 pos = talent.GraphPosition;
-            pos.y = -pos.y;
-            node.RectTransform.anchoredPosition = pos;
+            node.RectTransform.anchoredPosition = ScaledGraphPosition(talent);
             node.Initialize(this, talent, _animationConfig);
             node.SetVisible(false);
             _nodesById[talent.Id] = node;
@@ -237,13 +236,23 @@ namespace _Project.Scripts.Gameplay.Talents
         private void CreateConnection(TalentDefinition parent, TalentDefinition child)
         {
             TalentConnectionView connection = Instantiate(ConnectionPrefab, ConnectionsRoot);
-            Vector2 from = parent.GraphPosition;
-            Vector2 to = child.GraphPosition;
-            from.y = -from.y;
-            to.y = -to.y;
+            Vector2 from = ScaledGraphPosition(parent);
+            Vector2 to = ScaledGraphPosition(child);
             connection.Initialize(from, to, _animationConfig);
             connection.SetVisible(false);
             _connections.Add(new TalentConnectionBinding(parent.Id, child.Id, connection));
+        }
+
+        private Vector2 ScaledGraphPosition(TalentDefinition talent)
+        {
+            Vector2 position = talent.GraphPosition * NodePositionScale();
+            position.y = -position.y;
+            return position;
+        }
+
+        private float NodePositionScale()
+        {
+            return _talentConfig != null ? Mathf.Max(0.1f, _talentConfig.NodePositionScale) : 1f;
         }
 
         private void CalculateGraphContentHalfSize()

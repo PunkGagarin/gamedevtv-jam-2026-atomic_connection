@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: TalentConfig
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Talents.TalentConfig
   <ClearSavedProgressOnStartup>k__BackingField: 0
+  <NodePositionScale>k__BackingField: 1.5
   <Talents>k__BackingField:
   - {fileID: 11400000, guid: dba7fdf4bb0d1c71ff0c67f18f045578, type: 2}
   - {fileID: 11400000, guid: 0291001701f8c6fd18aadfd636bd33df, type: 2}

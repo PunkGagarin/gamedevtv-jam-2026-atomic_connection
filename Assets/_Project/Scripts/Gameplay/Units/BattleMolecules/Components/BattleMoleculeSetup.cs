@@ -16,9 +16,11 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
     [RequireComponent(typeof(BattleMoleculeConnectionVisual))]
     public class BattleMoleculeSetup : MonoBehaviour
     {
+        [field: SerializeField] private OwnedAtoms OwnedAtoms { get; set; }
         [field: SerializeField] private OwnedAtomReceiver AtomReceiver { get; set; }
         [field: SerializeField] private BattleMoleculeBond Bond { get; set; }
         [field: SerializeField] private BattleMoleculeCharge Charge { get; set; }
+        [field: SerializeField] private BattleMoleculeChargeRequirementVisual ChargeRequirementVisual { get; set; }
         [field: SerializeField] private OwnedAtomOrbitLayout AtomOrbitLayout { get; set; }
         [field: SerializeField] private AtomOrbit AtomOrbit { get; set; }
         [field: SerializeField] private BattleMoleculeShotQueue ShotQueue { get; set; }
@@ -27,6 +29,9 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
         private void Awake()
         {
+            if (OwnedAtoms == null)
+                OwnedAtoms = GetComponent<OwnedAtoms>();
+
             if (AtomReceiver == null)
                 AtomReceiver = GetComponent<OwnedAtomReceiver>();
 
@@ -35,6 +40,9 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
             if (Charge == null)
                 Charge = GetComponent<BattleMoleculeCharge>();
+
+            if (ChargeRequirementVisual == null)
+                ChargeRequirementVisual = GetComponentInChildren<BattleMoleculeChargeRequirementVisual>(true);
 
             if (AtomOrbitLayout == null)
                 AtomOrbitLayout = GetComponent<OwnedAtomOrbitLayout>();
@@ -60,6 +68,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             AtomReceiver?.Configure(FreeAtomOwnerKind.BattleMolecule);
             Bond?.Configure(bondAtomsRequired);
             Charge?.Configure(atomsRequired);
+            ChargeRequirementVisual?.Configure(OwnedAtoms, Charge, atomsRequired);
             ConnectionArrival?.Configure(config.AtomsPosCircleRadius);
             AtomOrbitLayout?.ConfigureFixedRadius(FreeAtomOwnerKind.BattleMolecule, config.AtomsPosCircleRadius);
             AtomOrbit?.Configure(config.DepositedAtomsOrbitDegreesPerSecond);

@@ -80,7 +80,7 @@
   <text key="TALENT_MEMBRANE_MOLECULE_INTEGRITY_TITLE">Плотная мембрана</text>
   <text key="TALENT_MEMBRANE_MOLECULE_INTEGRITY_DESC">Увеличивает прочность мембраны на 1 за уровень.</text>
   <text key="TALENT_MEMBRANE_MOLECULE_COOLDOWN_REDUCTION_TITLE">Быстрая рекристаллизация</text>
-  <text key="TALENT_MEMBRANE_MOLECULE_COOLDOWN_REDUCTION_DESC">Уменьшает перезарядку мембраны на 20% за уровень.</text>
+  <text key="TALENT_MEMBRANE_MOLECULE_COOLDOWN_REDUCTION_DESC">Уменьшает перезарядку мембраны на 10% за уровень.</text>
   <text key="TALENT_SWARM_MOLECULE_TITLE">Роевая молекула</text>
   <text key="TALENT_SWARM_MOLECULE_DESC">Разблокирует SwarmMolecule: 6 пробивающих снарядов 30 градусов разброса и 8 дальности.</text>
   <text key="TALENT_SWARM_MOLECULE_CHARGE_REDUCTION_TITLE">Лёгкий рой</text>

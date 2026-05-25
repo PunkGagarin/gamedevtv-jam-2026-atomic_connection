@@ -80,7 +80,7 @@
   <text key="TALENT_MEMBRANE_MOLECULE_INTEGRITY_TITLE">Dense Membrane</text>
   <text key="TALENT_MEMBRANE_MOLECULE_INTEGRITY_DESC">Increases membrane integrity by 1 per level.</text>
   <text key="TALENT_MEMBRANE_MOLECULE_COOLDOWN_REDUCTION_TITLE">Fast Recrystallization</text>
-  <text key="TALENT_MEMBRANE_MOLECULE_COOLDOWN_REDUCTION_DESC">Reduces membrane cooldown by 20% per level.</text>
+  <text key="TALENT_MEMBRANE_MOLECULE_COOLDOWN_REDUCTION_DESC">Reduces membrane cooldown by 10% per level.</text>
   <text key="TALENT_SWARM_MOLECULE_TITLE">Swarm Molecule</text>
   <text key="TALENT_SWARM_MOLECULE_DESC">Unlocks SwarmMolecule: 6 piercing projectiles 30 degrees spread and 8 range.</text>
   <text key="TALENT_SWARM_MOLECULE_CHARGE_REDUCTION_TITLE">Light Swarm</text>

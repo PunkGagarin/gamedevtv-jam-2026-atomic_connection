@@ -188,7 +188,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Main Menu
+  m_text: Upgrades
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: e3df08d386579401495a30d678cfb5a5, type: 2}
   m_sharedMaterial: {fileID: 2378316875688634224, guid: e3df08d386579401495a30d678cfb5a5, type: 2}
@@ -272,7 +272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7bad83c90fe747ad82f6472b7fc19acf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Localization.ToLocalize
-  _key: COMMON_MAIN_MENU
+  _key: MAIN_MENU_UPGRADE
   _fontAsset: {fileID: 0}
 --- !u!1 &36648229350131901
 GameObject:

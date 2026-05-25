@@ -36,7 +36,7 @@ MonoBehaviour:
     <SpawnLimit>k__BackingField: 1
   - <StartTimeSeconds>k__BackingField: 8
     <EndTimeSeconds>k__BackingField: 60
-    <SpawnIntervalSeconds>k__BackingField: 5
+    <SpawnIntervalSeconds>k__BackingField: 6
     <EnemyId>k__BackingField: 1
     <MaxHealthOverride>k__BackingField: 3
     <CoreCollisionDamageOverride>k__BackingField: 2

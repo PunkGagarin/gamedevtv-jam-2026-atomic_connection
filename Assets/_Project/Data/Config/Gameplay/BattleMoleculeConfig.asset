@@ -47,7 +47,7 @@ MonoBehaviour:
   <MembraneKnockbackDurationSeconds>k__BackingField: 0.18
   <SwarmMoleculeSpawnOffset>k__BackingField: {x: -2, y: 0}
   <SwarmMoleculeBondAtomsRequired>k__BackingField: 1
-  <SwarmMoleculeAtomsRequired>k__BackingField: 7
+  <SwarmMoleculeAtomsRequired>k__BackingField: 6
   <SwarmMoleculeShotDamage>k__BackingField: 1
   <SwarmMoleculeShotCount>k__BackingField: 6
   <SwarmMoleculeShotSpreadDegrees>k__BackingField: 30

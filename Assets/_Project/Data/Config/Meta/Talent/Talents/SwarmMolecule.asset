@@ -16,10 +16,10 @@ MonoBehaviour:
   <EffectType>k__BackingField: 12
   <Title>k__BackingField: TALENT_SWARM_MOLECULE_TITLE
   <Description>k__BackingField: TALENT_SWARM_MOLECULE_DESC
-  <Icon>k__BackingField: {fileID: 4099191518589774541, guid: 96b274445eeba824696184e6741630b2, type: 3}
+  <Icon>k__BackingField: {fileID: -8521412172138966992, guid: dd5cda473dd2d2d488a837f32ae7cefb, type: 3}
   <MaxLevel>k__BackingField: 1
   <CostCurrency>k__BackingField: 1
-  <CostsByLevel>k__BackingField: 01000000
+  <CostsByLevel>k__BackingField: 02000000
   <Prerequisites>k__BackingField: 1f000000
   <GraphPosition>k__BackingField: {x: -240, y: -720}
   <BonusPerLevel>k__BackingField: 1

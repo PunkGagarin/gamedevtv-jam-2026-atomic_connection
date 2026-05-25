@@ -50,7 +50,7 @@ MonoBehaviour:
     <CoreCollisionDamageOverride>k__BackingField: 1
     <SpawnCount>k__BackingField: 8
     <SpawnLimit>k__BackingField: 1
-  - <StartTimeSeconds>k__BackingField: 40
+  - <StartTimeSeconds>k__BackingField: 45
     <EndTimeSeconds>k__BackingField: 0
     <SpawnIntervalSeconds>k__BackingField: 999
     <EnemyId>k__BackingField: 3

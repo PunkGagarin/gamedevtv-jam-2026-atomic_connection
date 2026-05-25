@@ -16,10 +16,10 @@ MonoBehaviour:
   <EffectType>k__BackingField: 16
   <Title>k__BackingField: TALENT_SWARM_MOLECULE_SHOT_COUNT_TITLE
   <Description>k__BackingField: TALENT_SWARM_MOLECULE_SHOT_COUNT_DESC
-  <Icon>k__BackingField: {fileID: 4099191518589774541, guid: 96b274445eeba824696184e6741630b2, type: 3}
+  <Icon>k__BackingField: {fileID: 5074443773982679550, guid: 499cee2c4bb401a4e9f9392c0329c8f0, type: 3}
   <MaxLevel>k__BackingField: 2
-  <CostCurrency>k__BackingField: 1
-  <CostsByLevel>k__BackingField: 0100000001000000
+  <CostCurrency>k__BackingField: 2
+  <CostsByLevel>k__BackingField: 0a00000023000000
   <Prerequisites>k__BackingField: 0e000000
   <GraphPosition>k__BackingField: {x: -480, y: -480}
   <BonusPerLevel>k__BackingField: 2

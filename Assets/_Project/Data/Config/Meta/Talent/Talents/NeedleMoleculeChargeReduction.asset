@@ -16,10 +16,10 @@ MonoBehaviour:
   <EffectType>k__BackingField: 29
   <Title>k__BackingField: TALENT_NEEDLE_MOLECULE_CHARGE_REDUCTION_TITLE
   <Description>k__BackingField: TALENT_NEEDLE_MOLECULE_CHARGE_REDUCTION_DESC
-  <Icon>k__BackingField: {fileID: 48219680630978696, guid: df4c97b674933a140b0dd7d026bb3dc2, type: 3}
+  <Icon>k__BackingField: {fileID: 7963119690065741614, guid: abb45b8b111a7534f9f9050aedfb9953, type: 3}
   <MaxLevel>k__BackingField: 2
   <CostCurrency>k__BackingField: 0
-  <CostsByLevel>k__BackingField: 0400000050000000
+  <CostsByLevel>k__BackingField: 0400000096000000
   <Prerequisites>k__BackingField: 00000000
   <GraphPosition>k__BackingField: {x: 240, y: -240}
   <BonusPerLevel>k__BackingField: 1

@@ -6,7 +6,7 @@ on:
       itch_target:
         description: "itch target in the form user/game:channel"
         required: true
-        default: "punkgagarin/atomicconnection:html5"
+        default: "punkgagarin/petricore:html5"
       upload_to_itch:
         description: "Upload the successful build to itch"
         required: true
@@ -52,7 +52,7 @@ jobs:
           unityVersion: 6000.4.4f1
           targetPlatform: WebGL
           buildsPath: build
-          buildName: AtomicConnection
+          buildName: Petricore
 
       - name: Locate WebGL build
         id: webgl_build
@@ -90,7 +90,7 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: AtomicConnection-WebGL-${{ steps.build_version.outputs.value }}
+          name: Petricore-WebGL-${{ steps.build_version.outputs.value }}
           path: ${{ steps.webgl_build.outputs.dir }}
           if-no-files-found: error
 
@@ -117,7 +117,7 @@ jobs:
           set -euo pipefail
 
           if [[ "$ITCH_TARGET" == "your-itch-username/"* ]]; then
-            echo "::error::Set itch_target to your real itch page, for example username/atomic-connection:html5."
+            echo "::error::Set itch_target to your real itch page, for example username/petricore:html5."
             exit 1
           fi
 

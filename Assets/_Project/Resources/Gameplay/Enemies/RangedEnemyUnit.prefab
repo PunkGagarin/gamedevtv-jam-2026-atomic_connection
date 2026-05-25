@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 11400023}
   - component: {fileID: 11400024}
   - component: {fileID: 7710465520041925972}
+  - component: {fileID: 3345800396466195692}
   m_Layer: 0
   m_Name: RangedEnemyUnit
   m_TagString: Untagged
@@ -99,7 +100,7 @@ MonoBehaviour:
   <RuntimeBehaviors>k__BackingField: {fileID: 11400023}
   <Lifecycle>k__BackingField: {fileID: 11400024}
   <Movement>k__BackingField: {fileID: 11400002}
-  <Knockback>k__BackingField: {fileID: 11400025}
+  <Knockback>k__BackingField: {fileID: 0}
   <CoreCollision>k__BackingField: {fileID: 11400003}
 --- !u!114 &11400001
 MonoBehaviour:
@@ -125,7 +126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c3c037fe263404e957510041e89b91e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <StopDistance>k__BackingField: 3
+  <StopDistance>k__BackingField: 4.5
   <StopDistanceJitter>k__BackingField: 1.1
 --- !u!114 &11400003
 MonoBehaviour:
@@ -200,6 +201,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Enemy>k__BackingField: {fileID: 11400000}
   <Health>k__BackingField: {fileID: 11400001}
+  <DamageSound>k__BackingField: 4
+  <DeathSound>k__BackingField: 6
 --- !u!114 &11400022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -244,6 +247,7 @@ MonoBehaviour:
   <RuntimeBehaviors>k__BackingField: {fileID: 11400023}
   <Vitality>k__BackingField: {fileID: 11400021}
   <Merge>k__BackingField: {fileID: 11400022}
+  <Knockback>k__BackingField: {fileID: 0}
 --- !u!114 &7710465520041925972
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -257,6 +261,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyDieEffectorBehaviour
   enemyVitality: {fileID: 11400021}
+--- !u!114 &3345800396466195692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 100000}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97670ec007be4875a5f742d49e6b56cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Enemies.Components.EnemyKnockback
 --- !u!1 &100001
 GameObject:
   m_ObjectHideFlags: 0

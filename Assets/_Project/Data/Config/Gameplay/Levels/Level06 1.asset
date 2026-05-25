@@ -19,7 +19,7 @@ MonoBehaviour:
   <RewardAmount>k__BackingField: 1
   <Waves>k__BackingField:
   - <StartTimeSeconds>k__BackingField: 0
-    <EndTimeSeconds>k__BackingField: 40
+    <EndTimeSeconds>k__BackingField: 44
     <SpawnIntervalSeconds>k__BackingField: 5
     <EnemyId>k__BackingField: 0
     <MaxHealthOverride>k__BackingField: 3
@@ -36,7 +36,7 @@ MonoBehaviour:
     <SpawnLimit>k__BackingField: 1
   - <StartTimeSeconds>k__BackingField: 10
     <EndTimeSeconds>k__BackingField: 40
-    <SpawnIntervalSeconds>k__BackingField: 8
+    <SpawnIntervalSeconds>k__BackingField: 9
     <EnemyId>k__BackingField: 1
     <MaxHealthOverride>k__BackingField: 2
     <CoreCollisionDamageOverride>k__BackingField: 1

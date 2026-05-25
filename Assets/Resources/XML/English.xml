@@ -50,7 +50,7 @@
   <text key="TALENT_AUTO_CLICK_ANYWHERE_TITLE">Free Auto Click</text>
   <text key="TALENT_AUTO_CLICK_ANYWHERE_DESC">Auto Click runs every 0.35 sec regardless of cursor position.</text>
   <text key="TALENT_CORE_CLICK_REDUCTION_TITLE">Quick Assembly</text>
-  <text key="TALENT_CORE_CLICK_REDUCTION_DESC">Increases click atom generation speed by 25% per level.</text>
+  <text key="TALENT_CORE_CLICK_REDUCTION_DESC">Reduces clicks needed to generate an atom by 1 per level.</text>
   <text key="TALENT_CORE_HEALTH_LARGE_TITLE">Reinforced Core</text>
   <text key="TALENT_CORE_HEALTH_LARGE_DESC">Increases core health by 5 per level.</text>
   <text key="TALENT_STINGER_MOLECULE_TITLE">Stinger Molecule</text>
@@ -107,7 +107,7 @@
   <text key="TALENT_DNA_EXTRA_DROP_CHANCE_TITLE">Excess DNA</text>
   <text key="TALENT_DNA_EXTRA_DROP_CHANCE_DESC">Each collected DNA pickup grants 1 more DNA per level.</text>
   <text key="TALENT_RADICAL_DROP_CHANCE_TITLE">Radical Trace</text>
-  <text key="TALENT_RADICAL_DROP_CHANCE_DESC">Gives a 5% chance per level to gain 1 radical from a non-boss enemy.</text>
+  <text key="TALENT_RADICAL_DROP_CHANCE_DESC">Gives a 7.5% chance per level to gain 1 radical from a non-boss enemy.</text>
   <text key="TALENT_RADICAL_DROP_CHANCE_LARGE_TITLE">Radical Resonance</text>
   <text key="TALENT_RADICAL_DROP_CHANCE_LARGE_DESC">Each collected radical pickup grants 1 more radical per level.</text>
   <text key="GAMEPLAY_TUTORIAL_ACTIVE_MOLECULE">First connect the new molecule to the core, then click it to make it active.%%Only one molecule can be active at a time.</text>

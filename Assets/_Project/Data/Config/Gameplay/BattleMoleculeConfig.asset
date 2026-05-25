@@ -38,7 +38,7 @@ MonoBehaviour:
   <ConnectionActiveColor>k__BackingField: {r: 1, g: 0.35686278, b: 0.6577703, a: 0.95}
   <MembraneMoleculeSpawnOffset>k__BackingField: {x: 0, y: -2}
   <MembraneMoleculeBondAtomsRequired>k__BackingField: 1
-  <MembraneMoleculeAtomsRequired>k__BackingField: 3
+  <MembraneMoleculeAtomsRequired>k__BackingField: 4
   <MembraneDurationSeconds>k__BackingField: 5
   <MembraneIntegrity>k__BackingField: 3
   <MembraneCooldownSeconds>k__BackingField: 18
@@ -48,8 +48,8 @@ MonoBehaviour:
   <SwarmMoleculeSpawnOffset>k__BackingField: {x: -2, y: 0}
   <SwarmMoleculeBondAtomsRequired>k__BackingField: 1
   <SwarmMoleculeAtomsRequired>k__BackingField: 6
-  <SwarmMoleculeShotDamage>k__BackingField: 1
+  <SwarmMoleculeShotDamage>k__BackingField: 2
   <SwarmMoleculeShotCount>k__BackingField: 6
-  <SwarmMoleculeShotSpreadDegrees>k__BackingField: 30
+  <SwarmMoleculeShotSpreadDegrees>k__BackingField: 40
   <SwarmMoleculeShotSpreadDegreesPerShotCountBonus>k__BackingField: 10
   <SwarmMoleculeAttackRange>k__BackingField: 8

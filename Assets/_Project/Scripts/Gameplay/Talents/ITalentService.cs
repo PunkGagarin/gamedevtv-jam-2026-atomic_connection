@@ -8,7 +8,6 @@ namespace _Project.Scripts.Gameplay.Talents
         event Action Changed;
 
         IReadOnlyList<TalentDefinition> Talents { get; }
-        float AtomGenerationMultiplier { get; }
         bool HasAvailableUpgradeNotification { get; }
 
         int LevelOf(TalentId talentId);

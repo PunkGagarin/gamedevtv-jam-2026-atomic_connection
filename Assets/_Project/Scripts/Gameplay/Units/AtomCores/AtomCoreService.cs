@@ -189,8 +189,8 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores
 
         private void ApplyTalentBonuses()
         {
-            int adjustedClicks = Mathf.Max(1, Mathf.RoundToInt(
-                _config.ClicksToGenerateFreeAtom / _talentService.AtomGenerationMultiplier));
+            int clickReduction = Mathf.RoundToInt(_talentService.BonusOf(TalentEffectType.CoreClickReduction));
+            int adjustedClicks = Mathf.Max(1, _config.ClicksToGenerateFreeAtom - clickReduction);
 
             int adjustedHealth = Mathf.Max(1, Mathf.RoundToInt(
                 _config.CoreMaxHealth + _talentService.BonusOf(TalentEffectType.CoreHealth)));

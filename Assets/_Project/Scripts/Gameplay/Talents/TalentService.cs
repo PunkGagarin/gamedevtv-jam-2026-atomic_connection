@@ -22,7 +22,6 @@ namespace _Project.Scripts.Gameplay.Talents
         public IReadOnlyList<TalentDefinition> Talents => _config.Talents;
         private IEnumerable<TalentDefinition> DefinedTalents =>
             _config?.Talents?.Where(talent => talent != null) ?? Enumerable.Empty<TalentDefinition>();
-        public float AtomGenerationMultiplier => 1f + BonusOf(TalentEffectType.CoreClickReduction);
         public bool HasAvailableUpgradeNotification => DefinedTalents.Any(talent => ShouldShowNotification(talent.Id));
 
         public void Initialize()

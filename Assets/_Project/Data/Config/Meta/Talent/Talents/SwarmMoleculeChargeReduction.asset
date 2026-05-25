@@ -16,10 +16,10 @@ MonoBehaviour:
   <EffectType>k__BackingField: 32
   <Title>k__BackingField: TALENT_SWARM_MOLECULE_CHARGE_REDUCTION_TITLE
   <Description>k__BackingField: TALENT_SWARM_MOLECULE_CHARGE_REDUCTION_DESC
-  <Icon>k__BackingField: {fileID: 4099191518589774541, guid: 96b274445eeba824696184e6741630b2, type: 3}
+  <Icon>k__BackingField: {fileID: 21300000, guid: 8dbfe9b03cb9afd42a7f64a3ce815eef, type: 3}
   <MaxLevel>k__BackingField: 2
   <CostCurrency>k__BackingField: 2
-  <CostsByLevel>k__BackingField: 090000001e000000
+  <CostsByLevel>k__BackingField: 140000004b000000
   <Prerequisites>k__BackingField: 0e000000
   <GraphPosition>k__BackingField: {x: -480, y: -960}
   <BonusPerLevel>k__BackingField: 1

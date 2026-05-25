@@ -15,6 +15,7 @@
   <text key="LEVEL_COMPLETE_REWARD_FORMAT">Reward: +{0} {1}</text>
   <text key="LEVEL_COMPLETE_REWARD_CLAIMED">Reward already claimed</text>
   <text key="LEVEL_COMPLETE_NEXT_LEVEL">To Next Level</text>
+  <text key="GAME_COMPLETE_MESSAGE">Thanks for playing!</text>
   <text key="CREDITS_POPUP_TITLE">Credits</text>
   <text key="CREDITS_POPUP_DESC">@punkgagarin - game designer, programmer%%@Madgine_Solis - programmer%%@the_nomah - artist%%@CoderLivingDeath - tech artist</text>
   <text key="CREDITS_POPUP_CLOSE">Close</text>

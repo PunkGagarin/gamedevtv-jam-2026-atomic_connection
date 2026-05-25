@@ -15,6 +15,7 @@
   <text key="LEVEL_COMPLETE_REWARD_FORMAT">Награда: +{0} {1}</text>
   <text key="LEVEL_COMPLETE_REWARD_CLAIMED">Награда уже получена</text>
   <text key="LEVEL_COMPLETE_NEXT_LEVEL">К следующему уровню</text>
+  <text key="GAME_COMPLETE_MESSAGE">Спасибо за игру!</text>
   <text key="CREDITS_POPUP_TITLE">Авторы</text>
   <text key="CREDITS_POPUP_DESC">@punkgagarin - геймдизайнер, программист%%@Madgine_Solis - программист%%@the_nomah - художник%%@CoderLivingDeath - тех артист</text>
   <text key="CREDITS_POPUP_CLOSE">Закрыть</text>

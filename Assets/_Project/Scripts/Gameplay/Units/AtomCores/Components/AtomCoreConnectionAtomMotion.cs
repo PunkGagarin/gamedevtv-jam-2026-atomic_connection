@@ -1,5 +1,6 @@
 using _Project.Scripts.Gameplay.Common.Movement;
 using _Project.Scripts.Gameplay.Talents;
+using _Project.Scripts.Gameplay.Units;
 using _Project.Scripts.Gameplay.Units.BattleMolecules;
 using UnityEngine;
 using Zenject;
@@ -10,6 +11,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
     public class AtomCoreConnectionAtomMotion : MonoBehaviour
     {
         [Inject] private BattleMoleculeConfig _config;
+        [Inject] private AtomCoreConfig _coreConfig;
         [Inject] private ITalentService _talentService;
 
         internal void InitializeStartState(ConnectionAtomFlowState flowAtom)
@@ -17,9 +19,11 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
             if (flowAtom?.Atom == null)
                 return;
 
-            flowAtom.Radius = Mathf.Max(
-                ConnectionAtomMinimumFlowRadius(),
-                Vector2.Distance(flowAtom.Atom.transform.position, transform.position));
+            flowAtom.Radius = flowAtom.Source != null
+                ? ConnectionAtomCoreFlowRadius()
+                : Mathf.Max(
+                    ConnectionAtomMinimumFlowRadius(),
+                    Vector2.Distance(flowAtom.Atom.transform.position, transform.position));
             flowAtom.ClearConnectionProgress();
         }
 
@@ -37,6 +41,21 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
 
             switch (flowAtom.Phase)
             {
+                case ConnectionAtomFlowPhase.MoveToSourceConnection:
+                    if (MoveAtomToSourceConnection(flowAtom, deltaTime))
+                    {
+                        flowAtom.Phase = ConnectionAtomFlowPhase.SourceConnectionToCore;
+                        flowAtom.ClearConnectionProgress();
+                    }
+                    break;
+                case ConnectionAtomFlowPhase.SourceConnectionToCore:
+                    if (MoveAtomFromSourceConnectionToCore(flowAtom, deltaTime))
+                    {
+                        flowAtom.Source = null;
+                        flowAtom.Phase = ConnectionAtomFlowPhase.OrbitToConnection;
+                        flowAtom.ClearConnectionProgress();
+                    }
+                    break;
                 case ConnectionAtomFlowPhase.MoveToRim:
                     if (MoveAtomToCoreRim(flowAtom, deltaTime, true))
                         flowAtom.Phase = ConnectionAtomFlowPhase.OrbitToConnection;
@@ -65,6 +84,40 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
             }
 
             return ConnectionAtomFlowMotionResult.Continue;
+        }
+
+        private bool MoveAtomToSourceConnection(ConnectionAtomFlowState flowAtom, float deltaTime)
+        {
+            if (flowAtom.Source == null)
+                return MoveAtomToCoreRim(flowAtom, deltaTime, true);
+
+            SetFlowAtomParent(flowAtom, transform);
+            return MoveFlowAtomTowards(flowAtom, SourceConnectionPosition(flowAtom.Source), ConnectionAtomTravelSpeed() * deltaTime);
+        }
+
+        private bool MoveAtomFromSourceConnectionToCore(ConnectionAtomFlowState flowAtom, float deltaTime)
+        {
+            if (flowAtom.Source == null)
+                return MoveAtomToCoreRim(flowAtom, deltaTime, true);
+
+            SetFlowAtomParent(flowAtom, transform);
+
+            Vector3 start = SourceConnectionPosition(flowAtom.Source);
+            Vector3 destination = SourceCoreRimPosition(flowAtom);
+            EnsureConnectionProgress(flowAtom, start, destination);
+
+            float distance = Vector2.Distance(start, destination);
+            if (distance <= ConnectionAtomArrivalDistance())
+                return true;
+
+            flowAtom.ConnectionProgress = Mathf.Clamp01(
+                flowAtom.ConnectionProgress + ConnectionAtomTravelSpeed() * deltaTime / distance);
+
+            Vector3 position = Vector3.Lerp(start, destination, flowAtom.ConnectionProgress);
+            position.z = flowAtom.Atom.transform.position.z;
+            flowAtom.Atom.transform.position = position;
+
+            return flowAtom.ConnectionProgress >= 1f;
         }
 
         private bool MoveAtomToCoreRim(ConnectionAtomFlowState flowAtom, float deltaTime, bool useTalentSpeed)
@@ -169,6 +222,22 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
             return target.GetConnectionArrivalPosition(transform.position);
         }
 
+        private Vector3 SourceConnectionPosition(BattleMolecule source)
+        {
+            return source != null
+                ? source.GetConnectionArrivalPosition(transform.position)
+                : transform.position;
+        }
+
+        private Vector3 SourceCoreRimPosition(ConnectionAtomFlowState flowAtom)
+        {
+            if (flowAtom.Source == null)
+                return flowAtom.Atom != null ? flowAtom.Atom.transform.position : transform.position;
+
+            float angle = AngleFromCoreTo(flowAtom.Source.transform.position);
+            return CoreRimPosition(flowAtom, angle);
+        }
+
         private static void EnsureConnectionProgress(ConnectionAtomFlowState flowAtom, Vector3 start, Vector3 destination)
         {
             if (flowAtom.HasConnectionProgress || flowAtom.Atom == null)
@@ -228,6 +297,12 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
         private float ConnectionAtomMinimumFlowRadius()
         {
             return _config != null ? Mathf.Max(0f, _config.ConnectionAtomMinimumFlowRadius) : 0f;
+        }
+
+        private float ConnectionAtomCoreFlowRadius()
+        {
+            float coreOrbitRadius = _coreConfig != null ? Mathf.Max(0f, _coreConfig.FreeAtomOrbitRadius) : 0f;
+            return Mathf.Max(ConnectionAtomMinimumFlowRadius(), coreOrbitRadius);
         }
 
         private float ConnectionCoreRimSnapDistance()

@@ -5,14 +5,18 @@ using _Project.Scripts.Gameplay.Drag;
 using _Project.Scripts.Gameplay.Input.Service;
 using _Project.Scripts.Gameplay.Talents;
 using _Project.Scripts.Gameplay.Units.AtomCores;
+using _Project.Scripts.Gameplay.Units.FreeAtoms;
 using UnityEngine;
 using Zenject;
 
 namespace _Project.Scripts.Gameplay.Units.BattleMolecules
 {
-    public class BattleMoleculeService : IBattleMoleculeService, IBattleMoleculeFeedTargetProvider
+    public class BattleMoleculeService : IBattleMoleculeService,
+        IBattleMoleculeFeedTargetProvider,
+        IBattleMoleculeConnectionAtomSourceProvider
     {
         private readonly List<BattleMolecule> _molecules = new();
+        private readonly List<FreeAtom> _moleculeAtomsBuffer = new();
         private bool _isStarted;
         private BattleMolecule _activeMolecule;
         private AtomCore _core;
@@ -107,8 +111,31 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
             }
 
             _molecules.Clear();
+            _moleculeAtomsBuffer.Clear();
             _activeMolecule = null;
             _core = null;
+        }
+
+        public void CollectSupplementalConnectionAtoms(BattleMolecule target, List<FreeAtom> results)
+        {
+            results?.Clear();
+
+            if (target == null || results == null)
+                return;
+
+            foreach (BattleMolecule molecule in _molecules)
+            {
+                if (molecule == null || molecule == target || !molecule.IsBonded)
+                    continue;
+
+                molecule.CollectConnectionAtoms(_moleculeAtomsBuffer);
+
+                foreach (FreeAtom atom in _moleculeAtomsBuffer)
+                {
+                    if (atom != null)
+                        results.Add(atom);
+                }
+            }
         }
 
         private void OnMoleculeBonded(BattleMolecule molecule)

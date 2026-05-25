@@ -102,8 +102,12 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
 
         private void RetargetFlowAtom(BattleMolecule target, ConnectionAtomFlowState flowAtom)
         {
-            flowAtom.ClearConnectionProgress();
             flowAtom.Target = target;
+
+            if (flowAtom.IsLeavingSource)
+                return;
+
+            flowAtom.ClearConnectionProgress();
             flowAtom.Phase = AtomMotion != null
                 ? AtomMotion.RetargetPhase(flowAtom)
                 : ConnectionAtomFlowPhase.MoveToRim;
@@ -222,8 +226,12 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
 
         private static void SetFlowAtomReturning(ConnectionAtomFlowState flowAtom)
         {
-            flowAtom.ClearConnectionProgress();
             flowAtom.Target = null;
+
+            if (flowAtom.IsLeavingSource)
+                return;
+
+            flowAtom.ClearConnectionProgress();
             flowAtom.Phase = ConnectionAtomFlowPhase.ReturnToCore;
         }
 
@@ -232,6 +240,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
             SetFlowAtomParent(flowAtom, flowAtom.Atom != null ? flowAtom.Atom.Owner : null);
             flowAtom.Atom?.EndConnectionFlow();
             flowAtom.ClearConnectionProgress();
+            flowAtom.Source = null;
             flowAtom.Target = null;
             flowAtom.Phase = ConnectionAtomFlowPhase.None;
             flowAtom.Radius = 0f;

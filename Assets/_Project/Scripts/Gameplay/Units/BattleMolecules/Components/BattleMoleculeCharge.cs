@@ -34,6 +34,17 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             return _atoms.RemainingFrom(currentAtomsCount);
         }
 
+        public void InvalidateIfAtomCountBelowRequirement(int atomsCount)
+        {
+            if (!_atoms.HasRequirement || !IsCharged || atomsCount >= _atoms.Required)
+                return;
+
+            _atoms.Reset();
+            _atoms.SetCurrent(atomsCount);
+            IsCharged = false;
+            Spent?.Invoke();
+        }
+
         public void RegisterAtomCount(int atomsCount)
         {
             if (!_atoms.HasRequirement || IsCharged || !_atoms.SetCurrent(atomsCount))

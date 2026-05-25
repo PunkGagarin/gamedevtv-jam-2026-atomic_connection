@@ -135,11 +135,18 @@ resolution.
 
 `BattleMoleculeFactory` only creates molecule prefabs. `IBattleMoleculeService`
 owns the registered battle molecule list, molecule subscriptions, active
-molecule ticking, active selection, active feed target provider, and cleanup.
+molecule ticking, active selection, active feed target provider, supplemental
+connection atom source provider for donor molecule charge atoms, and cleanup.
 `AtomCoreService` ticks core runtime behavior. Core-owned connection atom flow
 is coordinated by `AtomCoreConnectionAtomFlow` using the current feed target
 from `IBattleMoleculeFeedTargetProvider`; `AtomCoreConnectionAtomSource`
-selects startable core-owned atoms, while `AtomCoreConnectionAtomMotion` owns
+selects startable core-owned atoms first, then service-provided supplemental
+atoms from other battle molecule charges when the active target still needs
+more atoms. Supplemental atoms are re-owned by the core while in flow so donor
+molecules lose the matching charge slots immediately, but their flow state
+keeps the donor molecule as `Source`: `AtomCoreConnectionAtomMotion` moves them
+to the donor connection arrival point, back along the donor connection to the
+core rim, then through the normal active-target route. `AtomCoreConnectionAtomMotion` owns
 flow movement, geometry, speed, and tolerance config. `BattleMolecule` is a facade: setup,
 identity, bond event relays, point hit-tests, core orbit/connection-line
 coordination, connection arrival geometry, atom orbiting, charge consumption,

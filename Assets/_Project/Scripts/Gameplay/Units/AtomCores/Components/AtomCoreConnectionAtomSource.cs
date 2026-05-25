@@ -13,11 +13,13 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
     public class AtomCoreConnectionAtomSource : MonoBehaviour
     {
         private readonly List<FreeAtom> _coreAtoms = new();
-        private readonly Dictionary<FreeAtom, int> _coreAtomOrder = new();
+        private readonly List<FreeAtom> _supplementalAtoms = new();
+        private readonly Dictionary<FreeAtom, int> _atomOrder = new();
 
         [field: SerializeField] private OwnedAtoms OwnedAtoms { get; set; }
 
         [Inject] private IDragService _dragService;
+        [Inject] private IBattleMoleculeConnectionAtomSourceProvider _supplementalAtomSourceProvider;
 
         private void Awake()
         {
@@ -43,29 +45,69 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
             if (_dragService != null && _dragService.IsDragActive)
                 return;
 
-            OwnedAtoms.GetOwned(FreeAtomOwnerKind.Core, _coreAtoms);
-            SortCoreAtomsByDistanceTo(target);
+            int atomsRemainingToStart = atomsToStart;
 
-            foreach (FreeAtom candidate in _coreAtoms)
+            OwnedAtoms.GetOwned(FreeAtomOwnerKind.Core, _coreAtoms);
+            SortAtomsByDistanceTo(target, _coreAtoms);
+            StartFlowAtomsFromCandidates(target, _coreAtoms, activeFlowAtoms, motion, results, ref atomsRemainingToStart);
+
+            if (atomsRemainingToStart <= 0)
+                return;
+
+            _supplementalAtomSourceProvider?.CollectSupplementalConnectionAtoms(target, _supplementalAtoms);
+            SortAtomsByDistanceTo(target, _supplementalAtoms);
+            StartFlowAtomsFromCandidates(target, _supplementalAtoms, activeFlowAtoms, motion, results, ref atomsRemainingToStart);
+        }
+
+        private void StartFlowAtomsFromCandidates(
+            BattleMolecule target,
+            List<FreeAtom> candidates,
+            List<ConnectionAtomFlowState> activeFlowAtoms,
+            AtomCoreConnectionAtomMotion motion,
+            List<ConnectionAtomFlowState> results,
+            ref int atomsToStart)
+        {
+            foreach (FreeAtom candidate in candidates)
             {
                 if (atomsToStart <= 0)
                     return;
 
-                if (!CanStartFlowAtom(candidate, activeFlowAtoms))
+                if (!TryStartFlowAtom(target, candidate, activeFlowAtoms, motion, results))
                     continue;
 
-                ConnectionAtomFlowState flowAtom = new()
-                {
-                    Atom = candidate,
-                    Target = target,
-                    Phase = ConnectionAtomFlowPhase.OrbitToConnection
-                };
-
-                motion.InitializeStartState(flowAtom);
-                candidate.BeginConnectionFlow();
-                results.Add(flowAtom);
                 atomsToStart--;
             }
+        }
+
+        private bool TryStartFlowAtom(
+            BattleMolecule target,
+            FreeAtom candidate,
+            List<ConnectionAtomFlowState> activeFlowAtoms,
+            AtomCoreConnectionAtomMotion motion,
+            List<ConnectionAtomFlowState> results)
+        {
+            if (!CanStartFlowAtom(candidate, activeFlowAtoms))
+                return false;
+
+            BattleMolecule source = TryGetSourceMolecule(candidate);
+            ConnectionAtomFlowState flowAtom = new()
+            {
+                Atom = candidate,
+                Source = source,
+                Target = target,
+                Phase = source != null
+                    ? ConnectionAtomFlowPhase.MoveToSourceConnection
+                    : ConnectionAtomFlowPhase.OrbitToConnection
+            };
+
+            candidate.BeginConnectionFlow();
+
+            if (candidate.Owner != transform || candidate.OwnerKind != FreeAtomOwnerKind.Core)
+                OwnedAtoms.TakeOwnership(candidate, FreeAtomOwnerKind.Core);
+
+            motion.InitializeStartState(flowAtom);
+            results.Add(flowAtom);
+            return true;
         }
 
         internal bool IsDragInterrupted(ConnectionAtomFlowState flowAtom)
@@ -86,18 +128,26 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
             return atom.Draggable == null || _dragService == null || !_dragService.IsReserved(atom.Draggable);
         }
 
-        private void SortCoreAtomsByDistanceTo(BattleMolecule target)
+        private BattleMolecule TryGetSourceMolecule(FreeAtom atom)
         {
-            if (target == null)
+            if (atom == null || atom.Owner == null || atom.Owner == transform)
+                return null;
+
+            return atom.Owner.GetComponent<BattleMolecule>();
+        }
+
+        private void SortAtomsByDistanceTo(BattleMolecule target, List<FreeAtom> atoms)
+        {
+            if (target == null || atoms == null)
                 return;
 
             Vector3 targetPosition = target.transform.position;
-            _coreAtomOrder.Clear();
+            _atomOrder.Clear();
 
-            for (int i = 0; i < _coreAtoms.Count; i++)
-                _coreAtomOrder[_coreAtoms[i]] = i;
+            for (int i = 0; i < atoms.Count; i++)
+                _atomOrder[atoms[i]] = i;
 
-            _coreAtoms.Sort((left, right) =>
+            atoms.Sort((left, right) =>
             {
                 if (left == right)
                     return 0;
@@ -113,7 +163,7 @@ namespace _Project.Scripts.Gameplay.Units.AtomCores.Components
                 int distanceComparison = leftDistanceSqr.CompareTo(rightDistanceSqr);
                 return distanceComparison != 0
                     ? distanceComparison
-                    : _coreAtomOrder[left].CompareTo(_coreAtomOrder[right]);
+                    : _atomOrder[left].CompareTo(_atomOrder[right]);
             });
         }
 

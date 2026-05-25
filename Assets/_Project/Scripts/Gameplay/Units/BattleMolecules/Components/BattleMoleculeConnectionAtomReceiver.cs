@@ -43,6 +43,18 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
                 Bond = GetComponent<BattleMoleculeBond>();
         }
 
+        private void OnEnable()
+        {
+            if (OwnedAtoms != null)
+                OwnedAtoms.Changed += OnOwnedAtomsChanged;
+        }
+
+        private void OnDisable()
+        {
+            if (OwnedAtoms != null)
+                OwnedAtoms.Changed -= OnOwnedAtomsChanged;
+        }
+
         public bool TryReceive(FreeAtom atom, bool playConnectionSound = true)
         {
             if (atom == null || !CanReceiveAtom)
@@ -59,6 +71,11 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 
             Charge.RegisterAtomCount(OwnedAtoms.Count);
             return true;
+        }
+
+        private void OnOwnedAtomsChanged()
+        {
+            Charge?.InvalidateIfAtomCountBelowRequirement(OwnedAtoms != null ? OwnedAtoms.Count : 0);
         }
     }
 }

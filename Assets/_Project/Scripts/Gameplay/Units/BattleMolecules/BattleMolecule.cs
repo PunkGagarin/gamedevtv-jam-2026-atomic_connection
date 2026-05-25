@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Talents;
 using _Project.Scripts.Gameplay.Units.AtomCores;
 using _Project.Scripts.Gameplay.Units.BattleMolecules.Components;
@@ -27,6 +28,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
     public class BattleMolecule : MonoBehaviour
     {
         [field: SerializeField] private BattleMoleculeSetup Setup { get; set; }
+        [field: SerializeField] private OwnedAtoms OwnedAtoms { get; set; }
         [field: SerializeField] private BattleMoleculeBond Bond { get; set; }
         [field: SerializeField] private BattleMoleculeBondEventRelay BondEvents { get; set; }
         [field: SerializeField] private BattleMoleculeConnectionAtomReceiver ConnectionAtomReceiver { get; set; }
@@ -63,6 +65,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         private void Awake()
         {
             Setup = GetComponent<BattleMoleculeSetup>();
+            OwnedAtoms = GetComponent<OwnedAtoms>();
             Bond = GetComponent<BattleMoleculeBond>();
             BondEvents = GetComponent<BattleMoleculeBondEventRelay>();
             ConnectionAtomReceiver = GetComponent<BattleMoleculeConnectionAtomReceiver>();
@@ -118,6 +121,11 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         public bool TryReceiveConnectionAtom(FreeAtom atom)
         {
             return ConnectionAtomReceiver.TryReceive(atom);
+        }
+
+        public void CollectConnectionAtoms(List<FreeAtom> results)
+        {
+            OwnedAtoms?.GetOwned(FreeAtomOwnerKind.BattleMolecule, results);
         }
 
         public bool ContainsPoint(Vector2 worldPosition)

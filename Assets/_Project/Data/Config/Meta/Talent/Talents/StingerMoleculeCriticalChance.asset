@@ -16,7 +16,7 @@ MonoBehaviour:
   <EffectType>k__BackingField: 19
   <Title>k__BackingField: TALENT_STINGER_MOLECULE_CRITICAL_CHANCE_TITLE
   <Description>k__BackingField: TALENT_STINGER_MOLECULE_CRITICAL_CHANCE_DESC
-  <Icon>k__BackingField: {fileID: 846198935737336930, guid: 4793c39ace3f3da4d8b6542d784753d6, type: 3}
+  <Icon>k__BackingField: {fileID: -3646355136412483950, guid: f3ceb2cd09285dc4195f5e73358a9341, type: 3}
   <MaxLevel>k__BackingField: 3
   <CostCurrency>k__BackingField: 0
   <CostsByLevel>k__BackingField: 1e0000006e000000a4010000

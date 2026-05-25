@@ -16,7 +16,7 @@ MonoBehaviour:
   <EffectType>k__BackingField: 5
   <Title>k__BackingField: TALENT_STINGER_MOLECULE_PIERCE_TITLE
   <Description>k__BackingField: TALENT_STINGER_MOLECULE_PIERCE_DESC
-  <Icon>k__BackingField: {fileID: 21300000, guid: 3852d5f53a7207d488e08cf5a2073720, type: 3}
+  <Icon>k__BackingField: {fileID: 846198935737336930, guid: 4793c39ace3f3da4d8b6542d784753d6, type: 3}
   <MaxLevel>k__BackingField: 2
   <CostCurrency>k__BackingField: 2
   <CostsByLevel>k__BackingField: 040000000a000000

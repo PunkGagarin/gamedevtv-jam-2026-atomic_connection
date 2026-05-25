@@ -102,8 +102,8 @@ ExpectedLevelRadicals =
 
 | Talent | Isotopes |
 |---|---:|
-| `AutoClick` | 1 |
 | `NeedleMoleculeAim` | 1 |
+| `AutoClick` | 1 |
 | `StingerMolecule` | 1 |
 | `SwarmMolecule` | 1 |
 | `SwarmMoleculeShotCount 1` | 1 |
@@ -125,7 +125,7 @@ ExpectedLevelRadicals =
 | `NeedleMoleculeDamage` | 5 | `8 / 25 / 80 / 250 / 750` |
 | `NeedleMoleculeChargeReduction` | 2 | `4 / 80` |
 | `StingerMoleculeDamageSmall` | 3 | `14 / 45 / 160` |
-| `StingerMoleculeAim` | 1 | `15` |
+| `StingerMoleculeAim` | 1 | `50` |
 | `StingerMoleculeCriticalChance` | 3 | `30 / 110 / 420` |
 | `SwarmMoleculeDamageSmall` | 4 | `30 / 100 / 360 / 1100` |
 | `CurrencyPickupArea` | 4 | `20 / 80 / 300 / 900` |
@@ -154,8 +154,8 @@ ExpectedLevelRadicals =
 
 | После | Целевой bundle |
 |---:|---|
-| 1 | `CoreHealthSmall 1`, `NeedleMoleculeChargeReduction 1`, `NeedleMoleculeDamage 1`, `AutoClick` |
-| 2 | `NeedleMoleculeAim`, `CoreClickReduction 1`, `NeedleMoleculeDamage 2`, `CoreHealthSmall 2` |
+| 1 | `CoreHealthSmall 1`, `NeedleMoleculeChargeReduction 1`, `NeedleMoleculeDamage 1`, `NeedleMoleculeAim` |
+| 2 | `AutoClick`, `CoreClickReduction 1`, `NeedleMoleculeDamage 2`, `CoreHealthSmall 2` |
 | 3 | `StingerMolecule`, `StingerMoleculeDamageSmall 1`, `StingerMoleculeAim`, `DnaFlatKillReward 1` |
 | 4 | `StingerMoleculePierce 1`, `StingerMoleculeCriticalChance 1`, `DnaFlatKillReward 2`, `RadicalDropChance 1`, `StingerMoleculeCriticalReward 1` |
 | 5 | `SwarmMolecule`, `SwarmMoleculeDamageSmall 1`, `CurrencyPickupArea 1`, `ConnectionAtomSpeed 1`, `RadicalDropChance 2`, `SwarmMoleculeAttackRange 1` |

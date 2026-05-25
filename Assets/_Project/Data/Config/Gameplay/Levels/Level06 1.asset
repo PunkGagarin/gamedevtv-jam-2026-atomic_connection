@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe7035acdd4548e180a3a83a80dd6889, type: 3}
-  m_Name: Level06
+  m_Name: Level06 1
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Levels.LevelDefinition
   <LevelNumber>k__BackingField: 6
   <DurationSeconds>k__BackingField: 40

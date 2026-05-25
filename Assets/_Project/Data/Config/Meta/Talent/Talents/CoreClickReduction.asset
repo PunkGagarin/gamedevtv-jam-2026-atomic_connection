@@ -16,7 +16,7 @@ MonoBehaviour:
   <EffectType>k__BackingField: 2
   <Title>k__BackingField: TALENT_CORE_CLICK_REDUCTION_TITLE
   <Description>k__BackingField: TALENT_CORE_CLICK_REDUCTION_DESC
-  <Icon>k__BackingField: {fileID: -5425116251751816977, guid: ce9c9b6a587d48442ae541da77cb24f2, type: 3}
+  <Icon>k__BackingField: {fileID: 48219680630978696, guid: df4c97b674933a140b0dd7d026bb3dc2, type: 3}
   <MaxLevel>k__BackingField: 4
   <CostCurrency>k__BackingField: 0
   <CostsByLevel>k__BackingField: 080000001e00000096000000f4010000

@@ -16,7 +16,7 @@ MonoBehaviour:
   <EffectType>k__BackingField: 18
   <Title>k__BackingField: TALENT_CONNECTION_ATOM_SPEED_TITLE
   <Description>k__BackingField: TALENT_CONNECTION_ATOM_SPEED_DESC
-  <Icon>k__BackingField: {fileID: 0}
+  <Icon>k__BackingField: {fileID: -3246425566408168855, guid: 0a5a6c28b9c737644b0d759b23fa8cd0, type: 3}
   <MaxLevel>k__BackingField: 3
   <CostCurrency>k__BackingField: 0
   <CostsByLevel>k__BackingField: 1400000050000000fa000000

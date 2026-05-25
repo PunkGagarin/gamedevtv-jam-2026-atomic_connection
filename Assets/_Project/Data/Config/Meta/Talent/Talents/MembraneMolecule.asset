@@ -16,7 +16,7 @@ MonoBehaviour:
   <EffectType>k__BackingField: 8
   <Title>k__BackingField: TALENT_MEMBRANE_MOLECULE_TITLE
   <Description>k__BackingField: TALENT_MEMBRANE_MOLECULE_DESC
-  <Icon>k__BackingField: {fileID: -6717884257390833292, guid: caded05716564aa47a5bf86ba474dc35, type: 3}
+  <Icon>k__BackingField: {fileID: -7638502132994109350, guid: 59737a841a12a6140bb05351320d356b, type: 3}
   <MaxLevel>k__BackingField: 1
   <CostCurrency>k__BackingField: 1
   <CostsByLevel>k__BackingField: 02000000

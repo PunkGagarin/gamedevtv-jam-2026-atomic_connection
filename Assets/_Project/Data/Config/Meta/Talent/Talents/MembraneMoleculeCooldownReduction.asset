@@ -16,7 +16,7 @@ MonoBehaviour:
   <EffectType>k__BackingField: 26
   <Title>k__BackingField: TALENT_MEMBRANE_MOLECULE_COOLDOWN_REDUCTION_TITLE
   <Description>k__BackingField: TALENT_MEMBRANE_MOLECULE_COOLDOWN_REDUCTION_DESC
-  <Icon>k__BackingField: {fileID: -6717884257390833292, guid: caded05716564aa47a5bf86ba474dc35, type: 3}
+  <Icon>k__BackingField: {fileID: 7303269636679469684, guid: 242aff85532cec84ab77b81115207e73, type: 3}
   <MaxLevel>k__BackingField: 3
   <CostCurrency>k__BackingField: 0
   <CostsByLevel>k__BackingField: fa000000e8030000c4090000

@@ -49,7 +49,7 @@ MonoBehaviour:
   <SwarmMoleculeBondAtomsRequired>k__BackingField: 1
   <SwarmMoleculeAtomsRequired>k__BackingField: 7
   <SwarmMoleculeShotDamage>k__BackingField: 1
-  <SwarmMoleculeShotCount>k__BackingField: 5
+  <SwarmMoleculeShotCount>k__BackingField: 6
   <SwarmMoleculeShotSpreadDegrees>k__BackingField: 30
   <SwarmMoleculeShotSpreadDegreesPerShotCountBonus>k__BackingField: 10
   <SwarmMoleculeAttackRange>k__BackingField: 8

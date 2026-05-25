@@ -20,17 +20,17 @@
 | 2 | Связи / усиленные Standard | уже настроен | 0 | 0 | 0 |
 | 3 | Elite intro | 9 | 0 | 1 | 0 |
 | 4 | Elite закрепление | 10 | 0 | 3 | 0 |
-| 5 | Mass preview | 14 | 6 | 1 | 0 |
-| 6 | Mass problem | 12 | 20 | 2 | 0 |
-| 7 | Swarm payoff | 14 | 25 | 2 | 0 |
-| 8 | Ranged intro | 12 | 10 | 1 | 5 |
-| 9 | Mixed exam | 18 | 20 | 4 | 10 |
-| 10 | Final exam | 22 | 45 | 8 | 18 |
+| 5 | Mass preview | 14 | 8 | 1 | 0 |
+| 6 | Mass problem | 12 | 28 | 2 | 0 |
+| 7 | Swarm payoff | 14 | 35 | 2 | 0 |
+| 8 | Ranged intro | 12 | 14 | 1 | 5 |
+| 9 | Mixed exam | 18 | 28 | 4 | 10 |
+| 10 | Final exam | 22 | 63 | 8 | 18 |
 
 Правила:
 - Boss есть на каждом уровне, но валюту не дает.
-- `Level5` mass - одна пачка из 6.
-- `Level8` mass - две пачки по 5.
+- `Level5` mass - одна пачка из 8.
+- `Level8` mass - две пачки по 7.
 - `Level10` намеренно плотнее остальных уровней.
 
 ## Экономика
@@ -94,7 +94,7 @@ ExpectedLevelRadicals =
 | `DnaPickupAmountBonus 1` | после `Level8` |
 | `DnaPickupAmountBonus 2` | после `Level9` |
 
-Ожидаемый first-clear итог при текущих `Level01-Level02` и целевой экономике `Level03-Level10`: примерно `6.3k-6.5k DNA` и `360-390 Radicals`. Полная цена дерева выше first-clear дохода, поэтому остаток закрывается фармом.
+Ожидаемый first-clear итог при текущих `Level01-Level02` и целевой экономике `Level03-Level10`: примерно `7.4k-7.6k DNA` и `400-435 Radicals`. Полная цена дерева выше first-clear дохода, поэтому остаток закрывается фармом.
 
 ## Изотопы
 

@@ -40,7 +40,7 @@ MonoBehaviour:
     <EnemyId>k__BackingField: 1
     <MaxHealthOverride>k__BackingField: 2
     <CoreCollisionDamageOverride>k__BackingField: 1
-    <SpawnCount>k__BackingField: 5
+    <SpawnCount>k__BackingField: 7
     <SpawnLimit>k__BackingField: 4
   - <StartTimeSeconds>k__BackingField: 14
     <EndTimeSeconds>k__BackingField: 40

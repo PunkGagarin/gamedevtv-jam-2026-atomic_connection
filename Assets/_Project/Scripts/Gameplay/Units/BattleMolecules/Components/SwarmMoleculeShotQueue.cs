@@ -8,7 +8,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
     public class SwarmMoleculeShotQueue : BattleMoleculeShotQueue
     {
-        [field: SerializeField, Min(1)] private int ShotCount { get; set; } = 5;
+        [field: SerializeField, Min(1)] private int ShotCount { get; set; } = 6;
         [field: SerializeField, Min(0f)] private float SpreadDegrees { get; set; } = 30f;
         [field: SerializeField, Min(0f)] private float SpreadDegreesPerShotCountBonus { get; set; } = 10f;
 

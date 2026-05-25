@@ -53,7 +53,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules
         [field: SerializeField, Min(1)] public int SwarmMoleculeBondAtomsRequired { get; private set; } = 1;
         [field: SerializeField, Min(1)] public int SwarmMoleculeAtomsRequired { get; private set; } = 7;
         [field: SerializeField, Min(1)] public int SwarmMoleculeShotDamage { get; private set; } = 1;
-        [field: SerializeField, Min(1)] public int SwarmMoleculeShotCount { get; private set; } = 5;
+        [field: SerializeField, Min(1)] public int SwarmMoleculeShotCount { get; private set; } = 6;
         [field: SerializeField, Min(0f)] public float SwarmMoleculeShotSpreadDegrees { get; private set; } = 30f;
         [field: SerializeField, Min(0f)] public float SwarmMoleculeShotSpreadDegreesPerShotCountBonus { get; private set; } = 10f;
         [field: SerializeField, Min(0f)] public float SwarmMoleculeAttackRange { get; private set; } = 8f;

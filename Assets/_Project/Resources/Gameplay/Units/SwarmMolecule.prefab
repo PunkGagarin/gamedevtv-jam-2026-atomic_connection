@@ -307,7 +307,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <ChargeConsumption>k__BackingField: {fileID: 11400024}
-  <ShotCount>k__BackingField: 5
+  <ShotCount>k__BackingField: 6
   <SpreadDegrees>k__BackingField: 30
   <SpreadDegreesPerShotCountBonus>k__BackingField: 10
 --- !u!114 &11400009

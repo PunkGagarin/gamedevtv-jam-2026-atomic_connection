@@ -253,12 +253,6 @@ namespace _Project.Scripts.Gameplay.Tutorial
             if (_step != TutorialStep.Shoot)
                 return;
 
-            if (_battleMoleculeService.FirstAdditionalMolecule != null)
-            {
-                _step = TutorialStep.SelectActiveMolecule;
-                return;
-            }
-
             CompleteTutorial();
         }
 

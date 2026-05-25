@@ -13,6 +13,8 @@ namespace _Project.Scripts.Infrastructure.SaveLoad
         public int Gold;
         public int CompletedLevelCount;
         public int SelectedLevel = 1;
+        public bool GameplayTutorialCompleted;
+        public bool ActiveMoleculeTutorialCompleted;
         public List<CurrencySlot> Currencies = new();
         public List<TalentSlot> TalentLevels = new();
 

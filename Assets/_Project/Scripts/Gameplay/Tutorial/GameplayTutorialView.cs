@@ -24,6 +24,7 @@ namespace _Project.Scripts.Gameplay.Tutorial
         private TutorialHintMode _hintMode;
         private float _hintTime;
         private Vector2 _cursorIconOffset;
+        private Canvas _canvas;
         private GameplayTutorialConfig _config;
 
         private void Awake()
@@ -155,8 +156,26 @@ namespace _Project.Scripts.Gameplay.Tutorial
 
         private Vector2 ToAnchoredPosition(Vector2 screenPosition)
         {
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(OverlayRoot, screenPosition, null, out Vector2 localPosition);
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                OverlayRoot,
+                screenPosition,
+                UiCamera,
+                out Vector2 localPosition);
             return localPosition;
+        }
+
+        private Camera UiCamera
+        {
+            get
+            {
+                if (_canvas == null)
+                    _canvas = GetComponentInParent<Canvas>();
+
+                if (_canvas == null || _canvas.renderMode == RenderMode.ScreenSpaceOverlay)
+                    return null;
+
+                return _canvas.worldCamera;
+            }
         }
 
         private Vector2 ClampToOverlay(Vector2 anchoredPosition)

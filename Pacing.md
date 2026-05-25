@@ -1,6 +1,6 @@
 # Пейсинг прогрессии
 
-`Pacing.md` - целевое состояние кампании, экономики и дерева талантов. Конкретные волны живут в [Spawn.md](Spawn.md), численные конфиги - в [AtomicConnection_BALANCE.md](AtomicConnection_BALANCE.md).
+`Pacing.md` - целевое состояние кампании, экономики и дерева талантов. Конкретные волны живут в [Spawn.md](Spawn.md), численные конфиги - в [PetriCore_BALANCE.md](PetriCore_BALANCE.md).
 
 ## Коротко
 

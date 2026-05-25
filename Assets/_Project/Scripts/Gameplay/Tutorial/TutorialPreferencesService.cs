@@ -6,8 +6,8 @@ namespace _Project.Scripts.Gameplay.Tutorial
 {
     public class TutorialPreferencesService : ITutorialPreferencesService
     {
-        private const string GAMEPLAY_TUTORIAL_COMPLETED_KEY = "AtomicConnection.GameplayTutorialCompleted";
-        private const string ACTIVE_MOLECULE_TUTORIAL_COMPLETED_KEY = "AtomicConnection.ActiveMoleculeTutorialCompleted";
+        private const string GAMEPLAY_TUTORIAL_COMPLETED_KEY = "PetriCore.GameplayTutorialCompleted";
+        private const string ACTIVE_MOLECULE_TUTORIAL_COMPLETED_KEY = "PetriCore.ActiveMoleculeTutorialCompleted";
 
         [Inject] private IProgressProvider _progressProvider;
         [Inject] private ISaveLoadService _saveLoadService;

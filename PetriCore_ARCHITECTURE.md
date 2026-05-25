@@ -1,4 +1,4 @@
-# AtomicConnection Architecture Notes
+# Petri Core Architecture Notes
 
 This document keeps detailed architecture and flow notes. `AGENTS.md` is the
 short operational rule file; update both when architecture changes.

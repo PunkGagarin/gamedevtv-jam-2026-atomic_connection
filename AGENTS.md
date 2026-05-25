@@ -16,7 +16,7 @@ Why not service/root:
 Do not edit until ownership is clear. If you cannot name the owning component,
 do not put the behavior in a service yet. Run these gates before code changes:
 
-- Existing project first: check `AGENTS.md` and current `Assets/_Project`; AtomicConnection code and approved deviations win over `ecs-survivors`.
+- Existing project first: check `AGENTS.md` and current `Assets/_Project`; Petri Core code and approved deviations win over `ecs-survivors`.
 - User-facing implementation plans should be written in Russian by default unless the user asks for another language.
 - Ownership: object-local behavior goes to focused components; cross-object coordination, input, spawning, cleanup, lifecycle, and active loops go to state-owned services/states.
 - Root object: runtime roots are facades only. Key entity scripts must not own behavior logic, including validation, ownership changes, geometry, state mutation, spawn/pool reset, or collection cleanup; they only expose facade methods/properties and pass ticks to focused components. Gameplay object components must own a domain behavior or pure visual behavior; do not add MVP-style Presenter/Controller/View/ViewModel layers to runtime gameplay objects. Use gameplay names like `Visual`, `Line`, `Indicator`, or `Feedback` for pure visuals. Different unit/enemy behavior should be a prefab component variant, not a config bool in a shared component.
@@ -27,12 +27,12 @@ do not put the behavior in a service yet. Run these gates before code changes:
 - Lifecycle: states decide when; services know how.
 - Unity assets: keep `.meta` files, preserve GUIDs, update prefabs/scenes for serialized fields/components.
 - Localization: every new player-facing text, and every discovered existing text without localization, must be added through the localization flow. Use `ToLocalize` on static text components, `LocalizationTool`/localized keys for dynamic strings, update `Assets/_Project/Resources/LocalizationFile/localization.csv`, and regenerate/update the Russian and English XML language files.
-- Docs: update `AtomicConnection_GDD.md` for player-facing rules; update `AtomicConnection_BALANCE.md` for concrete numbers; update `Spawn.md` for level spawn tables whenever `LevelCatalogConfig` waves change; update `Pacing.md` when spawn, currency rewards, level rewards, or upgrade costs/prerequisites change.
+- Docs: update `PetriCore_GDD.md` for player-facing rules; update `PetriCore_BALANCE.md` for concrete numbers; update `Spawn.md` for level spawn tables whenever `LevelCatalogConfig` waves change; update `Pacing.md` when spawn, currency rewards, level rewards, or upgrade costs/prerequisites change.
 - Validation: run available compile/static checks and report Unity Editor/manual validation gaps.
 
 ## Project
 
-AtomicConnection is a Unity project built with Unity `6000.4.4f1` + URP. Game design is documented in [AtomicConnection_GDD.md](AtomicConnection_GDD.md), concrete gameplay numbers and tuning tables live in [AtomicConnection_BALANCE.md](AtomicConnection_BALANCE.md), level spawn tables live in [Spawn.md](Spawn.md), and progression pacing lives in [Pacing.md](Pacing.md). Infrastructure is still template-derived; `Gameplay/Units` and `Gameplay/Enemies` are minimal example features used to exercise lifecycle and DI patterns until production gameplay replaces them.
+Petri Core is a Unity project built with Unity `6000.4.4f1` + URP. Game design is documented in [PetriCore_GDD.md](PetriCore_GDD.md), concrete gameplay numbers and tuning tables live in [PetriCore_BALANCE.md](PetriCore_BALANCE.md), level spawn tables live in [Spawn.md](Spawn.md), and progression pacing lives in [Pacing.md](Pacing.md). Infrastructure is still template-derived; `Gameplay/Units` and `Gameplay/Enemies` are minimal example features used to exercise lifecycle and DI patterns until production gameplay replaces them.
 
 ## Build & Run
 
@@ -54,7 +54,7 @@ Do not run `dotnet build`, MSBuild, or generated solution/project builds as rout
 
 ### Lifecycle reference lock
 
-AtomicConnection implementation is the first source of truth. Use `ecs-survivors`
+Petri Core implementation is the first source of truth. Use `ecs-survivors`
 only for new lifecycle/state machine/DI/scene/UI flow decisions not already
 covered locally, or when explicitly asked to compare. Resolve its path from
 `REFERENCES.local.md`, then `REFERENCES.md`; ask if neither has a valid path.
@@ -80,7 +80,7 @@ Prefab rules:
 - `AGENTS.md` is the source of truth for current architecture rules.
 - Keep new or undocumented lifecycle decisions reference-backed by `ecs-survivors`; if a needed decision is neither covered locally nor reference-backed, stop and present it as a separate proposal.
 - After each architecture/lifecycle/UI/DI slice, check whether `AGENTS.md` still matches the implemented architecture. Update it before the final response if current flow, state registration, lifecycle rules, or project conventions changed.
-- Every time code adds gameplay, content, UI behavior, player-facing rules, or other design-relevant behavior that is not already described in `AtomicConnection_GDD.md`, update the GDD in the same task before the final response. Keep concrete gameplay numbers out of the GDD; if the change adds or changes balance values, update `AtomicConnection_BALANCE.md` instead or alongside the GDD. If the change touches `LevelCatalogConfig` waves, update `Spawn.md` as the only detailed spawn-table document and `Pacing.md` if rewards/progression expectations change. Pure infrastructure refactors that do not change design or player-facing behavior do not require GDD or balance-document updates.
+- Every time code adds gameplay, content, UI behavior, player-facing rules, or other design-relevant behavior that is not already described in `PetriCore_GDD.md`, update the GDD in the same task before the final response. Keep concrete gameplay numbers out of the GDD; if the change adds or changes balance values, update `PetriCore_BALANCE.md` instead or alongside the GDD. If the change touches `LevelCatalogConfig` waves, update `Spawn.md` as the only detailed spawn-table document and `Pacing.md` if rewards/progression expectations change. Pure infrastructure refactors that do not change design or player-facing behavior do not require GDD or balance-document updates.
 
 ### Layer structure
 
@@ -92,7 +92,7 @@ components in a `Components/` subfolder.
 
 ### Core patterns
 
-Detailed flow notes live in [AtomicConnection_ARCHITECTURE.md](AtomicConnection_ARCHITECTURE.md).
+Detailed flow notes live in [PetriCore_ARCHITECTURE.md](PetriCore_ARCHITECTURE.md).
 Keep `AGENTS.md` operational and update the architecture notes when current flow changes.
 
 - State flow is `Bootstrap -> MainMenu -> GameplayEnter -> GameplayLoop`; terminal transitions go to game-over or level-complete states/windows.
@@ -146,7 +146,7 @@ Keep `AGENTS.md` operational and update the architecture notes when current flow
 ## Git Notes
 
 - Git may report `dubious ownership` in sandboxed environments. Use a per-command safe directory override when inspecting status:
-  `git -c safe.directory=F:/unity_personal/Jams/gamedevtv-jam-2026-atomic_connection status --short --branch`
+  `git -c safe.directory=<repo-root> status --short --branch`
 - Do not create commits, branches, stage files, or rewrite history unless the user asks for that explicitly.
 
 ## Key dependencies

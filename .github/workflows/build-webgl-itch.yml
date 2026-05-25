@@ -52,7 +52,7 @@ jobs:
           unityVersion: 6000.4.4f1
           targetPlatform: WebGL
           buildsPath: build
-          buildName: Petricore
+          buildName: Petri Core
 
       - name: Locate WebGL build
         id: webgl_build
@@ -90,7 +90,7 @@ jobs:
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Petricore-WebGL-${{ steps.build_version.outputs.value }}
+          name: Petri Core-WebGL-${{ steps.build_version.outputs.value }}
           path: ${{ steps.webgl_build.outputs.dir }}
           if-no-files-found: error
 

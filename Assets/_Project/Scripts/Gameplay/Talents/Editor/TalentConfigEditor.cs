@@ -21,7 +21,7 @@ namespace _Project.Scripts.Gameplay.Talents.Editor
         private const string ID_FIELD = "<Id>k__BackingField";
         private const string PREREQUISITES_FIELD = "<Prerequisites>k__BackingField";
         private const string GRAPH_POSITION_FIELD = "<GraphPosition>k__BackingField";
-        private const string PREVIEW_HEIGHT_PREF_KEY = "AtomicConnection.TalentConfigEditor.PreviewHeight";
+        private const string PREVIEW_HEIGHT_PREF_KEY = "PetriCore.TalentConfigEditor.PreviewHeight";
 
         private SerializedProperty _talentsProp;
         private int _selectedIndex = -1;

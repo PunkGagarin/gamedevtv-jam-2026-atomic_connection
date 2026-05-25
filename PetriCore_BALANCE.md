@@ -1,7 +1,7 @@
-# Баланс: AtomicConnection
+# Баланс: Petri Core
 
 Этот файл хранит конкретные игровые числа, tuning values и таблицы баланса.
-`AtomicConnection_GDD.md` описывает дизайн-идею и player-facing правила без
+`PetriCore_GDD.md` описывает дизайн-идею и player-facing правила без
 вшитых числовых значений.
 
 ## Реализованные значения конфигов

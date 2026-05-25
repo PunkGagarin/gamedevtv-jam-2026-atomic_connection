@@ -15,6 +15,8 @@ namespace _Project.Scripts.Gameplay.Enemies
         [field: SerializeField, Min(0f)] public float InitialSpawnDelaySeconds { get; private set; } = 3f;
         [field: SerializeField, Min(0.01f)] public float SpawnIntervalSeconds { get; private set; } = 6f;
         [field: SerializeField, Min(0f)] public float OffscreenSpawnPadding { get; private set; } = 1f;
+        [field: SerializeField, Min(0.01f)] public float VerticalOffscreenSpawnPaddingMultiplier { get; private set; } = 2f;
+        [field: SerializeField, Min(0.01f)] public float VerticalSpawnRadiusScale { get; private set; } = 0.5f;
         [field: SerializeField, Min(0f)] public float GroupSpawnSpacing { get; private set; } = 0.65f;
         [field: SerializeField, Min(0f)] public float GroupSpawnJitter { get; private set; } = 0.12f;
         [field: SerializeField, Min(0f)] public float MoveSpeed { get; private set; } = 0.7f;

@@ -57,10 +57,17 @@ namespace _Project.Scripts.Gameplay.Enemies
             float centerAngle = _random.Range(0f, Mathf.PI * 2f);
             float groupSpacing = Mathf.Max(0f, _config.GroupSpawnSpacing);
             float groupJitter = Mathf.Max(0f, _config.GroupSpawnJitter);
-            float minimumSpawnRadius = MinimumSpawnRadius(bottomLeft, topRight, padding);
+            float verticalPaddingMultiplier = Mathf.Max(0.01f, _config.VerticalOffscreenSpawnPaddingMultiplier);
+            float verticalSpawnRadiusScale = Mathf.Max(0.01f, _config.VerticalSpawnRadiusScale);
             float groupRadius = Mathf.Max(
-                SpawnRadiusOnScreenRay(target.position, padding, bottomLeft, topRight, centerAngle),
-                minimumSpawnRadius);
+                SpawnRadiusOnScreenRay(
+                    target.position,
+                    padding,
+                    verticalPaddingMultiplier,
+                    bottomLeft,
+                    topRight,
+                    centerAngle),
+                MinimumSpawnRadius(bottomLeft, topRight, padding, centerAngle, verticalSpawnRadiusScale));
             float angularSpacing = groupRadius > Mathf.Epsilon ? groupSpacing / groupRadius : 0f;
             float angularJitter = groupRadius > Mathf.Epsilon ? groupJitter / groupRadius : 0f;
 
@@ -70,8 +77,14 @@ namespace _Project.Scripts.Gameplay.Enemies
                 float jitter = count <= 1 ? 0f : _random.Range(-angularJitter, angularJitter);
                 float angle = centerAngle + offset + jitter;
                 float spawnRadius = Mathf.Max(
-                    SpawnRadiusOnScreenRay(target.position, padding, bottomLeft, topRight, angle),
-                    minimumSpawnRadius);
+                    SpawnRadiusOnScreenRay(
+                        target.position,
+                        padding,
+                        verticalPaddingMultiplier,
+                        bottomLeft,
+                        topRight,
+                        angle),
+                    MinimumSpawnRadius(bottomLeft, topRight, padding, angle, verticalSpawnRadiusScale));
 
                 spawnPositions.Add(OrbitMath.PositionOnCircle(
                     target.position,
@@ -86,13 +99,14 @@ namespace _Project.Scripts.Gameplay.Enemies
         private static float SpawnRadiusOnScreenRay(
             Vector3 center,
             float padding,
+            float verticalPaddingMultiplier,
             Vector3 bottomLeft,
             Vector3 topRight,
             float angle)
         {
             Vector2 direction = new(Mathf.Cos(angle), Mathf.Sin(angle));
             float edgeDistance = DistanceToScreenEdge(center, bottomLeft, topRight, direction);
-            return edgeDistance + padding;
+            return edgeDistance + DirectionalPadding(padding, verticalPaddingMultiplier, direction);
         }
 
         private static float DistanceToScreenEdge(Vector3 center, Vector3 bottomLeft, Vector3 topRight, Vector2 direction)
@@ -114,11 +128,38 @@ namespace _Project.Scripts.Gameplay.Enemies
             return float.IsPositiveInfinity(distance) ? 0f : Mathf.Max(0f, distance);
         }
 
-        private static float MinimumSpawnRadius(Vector3 bottomLeft, Vector3 topRight, float padding)
+        private static float DirectionalPadding(float padding, float verticalMultiplier, Vector2 direction)
+        {
+            float verticalWeight = Mathf.Clamp01(Mathf.Abs(direction.y));
+            float multiplier = Mathf.Lerp(1f, verticalMultiplier, verticalWeight);
+            return padding * multiplier;
+        }
+
+        private static float MinimumSpawnRadius(
+            Vector3 bottomLeft,
+            Vector3 topRight,
+            float padding,
+            float angle,
+            float verticalScale)
         {
             float width = Mathf.Max(0f, topRight.x - bottomLeft.x);
             float height = Mathf.Max(0f, topRight.y - bottomLeft.y);
-            return Mathf.Min(width, height) * 0.5f + padding;
+            float horizontalRadius = Mathf.Min(width, height) * 0.5f;
+            float verticalRadius = horizontalRadius * verticalScale;
+            return RadiusOnEllipse(horizontalRadius, verticalRadius, angle) + padding;
+        }
+
+        private static float RadiusOnEllipse(float horizontalRadius, float verticalRadius, float angle)
+        {
+            if (horizontalRadius <= Mathf.Epsilon || verticalRadius <= Mathf.Epsilon)
+                return 0f;
+
+            float x = Mathf.Cos(angle);
+            float y = Mathf.Sin(angle);
+            float denominator = x * x / (horizontalRadius * horizontalRadius)
+                                + y * y / (verticalRadius * verticalRadius);
+
+            return denominator > Mathf.Epsilon ? 1f / Mathf.Sqrt(denominator) : 0f;
         }
     }
 }

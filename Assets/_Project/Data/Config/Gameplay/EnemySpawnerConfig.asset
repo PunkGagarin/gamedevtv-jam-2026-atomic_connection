@@ -46,6 +46,8 @@ MonoBehaviour:
   <InitialSpawnDelaySeconds>k__BackingField: 3
   <SpawnIntervalSeconds>k__BackingField: 6
   <OffscreenSpawnPadding>k__BackingField: 1
+  <VerticalOffscreenSpawnPaddingMultiplier>k__BackingField: 2
+  <VerticalSpawnRadiusScale>k__BackingField: 0.5
   <GroupSpawnSpacing>k__BackingField: 0.65
   <GroupSpawnJitter>k__BackingField: 0.12
   <MoveSpeed>k__BackingField: 0.7

@@ -53,7 +53,7 @@ namespace _Project.Scripts.MainMenu
         private void Start()
         {
             RefreshUpgradeNotification();
-            _audio.PlayMusic(Sounds.intenseBgm);
+            _audio.PlayMusic(Sounds.mainMenuBgm, true);
         }
 
         private void OnEnable()

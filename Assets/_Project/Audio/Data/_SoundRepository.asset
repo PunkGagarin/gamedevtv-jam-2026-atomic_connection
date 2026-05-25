@@ -84,3 +84,11 @@ MonoBehaviour:
     _clips:
     - _volume: 1
       _clip: {fileID: 8300000, guid: 9595a9776500841cfaa9122c83de6adf, type: 3}
+  - _name: main_menu_bgm
+    _clips:
+    - _volume: 1
+      _clip: {fileID: 8300000, guid: 4e7c147dcb2fd4911b622c200b0ec0b5, type: 3}
+  - _name: gameplayMusic
+    _clips:
+    - _volume: 1
+      _clip: {fileID: 8300000, guid: 4872fecb484774b09bca87da18203b11, type: 3}

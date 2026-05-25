@@ -1,5 +1,6 @@
 using _Project.Scripts.Gameplay.Drag;
 using _Project.Scripts.Gameplay.Enemies;
+using _Project.Scripts.Gameplay.Common.Time;
 using _Project.Scripts.Gameplay.CurrencyDrops;
 using _Project.Scripts.Gameplay.Level;
 using _Project.Scripts.Gameplay.Levels;
@@ -30,12 +31,17 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
         [Inject] private IGameplayRuntimeHierarchy _runtimeHierarchy;
         [Inject] private GameStateMachine _stateMachine;
         [Inject] private PauseService _pauseService;
+        [Inject] private ITimeService _timeService;
 
         private bool _terminalTransitionWasRequested;
+        private bool _victoryTransitionIsPending;
+        private float _victoryTransitionDelaySeconds;
 
         public override void Enter()
         {
             _terminalTransitionWasRequested = false;
+            _victoryTransitionIsPending = false;
+            _victoryTransitionDelaySeconds = 0f;
             _atomCoreService.CoreDied += OnCoreDied;
             _enemyService.BossKilled += OnBossKilled;
             _levelProgressService.Completed += OnLevelCompleted;
@@ -53,7 +59,17 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
             if (_pauseService.IsPaused)
                 return;
 
+            if (_victoryTransitionIsPending)
+            {
+                UpdateVictoryTransition();
+                return;
+            }
+
             _enemyService.Update();
+
+            if (_terminalTransitionWasRequested)
+                return;
+
             _enemyProjectileService.Update();
 
             if (_terminalTransitionWasRequested)
@@ -107,13 +123,33 @@ namespace _Project.Scripts.Infrastructure.GameStates.States
             _levelProgressService.Complete();
         }
 
+        private void UpdateVictoryTransition()
+        {
+            _victoryTransitionDelaySeconds -= _timeService.DeltaTime;
+
+            if (_victoryTransitionDelaySeconds > 0f)
+                return;
+
+            _victoryTransitionIsPending = false;
+            _stateMachine.Enter<LevelCompleteState>();
+        }
+
         private void OnLevelCompleted()
         {
             if (_terminalTransitionWasRequested)
                 return;
 
             _terminalTransitionWasRequested = true;
-            _stateMachine.Enter<LevelCompleteState>();
+            _dragService.CancelDrag();
+            _victoryTransitionDelaySeconds = _currencyPickupService.CollectAllToCursor();
+
+            if (_victoryTransitionDelaySeconds <= 0f)
+            {
+                _stateMachine.Enter<LevelCompleteState>();
+                return;
+            }
+
+            _victoryTransitionIsPending = true;
         }
     }
 }

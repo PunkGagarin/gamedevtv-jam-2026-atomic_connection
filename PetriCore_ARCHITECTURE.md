@@ -22,7 +22,7 @@ BootstrapState
 
 Terminal gameplay transitions:
 - core death: `GameplayLoopState -> GameOverOrParagonState -> GameOverWindow`
-- level complete: `GameplayLoopState -> LevelCompleteState -> LevelCompleteWindow`
+- level complete: `GameplayLoopState -> victory currency auto-collect -> LevelCompleteState -> LevelCompleteWindow`
 
 `GameplayPauseState` is registered for later transitions. Do not enter it for
 the gear menu until `GameplayLoopState` has explicit suspend/resume semantics.
@@ -78,7 +78,8 @@ Runtime ownership:
   `EnemyFactory` to create the unit, apply spawn-time object setup, and keep
   multi-enemy wave spawns clustered in one offscreen sector.
 - `CurrencyPickupService` owns physical currency pickup spawning, cursor-hover
-  collection checks, currency grant on collection, and pickup cleanup.
+  collection checks, victory auto-collection to the cursor, currency grant on
+  collection, and pickup cleanup.
 - `CurrencyPickup` is the pickup prefab facade. Pickup amount, hit-area checks,
   and collection feedback are component-owned.
 - Enemy object-internal behavior stays on focused components. `EnemyUnit` is
@@ -209,8 +210,9 @@ gameplay cleanup runs, and `GameOverOrParagonState` opens `GameOverWindow`.
 
 Level complete is also a normal state transition. In the current MVP, the level
 completes when `EnemyService` raises `BossKilled`. `GameplayLoopState` calls
-`LevelProgressService.Complete()`, then transitions to `LevelCompleteState`,
-which opens `LevelCompleteWindow`.
+`LevelProgressService.Complete()`, starts `CurrencyPickupService` victory
+auto-collection for remaining pickup loot, waits for that short feedback, then
+transitions to `LevelCompleteState`, which opens `LevelCompleteWindow`.
 
 ## Gameplay Input And Interaction
 

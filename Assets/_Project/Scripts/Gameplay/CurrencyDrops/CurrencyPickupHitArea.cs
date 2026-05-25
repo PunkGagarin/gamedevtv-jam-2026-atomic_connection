@@ -32,5 +32,10 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
         {
             Colliders?.SetEnabled(false);
         }
+
+        public void Enable()
+        {
+            Colliders?.SetEnabled(true);
+        }
     }
 }

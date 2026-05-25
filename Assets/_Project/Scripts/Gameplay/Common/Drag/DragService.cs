@@ -115,7 +115,8 @@ namespace _Project.Scripts.Gameplay.Drag
         private bool StartPendingDrag(Vector2 screenPosition, Camera camera)
         {
             IDraggable draggable = _pendingCandidate.Draggable;
-            if (draggable == null || (_pendingCandidate.RequiresCanStartDrag && !draggable.CanStartDrag))
+            if (!TryGetDragTransform(draggable, out Transform dragTransform) ||
+                (_pendingCandidate.RequiresCanStartDrag && !draggable.CanStartDrag))
             {
                 ClearPendingDrag();
                 return false;
@@ -125,62 +126,78 @@ namespace _Project.Scripts.Gameplay.Drag
             _dragWasStartedThisPress = true;
             ClearPendingDrag();
             draggable.OnDragStart();
-            draggable.OnDragMove(GetDragWorldPosition(screenPosition, camera, draggable));
+            draggable.OnDragMove(GetDragWorldPosition(screenPosition, camera, dragTransform));
 
             return true;
         }
 
         private IDropTarget UpdateDrag(Vector2 screenPosition, Camera camera)
         {
-            if (_currentDraggable == null)
+            IDraggable draggable = _currentDraggable;
+            if (!TryGetDragTransform(draggable, out Transform dragTransform))
+            {
+                _currentDraggable = null;
                 return null;
+            }
 
-            Vector3 worldPosition = GetDragWorldPosition(screenPosition, camera, _currentDraggable);
-            _currentDraggable.OnDragMove(worldPosition);
+            Vector3 worldPosition = GetDragWorldPosition(screenPosition, camera, dragTransform);
+            draggable.OnDragMove(worldPosition);
 
-            return GetDropTargetAt(worldPosition);
+            return GetDropTargetAt(worldPosition, draggable, dragTransform);
         }
 
         private IDropTarget EndDrag(Vector2 screenPosition, Camera camera)
         {
-            if (_currentDraggable == null)
-                return null;
-
-            Vector3 worldPosition = GetDragWorldPosition(screenPosition, camera, _currentDraggable);
-            IDropTarget target = GetDropTargetAt(worldPosition);
-
-            if (target != null && target.CanAcceptDrop(_currentDraggable))
+            IDraggable draggable = _currentDraggable;
+            if (!TryGetDragTransform(draggable, out Transform dragTransform))
             {
-                target.OnDropAccepted(_currentDraggable);
-                _currentDraggable.OnDragEnd();
+                _currentDraggable = null;
+                return null;
             }
-            else if (_currentDraggable is IDragReleaseHandler releaseHandler
+
+            Vector3 worldPosition = GetDragWorldPosition(screenPosition, camera, dragTransform);
+            IDropTarget target = GetDropTargetAt(worldPosition, draggable, dragTransform);
+
+            if (target != null && target.CanAcceptDrop(draggable))
+            {
+                target.OnDropAccepted(draggable);
+
+                if (_currentDraggable == draggable)
+                    draggable.OnDragEnd();
+            }
+            else if (draggable is IDragReleaseHandler releaseHandler
                      && releaseHandler.TryHandleDragRelease(worldPosition))
             {
-                _currentDraggable.OnDragEnd();
+                if (_currentDraggable == draggable)
+                    draggable.OnDragEnd();
             }
             else
             {
-                target?.OnDropRejected(_currentDraggable);
-                _currentDraggable.OnDragCancel();
+                target?.OnDropRejected(draggable);
+
+                if (_currentDraggable == draggable)
+                    draggable.OnDragCancel();
             }
 
             IDropTarget result = target;
-            _currentDraggable = null;
+
+            if (_currentDraggable == draggable)
+                _currentDraggable = null;
+
             return result;
         }
 
-        private static Vector3 GetDragWorldPosition(Vector2 screenPosition, Camera camera, IDraggable draggable)
+        private static Vector3 GetDragWorldPosition(Vector2 screenPosition, Camera camera, Transform dragTransform)
         {
             Vector3 worldPosition = camera.ScreenToWorldPoint(screenPosition);
-            worldPosition.z = draggable.Transform.position.z;
+            worldPosition.z = dragTransform.position.z;
             return worldPosition;
         }
 
-        private IDropTarget GetDropTargetAt(Vector3 worldPosition)
+        private IDropTarget GetDropTargetAt(Vector3 worldPosition, IDraggable draggable, Transform dragTransform)
         {
-            Collider2D col = _currentDraggable.Transform.GetComponent<Collider2D>();
-            ColliderSet colliderSet = _currentDraggable.Transform.GetComponent<ColliderSet>();
+            Collider2D col = dragTransform.GetComponent<Collider2D>();
+            ColliderSet colliderSet = dragTransform.GetComponent<ColliderSet>();
             bool colliderWasEnabled = col != null && col.enabled;
 
             if (colliderSet != null)
@@ -207,7 +224,7 @@ namespace _Project.Scripts.Gameplay.Drag
 
                 target ??= candidate;
 
-                if (_currentDraggable != null && candidate.CanAcceptDrop(_currentDraggable))
+                if (candidate.CanAcceptDrop(draggable))
                 {
                     target = candidate;
                     break;
@@ -220,6 +237,20 @@ namespace _Project.Scripts.Gameplay.Drag
                 col.enabled = colliderWasEnabled;
 
             return target;
+        }
+
+        private static bool TryGetDragTransform(IDraggable draggable, out Transform dragTransform)
+        {
+            dragTransform = null;
+
+            if (draggable == null)
+                return false;
+
+            if (draggable is UnityEngine.Object unityObject && unityObject == null)
+                return false;
+
+            dragTransform = draggable.Transform;
+            return dragTransform != null;
         }
 
         private DragStartCandidate GetDragStartCandidateAt(Vector3 worldPosition)

@@ -25,6 +25,8 @@ MonoBehaviour:
   <IdleScaleDuration>k__BackingField: 0.55
   <CollectIconScaleMultiplier>k__BackingField: 1.35
   <CollectIconScaleDuration>k__BackingField: 0.12
+  <VictoryAutoCollectDuration>k__BackingField: 0.35
+  <VictoryAutoCollectEndScaleMultiplier>k__BackingField: 0.2
   <CollectPopupWorldOffset>k__BackingField: {x: 0, y: 0.55, z: 0}
   <CollectPopupRiseDistance>k__BackingField: 0.45
   <CollectPopupDuration>k__BackingField: 0.45

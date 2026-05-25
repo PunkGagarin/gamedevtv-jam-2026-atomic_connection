@@ -30,6 +30,7 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
         public void Initialize(CurrencyAmount amount, CurrencyPickupConfig config)
         {
             AmountState.Configure(amount);
+            HitArea.Enable();
             Feedback.Initialize(amount, config);
         }
 
@@ -42,6 +43,12 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
         {
             HitArea.Disable();
             Feedback.PlayCollected(collectedAmount, config);
+        }
+
+        public void PlayVictoryCollected(Vector3 targetWorldPosition, CurrencyPickupConfig config)
+        {
+            HitArea.Disable();
+            Feedback.PlayVictoryCollected(targetWorldPosition, config);
         }
     }
 }

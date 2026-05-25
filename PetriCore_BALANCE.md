@@ -264,6 +264,8 @@ SwarmMolecule должен быть ответом на Mass, но не долж
 | Idle scale duration pickup-а | 0.55 сек |
 | Scale multiplier иконки при сборе | 1.35 |
 | Длительность scale-up иконки при сборе | 0.12 сек |
+| Длительность автосбора pickup-ов перед победным окном | 0.35 сек |
+| Конечный scale multiplier иконки при автосборе перед победой | 0.2 |
 | Смещение popup сбора pickup-а в режиме `SinglePickupWithAmount` | `(0, 0.55, 0)` |
 | Подъём popup сбора pickup-а в режиме `SinglePickupWithAmount` | 0.45 |
 | Длительность popup сбора pickup-а в режиме `SinglePickupWithAmount` | 0.45 сек |

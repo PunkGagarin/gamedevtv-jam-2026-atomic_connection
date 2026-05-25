@@ -7,6 +7,7 @@ namespace _Project.Scripts.Gameplay.CurrencyDrops
     {
         void Start();
         void Spawn(CurrencyAmount amount, Vector3 worldPosition);
+        float CollectAllToCursor();
         void Update();
         void Cleanup();
     }

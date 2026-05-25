@@ -59,6 +59,7 @@ Transform:
   - {fileID: 9100000000021875743}
   - {fileID: 9100000000021875753}
   - {fileID: 5437990380064028592}
+  - {fileID: 7099999999999609479}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &11400000
@@ -380,9 +381,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06d4872009f6452abdc0c185bdc71368, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <OwnedAtoms>k__BackingField: {fileID: 11400001}
   <AtomReceiver>k__BackingField: {fileID: 11400023}
   <Bond>k__BackingField: {fileID: 11400013}
   <Charge>k__BackingField: {fileID: 11400002}
+  <ChargeRequirementVisual>k__BackingField: {fileID: 7100000000010871623}
   <AtomOrbitLayout>k__BackingField: {fileID: 11400009}
   <AtomOrbit>k__BackingField: {fileID: 11400004}
   <ShotQueue>k__BackingField: {fileID: 11400008}
@@ -839,6 +842,39 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3051216323999445021, guid: 57db108107da2d544a6f22e963ca6851, type: 3}
   m_PrefabInstance: {fileID: 6906328881337127829}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &7100000000000004103
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 400000}
+    m_Modifications:
+    - target: {fileID: 400000, guid: 641d516e3fbd498cb0612744a5a0ef7e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.355
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 641d516e3fbd498cb0612744a5a0ef7e, type: 3}
+--- !u!4 &7099999999999609479 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400000, guid: 641d516e3fbd498cb0612744a5a0ef7e, type: 3}
+  m_PrefabInstance: {fileID: 7100000000000004103}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7100000000010871623 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 11400000, guid: 641d516e3fbd498cb0612744a5a0ef7e, type: 3}
+  m_PrefabInstance: {fileID: 7100000000000004103}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74e3c179ad6d4f76bcbb969d2d8aeb3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &9100000000000000031
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -861,7 +897,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 11400005, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
       propertyPath: m_Color.b
-      value: 0.15642649
+      value: 0.878471
       objectReference: {fileID: 0}
     - target: {fileID: 11400005, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
       propertyPath: m_Color.g
@@ -869,7 +905,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 11400005, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
       propertyPath: m_Color.r
-      value: 0
+      value: 0.5518868
       objectReference: {fileID: 0}
     - target: {fileID: 22400000, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
       propertyPath: m_AnchorMax.x
@@ -893,7 +929,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 22400000, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0.1
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 22400000, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
       propertyPath: m_LocalPosition.x
@@ -929,7 +965,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 22400000, guid: a45c474c6b8d4cd1b05e1e9341899742, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.82
+      value: 0.955
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

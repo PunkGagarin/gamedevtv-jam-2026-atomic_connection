@@ -59,6 +59,7 @@ Transform:
   - {fileID: 6974768364817907390}
   - {fileID: 400001}
   - {fileID: 400002}
+  - {fileID: 7099999999999609480}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &11400000
@@ -220,6 +221,7 @@ MonoBehaviour:
   <AimLineVisual>k__BackingField: {fileID: 11400006}
   <ShotQueue>k__BackingField: {fileID: 11400008}
   <PullVisual>k__BackingField: {fileID: 0}
+  <AimSmoothTime>k__BackingField: 0.08
   <AimPullSound>k__BackingField: 10
 --- !u!114 &11400006
 MonoBehaviour:
@@ -246,6 +248,35 @@ MonoBehaviour:
   <AimLineColor>k__BackingField: {r: 1, g: 0.9215686, b: 0.01568628, a: 1}
   <AimPreviewLineColor>k__BackingField: {r: 0, g: 1, b: 0, a: 1}
   <ShotLineColor>k__BackingField: {r: 0, g: 1, b: 1, a: 1}
+  <PreviewWobbleSegmentCount>k__BackingField: 14
+  <PreviewWobbleAmplitude>k__BackingField: 1.5
+  <PreviewWobbleFrequency>k__BackingField: 3
+  <PreviewWobbleDuration>k__BackingField: 0.4
+  <PreviewWobbleAnimationSpeed>k__BackingField: 4
+  <WidthCurve>k__BackingField:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &11400007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -384,9 +415,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06d4872009f6452abdc0c185bdc71368, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <OwnedAtoms>k__BackingField: {fileID: 11400001}
   <AtomReceiver>k__BackingField: {fileID: 11400023}
   <Bond>k__BackingField: {fileID: 11400013}
   <Charge>k__BackingField: {fileID: 11400002}
+  <ChargeRequirementVisual>k__BackingField: {fileID: 7100000000010871624}
   <AtomOrbitLayout>k__BackingField: {fileID: 11400009}
   <AtomOrbit>k__BackingField: {fileID: 11400004}
   <ShotQueue>k__BackingField: {fileID: 11400008}
@@ -870,3 +903,34 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3051216323999445021, guid: 57db108107da2d544a6f22e963ca6851, type: 3}
   m_PrefabInstance: {fileID: 66156469164568838}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &7100000000000004104
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 400000}
+    m_Modifications:
+    - target: {fileID: 400000, guid: 641d516e3fbd498cb0612744a5a0ef7e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.759
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 641d516e3fbd498cb0612744a5a0ef7e, type: 3}
+--- !u!4 &7099999999999609480 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 400000, guid: 641d516e3fbd498cb0612744a5a0ef7e, type: 3}
+  m_PrefabInstance: {fileID: 7100000000000004104}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7100000000010871624 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 11400000, guid: 641d516e3fbd498cb0612744a5a0ef7e, type: 3}
+  m_PrefabInstance: {fileID: 7100000000000004104}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74e3c179ad6d4f76bcbb969d2d8aeb3a, type: 3}

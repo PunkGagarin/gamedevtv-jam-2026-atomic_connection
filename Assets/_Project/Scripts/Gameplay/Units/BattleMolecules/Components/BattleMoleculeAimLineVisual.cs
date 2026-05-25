@@ -24,20 +24,32 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         [field: SerializeField] private Color AimPreviewLineColor { get; set; } = Color.green;
         [field: SerializeField] private Color ShotLineColor { get; set; } = Color.cyan;
 
+        [field: SerializeField, Min(2)] private int PreviewWobbleSegmentCount { get; set; } = 14;
+        [field: SerializeField, Min(0f)] private float PreviewWobbleAmplitude { get; set; } = 1.5f;
+        [field: SerializeField, Min(0f)] private float PreviewWobbleFrequency { get; set; } = 3f;
+        [field: SerializeField, Min(0.01f)] private float PreviewWobbleDuration { get; set; } = 0.4f;
+        [field: SerializeField, Min(0f)] private float PreviewWobbleAnimationSpeed { get; set; } = 4f;
+
+        [field: SerializeField] private AnimationCurve WidthCurve { get; set; } = AnimationCurve.Linear(0f, 1f, 1f, 1f);
+
         private readonly List<LineRenderer> _shotLines = new();
         private readonly List<float> _shotLineTimesLeft = new();
         private LineRenderer _aimLine;
         private LineRenderer _aimPreviewLine;
         private Vector3 _origin;
+        private float _previewWobbleTimeLeft;
+        private int _previewPointCount;
 
         private void Awake()
         {
-            _aimLine = SetupLine(gameObject, AimLineWidth, AimLineSortingOrder, AimLineColor);
+            _previewPointCount = PreviewWobbleSegmentCount + 2;
+            _aimLine = SetupLine(gameObject, AimLineWidth, AimLineSortingOrder, AimLineColor, 2);
             _aimPreviewLine = SetupLine(
                 GetOrCreateLineObject(AIM_PREVIEW_LINE_OBJECT_NAME),
                 AimPreviewLineWidth,
                 AimPreviewLineSortingOrder,
-                AimPreviewLineColor);
+                AimPreviewLineColor,
+                _previewPointCount);
             CreateShotLine();
         }
 
@@ -72,6 +84,13 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
                 }
 
                 LineRendererUtility.SetColor(shotLine, ShotLineColor, _shotLineTimesLeft[i] / CurrentShotLineSeconds());
+            }
+
+            if (_previewWobbleTimeLeft > 0f)
+            {
+                _previewWobbleTimeLeft -= deltaTime;
+                if (_previewWobbleTimeLeft < 0f)
+                    _previewWobbleTimeLeft = 0f;
             }
         }
 
@@ -117,10 +136,12 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
                 return;
             }
 
-            Vector3 end = origin + direction.normalized * Mathf.Max(0f, AimPreviewLineLength);
+            bool wasHidden = !_aimPreviewLine.enabled;
+            if (wasHidden)
+                _previewWobbleTimeLeft = PreviewWobbleDuration;
 
-            _aimPreviewLine.SetPosition(0, origin);
-            _aimPreviewLine.SetPosition(1, end);
+            Vector3 end = origin + direction.normalized * Mathf.Max(0f, AimPreviewLineLength);
+            SetPreviewEndpoints(origin, end);
             _aimPreviewLine.enabled = true;
         }
 
@@ -149,11 +170,59 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             shotLine.enabled = true;
         }
 
-        private LineRenderer SetupLine(GameObject lineObject, float width, int sortingOrder, Color color)
+        private void SetPreviewEndpoints(Vector3 from, Vector3 to)
+        {
+            if (_aimPreviewLine == null)
+                return;
+
+            Vector3 direction = to - from;
+            float distance = direction.magnitude;
+
+            if (distance < 0.001f || _previewWobbleTimeLeft <= 0f || PreviewWobbleAmplitude <= 0f)
+            {
+                if (_aimPreviewLine.positionCount != 2)
+                    _aimPreviewLine.positionCount = 2;
+
+                _aimPreviewLine.SetPosition(0, from);
+                _aimPreviewLine.SetPosition(1, to);
+                return;
+            }
+
+            int pointCount = _previewPointCount;
+            if (_aimPreviewLine.positionCount != pointCount)
+                _aimPreviewLine.positionCount = pointCount;
+
+            Vector3 normalizedDir = direction / distance;
+            Vector3 perpendicular = Vector3.Cross(normalizedDir, Vector3.forward).normalized;
+
+            if (perpendicular.sqrMagnitude < 0.001f)
+                perpendicular = Vector3.up;
+
+            float amplitudeFactor = _previewWobbleTimeLeft / PreviewWobbleDuration;
+            float currentAmplitude = PreviewWobbleAmplitude * amplitudeFactor;
+            float timeOffset = Time.time * PreviewWobbleAnimationSpeed;
+
+            for (int i = 0; i < pointCount; i++)
+            {
+                float t = (float)i / (pointCount - 1);
+                Vector3 basePoint = Vector3.Lerp(from, to, t);
+
+                float weight = Mathf.Sin(t * Mathf.PI);
+                float sineOffset = Mathf.Sin(t * Mathf.PI * 2f * PreviewWobbleFrequency + timeOffset) * currentAmplitude * weight;
+                Vector3 point = basePoint + perpendicular * sineOffset;
+
+                _aimPreviewLine.SetPosition(i, point);
+            }
+        }
+
+        private LineRenderer SetupLine(GameObject lineObject, float width, int sortingOrder, Color color, int pointCount = 2)
         {
             LineRenderer line = LineRendererUtility.Ensure(lineObject);
-            line.positionCount = 2;
+            line.positionCount = pointCount;
             LineRendererUtility.Configure(line, width, sortingOrder, color, false);
+
+            line.widthCurve = WidthCurve;
+            line.widthMultiplier = Mathf.Max(0f, width);
 
             return line;
         }

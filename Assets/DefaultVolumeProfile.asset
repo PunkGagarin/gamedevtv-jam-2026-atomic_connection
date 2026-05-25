@@ -691,10 +691,10 @@ MonoBehaviour:
     m_Value: 1
   firstFlareIntensity:
     m_OverrideState: 1
-    m_Value: 7.71
+    m_Value: 0.09
   secondaryFlareIntensity:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 17.42
   warpedFlareIntensity:
     m_OverrideState: 1
     m_Value: 1

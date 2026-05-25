@@ -15,11 +15,15 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         [field: SerializeField] protected BattleMoleculeAimLineVisual AimLineVisual { get; private set; }
         [field: SerializeField] protected BattleMoleculeShotQueue ShotQueue { get; private set; }
         [field: SerializeField] private BattleMoleculePullVisual PullVisual { get; set; }
+        [field: SerializeField, Min(0.001f)] private float AimSmoothTime { get; set; } = 0.08f;
         [field: SerializeField] private Sounds AimPullSound { get; set; } = Sounds.pew;
 
         [Inject] private AudioService _audioService;
 
         private bool _isAiming;
+        private Vector3 _smoothDragPosition;
+        private Vector3 _smoothDragVelocity;
+        private bool _smoothPositionInitialized;
 
         protected bool IsAiming => _isAiming;
         public bool CanStartDrag => Charge != null && Charge.IsCharged;
@@ -43,7 +47,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         public virtual void OnDragStart()
         {
             _isAiming = true;
-            AimLineVisual?.Show(CurrentAimOrigin());
+            _smoothPositionInitialized = false;
             PullVisual?.Show();
             _audioService?.PlaySfxWithRandomPitch(AimPullSound);
             OnAimingStarted();
@@ -54,12 +58,23 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             if (!_isAiming)
                 return;
 
-            Vector3 origin = CurrentAimOrigin();
-            Vector3 dragEnd = GetDragEnd(worldPosition);
+            if (!_smoothPositionInitialized)
+            {
+                _smoothDragPosition = worldPosition;
+                _smoothDragVelocity = Vector3.zero;
+                _smoothPositionInitialized = true;
+            }
+            else
+            {
+                _smoothDragPosition = Vector3.SmoothDamp(
+                    _smoothDragPosition, worldPosition, ref _smoothDragVelocity, AimSmoothTime);
+            }
 
-            AimLineVisual?.SetSegment(origin, dragEnd);
+            Vector3 origin = CurrentAimOrigin();
+            Vector3 dragEnd = GetDragEnd(_smoothDragPosition);
+
             PullVisual?.SetMouseWorldPosition(worldPosition);
-            OnAimingMoved(origin, dragEnd, GetShotDirection(worldPosition));
+            OnAimingMoved(origin, dragEnd, GetShotDirection(_smoothDragPosition));
         }
 
         public virtual void OnDragEnd()
@@ -77,7 +92,8 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
             if (Charge == null || ShotQueue == null || !Charge.IsCharged)
                 return false;
 
-            Vector3 direction = GetShotDirection(worldPosition);
+            Vector3 dragPosition = _smoothPositionInitialized ? _smoothDragPosition : worldPosition;
+            Vector3 direction = GetShotDirection(dragPosition);
             if (direction.sqrMagnitude <= Mathf.Epsilon)
                 return false;
 
@@ -87,7 +103,6 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
         protected virtual void StopAiming()
         {
             _isAiming = false;
-            AimLineVisual?.Hide();
             PullVisual?.Hide();
             OnAimingStopped();
         }

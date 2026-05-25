@@ -100,11 +100,11 @@
 
 | Id | Prefab resource path | HP | Скорость | Урон по ядру | Ваншот ядра | Награда |
 |---|---|---:|---:|---:|---|---:|
-| Standard | `Gameplay/Enemies/EnemyUnit` | 1 | 0.7 | 1 | нет | 1 DNA |
-| Mass | `Gameplay/Enemies/MassEnemyUnit` | 1 | 0.91 | 1 | нет | 1 DNA |
-| Elite | `Gameplay/Enemies/EliteEnemyUnit` | 6 | 0.525 | 1 | нет | 5 DNA + 1 радикал |
+| Standard | `Gameplay/Enemies/EnemyUnit` | 1 | 0.55 | 1 | нет | 1 DNA |
+| Mass | `Gameplay/Enemies/MassEnemyUnit` | 1 | 0.7 | 1 | нет | 1 DNA |
+| Elite | `Gameplay/Enemies/EliteEnemyUnit` | 6 | 0.4 | 1 | нет | 5 DNA + 1 радикал |
 | Ranged | `Gameplay/Enemies/RangedEnemyUnit` | 2 | 0.455 | 1 projectile | нет | 1 DNA |
-| Boss | `Gameplay/Enemies/BossEnemyUnit` | 3 | 0.35 | 2 | да | нет; завершает уровень |
+| Boss | `Gameplay/Enemies/BossEnemyUnit` | 3 | 0.3 | 2 | да | нет; завершает уровень |
 
 ### Боевые override-значения уровней
 

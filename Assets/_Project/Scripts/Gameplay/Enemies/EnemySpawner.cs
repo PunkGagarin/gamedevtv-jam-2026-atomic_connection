@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using _Project.Scripts.Gameplay.Cameras.Provider;
+using _Project.Scripts.Gameplay.Common.Movement;
 using _Project.Scripts.Gameplay.Common.Random;
 using _Project.Scripts.Gameplay.Units.AtomCores;
 using UnityEngine;
@@ -52,39 +53,72 @@ namespace _Project.Scripts.Gameplay.Enemies
             float depth = Mathf.Abs(camera.transform.position.z - target.position.z);
             Vector3 bottomLeft = camera.ViewportToWorldPoint(new Vector3(0, 0, depth));
             Vector3 topRight = camera.ViewportToWorldPoint(new Vector3(1, 1, depth));
-            float padding = Mathf.Max(0, offscreenSpawnPadding);
-            int side = _random.Range(0, 4);
-            bool verticalSide = side <= 1;
-            float axisMin = verticalSide ? bottomLeft.y : bottomLeft.x;
-            float axisMax = verticalSide ? topRight.y : topRight.x;
-            float axisLength = axisMax - axisMin;
+            float padding = Mathf.Max(0f, offscreenSpawnPadding);
+            float centerAngle = _random.Range(0f, Mathf.PI * 2f);
             float groupSpacing = Mathf.Max(0f, _config.GroupSpawnSpacing);
             float groupJitter = Mathf.Max(0f, _config.GroupSpawnJitter);
-            float groupSpan = Mathf.Min(axisLength, (Mathf.Max(1, count) - 1) * groupSpacing);
-            float centerMin = axisMin + groupSpan * 0.5f;
-            float centerMax = axisMax - groupSpan * 0.5f;
-            float center = centerMin >= centerMax ? (axisMin + axisMax) * 0.5f : _random.Range(centerMin, centerMax);
+            float minimumSpawnRadius = MinimumSpawnRadius(bottomLeft, topRight, padding);
+            float groupRadius = Mathf.Max(
+                SpawnRadiusOnScreenRay(target.position, padding, bottomLeft, topRight, centerAngle),
+                minimumSpawnRadius);
+            float angularSpacing = groupRadius > Mathf.Epsilon ? groupSpacing / groupRadius : 0f;
+            float angularJitter = groupRadius > Mathf.Epsilon ? groupJitter / groupRadius : 0f;
 
             for (int i = 0; i < count; i++)
             {
-                float offset = count <= 1 ? 0f : (i - (count - 1) * 0.5f) * groupSpacing;
-                float jitter = count <= 1 ? 0f : _random.Range(-groupJitter, groupJitter);
-                float axisValue = Mathf.Clamp(center + offset + jitter, axisMin, axisMax);
-                spawnPositions.Add(PositionOnSide(side, axisValue, bottomLeft, topRight, padding, target.position.z));
+                float offset = count <= 1 ? 0f : (i - (count - 1) * 0.5f) * angularSpacing;
+                float jitter = count <= 1 ? 0f : _random.Range(-angularJitter, angularJitter);
+                float angle = centerAngle + offset + jitter;
+                float spawnRadius = Mathf.Max(
+                    SpawnRadiusOnScreenRay(target.position, padding, bottomLeft, topRight, angle),
+                    minimumSpawnRadius);
+
+                spawnPositions.Add(OrbitMath.PositionOnCircle(
+                    target.position,
+                    spawnRadius,
+                    angle,
+                    target.position.z));
             }
 
             return true;
         }
 
-        private static Vector3 PositionOnSide(int side, float axisValue, Vector3 bottomLeft, Vector3 topRight, float padding, float z)
+        private static float SpawnRadiusOnScreenRay(
+            Vector3 center,
+            float padding,
+            Vector3 bottomLeft,
+            Vector3 topRight,
+            float angle)
         {
-            return side switch
+            Vector2 direction = new(Mathf.Cos(angle), Mathf.Sin(angle));
+            float edgeDistance = DistanceToScreenEdge(center, bottomLeft, topRight, direction);
+            return edgeDistance + padding;
+        }
+
+        private static float DistanceToScreenEdge(Vector3 center, Vector3 bottomLeft, Vector3 topRight, Vector2 direction)
+        {
+            float distance = float.PositiveInfinity;
+
+            if (Mathf.Abs(direction.x) > Mathf.Epsilon)
             {
-                0 => new Vector3(bottomLeft.x - padding, axisValue, z),
-                1 => new Vector3(topRight.x + padding, axisValue, z),
-                2 => new Vector3(axisValue, bottomLeft.y - padding, z),
-                _ => new Vector3(axisValue, topRight.y + padding, z)
-            };
+                float xEdge = direction.x > 0f ? topRight.x : bottomLeft.x;
+                distance = Mathf.Min(distance, (xEdge - center.x) / direction.x);
+            }
+
+            if (Mathf.Abs(direction.y) > Mathf.Epsilon)
+            {
+                float yEdge = direction.y > 0f ? topRight.y : bottomLeft.y;
+                distance = Mathf.Min(distance, (yEdge - center.y) / direction.y);
+            }
+
+            return float.IsPositiveInfinity(distance) ? 0f : Mathf.Max(0f, distance);
+        }
+
+        private static float MinimumSpawnRadius(Vector3 bottomLeft, Vector3 topRight, float padding)
+        {
+            float width = Mathf.Max(0f, topRight.x - bottomLeft.x);
+            float height = Mathf.Max(0f, topRight.y - bottomLeft.y);
+            return Mathf.Min(width, height) * 0.5f + padding;
         }
     }
 }

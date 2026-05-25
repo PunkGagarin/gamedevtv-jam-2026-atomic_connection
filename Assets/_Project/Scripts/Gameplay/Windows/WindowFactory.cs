@@ -29,6 +29,7 @@ namespace _Project.Scripts.Gameplay.Windows
                 throw new InvalidOperationException("UIRoot is not set. Add UIInitializer to the scene before opening windows.");
 
             RectTransform modalRoot = CreateStretchRect(MODAL_ROOT_NAME, _uiRoot);
+            ConfigureModalCanvas(modalRoot);
             WindowBackdrop backdrop = CreateBackdrop(modalRoot, Config.BackdropColor);
             BaseWindow window = _instantiator.InstantiatePrefabForComponent<BaseWindow>(PrefabFor(windowId), modalRoot);
 
@@ -37,6 +38,19 @@ namespace _Project.Scripts.Gameplay.Windows
             backdrop.Initialize(window);
 
             return window;
+        }
+
+        private void ConfigureModalCanvas(RectTransform modalRoot)
+        {
+            Canvas canvas = modalRoot.gameObject.AddComponent<Canvas>();
+            canvas.overrideSorting = true;
+            canvas.sortingOrder = Config.ModalSortingOrder;
+
+            Canvas parentCanvas = _uiRoot.GetComponentInParent<Canvas>();
+            if (parentCanvas != null)
+                canvas.sortingLayerID = parentCanvas.sortingLayerID;
+
+            modalRoot.gameObject.AddComponent<GraphicRaycaster>();
         }
 
         private static WindowBackdrop CreateBackdrop(RectTransform parent, Color backdropColor)

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4bd85fe7205c41fd9aa25ae0057ddf13, type: 3}
   m_Name: windowConfig
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.Gameplay.Windows.Configs.WindowsConfig
+  <ModalSortingOrder>k__BackingField: 900
   <BackdropColor>k__BackingField: {r: 0.17254902, g: 0.1882353, b: 0.1254902, a: 1}
   <WindowConfigs>k__BackingField:
   - <Id>k__BackingField: 0

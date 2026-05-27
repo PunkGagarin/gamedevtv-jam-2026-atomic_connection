@@ -19,7 +19,7 @@ MonoBehaviour:
   <Icon>k__BackingField: {fileID: 21300000, guid: eff0a37881f24d6fbbe3b8f81245624f, type: 3}
   <MaxLevel>k__BackingField: 5
   <CostCurrency>k__BackingField: 2
-  <CostsByLevel>k__BackingField: 080000001900000064000000fa000000f4010000
+  <CostsByLevel>k__BackingField: 05000000140000003c000000960000002c010000
   <Prerequisites>k__BackingField: 00000000
   <GraphPosition>k__BackingField: {x: 240, y: 240}
   <BonusPerLevel>k__BackingField: 1

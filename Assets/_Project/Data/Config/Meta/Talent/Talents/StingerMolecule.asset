@@ -19,8 +19,8 @@ MonoBehaviour:
   <Icon>k__BackingField: {fileID: -8802965784826877140, guid: dec542136df6c8e4fa0a3507cfc135e7, type: 3}
   <MaxLevel>k__BackingField: 1
   <CostCurrency>k__BackingField: 1
-  <CostsByLevel>k__BackingField: 01000000
+  <CostsByLevel>k__BackingField: 02000000
   <Prerequisites>k__BackingField: 01000000
-  <GraphPosition>k__BackingField: {x: 0, y: -720}
+  <GraphPosition>k__BackingField: {x: -0, y: -720}
   <BonusPerLevel>k__BackingField: 1
   <IsUnlock>k__BackingField: 1

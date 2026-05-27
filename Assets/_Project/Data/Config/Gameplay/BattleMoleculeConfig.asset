@@ -41,7 +41,7 @@ MonoBehaviour:
   <MembraneMoleculeAtomsRequired>k__BackingField: 4
   <MembraneDurationSeconds>k__BackingField: 5
   <MembraneIntegrity>k__BackingField: 3
-  <MembraneCooldownSeconds>k__BackingField: 18
+  <MembraneCooldownSeconds>k__BackingField: 15
   <MembraneKnockbackRadius>k__BackingField: 2.5
   <MembraneKnockbackDistance>k__BackingField: 0.8
   <MembraneKnockbackDurationSeconds>k__BackingField: 0.18

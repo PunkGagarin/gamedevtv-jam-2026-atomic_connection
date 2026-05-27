@@ -17,9 +17,9 @@ MonoBehaviour:
   <Title>k__BackingField: TALENT_SWARM_MOLECULE_CHARGE_REDUCTION_TITLE
   <Description>k__BackingField: TALENT_SWARM_MOLECULE_CHARGE_REDUCTION_DESC
   <Icon>k__BackingField: {fileID: 21300000, guid: 8dbfe9b03cb9afd42a7f64a3ce815eef, type: 3}
-  <MaxLevel>k__BackingField: 2
+  <MaxLevel>k__BackingField: 3
   <CostCurrency>k__BackingField: 2
-  <CostsByLevel>k__BackingField: 140000004b000000
+  <CostsByLevel>k__BackingField: 0f0000002300000050000000
   <Prerequisites>k__BackingField: 0e000000
   <GraphPosition>k__BackingField: {x: -480, y: -960}
   <BonusPerLevel>k__BackingField: 1

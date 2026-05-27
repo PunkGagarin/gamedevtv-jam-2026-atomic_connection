@@ -1,15 +1,9 @@
 using UnityEngine;
-using Zenject;
-using _Project.Scripts.Gameplay.Talents;
 
 namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
 {
     public abstract class TalentPreviewBattleMoleculeAiming : BattleMoleculeAiming
     {
-        [Inject] private ITalentService _talentService;
-
-        protected abstract TalentEffectType PreviewTalentEffectType { get; }
-
         protected override void OnAimingStarted()
         {
             AimLineVisual?.HideAimPreview();
@@ -37,9 +31,7 @@ namespace _Project.Scripts.Gameplay.Units.BattleMolecules.Components
                    && Charge != null
                    && Charge.IsCharged
                    && AimLineVisual != null
-                   && shotDirection.sqrMagnitude > Mathf.Epsilon
-                   && _talentService != null
-                   && _talentService.IsUnlocked(PreviewTalentEffectType);
+                   && shotDirection.sqrMagnitude > Mathf.Epsilon;
         }
     }
 }

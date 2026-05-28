@@ -67,20 +67,62 @@ namespace _Project.Scripts.Infrastructure.SaveLoad
             return JsonUtility.ToJson(this);
         }
 
-        public static ProgressData FromJson(string json)
+        public bool Normalize(int progressVersion)
         {
-            return JsonUtility.FromJson<ProgressData>(json);
+            bool changed = false;
+
+            if (ProgressVersion != progressVersion)
+            {
+                ProgressVersion = progressVersion;
+                changed = true;
+            }
+
+            if (Currencies == null)
+            {
+                Currencies = new List<CurrencySlot>();
+                changed = true;
+            }
+
+            if (TalentLevels == null)
+            {
+                TalentLevels = new List<TalentSlot>();
+                changed = true;
+            }
+
+            if (SelectedLevel <= 0)
+            {
+                SelectedLevel = 1;
+                changed = true;
+            }
+
+            return EnsureLegacyGoldMigrated() || changed;
         }
 
-        private void EnsureLegacyGoldMigrated()
+        public static ProgressData FromJson(string json)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+                return null;
+
+            try
+            {
+                return JsonUtility.FromJson<ProgressData>(json);
+            }
+            catch (ArgumentException)
+            {
+                return null;
+            }
+        }
+
+        private bool EnsureLegacyGoldMigrated()
         {
             Currencies ??= new List<CurrencySlot>();
 
             if (Gold <= 0 || Currencies.Any(s => s.CurrencyId == (int)CurrencyId.Dna))
-                return;
+                return false;
 
             Currencies.Add(new CurrencySlot { CurrencyId = (int)CurrencyId.Dna, Amount = Gold });
             Gold = 0;
+            return true;
         }
     }
 

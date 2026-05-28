@@ -37,13 +37,18 @@ namespace _Project.Scripts.Infrastructure.SaveLoad
             string json = PlayerPrefs.GetString(PROGRESS_KEY);
             ProgressData data = ProgressData.FromJson(json);
 
-            if (data == null || data.ProgressVersion != CURRENT_PROGRESS_VERSION)
+            if (data == null)
             {
-                DeleteProgressData();
+                CreateProgress();
+                SaveProgress();
                 return;
             }
 
+            bool progressChanged = data.Normalize(CURRENT_PROGRESS_VERSION);
             _progressProvider.SetProgressData(data);
+
+            if (progressChanged)
+                SaveProgress();
         }
 
         public void CreateProgress()

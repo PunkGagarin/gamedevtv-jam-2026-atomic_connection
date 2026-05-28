@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <NeedleMoleculeSpawnOffset>k__BackingField: {x: 4, y: 0}
   <NeedleMoleculeBondAtomsRequired>k__BackingField: 1
-  <NeedleMoleculeAtomsRequired>k__BackingField: 3
+  <NeedleMoleculeAtomsRequired>k__BackingField: 2
   <NeedleMoleculeShotDamage>k__BackingField: 1
   <StingerMoleculeSpawnOffset>k__BackingField: {x: 0, y: 2}
   <StingerMoleculeBondAtomsRequired>k__BackingField: 1
